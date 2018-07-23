@@ -18,9 +18,6 @@
     <ClInclude Include="Include\Image.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Include\SapphireGraphics.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Include\stb_image.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -28,6 +25,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Include\stb_image_write.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Graphics.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

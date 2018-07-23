@@ -69,7 +69,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Include\Image.h" />
-    <ClInclude Include="Include\SapphireGraphics.h" />
+    <ClInclude Include="Include\Graphics.h" />
     <ClInclude Include="Include\stb_image.h" />
     <ClInclude Include="Include\stb_image_resize.h" />
     <ClInclude Include="Include\stb_image_write.h" />

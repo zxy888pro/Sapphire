@@ -21,9 +21,6 @@
     <ClInclude Include="Include\BaseException.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Core.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="Include\charset.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -52,6 +49,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Include\stringHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Core.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

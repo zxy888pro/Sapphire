@@ -1,7 +1,7 @@
 #ifndef __IMAGE__H__
 #define __IMAGE__H__
 
-#include "SapphireGraphics.h"
+#include "Graphics.h"
 #include "handle.h"
 #include <cassert>
 #include <map>
