@@ -54,6 +54,12 @@
     <ClInclude Include="Include\Core.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\FrameMem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\BaseResource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -81,6 +87,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\path.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\FrameMem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\BaseResource.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

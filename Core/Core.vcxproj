@@ -20,19 +20,23 @@
     <ClInclude Include="Include\logUtil.h" />
     <ClInclude Include="Include\mathHelper.h" />
     <ClInclude Include="Include\md5.h" />
+    <ClInclude Include="Include\FrameMem.h" />
     <ClInclude Include="Include\path.h" />
     <ClInclude Include="Include\Sapphire.h" />
     <ClInclude Include="Include\singleton.h" />
     <ClInclude Include="Include\stringHelper.h" />
+    <ClInclude Include="Src\BaseResource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\BaseException.cpp" />
+    <ClCompile Include="Src\BaseResource.cpp" />
     <ClCompile Include="Src\charset.cpp" />
     <ClCompile Include="Src\Core.cpp" />
     <ClCompile Include="Src\FileStream.cpp" />
     <ClCompile Include="Src\inifile.cpp" />
     <ClCompile Include="Src\logUtil.cpp" />
     <ClCompile Include="Src\md5.cpp" />
+    <ClCompile Include="Src\FrameMem.cpp" />
     <ClCompile Include="Src\path.cpp" />
     <ClCompile Include="Src\stringHelper.cpp" />
   </ItemGroup>

@@ -21,7 +21,9 @@
 #include <string>
 #include <cstring>
 #include <vector>
+#include <map>
 #include <tchar.h>
+#include<time.h>
 
 
 #if defined(SAPPHIRE_STATIC_LIB) && defined(SAPPHIRE_LIB)
