@@ -5,6 +5,7 @@
 
 namespace Sapphire
 {
+
 	//Handle¿‡
 	template<typename TAG>
 	class Handle

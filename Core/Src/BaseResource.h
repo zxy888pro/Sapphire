@@ -7,7 +7,11 @@
 
 namespace Sapphire
 {
-	typedef Handle <BaseResource> HRESOURCE;
+#define RHANDLE uint
+#define INVALID_RHANDLE 0xFFFFFFFF
+#define IS_INVALID_RHANDLE(_rh)	((_rh == INVALID_RHANDLE) ? true : false)
+#define IS_VALID_RHANDLE(_rh)	((_rh == INVALID_RHANDLE) ? false : true)
+
 
 	//资源基类
 	class  BaseResource
@@ -80,7 +84,7 @@ namespace Sapphire
 		}
 	};
 
-	typedef std::map<HRESOURCE, BaseResource*> ResMap;
+	typedef std::map<RHANDLE, BaseResource*> ResMap;
 	typedef ResMap::iterator ResMapItor;
 	typedef ResMap::value_type ResMapPair;
 
@@ -133,42 +137,43 @@ namespace Sapphire
 
 		// 预分配内存,以便插入资源后直接可用
 		bool ReserveMemory(size_t nMem);
-
-		bool InsertResource(HRESOURCE* rhUniqueID, BaseResource* pResource);
-		bool InsertResource(HRESOURCE rhUniqueID, BaseResource* pResource);
+		//插入資源
+		bool InsertResource(RHANDLE* rhUniqueID, BaseResource* pResource);
+		bool InsertResource(RHANDLE rhUniqueID, BaseResource* pResource);
 
 		bool RemoveResource(BaseResource* pResource);
-		bool RemoveResource(HRESOURCE rhUniqueID);
+		bool RemoveResource(RHANDLE rhUniqueID);
 
 		// 销毁资源并释放内存
 		bool DestroyResource(BaseResource* pResource);
-		bool DestroyResource(HRESOURCE rhUniqueID);
+		bool DestroyResource(RHANDLE rhUniqueID);
 
 		// 获取指定的资源， 如果资源已经被销毁，那么会重建一个
-		BaseResource* GetResource(HRESOURCE rhUniqueID);
+		BaseResource* GetResource(RHANDLE rhUniqueID);
 
 		// 锁定资源，保证不会被自动清理
-		BaseResource* Lock(HRESOURCE rhUniqueID);
+		BaseResource* Lock(RHANDLE rhUniqueID);
 
 		//解锁资源
-		int Unlock(HRESOURCE rhUniqueID);
+		int Unlock(RHANDLE rhUniqueID);
 		int Unlock(BaseResource* pResource);
 
 		// 通过资源指针获取存储句柄
-		HRESOURCE FindResourceHandle(BaseResource* pResource);
+		RHANDLE FindResourceHandle(BaseResource* pResource);
 
 	protected:
 
 		// 内部函数
 		inline void AddMemory(size_t nMem)		{ m_nCurrentUsedMemory += nMem; }
 		inline void RemoveMemory(size_t nMem)	{ m_nCurrentUsedMemory -= nMem; }
-		//uint GetNextResHandle()					{ return --m_rhNextResHandle; }
+		//獲取下一個可用的資源句柄,句柄暫時由容器統一管理和递增生產
+		uint GetNextResHandle()					{ return --m_rhNextResHandle; }
 
 		//检查已释放资源
 		bool CheckForOverallocation();
 
 	protected:
-		HRESOURCE			m_rhNextResHandle;
+		RHANDLE			m_rhNextResHandle;
 		size_t			m_nCurrentUsedMemory;
 		size_t			m_nMaximumMemory;
 		bool			m_bResourceReserved;
