@@ -16,7 +16,8 @@ namespace Sapphire
 		FILE_WRITE = 0x2,
 		FILE_CREATE = 0x4,
 		FILE_EXIST = 0x8,
-		FILE_APPEND = 0x10
+		FILE_APPEND = 0x10,
+		FILE_STRING = 0x20
 	};
 
 	
@@ -60,11 +61,15 @@ namespace Sapphire
 
 		virtual bool Release();
 
+		virtual std::string ReadString(int nCharCount);
+
+
 	private:
 
 		//byte* m_buffer = NULL;
 		std::fstream m_fstream;
 		Path m_filePath;
+		uint m_mode;
 
 	};
 

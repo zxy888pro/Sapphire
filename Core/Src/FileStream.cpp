@@ -3,6 +3,7 @@
 #include "baseException.h"
 #include "charset.h"
 #include <cassert>
+#include <sstream>
 
 namespace Sapphire
 {
@@ -59,14 +60,22 @@ namespace Sapphire
 			iosmode &= ~std::ios_base::in;
 			iosmode &= std::ios_base::app;
 		}
-		iosmode |= std::ios_base::binary;
+		if (mode & FileMode::FILE_STRING)
+		{
+			iosmode &= ~std::ios_base::binary;
+		}
+		else
+		{
+			iosmode |= std::ios_base::binary;
+		}
+		
 		m_fstream.open(filePath.c_str(), iosmode);
 		
 		if (!m_fstream.good())
 		{
 			return false;
 		}
-
+		m_mode = mode;
 		return true;
 	}
 
@@ -80,6 +89,8 @@ namespace Sapphire
 		ulonglong ret = m_fstream.gcount();
 		return ret;
 	}
+
+	 
 
 	bool FileStream::Write(const void* buffer, ulong toWrite)
 	{
@@ -192,6 +203,29 @@ namespace Sapphire
 		m_filePath = "";
 
 		return true;
+	}
+
+
+	std::string FileStream::ReadString(int nCharCount)
+	{
+		std::stringstream ss;
+		if (!IsOpen())
+		{
+			throw FileStreamException(FileStreamException::FSErrorCode::FSError_FileNotExist);
+		}
+		if (!(m_mode & FileMode::FILE_STRING))
+		{
+			throw FileStreamException("coundn't Read string! current openmode is Binary!", FileStreamException::FSErrorCode::FSErrorCode_OpenModeError);
+		}
+
+		char ch;
+		int iCount = 0;
+		while (EOF != (ch = m_fstream.get()) && iCount < nCharCount)
+		{
+			ss << ch;
+			++iCount;
+		}
+		return ss.str();
 	}
 
 }

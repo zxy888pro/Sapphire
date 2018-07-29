@@ -8,6 +8,8 @@
 #include "afxdialogex.h"
 #include "stringHelper.h"
 #include "logUtil.h"
+#include "Graphics.h"
+#include "Image.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -104,6 +106,10 @@ BOOL CResInfoGeneratorDlg::OnInitDialog()
 	using namespace Sapphire;
 	LogUtil::getInstancePtr()->Init("log.txt");
 	LogUtil::LogMsgLn("ResInfoGenerator Init");
+	ImageMgr* imgMgr = new ImageMgr();
+	
+
+	delete imgMgr;
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 

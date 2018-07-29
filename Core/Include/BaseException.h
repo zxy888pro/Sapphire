@@ -25,6 +25,7 @@ namespace Sapphire
 		{
 			FSError_FileNotExist,
 			FSErrorCode_OpenFileError,
+			FSErrorCode_OpenModeError,
 			FSError_UnknownError
 
 		};

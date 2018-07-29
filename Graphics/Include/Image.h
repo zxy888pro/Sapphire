@@ -18,6 +18,8 @@ namespace Sapphire
 		ImageType_Unknown
 	};
 
+	
+
 	class Image
 	{
 	public:
@@ -48,7 +50,7 @@ namespace Sapphire
 
 		int getWidth() const { return m_nWidth; }
 
-		virtual byte* getData() const
+		virtual LPRGBADATA getData() const
 		{
 			return m_pbData;
 		}
@@ -80,7 +82,7 @@ namespace Sapphire
 		int m_nChannels;
 		ulonglong    m_ullDataSize;
 		uint		 m_uRowSize;
-		byte*	     m_pbData;
+		LPRGBADATA	     m_pbData;
 		ImageType    m_imgType;
 		int          m_nMipmapNum;
 		MipmapArray  m_mipmaps;
@@ -96,9 +98,11 @@ namespace Sapphire
 	//¶¨ÒåImage¾ä±ú
 	typedef Handle <Image> HIMAGE;
 
-	class SAPPHIRE_GRAPHICS_CLASS ImageMgr
+
+	class ImageMgr
 	{
 	public:
+
 
 		ImageMgr();
 		virtual ~ImageMgr();
@@ -121,16 +125,20 @@ namespace Sapphire
 		{
 			return (m_Images.Dereference(himg)->getHeight());
 		}
+		uint GetNumChannels(HIMAGE himg) const
+		{
+			return (m_Images.Dereference(himg)->getChannels());
+		}
 		ulonglong GetImageSize(HIMAGE himg) const
 		{
 			return (m_Images.Dereference(himg)->getDataSize());
 		}
 
-
-		/*OsHandle GetTexture(HIMAGE himg, unsigned int mip = 0) const
+		LPRGBADATA  GetTexture(HIMAGE himg, uint mip = 0) const
 		{
-		return (m_Textures.Dereference(himg)->GetOsHandle(mip));
-		}*/
+			return m_Images.Dereference(himg)->getMipmap(mip)->getData();
+		}
+		 
 
 	private:
 

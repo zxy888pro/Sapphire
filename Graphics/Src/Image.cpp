@@ -22,6 +22,10 @@ Sapphire::ImageMgr::~ImageMgr()
 
 Sapphire::HIMAGE Sapphire::ImageMgr::LoadImage(const char* name)
 {
+	/*std::map<std::string, HIMAGE> _imgMap;
+	HIMAGE h;
+	ImageMapInsertRc _rc = _imgMap.insert(std::make_pair(name, h));*/
+
 	ImageMapInsertRc rc = m_imageMap.insert(std::make_pair(name, HIMAGE()));
 	if (rc.second)
 	{
@@ -88,7 +92,8 @@ bool Sapphire::Image::Load(const std::string& imagePath)
 	{
 		m_imgType = ImageType::ImageType_Tga;
 	}
-
+	m_mipmaps.push_back(this);
+	++m_nMipmapNum;
 	return true;
 }
 
@@ -99,7 +104,7 @@ void Sapphire::Image::Unload(void)
 	{
 		stbi_image_free(m_pbData);
 	}
-	for (int i = 0; i < m_mipmaps.size(); ++i)
+	for (int i = 1; i < m_mipmaps.size(); ++i)
 	{
 		m_mipmaps[i]->Unload();
 	}
@@ -120,7 +125,7 @@ void Sapphire::Image::SetRAWData(void* dataPtr, int width, int height, int nChan
 	{
 		LogUtil::LogMsgLn("SetRAWData Error! dataPtr is NULL");
 	}
-	m_pbData = (byte*)dataPtr;
+	m_pbData = (LPRGBADATA)dataPtr;
 	m_nWidth = width;
 	m_nHeight = height;
 	m_imgType = ImageType::ImageType_RAW;
@@ -155,7 +160,7 @@ void Sapphire::Image::GenerateMipmaps()
 		int ret = stbir_resize_uint8(m_pbData, parentWidth, parentHeight, 0, pbDate, subWidth, subHeight, 0, m_nChannels);
 		imgPtr->SetRAWData(pbDate, subWidth, subHeight, m_nChannels);
 		m_mipmaps.push_back(imgPtr);
+		++m_nMipmapNum;
 	}
-	m_nMipmapNum = nMipmap;
 
 }
