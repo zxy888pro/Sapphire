@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ResInfoGenerator", "ResInfo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestClient", "TestClient\TestClient.vcxproj", "{828271DA-AF45-477E-92EE-E8351FC3894D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestClient2", "TestClient2\TestClient2.vcxproj", "{04E9CD96-6FCF-48BA-B9FF-F1E636F663FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -33,6 +35,10 @@ Global
 		{828271DA-AF45-477E-92EE-E8351FC3894D}.Debug|Win32.Build.0 = Debug|Win32
 		{828271DA-AF45-477E-92EE-E8351FC3894D}.Release|Win32.ActiveCfg = Release|Win32
 		{828271DA-AF45-477E-92EE-E8351FC3894D}.Release|Win32.Build.0 = Release|Win32
+		{04E9CD96-6FCF-48BA-B9FF-F1E636F663FD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{04E9CD96-6FCF-48BA-B9FF-F1E636F663FD}.Debug|Win32.Build.0 = Debug|Win32
+		{04E9CD96-6FCF-48BA-B9FF-F1E636F663FD}.Release|Win32.ActiveCfg = Release|Win32
+		{04E9CD96-6FCF-48BA-B9FF-F1E636F663FD}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

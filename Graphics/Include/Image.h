@@ -2,6 +2,7 @@
 #define __IMAGE__H__
 
 #include "Graphics.h"
+#include "singleton.h"
 #include "handle.h"
 #include <cassert>
 #include <map>
@@ -99,7 +100,7 @@ namespace Sapphire
 	typedef Handle <Image> HIMAGE;
 
 
-	class ImageMgr
+	class ImageMgr : public Singleton<ImageMgr>
 	{
 	public:
 
@@ -110,6 +111,8 @@ namespace Sapphire
 		typedef HandleMgr <Image, HIMAGE> HImageMgr;	
 
 		HIMAGE   LoadImage(const char* name);
+
+		HIMAGE   GetImage(const char* name);
 
 		void     DeleteTexture(HIMAGE himg);
 

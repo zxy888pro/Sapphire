@@ -40,6 +40,16 @@ Sapphire::HIMAGE Sapphire::ImageMgr::LoadImage(const char* name)
 	return (rc.first->second);
 }
 
+Sapphire::HIMAGE Sapphire::ImageMgr::GetImage(const char* name)
+{
+    ImageMap::iterator it = m_imageMap.find(name);
+	if (it != m_imageMap.end())
+	{
+		return it->second;
+	}
+	return LoadImage(name);
+}
+
 void Sapphire::ImageMgr::DeleteTexture(HIMAGE himg)
 {
 	Image* pImg = m_Images.Dereference(himg);
