@@ -30,9 +30,15 @@
     <ClInclude Include="Src\stb_image_write.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\FontFace.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Font.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

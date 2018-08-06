@@ -1,6 +1,7 @@
 #include "GLUITest.h"
 #include <glm.hpp>
 #include <gtx/transform.hpp>
+#include <freetype/ftoutln.h>
 
 namespace Sapphire
 {
@@ -29,22 +30,29 @@ namespace Sapphire
 		//设定字体大小,将宽度值设为0表示我们要从字体面通过给定的高度中动态计算出字形的宽度
 		FT_Set_Pixel_Sizes(face, 0, 48);
 
-		//加载字符, FT_LOAD_RENDER, face->glyph->bitmap
-		if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
+		//加载字符, FT_LOAD_RENDER, face->glyph->bitmap  FT_LOAD_RENDER 加载时渲染
+		if (FT_Load_Char(face, 'X', FT_LOAD_RENDER ))
 			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
 		
 
-		
+	
+
 		
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); //禁用字节对齐限制
 		for (GLubyte c = 0; c < 128; c++)
 		{
 			// 加载字符的字形 
-			if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+			//if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+			if (FT_Load_Char(face, c, FT_LOAD_NO_BITMAP))
 			{
 				std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
 				continue;
 			}
+			FT_Outline* pOutline = &face->glyph->outline;
+			FT_Pos strength = 15;
+			FT_Outline_Embolden(pOutline, strength);
+			//FT_Render_Mode
+			FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);//FT_RENDER_MODE_MONO);
 			// 生成纹理
 			GLuint texture;
 			glGenTextures(1, &texture);
