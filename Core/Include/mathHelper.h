@@ -5,6 +5,23 @@
 
 namespace Sapphire
 {
+
+	//32位和64位架构
+#define SAPPHIRE_ARCHITECTURE_32 1
+#define SAPPHIRE_ARCHITECTURE_64 2
+	/* 判断架构32/64位 */
+#if defined(__x86_64__) || defined(_M_X64) || defined(__powerpc64__) || defined(__alpha__) || defined(__ia64__) || defined(__s390__) || defined(__s390x__)
+#   define SAPPHIRE_ARCH_TYPE SAPPHIRE_ARCHITECTURE_64
+#else
+#   define SAPPHIRE_ARCH_TYPE SAPPHIRE_ARCHITECTURE_32
+#endif
+#define SAPPHIRE_COMPILER_MSVC 1
+
+
+#if defined(_MSC_VER)
+#define SAPPHIRE_COMPILER SAPPHIRE_COMPILER_MSVC
+#define SAPPHIRE_COMP_VER _MSC_VER
+
 	//////////////////////////数学常量//////////////////////////////////
 	//PI相关
 	/**
@@ -380,6 +397,120 @@ namespace Sapphire
 		static unsigned randomSeed;
 	};
 
+
+	/*
+	欧几里德算法：辗转求余
+	原理： gcd(a,b)=gcd(b,a mod b)
+	当b为0时，两数的最大公约数即为a
+	getchar()会接受前一个scanf的回车符
+	*/
+	static unsigned int Gcd(unsigned int M, unsigned int N)
+	{
+		unsigned int Rem;
+		while (N > 0)
+		{
+			Rem = M % N;
+			M = N;
+			N = Rem;
+		}
+		return M;
+	}
+
+
+	/*
+	对于不完全为 0 的非负整数 a，b，gcd（a，b）表示 a，b 的最大公约数，必然
+	存在整数对 x，y ，使得 gcd（a，b）=ax+by。
+	*/
+	static int gcd(int a, int b, int &x, int &y) {
+		if (b == 0) {
+			x = 1, y = 0;
+			return a;
+		}
+		int q = gcd(b, a%b, y, x);
+		y -= a / b*x;
+		return q;
+	}
+
+
+	// 返回一个随机数
+	static float asm_rand()
+	{
+
+#if  SAPPHIRE_COMPILER == SAPPHIRE_COMPILER_MSVC &&  SAPPHIRE_ARCH_TYPE == SAPPHIRE_ARCHITECTURE_32
+#if SAPPHIRE_COMP_VER >= 1300
+
+		static unsigned __int64 q = time(NULL);
+
+		_asm {
+			movq mm0, q      //将64位int变量q值移动到mmx寄存器mm0中
+
+				//操作码 0F 70 /r ib
+				//PSHUFW mm1, mm2/m64, imm8
+				//按照 imm8 中的编码对 mm2/m64 中的字执行乱序处理，结果存储到 mm1。
+				pshufw mm1, mm0, 0x1E   //压缩字乱序  
+				paddd mm0, mm1      //环绕打包双字节整数加法  按双字对齐,普通相加.与add指令类似.
+
+				// 在移动整形内存地址并且释放MMX寄存器
+				movq q, mm0
+				emms   //浮点寄存器复位
+		}
+
+		return float(q);
+#endif
+#else
+		// 不支持PSHUFW
+		return float(rand());
+#endif
+#else
+		// GCC 
+
+		return float(rand());
+
+#endif
+	}
+
+	static int	Q_rand(int *seed) {
+		*seed = (69069 * *seed + 1);
+		return *seed;
+	}
+
+	static float Q_random(int *seed) {
+		return (Q_rand(seed) & 0xffff) / (float)0x10000;
+	}
+
+	
+
+	static float Q_crandom(int *seed) {
+		return 2.0 * (Q_random(seed) - 0.5);
+	}
+
+	//解一元二次方程
+	inline static bool quadratic_formula
+		(
+		const double a,
+		const double b,
+		const double c,
+		double& r1,		 
+		double& r2		 
+		)
+	{
+		const double q = b*b - 4 * a*c;
+
+		if (q >= 0)
+		{
+			const double sq = sqrt(q);
+			const double d = 1 / (2 * a);
+
+			r1 = (-b + sq) * d;
+			r2 = (-b - sq) * d;
+
+			return true; 
+		}
+		else
+		{
+			return false; 
+		}
+	}
 
 }
 
