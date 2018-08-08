@@ -514,6 +514,6 @@ namespace Sapphire
 
 }
 
-unsigned Sapphire::MathHelper::randomSeed = 1;
+//unsigned Sapphire::MathHelper::randomSeed = 1;
 
 #endif

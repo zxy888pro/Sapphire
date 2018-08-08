@@ -7,8 +7,8 @@ namespace Sapphire
 
 	bool Is64bitSystem();
 
-	inline SAPPHIRE_API void Mem_Set_WORD(void *dest, ushort data, int count);
-	inline SAPPHIRE_API void Mem_Set_QUAD(void *dest, uint   data, int count);
+	 SAPPHIRE_API void Mem_Set_WORD(void *dest, ushort data, int count);
+	 SAPPHIRE_API void Mem_Set_QUAD(void *dest, uint   data, int count);
 
 }
 
