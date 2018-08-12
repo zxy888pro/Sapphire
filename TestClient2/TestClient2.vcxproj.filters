@@ -30,6 +30,9 @@
     <ClInclude Include="GLUITest.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="SDFTest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -48,6 +51,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="GLUITest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SDFTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

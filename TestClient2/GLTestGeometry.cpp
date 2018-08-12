@@ -99,7 +99,7 @@ void Sapphire::GLTestGeometry::Init()
 	 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	 HIMAGE himg = ImageMgr::GetSingletonPtr()->GetImage("1.tga");
+	 HIMAGE himg = ImageMgr::GetSingletonPtr()->GetImage("1.jpg");
 	 if (!himg.IsNull())
 	 {
 		LPRGBADATA pImgData = ImageMgr::GetSingletonPtr()->GetTexture(himg);

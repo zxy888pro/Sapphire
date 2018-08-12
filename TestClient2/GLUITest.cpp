@@ -1,4 +1,4 @@
-#include "GLUITest.h"
+ï»¿#include "GLUITest.h"
 #include <glm.hpp>
 #include <gtx/transform.hpp>
 #include <freetype/ftoutln.h>
@@ -15,6 +15,7 @@
 #else
 #error "Couldn't determine the endianness!"
 #endif
+
 
 namespace Sapphire
 {
@@ -143,129 +144,51 @@ namespace Sapphire
 
 	}
 
-	void GLUITest::Init()
+	void GLUITest::Init(FontRenderMode mode, std::string fontPath, int width, int height)
 	{
-
-		//³õÊ¼»¯freetype¿â
+		renderMode = mode;
+		m_uWidth = width;
+		m_uHeight = height;
+		//åˆå§‹åŒ–freetypeåº“
 		if (FT_Init_FreeType(&ft));
 
-		//¶ÁÈ¡Ò»¸ö×ÖÌå
-		if (FT_New_Face(ft, "fonts/arial.ttf", 0, &face));
-		//Éè¶¨×ÖÌå´óĞ¡,½«¿í¶ÈÖµÉèÎª0±íÊ¾ÎÒÃÇÒª´Ó×ÖÌåÃæÍ¨¹ı¸ø¶¨µÄ¸ß¶ÈÖĞ¶¯Ì¬¼ÆËã³ö×ÖĞÎµÄ¿í¶È
-		FT_Set_Pixel_Sizes(face, 0, 48);
-
-		//¼ÓÔØ×Ö·û, FT_LOAD_RENDER, face->glyph->bitmap  FT_LOAD_RENDER ¼ÓÔØÊ±äÖÈ¾
-		/*if (FT_Load_Char(face, 'X', FT_LOAD_RENDER ))
-			LogUtil::LogMsgLn("ERROR::FREETYTPE: Failed to load Glyph");*/
-
-
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); //½ûÓÃ×Ö½Ú¶ÔÆëÏŞÖÆ
-		for (GLubyte c = 0; c < 128; c++)
-		{
-			byte* pixelBuffer = new byte[64 * 64 * 4];
-			memset(pixelBuffer, 0, 64 * 64 * 4);
-			// ¼ÓÔØ×Ö·ûµÄ×ÖĞÎ 
-			if (FT_Load_Char(face, c, FT_LOAD_RENDER | FT_LOAD_MONOCHROME))
-				//if (FT_Load_Char(face, c, FT_LOAD_NO_BITMAP))
-			{
-				LogUtil::LogMsgLn("ERROR::FREETYTPE: Failed to load Glyph");
-				continue;
-			}
-			//FT_Outline* pOutline = &face->glyph->outline;
-			//FT_Pos strength = 15;
-			//FT_Outline_Embolden(pOutline, strength);
-			//FT_Render_Mode
-			//FT_Render_Glyph(face->glyph, FT_RENDER_MODE_MONO);//FT_RENDER_MODE_MONO/FT_RENDER_MODE_NORMAL);
-
-			for (int i = 0; i < face->glyph->bitmap.rows; i++)
-			{
-				byte* src = face->glyph->bitmap.buffer + i*face->glyph->bitmap.pitch;
-				uint pitch = i * 64;// face->glyph->bitmap.rows;
-				for (int j = 0; j < face->glyph->bitmap.width; j++)
-				{
-					uint color = (src[j / 8] & (0x80 >> (j & 7))) ? 0xFFFFFF : 0;
-					pixelBuffer[pitch + j] = color;
-				}
-			}
-
-			std::string fileName = StringFormatA("%d_char.tga", c);
-			//WriteTGA(fileName, (Pixel32*)pixelBuffer, 64, 64);
-
-			// Éú³ÉÎÆÀí
-			GLuint texture;
-			glGenTextures(1, &texture);
-			glBindTexture(GL_TEXTURE_2D, texture);
-			/*glTexImage2D(
-				GL_TEXTURE_2D,
-				0,
-				GL_RED,
-				face->glyph->bitmap.width,
-				face->glyph->bitmap.rows,
-				0,
-				GL_RED,
-				GL_UNSIGNED_BYTE,
-				face->glyph->bitmap.buffer
-				);*/
-			glTexImage2D(
-				GL_TEXTURE_2D,
-				0,
-				GL_RGBA,
-				64,
-				64,
-				0,
-				GL_RGBA,
-				GL_UNSIGNED_BYTE,
-				pixelBuffer
-				);
-			// ÉèÖÃÎÆÀíÑ¡Ïî
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			// ´¢´æ×Ö·û¹©Ö®ºóÊ¹ÓÃ
-			Character character = {
-				texture,  //ÎÆÀíID´æµ½CharacterÖĞ
-				glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-				glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-				face->glyph->advance.x
-			};
-			delete[] pixelBuffer;
-			CharactersMap.insert(std::pair<GLchar, Character>(c, character));
-		}
-
-		glGenVertexArrays(1, &VAO);
-		glGenBuffers(1, &VBO);
-		glBindVertexArray(VAO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		//¶¯Ì¬¸üĞÂ
-		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
-
-		FT_Done_Face(face);
-		FT_Done_FreeType(ft);
+		//è¯»å–ä¸€ä¸ªå­—ä½“
+		if (FT_New_Face(ft, fontPath.c_str(), 0, &face));
+		//è®¾å®šå­—ä½“å¤§å°,å°†å®½åº¦å€¼è®¾ä¸º0è¡¨ç¤ºæˆ‘ä»¬è¦ä»å­—ä½“é¢é€šè¿‡ç»™å®šçš„é«˜åº¦ä¸­åŠ¨æ€è®¡ç®—å‡ºå­—å½¢çš„å®½åº¦
+		FT_Set_Pixel_Sizes(face, width, height);
 
 	}
 
 	void GLUITest::Clean()
 	{
-
+		std::map<GLchar, Character>::iterator it = CharactersMap.begin();
+		while (it != CharactersMap.end())
+		{
+			Character c = it->second;
+			glDeleteTextures(1, &(c.TextureID));
+			GLenum err = glGetError();
+			if (err != GL_NO_ERROR)
+			{
+				LogUtil::LogMsgLn(StringFormatA("Clean Error! delete character texture failed! errorCode = %d", err));
+			}
+			it++;
+		}
 	}
 
 	void GLUITest::Render()
 	{
 
-
-
-
 	}
 
 	void GLUITest::RenderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
 	{
+		std::string::const_iterator it;
+		for (it = text.begin(); it != text.end(); it++)
+		{
+			Rasterzation(*it);
+		}
 		backupState();
-		// ¼¤»î¶ÔÓ¦µÄäÖÈ¾×´Ì¬
+		// æ¿€æ´»å¯¹åº”çš„æ¸²æŸ“çŠ¶æ€
 		m_pShader->Use();
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
@@ -277,18 +200,20 @@ namespace Sapphire
 		glActiveTexture(GL_TEXTURE0);
 		glBindVertexArray(VAO);
 
-		// ±éÀúÎÄ±¾ÖĞËùÓĞµÄ×Ö·û
+		// éå†æ–‡æœ¬ä¸­æ‰€æœ‰çš„å­—ç¬¦
 		std::string::const_iterator c;
 		for (c = text.begin(); c != text.end(); c++)
 		{
+			if (CharactersMap.find(*c) == CharactersMap.end())
+				continue;
 			Character ch = CharactersMap[*c];
-			//Ò»Ğ©×Ö·û£¨Èç¡¯p¡¯»ò¡¯q¡¯£©ĞèÒª±»äÖÈ¾µ½»ù×¼ÏßÒÔÏÂ£¬Òò´Ë×ÖĞÎËÄ±ßĞÎÒ²Ó¦¸Ã±»°Ú·ÅÔÚRenderTextµÄyÖµÒÔÏÂ¡£yposµÄÆ«ÒÆÁ¿¿ÉÒÔ´Ó×ÖĞÎµÄ¶ÈÁ¿ÖµÖĞµÃ³ö£º
+			//ä¸€äº›å­—ç¬¦ï¼ˆå¦‚â€™pâ€™æˆ–â€™qâ€™ï¼‰éœ€è¦è¢«æ¸²æŸ“åˆ°åŸºå‡†çº¿ä»¥ä¸‹ï¼Œå› æ­¤å­—å½¢å››è¾¹å½¢ä¹Ÿåº”è¯¥è¢«æ‘†æ”¾åœ¨RenderTextçš„yå€¼ä»¥ä¸‹ã€‚yposçš„åç§»é‡å¯ä»¥ä»å­—å½¢çš„åº¦é‡å€¼ä¸­å¾—å‡ºï¼š
 			GLfloat xpos = x + ch.Bearing.x * scale;
 			GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
 
 			GLfloat w = ch.Size.x * scale;
 			GLfloat h = ch.Size.y * scale;
-			// ¶ÔÃ¿¸ö×Ö·û¸üĞÂVBO
+			// å¯¹æ¯ä¸ªå­—ç¬¦æ›´æ–°VBO
 			GLfloat vertices[6][4] = {
 				{ xpos, ypos + h, 0.0, 0.0 },
 				{ xpos, ypos, 0.0, 1.0 },
@@ -298,16 +223,16 @@ namespace Sapphire
 				{ xpos + w, ypos, 1.0, 1.0 },
 				{ xpos + w, ypos + h, 1.0, 0.0 }
 			};
-			// ÔÚËÄ±ßĞÎÉÏ»æÖÆ×ÖĞÎÎÆÀí
+			// åœ¨å››è¾¹å½¢ä¸Šç»˜åˆ¶å­—å½¢çº¹ç†
 			glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-			// ¸üĞÂVBOÄÚ´æµÄÄÚÈİ
+			// æ›´æ–°VBOå†…å­˜çš„å†…å®¹
 			glBindBuffer(GL_ARRAY_BUFFER, VBO);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			// »æÖÆËÄ±ßĞÎ
+			// ç»˜åˆ¶å››è¾¹å½¢
 			glDrawArrays(GL_TRIANGLES, 0, 6);
-			// ¸üĞÂÎ»ÖÃµ½ÏÂÒ»¸ö×ÖĞÎµÄÔ­µã£¬×¢Òâµ¥Î»ÊÇ1/64ÏñËØ
-			x += (ch.Advance >> 6) * scale; // Î»Æ«ÒÆ6¸öµ¥Î»À´»ñÈ¡µ¥Î»ÎªÏñËØµÄÖµ (2^6 = 64)
+			// æ›´æ–°ä½ç½®åˆ°ä¸‹ä¸€ä¸ªå­—å½¢çš„åŸç‚¹ï¼Œæ³¨æ„å•ä½æ˜¯1/64åƒç´ 
+			x += (ch.Advance >> 6) * scale; // ä½åç§»6ä¸ªå•ä½æ¥è·å–å•ä½ä¸ºåƒç´ çš„å€¼ (2^6 = 64)
 		}
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -319,9 +244,9 @@ namespace Sapphire
 
 	void GLUITest::Create(std::string fontPath, int width, int height)
 	{
-		//¶ÁÈ¡Ò»¸ö×ÖÌå
+		//è¯»å–ä¸€ä¸ªå­—ä½“
 		if (FT_New_Face(ft, fontPath.c_str(), 0, &face));
-		//Éè¶¨×ÖÌå´óĞ¡,½«¿í¶ÈÖµÉèÎª0±íÊ¾ÎÒÃÇÒª´Ó×ÖÌåÃæÍ¨¹ı¸ø¶¨µÄ¸ß¶ÈÖĞ¶¯Ì¬¼ÆËã³ö×ÖĞÎµÄ¿í¶È
+		//è®¾å®šå­—ä½“å¤§å°,å°†å®½åº¦å€¼è®¾ä¸º0è¡¨ç¤ºæˆ‘ä»¬è¦ä»å­—ä½“é¢é€šè¿‡ç»™å®šçš„é«˜åº¦ä¸­åŠ¨æ€è®¡ç®—å‡ºå­—å½¢çš„å®½åº¦
 		FT_Set_Pixel_Sizes(face, width, height);
 	}
 
@@ -335,13 +260,13 @@ namespace Sapphire
 
 	void GLUITest::RenderSpans(FT_Library &library, FT_Outline * const outline, Spans *spans)
 	{
-		//ÉèÖÃ¹âÕ¤»¯²ÎÊı
+		//è®¾ç½®å…‰æ …åŒ–å‚æ•°
 		FT_Raster_Params params;
 		memset(&params, 0, sizeof(params));
 		params.flags = FT_RASTER_FLAG_AA | FT_RASTER_FLAG_DIRECT;
 		params.gray_spans = RasterCallback;
 		params.user = spans;
-		// ÔÚ»Øµ÷º¯ÊıRasterCallbackÖĞÊµÏÖÏñËØ»¯µ½Î»Í¼ÖĞ
+		// åœ¨å›è°ƒå‡½æ•°RasterCallbackä¸­å®ç°åƒç´ åŒ–åˆ°ä½å›¾ä¸­
 		FT_Outline_Render(library, outline, &params);
 	}
 
@@ -354,6 +279,8 @@ namespace Sapphire
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//glGetIntegerv(GL_UNPACK_ALIGNMENT, &nUnpackAlign);
+		//glPixelStorei(GL_UNPACK_ALIGNMENT, 1); //ç¦ç”¨å­—èŠ‚å¯¹é½é™åˆ¶
 	}
 
 	void GLUITest::RestoreState()
@@ -374,59 +301,90 @@ namespace Sapphire
 		{
 			glDisable(GL_BLEND);
 		}
+		//glPixelStorei(GL_UNPACK_ALIGNMENT, nUnpackAlign); //ç¦ç”¨å­—èŠ‚å¯¹é½é™åˆ¶
 	}
 
-	void GLUITest::RasterzationOutline(uint code)
+	void GLUITest::Rasterzation(uint code)
 	{
-		//ÉèÖÃ¼Ó´Ö
-		FT_Outline* pOutline = &face->glyph->outline;
-		FT_Pos strength = 30;
-		FT_Outline_Embolden(pOutline, strength);
 
-		//×ÖÄ£µÄÉ¨ÃèÏßĞÅÏ¢
-		Spans spans;
-		//ÏÈäÖÈ¾×ÖÄ£É¨ÃèÏß
-		RenderSpans(ft, &face->glyph->outline, &spans);
-		//ÂÖÀªµÄÉ¨ÃèÏßĞÅÏ¢
-		Spans outlineSpans;
-		//´´½¨Ò»¸ö±Ê´¥
-		FT_Stroker stroker;
-		if (0 != FT_Stroker_New(ft, &stroker))
+		if (CharactersMap.find((GLchar)code) == CharactersMap.end())
 		{
-			FT_Stroker_Set(stroker,
-				(int)(3 * 64),
-				FT_STROKER_LINECAP_ROUND,
-				FT_STROKER_LINEJOIN_ROUND,
-				0);
-		}
-		//×ÖÄ£
-		FT_Glyph glyph;
-		//¸´ÖÆÒ»·İ×ÖÄ£
-		if (FT_Get_Glyph(face->glyph, &glyph) == 0)
-		{
-			//ÉèÖÃ×ÖÄ£Ãè±ßäÖÈ¾
-			FT_Glyph_StrokeBorder(&glyph, stroker, 0, 1);
-			//ÅĞ¶Ï×ÖÄ£¸ñÊ½ÊÇ·ñÊÇÃè±ß
-			if (glyph->format == FT_GLYPH_FORMAT_OUTLINE)
+			switch (renderMode)
 			{
-				//äÖÈ¾ÂÖÀªµÄSpanµ½SpanÁĞ±íÖĞ
-				FT_Outline *o =
-					&reinterpret_cast<FT_OutlineGlyph>(glyph)->outline;
-				RenderSpans(ft, o, &outlineSpans);
+			case Sapphire::FONT_RENDER_MODE_NORMAL:
+				RasterzationNormal(code);
+				break;
+			case Sapphire::FONT_RENDER_MODE_MONO:
+				RasterzationMono(code);
+				break;
+			case Sapphire::FONT_RENDER_MODE_OUTLINE:
+				RasterzationOutline(code);
+				break;
+			default:
+				RasterzationNormal(code);
+				break;
 			}
+
 		}
-		// ÇåÀí
+	}
+
+	bool GLUITest::RasterzationOutline(uint code)
+	{
+	
+		FT_Set_Char_Size(face, m_uWidth << 6, m_uWidth << 6, 90, 90);
+		//FT_UInt gindex = FT_Get_Char_Index(face, code);
+		int outlineWidth = 1;
+		//åˆ›å»ºä¸€ä¸ªç¬”è§¦
+		FT_Stroker stroker;
+		if (FT_Load_Char(face, code, FT_LOAD_NO_BITMAP))
+		{
+			LogUtil::LogMsgLn("FT_Load_Char Failed!");
+			return false;
+		}
+		//å­—æ¨¡çš„æ‰«æçº¿ä¿¡æ¯
+		Spans spans;
+		//å…ˆæ¸²æŸ“å­—æ¨¡æ‰«æçº¿
+		RenderSpans(ft, &face->glyph->outline, &spans);
+		
+		//è½®å»“çš„æ‰«æçº¿ä¿¡æ¯
+		Spans outlineSpans;
+		FT_Stroker_New(ft, &stroker);
+		FT_Stroker_Set(stroker,
+		  (int)(outlineWidth * 64),
+		  FT_STROKER_LINECAP_ROUND,
+		  FT_STROKER_LINEJOIN_ROUND,
+		  0);
+		
+		//å­—æ¨¡
+		FT_Glyph glyph;
+		//å¤åˆ¶ä¸€ä»½å­—æ¨¡
+		if (FT_Get_Glyph(face->glyph, &glyph) != 0)
+		{
+			LogUtil::LogMsgLn("load char glyph failed!");
+			return false;
+		}
+		//è®¾ç½®å­—æ¨¡æè¾¹æ¸²æŸ“
+		FT_Glyph_StrokeBorder(&glyph, stroker, 0, 1);
+		//åˆ¤æ–­å­—æ¨¡æ ¼å¼æ˜¯å¦æ˜¯æè¾¹
+		if (glyph->format == FT_GLYPH_FORMAT_OUTLINE)
+		{
+			//æ¸²æŸ“è½®å»“çš„Spanåˆ°Spanåˆ—è¡¨ä¸­
+			FT_Outline *o =
+				&reinterpret_cast<FT_OutlineGlyph>(glyph)->outline;
+			RenderSpans(ft, o, &outlineSpans);
+		}
+		// æ¸…ç†
 		FT_Stroker_Done(stroker);
 		FT_Done_Glyph(glyph);
 
 		GLuint texture;
-		//ÂÖÀªÑÕÉ«
+		//è½®å»“é¢œè‰²
 		const Pixel32 outlineCol(0xff, 0xff, 0x00, 0x00);
 		const Pixel32 fontCol(0xff, 0x00, 0xff, 0x00);
-		// ÒÑ¾­ÊÕ¼¯µ½ËùÓĞĞèÒªĞÅÏ¢
+		// å·²ç»æ”¶é›†åˆ°æ‰€æœ‰éœ€è¦ä¿¡æ¯
 		if (!spans.empty())
 		{
-			//¹À¼Æ³öspanÁĞ±íµÄ±ß½ç·¶Î§
+			//ä¼°è®¡å‡ºspanåˆ—è¡¨çš„è¾¹ç•ŒèŒƒå›´
 			Rect rect(spans.front().x,
 				spans.front().y,
 				spans.front().x,
@@ -445,26 +403,25 @@ namespace Sapphire
 			}
 
 #if 1
-			//ÕâĞ©ÓÃ²»µ½£¬³ı·ÇÄãÒª»æÖÆ¶àÓÚÒ»¸öµÄ×ÖÄ£0
+			//è¿™äº›ç”¨ä¸åˆ°ï¼Œé™¤éä½ è¦ç»˜åˆ¶å¤šäºä¸€ä¸ªçš„å­—æ¨¡0
 			/*float bearingX = face->glyph->metrics.horiBearingX >> 6;
 			float bearingY = face->glyph->metrics.horiBearingY >> 6;
 			float advance = face->glyph->advance.x >>6;*/
 			float bearingX = face->glyph->metrics.horiBearingX >> 6;
 			float bearingY = face->glyph->metrics.horiBearingY >> 6;
-			float advance = face->glyph->advance.x;
-			//advance = 25;
+			float advance = face->glyph->advance.x >>6;
 #endif
 
-			// È¡µÃÍ¼ÏñµÄ¿í¸ß
+			// å–å¾—å›¾åƒçš„å®½é«˜
 			int imgWidth = rect.Width(),
 				imgHeight = rect.Height(),
 				imgSize = imgWidth * imgHeight;
-
-			// ·ÖÅäÄÚ´æ»º³åÇø
+			advance = (imgWidth + 4)<<6;
+			// åˆ†é…å†…å­˜ç¼“å†²åŒº
 			Pixel32 *pxl = new Pixel32[imgSize];
 			memset(pxl, 0, sizeof(Pixel32) * imgSize);
 
-			// Ñ­»·±ß¿òÉ¨ÃèÏßÊı¾İ»æÖÆËüÃÇµ½Í¼Ïñ»º³åÇøÖĞ
+			// å¾ªç¯è¾¹æ¡†æ‰«æçº¿æ•°æ®ç»˜åˆ¶å®ƒä»¬åˆ°å›¾åƒç¼“å†²åŒºä¸­
 			for (Spans::iterator s = outlineSpans.begin();
 				s != outlineSpans.end(); ++s)
 				for (int w = 0; w < s->width; ++w)
@@ -473,7 +430,7 @@ namespace Sapphire
 					Pixel32(outlineCol.r, outlineCol.g, outlineCol.b,
 					s->coverage);
 
-			// Ñ­»·×ÖÄ£É¨ÃèÏßÊı¾İ»æÖÆËüÃÇµ½Í¼Ïñ»º³åÇøÖĞ
+			// å¾ªç¯å­—æ¨¡æ‰«æçº¿æ•°æ®ç»˜åˆ¶å®ƒä»¬åˆ°å›¾åƒç¼“å†²åŒºä¸­
 			for (Spans::iterator s = spans.begin();
 				s != spans.end(); ++s)
 				for (int w = 0; w < s->width; ++w)
@@ -488,17 +445,19 @@ namespace Sapphire
 					dst.b = (int)(dst.b + ((src.b - dst.b) * src.a) / 255.0f);
 					dst.a = MIN(255, dst.a + src.a);
 				}
-
+			std::string fileName = StringFormatA("char_%d.tga", code);
+			//WriteTGA(fileName, pxl, imgWidth, imgHeight);
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1); //ç¦ç”¨å­—èŠ‚å¯¹é½é™åˆ¶
 			glGenTextures(1, &texture);
 			glBindTexture(GL_TEXTURE_2D, texture);
 			glTexImage2D(
 				GL_TEXTURE_2D,
 				0,
-				GL_RED,
+				GL_RGBA,
 				imgWidth,
 				imgHeight,
 				0,
-				GL_RED,
+				GL_RGBA,
 				GL_UNSIGNED_BYTE,
 				pxl
 				);
@@ -507,28 +466,43 @@ namespace Sapphire
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			Character character = {
-				texture,  //ÎÆÀíID´æµ½CharacterÖĞ
+				texture,  //çº¹ç†IDå­˜åˆ°Characterä¸­
 				glm::ivec2(imgWidth, imgWidth),
 				glm::ivec2(bearingX, bearingY),
 				advance
 			};
-			std::string fileName = StringFormatA("char_%d.tga", code);
+			
 			CharactersMap.insert(std::pair<GLchar, Character>(code, character));
-			//WriteTGA(fileName, pxl, imgWidth, imgHeight);
+			glGenVertexArrays(1, &VAO);
+			glGenBuffers(1, &VBO);
+			glBindVertexArray(VAO);
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			//åŠ¨æ€æ›´æ–°
+			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindVertexArray(0);
 			delete[] pxl;
 		}
-
+		return true;
 	}
 
 	void GLUITest::RasterzationNormal(uint code)
 	{
-
-		if (FT_Load_Char(face, code, FT_LOAD_RENDER | FT_RENDER_MODE_NORMAL))
+		//FT_LOAD_RENDERåŠ è½½å­—ç¬¦æ—¶ç«‹å³æ¸²æŸ“ |FT_RENDER_MODE_NORMAL æŠ—é”¯é½¿æ¨¡å¼
+		if (FT_Load_Char(face, code, FT_LOAD_NO_BITMAP))
 		{
 			LogUtil::LogMsgLn("ERROR::FREETYTPE: Failed to load Glyph");
 			return;
 		}
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); //½ûÓÃ×Ö½Ú¶ÔÆëÏŞÖÆ
+		FT_Outline* pOutline = &face->glyph->outline;
+		FT_Pos strength = 15;
+		FT_Outline_Embolden(pOutline, strength);
+		FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); //ç¦ç”¨å­—èŠ‚å¯¹é½é™åˆ¶
+		// ç”Ÿæˆçº¹ç†
 		GLuint texture;
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
@@ -543,35 +517,36 @@ namespace Sapphire
 			GL_UNSIGNED_BYTE,
 			face->glyph->bitmap.buffer
 			);
-
-		// ÉèÖÃÎÆÀíÑ¡Ïî
+		// è®¾ç½®çº¹ç†é€‰é¡¹
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// ´¢´æ×Ö·û¹©Ö®ºóÊ¹ÓÃ
+		// å‚¨å­˜å­—ç¬¦ä¾›ä¹‹åä½¿ç”¨
 		Character character = {
-			texture,  //ÎÆÀíID´æµ½CharacterÖĞ
+			texture,  //çº¹ç†IDå­˜åˆ°Characterä¸­
 			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
 			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-			face->glyph->advance.x };
+			face->glyph->advance.x
+		};
 		CharactersMap.insert(std::pair<GLchar, Character>(code, character));
+
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		//¶¯Ì¬¸üĞÂ
+		//åŠ¨æ€æ›´æ–°
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 
-
 	}
 
 	void GLUITest::RasterzationMono(uint code)
 	{
+		
 		if (FT_Load_Char(face, code, FT_LOAD_RENDER | FT_LOAD_MONOCHROME))
 		{
 			LogUtil::LogMsgLn("ERROR::FREETYTPE: Failed to load Glyph");
@@ -589,8 +564,9 @@ namespace Sapphire
 				pixelBuffer[pitch + j] = color;
 			}
 		}
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); //½ûÓÃ×Ö½Ú¶ÔÆëÏŞÖÆ
-		// Éú³ÉÎÆÀí
+	
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); //ç¦ç”¨å­—èŠ‚å¯¹é½é™åˆ¶
+		// ç”Ÿæˆçº¹ç†
 		GLuint texture;
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
@@ -605,14 +581,14 @@ namespace Sapphire
 			GL_UNSIGNED_BYTE,
 			pixelBuffer
 			);
-		// ÉèÖÃÎÆÀíÑ¡Ïî
+		// è®¾ç½®çº¹ç†é€‰é¡¹
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// ´¢´æ×Ö·û¹©Ö®ºóÊ¹ÓÃ
+		// å‚¨å­˜å­—ç¬¦ä¾›ä¹‹åä½¿ç”¨
 		Character character = {
-			texture,  //ÎÆÀíID´æµ½CharacterÖĞ
+			texture,  //çº¹ç†IDå­˜åˆ°Characterä¸­
 			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
 			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
 			face->glyph->advance.x
@@ -624,13 +600,12 @@ namespace Sapphire
 		glGenBuffers(1, &VBO);
 		glBindVertexArray(VAO);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		//¶¯Ì¬¸üĞÂ
+		//åŠ¨æ€æ›´æ–°
 		glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
-
 	}
 
 	

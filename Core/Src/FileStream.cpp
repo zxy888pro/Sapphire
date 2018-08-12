@@ -228,4 +228,25 @@ namespace Sapphire
 		return ss.str();
 	}
 
+	std::string FileStream::ReadLine()
+	{
+		std::stringstream ss;
+		if (!IsOpen())
+		{
+			throw FileStreamException(FileStreamException::FSErrorCode::FSError_FileNotExist);
+		}
+		if (!(m_mode & FileMode::FILE_STRING))
+		{
+			throw FileStreamException("coundn't Read string! current openmode is Binary!", FileStreamException::FSErrorCode::FSErrorCode_OpenModeError);
+		}
+		char ch;
+		int iCount = 0;
+		while (EOF != (ch = m_fstream.get()) && ch !='\n')
+		{
+			ss << ch;
+			++iCount;
+		}
+		return ss.str();
+	}
+
 }

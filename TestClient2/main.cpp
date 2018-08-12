@@ -7,12 +7,13 @@
 #include "GLTestGeometry.h"
 #include "Camera.h"
 #include "GLUITest.h"
-
+#include "SDFTest.h"
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 Sapphire::GLTestGeometry* glTestGeo = NULL;
 Sapphire::GLUITest* glUiTest = NULL;
+Sapphire::SDFTest*  sdfTest = NULL;
 Sapphire::Shader* shader = NULL;
 Sapphire::Shader* textShader = NULL;
 
@@ -62,6 +63,10 @@ void Release()
 	if (glUiTest != NULL)
 	{
 		delete glUiTest;
+	}
+	if (sdfTest != NULL)
+	{
+		delete sdfTest;
 	}
 	if (shader != NULL)
 	{
@@ -149,11 +154,12 @@ int main()
 		glUiTest = new Sapphire::GLUITest(textShader);
 	}
 	
-	
+	sdfTest = new Sapphire::SDFTest();
+	sdfTest->init("STXIHEI", 32, 32);
 	
 	glViewport(0, 0, 800, 600);
 	glTestGeo->Init();
-	glUiTest->Init();
+	glUiTest->Init(Sapphire::FontRenderMode::FONT_RENDER_MODE_OUTLINE, "fonts/arial.ttf", 32, 32);
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();
