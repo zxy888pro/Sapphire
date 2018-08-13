@@ -16,6 +16,7 @@ Sapphire::GLUITest* glUiTest = NULL;
 Sapphire::SDFTest*  sdfTest = NULL;
 Sapphire::Shader* shader = NULL;
 Sapphire::Shader* textShader = NULL;
+Sapphire::Shader* sdfShader = NULL;
 
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
@@ -153,13 +154,15 @@ int main()
 	{
 		glUiTest = new Sapphire::GLUITest(textShader);
 	}
-	
-	sdfTest = new Sapphire::SDFTest();
-	sdfTest->init("STXIHEI", 32, 32);
-	
+	sdfShader = new Sapphire::Shader("SDFVs.glsl", "SDFFs.glsl", "");
+	if (shader != NULL)
+	{
+		sdfTest = new Sapphire::SDFTest(sdfShader);
+		sdfTest->init("arial", 32, 32);
+	}
 	glViewport(0, 0, 800, 600);
 	glTestGeo->Init();
-	glUiTest->Init(Sapphire::FontRenderMode::FONT_RENDER_MODE_OUTLINE, "fonts/arial.ttf", 32, 32);
+	glUiTest->Init(Sapphire::FontRenderMode::FONT_RENDER_MODE_NORMAL, "fonts/arial.ttf", 0, 32);
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();
@@ -168,9 +171,9 @@ int main()
 		ProcessInput(window);
 		glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glTestGeo->Render();
-		glUiTest->RenderText("This is sample text", 125.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-		glUiTest->RenderText("(C) LearnOpenGL.com", 220.0f, 210.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
+		//glTestGeo->Render();
+		glUiTest->RenderText("Test FreeType Font", 125.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+		sdfTest->RenderText("Hello World!", 320.0f, 110.0f, 0.05f, glm::vec3(0.3, 0.7f, 0.9f));
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

@@ -228,7 +228,8 @@ namespace Sapphire
 		return ss.str();
 	}
 
-	std::string FileStream::ReadLine()
+
+	bool FileStream::ReadLine(std::string& str)
 	{
 		std::stringstream ss;
 		if (!IsOpen())
@@ -241,12 +242,20 @@ namespace Sapphire
 		}
 		char ch;
 		int iCount = 0;
-		while (EOF != (ch = m_fstream.get()) && ch !='\n')
+		ch = m_fstream.get();
+		//ÒÑµ½´ïÄ©Î²
+		if (ch == EOF)
+		{
+			return false;
+		}
+		while (ch != '\n')
 		{
 			ss << ch;
 			++iCount;
+			ch = m_fstream.get();
 		}
-		return ss.str();
+		str = ss.str();
+		return true;
 	}
 
 }

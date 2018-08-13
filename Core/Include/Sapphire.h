@@ -24,7 +24,7 @@
 #include <map>
 #include <tchar.h>
 #include<time.h>
-
+#include <unordered_map>
 
 #if defined(SAPPHIRE_STATIC_LIB) && defined(SAPPHIRE_LIB)
 #  define SAPPHIRE_CLASS

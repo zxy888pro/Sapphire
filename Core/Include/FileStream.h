@@ -63,7 +63,7 @@ namespace Sapphire
 
 		virtual std::string ReadString(int nCharCount);
 
-		virtual std::string ReadLine();
+		virtual bool ReadLine(std::string& str);
 
 
 	private:
