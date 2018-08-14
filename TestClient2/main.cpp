@@ -109,9 +109,10 @@ void OnMouseScroll(GLFWwindow* window, double xoffset, double yoffset)
 	Sapphire::Camera::GetSingletonPtr()->ProcessMouseScroll(yoffset);
 }
 
+
+
 int main()
 {
-	
 	Init();
 
 	glfwInit();
