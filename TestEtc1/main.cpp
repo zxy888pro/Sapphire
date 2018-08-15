@@ -32,24 +32,35 @@ int main()
 
 	int width;
 	int height;
-	/*int channel;
-	byte* pRGBAData = stbi_load("2.tga", &width, &height, &channel, 0);
+	int channel;
+	/*byte* pRGBAData = stbi_load("55589.jpg", &width, &height, &channel, 0);
 	byte* pRGBData = new byte[width * height * 3];
 	memset(pRGBData, 0, width * height * 3);
 
 	for (int row = 0; row < height; row++)
 	{
-	uint pitch32 = width * row * 4;
+	uint pitch32 = width * row * channel;
 	uint pitch24 = width * row * 3;
 	for (int col = 0; col < width; col++)
 	{
-	byte* pixelSrc = &pRGBAData[pitch32 + col * 4];
+	byte* pixelSrc = &pRGBAData[pitch32 + col * channel];
+	if (channel == 3)
+	{
+	RGB24_Data* pSrc = (RGB24_Data*)pixelSrc;
+	byte* pixelDst = &pRGBData[pitch24 + col * 3];
+	RGB24_Data* pDst = (RGB24_Data*)pixelDst;
+	memcpy(pDst, pSrc, sizeof(RGB24_Data));
+	}
+	else if (channel == 4)
+	{
 	RGBA32_Data* pRGBA = (RGBA32_Data*)pixelSrc;
 	byte* pixelDesc = &pRGBData[pitch24 + col * 3];
 	RGB24_Data* pRGB = (RGB24_Data*)pixelDesc;
 	pRGB->r = pRGBA->r;
 	pRGB->g = pRGBA->g;
 	pRGB->b = pRGBA->b;
+	}
+
 
 	}
 	}
@@ -59,7 +70,7 @@ int main()
 	Sapphire::Path curPath = Sapphire::GetCurrentDirA();
 
 	Sapphire::Path outfile = curPath;
-	outfile = outfile.addTailSlash() + "3.etc";
+	outfile = outfile.addTailSlash() + "55589.etc";
 	byte pkmHeader[ETC_PKM_HEADER_SIZE];
 	memset(pkmHeader, 0, ETC_PKM_HEADER_SIZE);
 
@@ -80,7 +91,7 @@ int main()
 
 	{
 		Sapphire::FileStream fs;
-		if (fs.Open("3.etc", Sapphire::FILE_EXIST | Sapphire::FILE_READ))
+		if (fs.Open("55589.etc", Sapphire::FILE_EXIST | Sapphire::FILE_READ))
 		{
 			uint uLen = fs.GetLength();
 			byte* pData = new byte[uLen];
@@ -92,7 +103,7 @@ int main()
 			height = etc1_pkm_get_height(pData);
 			byte* pRGBData = new byte[width * height * 3];
 			etc1_decode_image((pData + ETC_PKM_HEADER_SIZE), pRGBData, width, height, 3, width * 3);
-			stbi_write_jpg("3.jpg", 400, 90, 3, pRGBData, 0);
+			stbi_write_jpg("55589_2.jpg", width, height, 3, pRGBData, 0);
 			delete[] pRGBData;
 			delete[] pData;
 		}
