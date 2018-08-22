@@ -3,6 +3,12 @@
 
 #include "Sapphire.h"
 
+#ifndef GLEW_STATIC
+#define  GLEW_STATIC
+#endif
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 //SAPPHIRE_WIN
 #ifdef SAPPHIRE_WIN
 #ifdef SAPPHIRE_GRAPHICS_EXPORT
@@ -72,7 +78,9 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #endif
 
-typedef  byte* LPRGBADATA;
+typedef  byte* PRAWIMAGE;
+
+
 
 
 #endif // !__SAPPHIRE_GRAPHICS__H__

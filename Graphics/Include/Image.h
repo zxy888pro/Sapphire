@@ -51,7 +51,8 @@ namespace Sapphire
 
 		int getWidth() const { return m_nWidth; }
 
-		virtual LPRGBADATA getData() const
+		//RAWDATA 统一为4通道RGBA  3通道RGB  2通道GA  1通道G
+		virtual PRAWIMAGE getData() const
 		{
 			return m_pbData;
 		}
@@ -83,16 +84,13 @@ namespace Sapphire
 		int m_nChannels;
 		ulonglong    m_ullDataSize;
 		uint		 m_uRowSize;
-		LPRGBADATA	     m_pbData;
+		PRAWIMAGE	     m_pbData;
 		ImageType    m_imgType;
 		int          m_nMipmapNum;
 		MipmapArray  m_mipmaps;
 
 		void GenerateMipmaps();
-
-		
-
-		 
+ 
 		
 	};
 
@@ -137,7 +135,7 @@ namespace Sapphire
 			return (m_Images.Dereference(himg)->getDataSize());
 		}
 
-		LPRGBADATA  GetTexture(HIMAGE himg, uint mip = 0) const
+		PRAWIMAGE  GetTexture(HIMAGE himg, uint mip = 0) const
 		{
 			return m_Images.Dereference(himg)->getMipmap(mip)->getData();
 		}

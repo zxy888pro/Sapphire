@@ -33,6 +33,9 @@
     <ClInclude Include="SDFTest.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="AssimpTest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -56,13 +59,16 @@
     <ClCompile Include="SDFTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="AssimpTest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\test2Vs.glsl" />
     <None Include="..\bin\test2Fs.glsl" />
     <None Include="..\bin\FontVs.glsl" />
     <None Include="..\bin\FontFs.glsl" />
-    <None Include="..\bin\SDFVs.glsl" />
     <None Include="..\bin\SDFFs.glsl" />
+    <None Include="..\bin\SDFVs.glsl" />
   </ItemGroup>
 </Project>

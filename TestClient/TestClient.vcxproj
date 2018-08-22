@@ -97,6 +97,9 @@
     <None Include="..\bin\vs1.glsl" />
     <None Include="..\bin\ps1.glsl" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\bin\SDFFs.glsl\Text.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

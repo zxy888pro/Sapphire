@@ -77,6 +77,9 @@
 
 #endif //END PARTFORM
 
+#ifndef NULL
+#define NULL 0
+#endif
 
 // 安全删除和释放
 #ifndef safeDelete

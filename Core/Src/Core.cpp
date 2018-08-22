@@ -59,6 +59,19 @@ namespace Sapphire
 #endif
 	}
 
+	Core::Core()
+	{
+		m_resMgr = new ResourceMgr();
+	}
+
+	Core::~Core()
+	{
+		m_resMgr->Clear();
+
+		safeDelete(m_resMgr);
+	}
+
+
 }
 
  

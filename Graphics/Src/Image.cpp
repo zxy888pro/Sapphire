@@ -135,7 +135,7 @@ void Sapphire::Image::SetRAWData(void* dataPtr, int width, int height, int nChan
 	{
 		LogUtil::LogMsgLn("SetRAWData Error! dataPtr is NULL");
 	}
-	m_pbData = (LPRGBADATA)dataPtr;
+	m_pbData = (PRAWIMAGE)dataPtr;
 	m_nWidth = width;
 	m_nHeight = height;
 	m_imgType = ImageType::ImageType_RAW;

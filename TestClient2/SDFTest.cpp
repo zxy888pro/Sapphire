@@ -69,7 +69,7 @@ namespace Sapphire
 		HIMAGE himg = ImageMgr::GetSingletonPtr()->GetImage(fontImgPath.c_str());
 		if (!himg.IsNull())
 		{
-			LPRGBADATA pImgData = ImageMgr::GetSingletonPtr()->GetTexture(himg);
+			PRAWIMAGE pImgData = ImageMgr::GetSingletonPtr()->GetTexture(himg);
 			uTextureWidth = ImageMgr::GetSingletonPtr()->GetWidth(himg);
 			uTextrueHeight = ImageMgr::GetSingletonPtr()->GetHeight(himg);
 			uTextureChannel = ImageMgr::GetSingletonPtr()->GetNumChannels(himg);

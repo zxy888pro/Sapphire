@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\BaseException.h" />
+    <ClInclude Include="Include\BaseResource.h" />
     <ClInclude Include="Include\charset.h" />
     <ClInclude Include="Include\Core.h" />
     <ClInclude Include="Include\FileStream.h" />
@@ -25,7 +26,6 @@
     <ClInclude Include="Include\Sapphire.h" />
     <ClInclude Include="Include\singleton.h" />
     <ClInclude Include="Include\stringHelper.h" />
-    <ClInclude Include="Src\BaseResource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\BaseException.cpp" />

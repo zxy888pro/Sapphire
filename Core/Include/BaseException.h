@@ -39,6 +39,9 @@ namespace Sapphire
 	private:
 		FSErrorCode m_errorCode;
 	};
+
+
+	
 }
 
 

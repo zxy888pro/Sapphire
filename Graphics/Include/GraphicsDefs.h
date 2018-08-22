@@ -1,0 +1,52 @@
+#pragma once
+
+namespace Sapphire
+{
+
+	enum TextureUsage
+	{
+		TEXTURE_STATIC = 0,
+		TEXTURE_DYNAMIC,
+		TEXTURE_RENDERTARGET,
+		TEXTURE_DEPTHSTENCIL
+	};
+
+	enum TextureFilterMode
+	{
+		FILTER_NEAREST = 0,
+		FILTER_BILINEAR,
+		FILTER_TRILINEAR,
+		FILTER_ANISOTROPIC,
+		FILTER_DEFAULT,
+		MAX_FILTERMODES
+	};
+
+	enum TextureCoordinate
+	{
+		COORD_U = 0,
+		COORD_V,
+		COORD_W,
+		MAX_COORDS
+	};
+
+	enum TextureAddressMode
+	{
+		ADDRESS_REPEAT = 0,
+		ADDRESS_MIRROR,
+		ADDRESS_CLAMP,
+		ADDRESS_BORDER,
+		MAX_ADDRESSMODES
+	};
+
+	enum PixelFormat
+	{
+		PF_R8G8B8A8,
+		PF_A8R8G8B8,
+		PF_A8B8G8R8,
+		PF_R8G8B8,
+		PF_B8G8R8,
+		PF_R8,
+		MAX_PIXELFORMATS
+	};
+}
+

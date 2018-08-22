@@ -33,12 +33,51 @@
     <ClInclude Include="Include\FontFace.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Src\GPUObject.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\GraphicsDefs.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextureMgr.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\GraphicDriver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ITextureMgr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ITexture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\GraphicException.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Texture2D.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\Font.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GpuObject.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TextureMgr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GraphicDriver.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GraphicException.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Texture2D.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

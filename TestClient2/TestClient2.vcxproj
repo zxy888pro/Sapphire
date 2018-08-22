@@ -46,7 +46,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\Core\Include;..\Graphics\Include;..\dependences\glew\include;..\dependences\glfw\include;..\dependences\freetype\include;..\ThirdParty\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Core\Include;..\Graphics\Include;..\dependences\glew\include;..\dependences\glfw\include;..\dependences\freetype\include;..\ThirdParty\glm;..\dependences\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -71,6 +71,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AssimpTest.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="GLTestGeometry.h" />
     <ClInclude Include="GLUITest.h" />
@@ -79,6 +80,7 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AssimpTest.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="GLTestGeometry.cpp" />
     <ClCompile Include="GLUITest.cpp" />

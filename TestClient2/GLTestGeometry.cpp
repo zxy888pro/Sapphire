@@ -102,7 +102,7 @@ void Sapphire::GLTestGeometry::Init()
 	 HIMAGE himg = ImageMgr::GetSingletonPtr()->GetImage("1.tga");
 	 if (!himg.IsNull())
 	 {
-		LPRGBADATA pImgData = ImageMgr::GetSingletonPtr()->GetTexture(himg);
+		PRAWIMAGE pImgData = ImageMgr::GetSingletonPtr()->GetTexture(himg);
 		uint width = ImageMgr::GetSingletonPtr()->GetWidth(himg);
 		uint height = ImageMgr::GetSingletonPtr()->GetHeight(himg);
 		uint nrChannels = ImageMgr::GetSingletonPtr()->GetNumChannels(himg);

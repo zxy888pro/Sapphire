@@ -47,7 +47,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Core\Include;Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Core\Include;..\dependences\glew\include;..\dependences\glfw\include;..\ThirdParty\glm;..\dependences\assimp\include;Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -70,15 +70,28 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Include\FontFace.h" />
+    <ClInclude Include="Include\GraphicDriver.h" />
+    <ClInclude Include="Include\GraphicException.h" />
+    <ClInclude Include="Include\GraphicsDefs.h" />
     <ClInclude Include="Include\Image.h" />
     <ClInclude Include="Include\Graphics.h" />
+    <ClInclude Include="Include\ITexture.h" />
+    <ClInclude Include="Include\ITextureMgr.h" />
+    <ClInclude Include="Src\GPUObject.h" />
     <ClInclude Include="Src\stb_image.h" />
     <ClInclude Include="Src\stb_image_resize.h" />
     <ClInclude Include="Src\stb_image_write.h" />
+    <ClInclude Include="Src\Texture2D.h" />
+    <ClInclude Include="Src\TextureMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Font.cpp" />
+    <ClCompile Include="Src\GpuObject.cpp" />
+    <ClCompile Include="Src\GraphicDriver.cpp" />
+    <ClCompile Include="Src\GraphicException.cpp" />
     <ClCompile Include="Src\Image.cpp" />
+    <ClCompile Include="Src\Texture2D.cpp" />
+    <ClCompile Include="Src\TextureMgr.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

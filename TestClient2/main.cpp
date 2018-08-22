@@ -155,12 +155,12 @@ int main()
 	{
 		glUiTest = new Sapphire::GLUITest(textShader);
 	}
-	sdfShader = new Sapphire::Shader("SDFVs.glsl", "SDFFs.glsl", "");
+	/*sdfShader = new Sapphire::Shader("SDFVs.glsl", "SDFFs.glsl", "");
 	if (shader != NULL)
 	{
 		sdfTest = new Sapphire::SDFTest(sdfShader);
 		sdfTest->init("arial", 32, 32);
-	}
+	}*/
 	glViewport(0, 0, 800, 600);
 	glTestGeo->Init();
 	glUiTest->Init(Sapphire::FontRenderMode::FONT_RENDER_MODE_NORMAL, "fonts/arial.ttf", 0, 32);
@@ -174,7 +174,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//glTestGeo->Render();
 		glUiTest->RenderText("Test FreeType Font", 125.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-		sdfTest->RenderText("Hello World!", 320.0f, 110.0f, 0.05f, glm::vec3(0.3, 0.7f, 0.9f));
+		//sdfTest->RenderText("Hello World!", 320.0f, 110.0f, 0.05f, glm::vec3(0.3, 0.7f, 0.9f));
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

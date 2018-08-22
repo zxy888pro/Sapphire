@@ -33,7 +33,7 @@ bool Sapphire::BaseResource::operator < (BaseResource& container)
 	return false;
 }
 
-void Sapphire::ResManager::Clear()
+void Sapphire::ResourceMgr::Clear()
 {
 	m_ResourceMap.clear();
 	m_rhNextResHandle = INVALID_RHANDLE;
@@ -43,14 +43,14 @@ void Sapphire::ResManager::Clear()
 	m_CurrentResource = m_ResourceMap.end();
 }
 
-bool Sapphire::ResManager::Create(uint nMaxSize)
+bool Sapphire::ResourceMgr::Create(uint nMaxSize)
 {
 	Clear();
 	SetMaximumMemory(nMaxSize);
 	return true;
 }
 
-void Sapphire::ResManager::Destroy()
+void Sapphire::ResourceMgr::Destroy()
 {
 	//销毁未锁定所有资源, 锁定资源由自己释放了
 	for (ResMapItor itor = m_ResourceMap.begin(); itor != m_ResourceMap.end(); ++itor)
@@ -64,13 +64,13 @@ void Sapphire::ResManager::Destroy()
 	Clear();
 }
 
-bool Sapphire::ResManager::SetMaximumMemory(size_t nMem)
+bool Sapphire::ResourceMgr::SetMaximumMemory(size_t nMem)
 {
 	m_nMaximumMemory = nMem;
 	return CheckForOverallocation();
 }
 
-bool Sapphire::ResManager::ReserveMemory(size_t nMem)
+bool Sapphire::ResourceMgr::ReserveMemory(size_t nMem)
 {
 	AddMemory(nMem);
 	if (!CheckForOverallocation())
@@ -79,7 +79,7 @@ bool Sapphire::ResManager::ReserveMemory(size_t nMem)
 	return true;
 }
 
-bool Sapphire::ResManager::InsertResource(RHANDLE* rhUniqueID, BaseResource* pResource)
+bool Sapphire::ResourceMgr::InsertResource(RHANDLE* rhUniqueID, BaseResource* pResource)
 {
 	// 取得這個目錄下的下一個唯一的ID
 	*rhUniqueID = GetNextResHandle();
@@ -97,7 +97,7 @@ bool Sapphire::ResManager::InsertResource(RHANDLE* rhUniqueID, BaseResource* pRe
 	return true;
 }
 
-bool Sapphire::ResManager::RemoveResource(BaseResource* pResource)
+bool Sapphire::ResourceMgr::RemoveResource(BaseResource* pResource)
 {
     //查找资源
 	ResMapItor itor;
@@ -119,7 +119,7 @@ bool Sapphire::ResManager::RemoveResource(BaseResource* pResource)
 	return true;
 }
 
-bool Sapphire::ResManager::DestroyResource(BaseResource* pResource)
+bool Sapphire::ResourceMgr::DestroyResource(BaseResource* pResource)
 {
 	if (!RemoveResource(pResource))
 		return false;
@@ -127,7 +127,7 @@ bool Sapphire::ResManager::DestroyResource(BaseResource* pResource)
 	return true;
 }
 
-Sapphire::BaseResource* Sapphire::ResManager::GetResource(RHANDLE rhUniqueID)
+Sapphire::BaseResource* Sapphire::ResourceMgr::GetResource(RHANDLE rhUniqueID)
 {
 	ResMapItor itor = m_ResourceMap.find(rhUniqueID);
 
@@ -153,7 +153,7 @@ Sapphire::BaseResource* Sapphire::ResManager::GetResource(RHANDLE rhUniqueID)
 	return itor->second;
 }
 
-Sapphire::BaseResource* Sapphire::ResManager::Lock(RHANDLE rhUniqueID)
+Sapphire::BaseResource* Sapphire::ResourceMgr::Lock(RHANDLE rhUniqueID)
 {
 	ResMapItor itor = m_ResourceMap.find(rhUniqueID);
 	if (itor == m_ResourceMap.end())
@@ -173,7 +173,7 @@ Sapphire::BaseResource* Sapphire::ResManager::Lock(RHANDLE rhUniqueID)
 	return itor->second;
 }
 
-int Sapphire::ResManager::Unlock(RHANDLE rhUniqueID)
+int Sapphire::ResourceMgr::Unlock(RHANDLE rhUniqueID)
 {
 	ResMapItor itor = m_ResourceMap.find(rhUniqueID);
 	if (itor == m_ResourceMap.end())
@@ -186,7 +186,7 @@ int Sapphire::ResManager::Unlock(RHANDLE rhUniqueID)
 	return itor->second->GetReferenceCount();
 }
 
-RHANDLE Sapphire::ResManager::FindResourceHandle(BaseResource* pResource)
+RHANDLE Sapphire::ResourceMgr::FindResourceHandle(BaseResource* pResource)
 {
 	//查找资源句柄
 	ResMapItor itor;
@@ -200,7 +200,7 @@ RHANDLE Sapphire::ResManager::FindResourceHandle(BaseResource* pResource)
 	return itor->first;
 }
 
-bool Sapphire::ResManager::CheckForOverallocation()
+bool Sapphire::ResourceMgr::CheckForOverallocation()
 {
 	//当前使用内存大于最大内存上限
 	if (m_nCurrentUsedMemory > m_nMaximumMemory)
@@ -236,7 +236,7 @@ bool Sapphire::ResManager::CheckForOverallocation()
 	return true;
 }
 
-int Sapphire::ResManager::Unlock(BaseResource* pResource)
+int Sapphire::ResourceMgr::Unlock(BaseResource* pResource)
 {
 	RHANDLE rhResource = FindResourceHandle(pResource);
 	if IS_INVALID_RHANDLE(rhResource)
@@ -244,7 +244,7 @@ int Sapphire::ResManager::Unlock(BaseResource* pResource)
 	return Unlock(rhResource);
 }
 
-bool Sapphire::ResManager::DestroyResource(RHANDLE rhUniqueID)
+bool Sapphire::ResourceMgr::DestroyResource(RHANDLE rhUniqueID)
 {
 	BaseResource* pResource = GetResource(rhUniqueID);
 	if (!RemoveResource(rhUniqueID))
@@ -253,7 +253,7 @@ bool Sapphire::ResManager::DestroyResource(RHANDLE rhUniqueID)
 	return true;
 }
 
-bool Sapphire::ResManager::RemoveResource(RHANDLE rhUniqueID)
+bool Sapphire::ResourceMgr::RemoveResource(RHANDLE rhUniqueID)
 {
 	
 	ResMapItor itor = m_ResourceMap.find(rhUniqueID);
@@ -269,7 +269,7 @@ bool Sapphire::ResManager::RemoveResource(RHANDLE rhUniqueID)
 	return true;
 }
 
-bool Sapphire::ResManager::InsertResource(RHANDLE rhUniqueID, BaseResource* pResource)
+bool Sapphire::ResourceMgr::InsertResource(RHANDLE rhUniqueID, BaseResource* pResource)
 {
 	ResMapItor itor = m_ResourceMap.find(rhUniqueID);
 	if (itor != m_ResourceMap.end())

@@ -210,7 +210,7 @@ void GLTest02::CreateRenderInfo()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	Sapphire::HIMAGE   hImg = imgMgr->LoadImage("1.jpg");
-	LPRGBADATA pImgData = imgMgr->GetTexture(hImg, 0);
+	PRAWIMAGE pImgData = imgMgr->GetTexture(hImg, 0);
 	uint width = imgMgr->GetWidth(hImg);
 	uint height = imgMgr->GetHeight(hImg);
 	uint nrChannels = imgMgr->GetNumChannels(hImg);

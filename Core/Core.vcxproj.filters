@@ -57,7 +57,7 @@
     <ClInclude Include="Include\FrameMem.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Src\BaseResource.h">
+    <ClInclude Include="Include\BaseResource.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

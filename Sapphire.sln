@@ -7,8 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core\Core.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphics", "Graphics\Graphics.vcxproj", "{6297BAAA-3EAC-4AF3-9869-C3DC1BA37421}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ResInfoGenerator", "ResInfoGenerator\ResInfoGenerator.vcxproj", "{919D943D-DD1B-4E2F-961D-2A9BC3077C26}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestClient", "TestClient\TestClient.vcxproj", "{828271DA-AF45-477E-92EE-E8351FC3894D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestClient2", "TestClient2\TestClient2.vcxproj", "{04E9CD96-6FCF-48BA-B9FF-F1E636F663FD}"
@@ -29,10 +27,6 @@ Global
 		{6297BAAA-3EAC-4AF3-9869-C3DC1BA37421}.Debug|Win32.Build.0 = Debug|Win32
 		{6297BAAA-3EAC-4AF3-9869-C3DC1BA37421}.Release|Win32.ActiveCfg = Release|Win32
 		{6297BAAA-3EAC-4AF3-9869-C3DC1BA37421}.Release|Win32.Build.0 = Release|Win32
-		{919D943D-DD1B-4E2F-961D-2A9BC3077C26}.Debug|Win32.ActiveCfg = Debug|Win32
-		{919D943D-DD1B-4E2F-961D-2A9BC3077C26}.Debug|Win32.Build.0 = Debug|Win32
-		{919D943D-DD1B-4E2F-961D-2A9BC3077C26}.Release|Win32.ActiveCfg = Release|Win32
-		{919D943D-DD1B-4E2F-961D-2A9BC3077C26}.Release|Win32.Build.0 = Release|Win32
 		{828271DA-AF45-477E-92EE-E8351FC3894D}.Debug|Win32.ActiveCfg = Debug|Win32
 		{828271DA-AF45-477E-92EE-E8351FC3894D}.Debug|Win32.Build.0 = Debug|Win32
 		{828271DA-AF45-477E-92EE-E8351FC3894D}.Release|Win32.ActiveCfg = Release|Win32
