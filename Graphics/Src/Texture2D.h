@@ -26,16 +26,15 @@ namespace Sapphire
 		virtual bool Recreate();
 		virtual void Dispose();
 		virtual size_t  GetSize() const { return m_uSize; }
-
 		virtual bool  IsDisposed();
-
 		virtual void GPUObjectInit() override;
-		
-
-
+		virtual void GPUObjectInit(void* pData) override;
 		virtual size_t GetSize() override;
-
 		virtual void SetSize(uint uSize);
+		virtual void Activate() override;
+		virtual void Deactivate() override;
+		virtual void Update(void* pData) override;
+
 	public:
 
 		virtual uint getWidth() const { return m_uWidth; }

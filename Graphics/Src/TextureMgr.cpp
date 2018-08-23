@@ -46,8 +46,7 @@ namespace Sapphire
 			LogUtil::LogMsgLn("Create Texture Failed! RawData is Null");
 		}
 		Texture2D*  pTexture = new Texture2D(width,height,nChannels);
-		pTexture->GPUObjectInit();
-		pTexture->SetData(pImgData);
+		pTexture->GPUObjectInit(pImgData);
 		pTexture->SetSize(pImageMgr->GetImageSize(himg));
 		return pTexture;
 

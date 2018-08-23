@@ -52,7 +52,8 @@ namespace Sapphire
 
 	void Texture2D::Release()
 	{
-
+		if (m_uHwUID != 0)
+			glDeleteTextures(1, &m_uHwUID);
 	}
 
 	bool Texture2D::Recreate()
@@ -118,6 +119,13 @@ namespace Sapphire
 		
 	}
 
+	void Texture2D::GPUObjectInit(void* pData)
+	{
+		GPUObjectInit();
+		SetData(pData);
+		Deactivate();
+	}
+
 	void Texture2D::SetData(void* pData)
 	{
 		if (pData != NULL)
@@ -125,10 +133,7 @@ namespace Sapphire
 			GLint format = GraphicDriver::GetSWTextureFormat(m_ePixelFormat);
 			GLint internalFormat = GraphicDriver::GetHWTextureFormat(m_ePixelFormat);
 			glTexImage2D(GL_TEXTURE_2D, m_mipLevel, internalFormat, m_uWidth, m_uHeight, 0, format, GL_UNSIGNED_BYTE, pData);
-			
 		}
-			
-
 	}
 
 	size_t Texture2D::GetSize()
@@ -139,6 +144,21 @@ namespace Sapphire
 	void Texture2D::SetSize(uint uSize)
 	{
 		m_uSize = uSize;
+	}
+
+	void Texture2D::Activate()
+	{
+		glBindTexture(GL_TEXTURE_2D, m_uHwUID);
+	}
+
+	void Texture2D::Deactivate()
+	{
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	void Texture2D::Update(void* pData)
+	{
+		 
 	}
 
 }
