@@ -1,17 +1,12 @@
-#version 330 core   //定义版本 openGL 3.3 core profile
+#version 330 core
+//我们将位置和纹理纹理坐标的数据合起来存在一个vec4中。这个顶点着色器将位置坐标与一个投影矩阵相乘，并将纹理坐标传递给片段着色器：
+layout (location = 0) in vec4 vertex; // <vec2 pos, vec2 tex>
+out vec2 TexCoords;
 
-layout(location=0) in vec3 position;
-layout(location=1) in vec3 color;
-layout(location=2) in vec2 uv;
-
-uniform mat4 transMat;
-
-out vec2 texCoord;
-out vec3 outColor;
+uniform mat4 projection;
 
 void main()
 {
-	gl_Position = transMat * vec4(position.xyz, 1.0f);
-	texCoord = uv;
-	outColor = color;
+    gl_Position = projection * vec4(vertex.xy, 0.0, 1.0);
+    TexCoords = vertex.zw;
 }

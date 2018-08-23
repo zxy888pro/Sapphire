@@ -26,7 +26,7 @@ namespace Sapphire
 			m_eAddressMode_[i] = ADDRESS_REPEAT; m_eAddressMode_;
 	}
 
-	Texture2D::Texture2D(uint width, uint height, uint depth, PixelFormat pf /*= PF_R8G8B8A8*/, uint NumMipmaps /*= 1*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_WRAP*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_WRAP*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/)
+	Texture2D::Texture2D(uint width, uint height, uint depth, PixelFormat pf /*= PF_R8G8B8A8*/, uint NumMipmaps /*= 1*/, TextureUsage eUsage /*= TextureUsage::TEXTURE_STATIC*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_WRAP*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_WRAP*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/)
 	{
 		m_uWidth = width;
 		m_uHeight = height;
@@ -39,7 +39,7 @@ namespace Sapphire
 		m_szName = "";
 		m_bIsCompress = false;
 		m_bIsDisposed = false;
-		m_eUsage = TextureUsage::TEXTURE_STATIC;
+		m_eUsage = eUsage;
 		m_mipLevel = 0;
 		m_uAnisotropyLevel = 8;
 
@@ -122,11 +122,23 @@ namespace Sapphire
 	{
 		if (pData != NULL)
 		{
-			glTexImage2D(GL_TEXTURE_2D, m_uAnisotropyLevel, GL_RGB, m_uWidth, m_uHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, pData);
+			GLint format = GraphicDriver::GetSWTextureFormat(m_ePixelFormat);
+			GLint internalFormat = GraphicDriver::GetHWTextureFormat(m_ePixelFormat);
+			glTexImage2D(GL_TEXTURE_2D, m_mipLevel, internalFormat, m_uWidth, m_uHeight, 0, format, GL_UNSIGNED_BYTE, pData);
 			
 		}
 			
 
+	}
+
+	size_t Texture2D::GetSize()
+	{
+		return m_uSize;
+	}
+
+	void Texture2D::SetSize(uint uSize)
+	{
+		m_uSize = uSize;
 	}
 
 }

@@ -27,9 +27,12 @@ namespace Sapphire
 		virtual void setFilterMode(Sapphire::TextureFilterMode val) = 0;
 		virtual Sapphire::TextureAddressMode getAddressMode(TextureCoordinate crood) = 0;
 		virtual void setAddressMode(TextureCoordinate crood, TextureAddressMode mode) = 0;
+		virtual size_t  GetSize() const = 0;
 		virtual std::string getName() const = 0;
 		virtual uint  getAnisotropyLevel() const = 0;
 		virtual void setAnisotropyLevel(uint val) = 0;
+		virtual Sapphire::TextureUsage getUsage() const = 0;
+		virtual void setUsage(Sapphire::TextureUsage val) = 0;
 	
 	};
 }

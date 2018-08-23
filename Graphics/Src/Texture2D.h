@@ -18,23 +18,24 @@ namespace Sapphire
 		friend class TextureMgr;
 
 		Texture2D();
-		Texture2D(uint width, uint height, uint depth, PixelFormat pf = PF_R8G8B8A8, uint NumMipmaps = 1, TextureAddressMode s = TextureAddressMode::ADDRESS_REPEAT, TextureAddressMode t = TextureAddressMode::ADDRESS_REPEAT, TextureFilterMode filterMode = TextureFilterMode::FILTER_BILINEAR);
+		Texture2D(uint width, uint height, uint depth, PixelFormat pf = PF_R8G8B8A8, uint NumMipmaps = 1, 
+			TextureUsage eUsage = TextureUsage::TEXTURE_STATIC,TextureAddressMode s = TextureAddressMode::ADDRESS_REPEAT,
+			TextureAddressMode t = TextureAddressMode::ADDRESS_REPEAT,TextureFilterMode filterMode = TextureFilterMode::FILTER_BILINEAR);
 		virtual ~Texture2D();
 		virtual void Release();
 		virtual bool Recreate();
 		virtual void Dispose();
-		virtual size_t  GetSize();
+		virtual size_t  GetSize() const { return m_uSize; }
+
 		virtual bool  IsDisposed();
-
-
 
 		virtual void GPUObjectInit() override;
 		
 
 
-		virtual void SetData(void* pData) override;
+		virtual size_t GetSize() override;
 
-		
+		virtual void SetSize(uint uSize);
 	public:
 
 		virtual uint getWidth() const { return m_uWidth; }
@@ -58,7 +59,9 @@ namespace Sapphire
 		virtual std::string getName() const { return m_szName; }
 		virtual uint  getAnisotropyLevel() const { return m_uAnisotropyLevel; }
 		virtual void setAnisotropyLevel(uint val) { m_uAnisotropyLevel = val; }
-
+		virtual Sapphire::TextureUsage getUsage() const { return m_eUsage; }
+		virtual void setUsage(Sapphire::TextureUsage val) { m_eUsage = val; }
+		virtual void SetData(void* pData) override;
 	private:
 
 		uint m_uWidth;
@@ -75,7 +78,8 @@ namespace Sapphire
 		TextureAddressMode m_eAddressMode_[MAX_COORDS];
 		TextureUsage   m_eUsage;
 		std::string m_szName;
-
+		ResoureType m_eType;
+		size_t  m_uSize;
 	    
 	};
 

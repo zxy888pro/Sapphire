@@ -40,6 +40,10 @@ namespace Sapphire
 
 	enum PixelFormat
 	{
+		PF_L8,
+		PF_L16,
+		PF_A8,
+		PF_A4L4,
 		PF_R8G8B8A8,
 		PF_A8R8G8B8,
 		PF_A8B8G8R8,

@@ -19,6 +19,10 @@ namespace Sapphire
 		Sapphire::ITextureMgr* getTextureMgr() const { return m_pTextureMgr; }
 
 		static int GetHWTextureWarpParam(TextureAddressMode mode);
+
+		static int GetHWTextureFormat(PixelFormat eFormat);
+
+		static int GetSWTextureFormat(PixelFormat eFormat);
 		
 	private:
 

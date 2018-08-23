@@ -4,6 +4,8 @@
 #include <Core.h>
 #include <GraphicException.h>
 #include <stringHelper.h>
+#include <Image.h>
+#include <BaseResource.h>
 #include <logUtil.h>
 
 
@@ -45,10 +47,8 @@ namespace Sapphire
 		}
 		Texture2D*  pTexture = new Texture2D(width,height,nChannels);
 		pTexture->GPUObjectInit();
-
-
-		
-
+		pTexture->SetData(pImgData);
+		pTexture->SetSize(pImageMgr->GetImageSize(himg));
 		return pTexture;
 
 	}

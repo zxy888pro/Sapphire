@@ -12,6 +12,12 @@ namespace Sapphire
 #define IS_INVALID_RHANDLE(_rh)	((_rh == INVALID_RHANDLE) ? true : false)
 #define IS_VALID_RHANDLE(_rh)	((_rh == INVALID_RHANDLE) ? false : true)
 
+	enum ResoureType
+	{
+		ResoureType_Texture,
+		ResoureType_Model,
+		ResoureType_MaxCount
+	};
 
 	//资源基类
 	class  BaseResource
@@ -89,13 +95,13 @@ namespace Sapphire
 	typedef ResMap::value_type ResMapPair;
 
 
-	class ResManager
+	class ResourceMgr
 	{
 
 	public:
 
-		ResManager()			{ Clear(); }
-		virtual ~ResManager()	{ Destroy(); }
+		ResourceMgr()			{ Clear(); }
+		virtual ~ResourceMgr()	{ Destroy(); }
 
 		void Clear();
 
