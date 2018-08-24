@@ -1,5 +1,6 @@
 #include <GraphicDriver.h>
 #include "Texture2D.h"
+#include <ITextureMgr.h>
 #include <mathHelper.h>
 
 
@@ -19,11 +20,13 @@ namespace Sapphire
 		m_ePixelFormat(PixelFormat::PF_R8G8B8A8),
 		m_eFilterMode(TextureFilterMode::FILTER_NEAREST),
 		m_eUsage(TextureUsage::TEXTURE_STATIC),
-		m_szName("")
+		m_szName(""),
+		m_glType(GL_TEXTURE_2D)
 	{
 		m_eType = ResoureType_Texture;
 		for (int i = 0; i < MAX_COORDS; ++i)
 			m_eAddressMode_[i] = ADDRESS_REPEAT; m_eAddressMode_;
+		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
 	}
 
 	Texture2D::Texture2D(uint width, uint height, uint depth, PixelFormat pf /*= PF_R8G8B8A8*/, uint NumMipmaps /*= 1*/, TextureUsage eUsage /*= TextureUsage::TEXTURE_STATIC*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_WRAP*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_WRAP*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/)
@@ -42,7 +45,8 @@ namespace Sapphire
 		m_eUsage = eUsage;
 		m_mipLevel = 0;
 		m_uAnisotropyLevel = 8;
-
+		m_glType = GL_TEXTURE_2D;
+		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
 	}
 
 	Texture2D::~Texture2D()
@@ -52,8 +56,22 @@ namespace Sapphire
 
 	void Texture2D::Release()
 	{
-		if (m_uHwUID != 0)
-			glDeleteTextures(1, &m_uHwUID);
+		if (m_uHwUID != 0 && m_pGraphicDriver != NULL)
+		{
+			if (!m_pGraphicDriver->IsDeviceLost())
+			{
+				for (int i = 0; i < MAX_TEXTURE_UNITS; ++i)
+				{
+					//释放当前纹理所占用的纹理单元
+					if (m_pGraphicDriver->getTextureMgr()->GetTexture((TextureUnit)i) == this)
+						m_pGraphicDriver->getTextureMgr()->SetTexture(0, (TextureUnit)i);
+				}
+				glDeleteTextures(1, &m_uHwUID);
+			}
+			//初始化硬件资源ID
+			m_uHwUID = 0;
+		}
+			
 	}
 
 	bool Texture2D::Recreate()
@@ -119,14 +137,7 @@ namespace Sapphire
 		
 	}
 
-	void Texture2D::GPUObjectInit(void* pData)
-	{
-		GPUObjectInit();
-		SetData(pData);
-		Deactivate();
-	}
-
-	void Texture2D::SetData(void* pData)
+	/*void Texture2D::SetData(void* pData)
 	{
 		if (pData != NULL)
 		{
@@ -134,31 +145,24 @@ namespace Sapphire
 			GLint internalFormat = GraphicDriver::GetHWTextureFormat(m_ePixelFormat);
 			glTexImage2D(GL_TEXTURE_2D, m_mipLevel, internalFormat, m_uWidth, m_uHeight, 0, format, GL_UNSIGNED_BYTE, pData);
 		}
-	}
+	}*/
 
 	size_t Texture2D::GetSize()
 	{
 		return m_uSize;
 	}
 
-	void Texture2D::SetSize(uint uSize)
+
+	void Texture2D::Load(HIMAGE himg)
 	{
-		m_uSize = uSize;
+		//先释放之前的纹理
+		Release();
+
 	}
 
-	void Texture2D::Activate()
+	uint Texture2D::getUID() const
 	{
-		glBindTexture(GL_TEXTURE_2D, m_uHwUID);
-	}
-
-	void Texture2D::Deactivate()
-	{
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-
-	void Texture2D::Update(void* pData)
-	{
-		 
+		return m_uHwUID;
 	}
 
 }

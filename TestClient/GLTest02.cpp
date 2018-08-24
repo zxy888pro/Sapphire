@@ -6,6 +6,7 @@
 #include "logUtil.h"
 #include "Graphics.h"
 #include "Image.h"
+#include <GraphicDriver.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
@@ -29,7 +30,8 @@ GLTest02::~GLTest02()
 void GLTest02::Init(const char* vertexShaderFile, const char* fragmentShaderFile)
 {
 	using namespace Sapphire;
-	imgMgr = new ImageMgr();
+	new Sapphire::GraphicDriver();
+	imgMgr = Sapphire::GraphicDriver::GetSingletonPtr()->getImageMgr();
 	if (FileIsExistA(vertexShaderFile) && FileIsExistA(fragmentShaderFile))
 	{
 		LogUtil::LogMsgLn("ÕÒµ½shaderÎÄ¼þ");
@@ -209,7 +211,7 @@ void GLTest02::CreateRenderInfo()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	Sapphire::HIMAGE   hImg = imgMgr->LoadImage("1.jpg");
+	Sapphire::HIMAGE   hImg = imgMgr->GetImage("1.jpg");
 	PRAWIMAGE pImgData = imgMgr->GetTexture(hImg, 0);
 	uint width = imgMgr->GetWidth(hImg);
 	uint height = imgMgr->GetHeight(hImg);

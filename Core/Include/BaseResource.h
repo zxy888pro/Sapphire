@@ -15,8 +15,9 @@ namespace Sapphire
 	enum ResoureType
 	{
 		ResoureType_Texture,
-		ResoureType_Model,
-		ResoureType_MaxCount
+		ResourceType_Model,
+		ResourceType_Unkown,
+		ResourceType_Max
 	};
 
 	//资源基类
@@ -31,11 +32,11 @@ namespace Sapphire
 			RES_HIGH_PRIORITY
 		};
 
-		BaseResource()			{ Clear(); }
+		BaseResource()			{ Clear(); m_eType = ResourceType_Unkown; }
 		virtual ~BaseResource()	{ Destroy(); }
 
 		virtual void Clear();
-
+		
 		virtual bool Create()	{ return false; }
 		virtual void Destroy()	{}
 
@@ -45,6 +46,7 @@ namespace Sapphire
 		virtual size_t GetSize() = 0;
 		virtual bool IsDisposed() = 0;
 
+		ResoureType  GetType() const { return m_eType; }
         //资源优先级
 		inline void SetPriority(PriorityType priority)		{ m_Priority = priority; }
 		inline PriorityType GetPriority()					{ return m_Priority; }
@@ -66,6 +68,7 @@ namespace Sapphire
 		PriorityType	m_Priority;
 		uint			m_nRefCount;
 		time_t			m_LastAccess;
+		ResoureType     m_eType;
 
 	};
 
@@ -95,6 +98,8 @@ namespace Sapphire
 	typedef ResMap::value_type ResMapPair;
 
 
+	//////////////////////////////////////////////////////////////////////////
+	//基础资源管理类
 	class ResourceMgr
 	{
 

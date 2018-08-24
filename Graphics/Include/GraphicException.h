@@ -1,7 +1,6 @@
 #pragma once
-#include "Sapphire.h"
 #include <Graphics.h>
-#include <BaseException.h>
+
 
 
 namespace Sapphire
@@ -13,7 +12,8 @@ namespace Sapphire
 		{
 			GDError_NullPointerError,
 			GDError_ComponentNotCreate,
-			GDError_UnknownError
+			GDError_TextureOperationError,
+			GDError_UnknownError,
 		};
 
 		GraphicDriverException();

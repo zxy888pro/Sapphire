@@ -2,6 +2,13 @@
 #define __SAPPHIRE_GRAPHICS__H__
 
 #include "Sapphire.h"
+#include <handle.h>
+#include <singleton.h>
+#include <stringHelper.h>
+#include <logUtil.h>
+#include <BaseException.h>
+#include <BaseResource.h>
+#include <path.h>
 
 #ifndef GLEW_STATIC
 #define  GLEW_STATIC
@@ -81,6 +88,6 @@
 typedef  byte* PRAWIMAGE;
 
 
-
+#include <GraphicsDefs.h>
 
 #endif // !__SAPPHIRE_GRAPHICS__H__

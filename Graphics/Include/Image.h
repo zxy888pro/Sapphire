@@ -2,25 +2,12 @@
 #define __IMAGE__H__
 
 #include "Graphics.h"
-#include "singleton.h"
-#include "handle.h"
 #include <cassert>
 #include <map>
 
 namespace Sapphire
 {
-	enum ImageType
-	{
-		ImageType_Bmp,
-		ImageType_Jpeg,
-		ImageType_Png,
-		ImageType_Tga,
-		ImageType_RAW,
-		ImageType_Unknown
-	};
-
 	
-
 	class Image
 	{
 	public:
@@ -98,65 +85,65 @@ namespace Sapphire
 	typedef Handle <Image> HIMAGE;
 
 
-	class ImageMgr : public Singleton<ImageMgr>
+	/*class ImageMgr : public Singleton<ImageMgr>
 	{
 	public:
 
 
-		ImageMgr();
-		virtual ~ImageMgr();
+	ImageMgr();
+	virtual ~ImageMgr();
 
-		typedef HandleMgr <Image, HIMAGE> HImageMgr;	
+	typedef HandleMgr <Image, HIMAGE> HImageMgr;
 
-		HIMAGE   LoadImage(const char* name);
+	HIMAGE   LoadImage(const char* name);
 
-		HIMAGE   GetImage(const char* name);
+	HIMAGE   GetImage(const char* name);
 
-		void     DeleteTexture(HIMAGE himg);
+	void     DeleteTexture(HIMAGE himg);
 
-		const std::string& GetName(HIMAGE himg) const
-		{
-			return (m_Images.Dereference(himg)->getName());
-		}
-		uint GetWidth(HIMAGE himg) const
-		{
-			return (m_Images.Dereference(himg)->getWidth());
-		}
-		uint GetHeight(HIMAGE himg) const
-		{
-			return (m_Images.Dereference(himg)->getHeight());
-		}
-		uint GetNumChannels(HIMAGE himg) const
-		{
-			return (m_Images.Dereference(himg)->getChannels());
-		}
-		ulonglong GetImageSize(HIMAGE himg) const
-		{
-			return (m_Images.Dereference(himg)->getDataSize());
-		}
+	const std::string& GetName(HIMAGE himg) const
+	{
+	return (m_Images.Dereference(himg)->getName());
+	}
+	uint GetWidth(HIMAGE himg) const
+	{
+	return (m_Images.Dereference(himg)->getWidth());
+	}
+	uint GetHeight(HIMAGE himg) const
+	{
+	return (m_Images.Dereference(himg)->getHeight());
+	}
+	uint GetNumChannels(HIMAGE himg) const
+	{
+	return (m_Images.Dereference(himg)->getChannels());
+	}
+	ulonglong GetImageSize(HIMAGE himg) const
+	{
+	return (m_Images.Dereference(himg)->getDataSize());
+	}
 
-		PRAWIMAGE  GetTexture(HIMAGE himg, uint mip = 0) const
-		{
-			return m_Images.Dereference(himg)->getMipmap(mip)->getData();
-		}
-		 
+	PRAWIMAGE  GetTexture(HIMAGE himg, uint mip = 0) const
+	{
+	return m_Images.Dereference(himg)->getMipmap(mip)->getData();
+	}
+
 
 	private:
 
-		struct istring_less
-		{
-			bool operator () (const std::string& l, const std::string& r) const
-			{
-				return (std::strcmp(l.c_str(), r.c_str()) < 0);
-			}
-		};
-
-		typedef std::map <std::string, HIMAGE, istring_less > ImageMap;
-		typedef std::pair <ImageMap::iterator, bool> ImageMapInsertRc;
-
-		HImageMgr m_Images;
-		ImageMap   m_imageMap;
+	struct istring_less
+	{
+	bool operator () (const std::string& l, const std::string& r) const
+	{
+	return (std::strcmp(l.c_str(), r.c_str()) < 0);
+	}
 	};
+
+	typedef std::map <std::string, HIMAGE, istring_less > ImageMap;
+	typedef std::pair <ImageMap::iterator, bool> ImageMapInsertRc;
+
+	HImageMgr m_Images;
+	ImageMap   m_imageMap;
+	};*/
 }
 
 #endif

@@ -1,4 +1,5 @@
 #include "GLTestGeometry.h"
+#include <GraphicDriver.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
@@ -6,6 +7,7 @@
 #include "logUtil.h"
 #include "Shader.h"
 #include "Camera.h"
+#include <IImageMgr.h>
 
 Sapphire::GLTestGeometry::GLTestGeometry(Shader* pShader)
 {
@@ -99,13 +101,13 @@ void Sapphire::GLTestGeometry::Init()
 	 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	 HIMAGE himg = ImageMgr::GetSingletonPtr()->GetImage("1.tga");
+	 HIMAGE himg = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetImage("1.jpg");
 	 if (!himg.IsNull())
 	 {
-		PRAWIMAGE pImgData = ImageMgr::GetSingletonPtr()->GetTexture(himg);
-		uint width = ImageMgr::GetSingletonPtr()->GetWidth(himg);
-		uint height = ImageMgr::GetSingletonPtr()->GetHeight(himg);
-		uint nrChannels = ImageMgr::GetSingletonPtr()->GetNumChannels(himg);
+		 PRAWIMAGE pImgData = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetTexture(himg);
+		 uint width = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetWidth(himg);
+		 uint height = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetHeight(himg);
+		 uint nrChannels = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetNumChannels(himg);
 
 		if (pImgData)
 		{

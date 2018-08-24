@@ -1,12 +1,11 @@
 #pragma once
-#include <Sapphire.h>
-#include <singleton.h>
 #include <Graphics.h>
-#include <ITextureMgr.h>
-
 
 namespace Sapphire
 {
+	struct ITextureMgr;
+	struct IImageMgr;
+	struct ITexture;
 
 	class GraphicDriver : public Singleton<GraphicDriver>
 	{
@@ -14,9 +13,21 @@ namespace Sapphire
 
 		GraphicDriver();
 		virtual ~GraphicDriver();
+
 		void Init();
 
+		void Release();
+
 		Sapphire::ITextureMgr* getTextureMgr() const { return m_pTextureMgr; }
+
+		Sapphire::IImageMgr* getImageMgr() const { return m_pImageMgr; }
+
+		//绑定一个纹理到指定的纹理单元
+		void BindTexture(ITexture* pTexture, TextureUnit unit);
+
+		bool  IsDeviceLost();
+
+	public:
 
 		static int GetHWTextureWarpParam(TextureAddressMode mode);
 
@@ -27,6 +38,8 @@ namespace Sapphire
 	private:
 
 		ITextureMgr*   m_pTextureMgr;
+		IImageMgr*     m_pImageMgr;
+		
 
 	};
 

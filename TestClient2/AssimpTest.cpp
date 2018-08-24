@@ -15,7 +15,7 @@ namespace Sapphire
 		unsigned int textureID;
 		glGenTextures(1, &textureID);
 
-		int width, height, nrComponents;
+		/*int width, height, nrComponents;
 		unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 		if (data)
 		{
@@ -42,7 +42,7 @@ namespace Sapphire
 		{
 			std::cout << "Texture failed to load at path: " << path << std::endl;
 			stbi_image_free(data);
-		}
+		}*/
 
 		return textureID;
 	}

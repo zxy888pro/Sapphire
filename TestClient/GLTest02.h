@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include <IImageMgr.h>
 
 namespace Sapphire
 {
@@ -26,5 +27,5 @@ protected:
 	GLuint VBO;
 	GLuint EBO;
 	GLuint texture1;
-	Sapphire::ImageMgr*  imgMgr;
+	Sapphire::IImageMgr*  imgMgr;
 };

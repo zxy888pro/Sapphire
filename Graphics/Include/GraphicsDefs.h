@@ -3,6 +3,16 @@
 namespace Sapphire
 {
 
+	enum ImageType
+	{
+		ImageType_Bmp,
+		ImageType_Jpeg,
+		ImageType_Png,
+		ImageType_Tga,
+		ImageType_RAW,
+		ImageType_Unknown
+	};
+
 	enum TextureUsage
 	{
 		TEXTURE_STATIC = 0,
@@ -38,6 +48,19 @@ namespace Sapphire
 		MAX_ADDRESSMODES
 	};
 
+	enum TextureUnit
+	{
+		TU_DIFFUSE = 0,
+		TU_NORMAL = 1,
+		TU_SPECULAR = 2,
+		TU_EMISSIVE = 3,
+		TU_ENVIRONMENT = 4,
+		TU_LIGHTRAMP = 5,
+		TU_LIGHTSHAPE = 6,
+		TU_SHADOWMAP = 7,
+		MAX_TEXTURE_UNITS
+	};
+
 	enum PixelFormat
 	{
 		PF_L8,
@@ -52,5 +75,9 @@ namespace Sapphire
 		PF_R8,
 		MAX_PIXELFORMATS
 	};
+
+
+ 
+
 }
 

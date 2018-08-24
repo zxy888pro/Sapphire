@@ -31,12 +31,21 @@ namespace Sapphire
 
 		virtual void DiscardTexture(ITexture* pTexture) override;
 
+		//设置纹理到纹理单元
+		virtual void SetTexture(ITexture* pTexture, TextureUnit index) override;
+
+		virtual ITexture* GetTexture(TextureUnit index) override;
+
 	protected:
 
 
 
 	private:
 
+		//正在使用的纹理
+		ITexture*      m_textures[MAX_TEXTURE_UNITS];
+		uint           m_textureTypes[MAX_TEXTURE_UNITS];
+		int            m_nCurActiveTexUnit;
 
 	};
 }

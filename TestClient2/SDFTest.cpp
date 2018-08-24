@@ -1,4 +1,5 @@
 #include "SDFTest.h"
+#include <GraphicDriver.h>
 #include <glm.hpp>
 #include <gtx/transform.hpp>
 #include <FileStream.h>
@@ -7,6 +8,7 @@
 #include <regex>
 #include <stdio.h>
 #include "Image.h"
+#include <IImageMgr.h>
 
 namespace Sapphire
 {
@@ -66,13 +68,13 @@ namespace Sapphire
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		HIMAGE himg = ImageMgr::GetSingletonPtr()->GetImage(fontImgPath.c_str());
+		HIMAGE himg = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetImage(fontImgPath.c_str());
 		if (!himg.IsNull())
 		{
-			PRAWIMAGE pImgData = ImageMgr::GetSingletonPtr()->GetTexture(himg);
-			uTextureWidth = ImageMgr::GetSingletonPtr()->GetWidth(himg);
-			uTextrueHeight = ImageMgr::GetSingletonPtr()->GetHeight(himg);
-			uTextureChannel = ImageMgr::GetSingletonPtr()->GetNumChannels(himg);
+			PRAWIMAGE pImgData = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetTexture(himg);
+			uTextureWidth = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetWidth(himg);
+			uTextrueHeight = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetHeight(himg);
+			uTextureChannel = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetNumChannels(himg);
 
 			if (pImgData)
 			{

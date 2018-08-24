@@ -13,18 +13,19 @@ namespace Sapphire
 		virtual ~GPUObject();
 
 		virtual void Release();
+
 		virtual void GPUObjectInit();
-		virtual void GPUObjectInit(void* pData);
-		virtual void SetData(void* pData);
-		virtual void Activate();
-		virtual void Deactivate();
-		virtual void Update(void* pData);
+
 		uint GetGPUHandle(){ return m_uHwUID; }
+
+		virtual void OnDeviceLost() { }
+
+		virtual void OnDeviceReset() { }
 		
 
 	protected:
 
 		uint m_uHwUID;
-
+		
 	};
 }

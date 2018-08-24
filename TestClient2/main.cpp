@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Sapphire.h"
+#include <GraphicDriver.h>
 #include "stringHelper.h"
 #include "logUtil.h"
 #include "Image.h"
@@ -46,16 +47,16 @@ void Init()
 	Sapphire::LogUtil::getInstancePtr()->Init("log.txt");
 	Sapphire::LogUtil::LogMsgLn("³õÊ¼»¯³ÌÐò");
 
-	new Sapphire::ImageMgr();
+	new Sapphire::GraphicDriver();
 
-	Sapphire::ImageMgr* pImgMgr = Sapphire::ImageMgr::GetSingletonPtr();
+	Sapphire::IImageMgr* pImgMgr = Sapphire::GraphicDriver::GetSingletonPtr()->getImageMgr();
 	new Sapphire::Camera();
 	
 }
 
 void Release()
 {
-	delete Sapphire::ImageMgr::GetSingletonPtr();
+	delete Sapphire::GraphicDriver::GetSingletonPtr();
 
 	if (glTestGeo != NULL)
 	{
@@ -155,12 +156,12 @@ int main()
 	{
 		glUiTest = new Sapphire::GLUITest(textShader);
 	}
-	/*sdfShader = new Sapphire::Shader("SDFVs.glsl", "SDFFs.glsl", "");
+	sdfShader = new Sapphire::Shader("SDFVs.glsl", "SDFFs.glsl", "");
 	if (shader != NULL)
 	{
 		sdfTest = new Sapphire::SDFTest(sdfShader);
 		sdfTest->init("arial", 32, 32);
-	}*/
+	}
 	glViewport(0, 0, 800, 600);
 	glTestGeo->Init();
 	glUiTest->Init(Sapphire::FontRenderMode::FONT_RENDER_MODE_NORMAL, "fonts/arial.ttf", 0, 32);
@@ -172,9 +173,9 @@ int main()
 		ProcessInput(window);
 		glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//glTestGeo->Render();
+		glTestGeo->Render();
 		glUiTest->RenderText("Test FreeType Font", 125.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-		//sdfTest->RenderText("Hello World!", 320.0f, 110.0f, 0.05f, glm::vec3(0.3, 0.7f, 0.9f));
+		sdfTest->RenderText("Hello World!", 320.0f, 110.0f, 0.05f, glm::vec3(0.3, 0.7f, 0.9f));
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

@@ -1,6 +1,8 @@
 #include <GraphicDriver.h>
+#include <GraphicException.h>
 #include "Texture2D.h"
 #include "TextureMgr.h"
+#include "ImageMgr.h"
 
 namespace Sapphire
 {
@@ -8,6 +10,7 @@ namespace Sapphire
 	GraphicDriver::GraphicDriver()
 	{
 		m_pTextureMgr = new TextureMgr();
+		m_pImageMgr = new ImageMgr();
 	}
 
 	GraphicDriver::~GraphicDriver()
@@ -18,6 +21,32 @@ namespace Sapphire
 	void GraphicDriver::Init()
 	{
 
+	}
+
+	void GraphicDriver::Release()
+	{
+		safeDelete(m_pImageMgr);	
+		safeDelete(m_pTextureMgr);
+		
+	}
+
+ 
+
+	void GraphicDriver::BindTexture(ITexture* pTexture, TextureUnit unit)
+	{
+		if (m_pTextureMgr)
+		{
+			m_pTextureMgr->SetTexture(pTexture, unit);
+		}
+		else
+		{
+			throw GraphicDriverException("TextureManager is Null!", GraphicDriverException::GDError_NullPointerError);
+		}
+	}
+
+	bool GraphicDriver::IsDeviceLost()
+	{
+		return false;
 	}
 
 	int GraphicDriver::GetHWTextureWarpParam(TextureAddressMode mode)
@@ -122,5 +151,6 @@ namespace Sapphire
 			break;
 		}
 	}
+
 
 }

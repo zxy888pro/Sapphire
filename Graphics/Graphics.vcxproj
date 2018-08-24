@@ -73,11 +73,13 @@
     <ClInclude Include="Include\GraphicDriver.h" />
     <ClInclude Include="Include\GraphicException.h" />
     <ClInclude Include="Include\GraphicsDefs.h" />
+    <ClInclude Include="Include\IImageMgr.h" />
     <ClInclude Include="Include\Image.h" />
     <ClInclude Include="Include\Graphics.h" />
     <ClInclude Include="Include\ITexture.h" />
     <ClInclude Include="Include\ITextureMgr.h" />
     <ClInclude Include="Src\GPUObject.h" />
+    <ClInclude Include="Src\ImageMgr.h" />
     <ClInclude Include="Src\stb_image.h" />
     <ClInclude Include="Src\stb_image_resize.h" />
     <ClInclude Include="Src\stb_image_write.h" />
@@ -90,6 +92,7 @@
     <ClCompile Include="Src\GraphicDriver.cpp" />
     <ClCompile Include="Src\GraphicException.cpp" />
     <ClCompile Include="Src\Image.cpp" />
+    <ClCompile Include="Src\ImageMgr.cpp" />
     <ClCompile Include="Src\Texture2D.cpp" />
     <ClCompile Include="Src\TextureMgr.cpp" />
   </ItemGroup>

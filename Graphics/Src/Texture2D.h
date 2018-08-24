@@ -1,11 +1,7 @@
 #pragma once
-
-#include <Sapphire.h>
 #include <Graphics.h>
 #include "GPUObject.h"
 #include <Image.h>
-#include <GraphicsDefs.h>
-#include <BaseResource.h>
 #include <ITexture.h>
 
 namespace Sapphire
@@ -28,12 +24,11 @@ namespace Sapphire
 		virtual size_t  GetSize() const { return m_uSize; }
 		virtual bool  IsDisposed();
 		virtual void GPUObjectInit() override;
-		virtual void GPUObjectInit(void* pData) override;
 		virtual size_t GetSize() override;
-		virtual void SetSize(uint uSize);
-		virtual void Activate() override;
-		virtual void Deactivate() override;
-		virtual void Update(void* pData) override;
+		virtual void Load(HIMAGE himg);
+
+
+		
 
 	public:
 
@@ -60,7 +55,10 @@ namespace Sapphire
 		virtual void setAnisotropyLevel(uint val) { m_uAnisotropyLevel = val; }
 		virtual Sapphire::TextureUsage getUsage() const { return m_eUsage; }
 		virtual void setUsage(Sapphire::TextureUsage val) { m_eUsage = val; }
-		virtual void SetData(void* pData) override;
+		virtual int getTextureType() const { return m_glType; }
+		virtual uint getUID() const override;
+
+
 	private:
 
 		uint m_uWidth;
@@ -79,7 +77,19 @@ namespace Sapphire
 		std::string m_szName;
 		ResoureType m_eType;
 		size_t  m_uSize;
-	    
+		//OpenGL 纹理目标类型  采样器
+		//GL_TEXTURE_1D  :  Sampler1D
+		//GL_TEXTURE_1D_ARRAY  : Sampler1DArray
+		//GL_TEXTURE_2D   : Sampler2D
+		//GL_TEXTURE_2D_ARRAY  :Sampler2DArray
+		//GL_TEXTURE_3D : Sampler3D
+		//GL_TEXTURE_2D_MULTISAMPLE : Simpler2DMS
+		//GL_TEXTURE_2D_MULTISAMPLE_ARRAY: Sampler2DMSArray
+		//GL_TEXTURE_CUBE_MAP :SamplerCube
+		//GL_TEXTURE_RECTANGLE : SamplerRect   //简单纹素矩形， 不支持mipmap
+		//GL_TEXTURE_BUFFER :  samplerBuffer   //任意纹素的1维数组，不支持mipmap
+		int  m_glType;
+		GraphicDriver*  m_pGraphicDriver;
 	};
 
 }

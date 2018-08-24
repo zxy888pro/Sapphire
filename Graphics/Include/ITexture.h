@@ -1,8 +1,6 @@
 #pragma once
-#include <Sapphire.h>
 #include <Graphics.h>
-#include <GraphicsDefs.h>
-#include <BaseResource.h>
+
 
 namespace Sapphire
 {
@@ -33,6 +31,8 @@ namespace Sapphire
 		virtual void setAnisotropyLevel(uint val) = 0;
 		virtual Sapphire::TextureUsage getUsage() const = 0;
 		virtual void setUsage(Sapphire::TextureUsage val) = 0;
+		virtual int getTextureType() const = 0;
+		virtual uint getUID() const = 0;
 	
 	};
 }
