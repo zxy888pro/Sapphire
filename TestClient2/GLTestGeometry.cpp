@@ -119,6 +119,9 @@ void Sapphire::GLTestGeometry::Init()
 			LogUtil::LogMsgLn("Failed to load texture");
 		}
 	 }
+	 GraphicDriver::GetSingletonPtr()->getImageMgr()->DeleteTexture(himg);
+	// himg.Discard();
+	 PRAWIMAGE pdata = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetTexture(himg);
 	 m_shader->Use();
 	 //glUseProgram(m_shader->getShaderProgram());
 	 //glUniform1i(glGetUniformLocation(m_shader->getShaderProgram(), "myTexture1"), 0); //设置纹理单元0

@@ -1,5 +1,6 @@
 #pragma once
 #include <Graphics.h>
+#include <GraphicDriver.h>
 #include "GPUObject.h"
 #include <Image.h>
 #include <ITexture.h>
@@ -14,28 +15,31 @@ namespace Sapphire
 		friend class TextureMgr;
 
 		Texture2D();
-		Texture2D(uint width, uint height, uint depth, PixelFormat pf = PF_R8G8B8A8, uint NumMipmaps = 1, 
+		Texture2D(uint width, uint height, uint depth, PixelFormat pf = PF_R8G8B8A8, uint NumMipmaps = 1, int glTargerType = GL_TEXTURE_2D,
 			TextureUsage eUsage = TextureUsage::TEXTURE_STATIC,TextureAddressMode s = TextureAddressMode::ADDRESS_REPEAT,
 			TextureAddressMode t = TextureAddressMode::ADDRESS_REPEAT,TextureFilterMode filterMode = TextureFilterMode::FILTER_BILINEAR);
+
 		virtual ~Texture2D();
-		virtual void Release();
-		virtual bool Recreate();
+		virtual void Release();//释放掉纹理对象
+		virtual bool Recreate();//重新创建纹理对象
 		virtual void Dispose();
-		virtual size_t  GetSize() const { return m_uSize; }
 		virtual bool  IsDisposed();
-		virtual void GPUObjectInit() override;
 		virtual size_t GetSize() override;
-		virtual void Load(HIMAGE himg);
+		virtual uint  GetRowSize() const override;
+		virtual void Load(HIMAGE himg);  //通过图像句柄加载纹理
+		virtual void OnDeviceLost() override;
+		virtual void OnDeviceReset() override;
+		virtual bool Create() override; //创建纹理对象
 
-
-		
+		virtual bool SetSize(int width, int height, PixelFormat eformat, TextureUsage usage = TEXTURE_STATIC);
+		virtual bool SetData(uint level, int x, int y, int width, int height, const void* data);
+		virtual uint getLevelWidth(uint level) const override;
+		virtual uint getLevelHeight(uint level) const override;
 
 	public:
 
 		virtual uint getWidth() const { return m_uWidth; }
-		virtual void setWidth(uint val) { m_uWidth = val; }
 		virtual uint getHeight() const { return m_uHeight; }
-		virtual void setHeight(uint val) { m_uHeight = val; }
 		virtual uint getDepth() const { return m_uDepth; }
 		virtual void setDepth(uint val) { m_uDepth = val; }
 		virtual uint getNumMipmaps() const { return m_uNumMipmaps; }
@@ -77,6 +81,7 @@ namespace Sapphire
 		std::string m_szName;
 		ResoureType m_eType;
 		size_t  m_uSize;
+
 		//OpenGL 纹理目标类型  采样器
 		//GL_TEXTURE_1D  :  Sampler1D
 		//GL_TEXTURE_1D_ARRAY  : Sampler1DArray
@@ -89,6 +94,7 @@ namespace Sapphire
 		//GL_TEXTURE_RECTANGLE : SamplerRect   //简单纹素矩形， 不支持mipmap
 		//GL_TEXTURE_BUFFER :  samplerBuffer   //任意纹素的1维数组，不支持mipmap
 		int  m_glType;
+
 		GraphicDriver*  m_pGraphicDriver;
 	};
 

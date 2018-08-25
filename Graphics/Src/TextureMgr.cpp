@@ -150,4 +150,9 @@ namespace Sapphire
 
 	}
 
+	bool TextureMgr::VerifyHWUID(uint uHwuid)
+	{
+		return glIsTexture(uHwuid);
+	}
+
 }

@@ -23,5 +23,7 @@ namespace Sapphire
 		virtual void SetTexture(ITexture* pTexture, TextureUnit index) = 0;
 
 		virtual ITexture* GetTexture(TextureUnit index) = 0;
+
+		virtual bool VerifyHWUID(uint uHwuid) = 0;
 	};
 }

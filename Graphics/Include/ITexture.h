@@ -8,9 +8,9 @@ namespace Sapphire
 	struct ITexture
 	{
 		virtual uint getWidth() const = 0;
-		virtual void setWidth(uint val) = 0;
 		virtual uint getHeight() const = 0;
-		virtual void setHeight(uint val) = 0;
+		virtual uint getLevelWidth(uint level) const = 0;  //获取指定mipmap等级下的宽度
+		virtual uint getLevelHeight(uint level) const = 0; ////获取指定mipmap等级下的高度
 		virtual uint getDepth() const = 0;
 		virtual void setDepth(uint val) = 0;
 		virtual uint getNumMipmaps() const = 0;
@@ -26,6 +26,7 @@ namespace Sapphire
 		virtual Sapphire::TextureAddressMode getAddressMode(TextureCoordinate crood) = 0;
 		virtual void setAddressMode(TextureCoordinate crood, TextureAddressMode mode) = 0;
 		virtual size_t  GetSize() const = 0;
+		virtual uint  GetRowSize() const = 0;
 		virtual std::string getName() const = 0;
 		virtual uint  getAnisotropyLevel() const = 0;
 		virtual void setAnisotropyLevel(uint val) = 0;

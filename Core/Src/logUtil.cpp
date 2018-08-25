@@ -9,14 +9,12 @@ namespace Sapphire
 
 	void LogUtil::Flush()
 	{
-		if (m_pLogFile != NULL)
+		if (m_fstream.is_open())
 		{
 
 			for (int i = 0; i < m_logCache.size(); ++i)
 			{
-				memset(szBuf, '\0', LOGUTIL_MAX_CHARBUFFER_SIZE*sizeof(TCHAR));
-				_tcscpy(szBuf, m_logCache[i].c_str());
-				fwrite(szBuf, _tcslen(m_logCache[i].c_str()) + 1, 1, m_pLogFile);
+				m_fstream.write(m_logCache[i].c_str(), m_logCache[i].size());
 			}
 			m_logCache.clear();
 		}
@@ -26,15 +24,15 @@ namespace Sapphire
 	{
 		memset(szBuf, '\0', LOGUTIL_MAX_CHARBUFFER_SIZE*sizeof(TCHAR));
 		m_logFilePath = pszFilePath;
-#ifdef UNICODE
-		m_pLogFile = FileOpen(pszFilePath, _T("wb+"));
-		byte pheader[2] = { 0xff, 0xfe };
-		fwrite(pheader, 2, 1, m_pLogFile);
-#else
-		m_pLogFile = FileOpen(pszFilePath, _T("at+"));
-#endif
-		assert(m_pLogFile);
-
+//#ifdef UNICODE
+//		m_pLogFile = FileOpen(pszFilePath, _T("wb+"));
+//		byte pheader[2] = { 0xff, 0xfe };
+//		fwrite(pheader, 2, 1, m_pLogFile);
+//#else
+//		m_pLogFile = FileOpen(pszFilePath, _T("at+"));
+//		
+//#endif
+		m_fstream.open(pszFilePath, std::ios_base::app | std::ios_base::out);
 	}
 
 	void LogUtil::Log(TCHAR* szLog)
@@ -47,10 +45,12 @@ namespace Sapphire
 		}
 		else
 		{
-			memset(szBuf, '\0', LOGUTIL_MAX_CHARBUFFER_SIZE*sizeof(TCHAR));
-			_tcscpy(szBuf, szLog);
 			int len = _tcslen(szLog);
-			fwrite(szBuf, len + 1, 1, m_pLogFile);
+			if (m_fstream.is_open())
+			{
+				m_fstream.write(szLog, len);
+				m_fstream.flush();
+			}
 		}
 
 
@@ -66,10 +66,11 @@ namespace Sapphire
 		}
 		else
 		{
-			memset(szBuf, '\0', LOGUTIL_MAX_CHARBUFFER_SIZE*sizeof(TCHAR));
-			_tcscpy(szBuf, logStr.c_str());
-			int len = _tcslen(logStr.c_str());
-			fwrite(szBuf, len + 1, 1, m_pLogFile);
+			if (m_fstream.is_open())
+			{
+				m_fstream.write(logStr.c_str(), logStr.size());
+				m_fstream.flush();
+			}
 		}
 	}
 
@@ -112,10 +113,14 @@ namespace Sapphire
 
 	LogUtil::~LogUtil()
 	{
-		if (m_pLogFile != NULL)
+		/*if (m_pLogFile != NULL)
 		{
-			assert(fclose(m_pLogFile) < 0);
-			m_pLogFile = NULL;
+		assert(fclose(m_pLogFile) < 0);
+		m_pLogFile = NULL;
+		}*/
+		if (m_fstream.is_open())
+		{
+			m_fstream.close();
 		}
 	}
 }

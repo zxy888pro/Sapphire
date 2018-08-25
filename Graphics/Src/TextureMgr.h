@@ -36,6 +36,9 @@ namespace Sapphire
 
 		virtual ITexture* GetTexture(TextureUnit index) override;
 
+		//检验硬件纹理对象ID是否已分配
+		virtual bool VerifyHWUID(uint uHwuid) override;
+
 	protected:
 
 

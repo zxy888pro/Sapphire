@@ -9,10 +9,6 @@ namespace Sapphire
 
 	}
 
-	void GPUObject::GPUObjectInit()
-	{
-
-	}
 
 	 
 

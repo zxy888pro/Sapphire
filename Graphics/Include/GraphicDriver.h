@@ -27,6 +27,11 @@ namespace Sapphire
 
 		bool  IsDeviceLost();
 
+		bool GetAnisotropySupport(){ return m_bAnisotropySupport; }
+
+		uint GetMaxAnisotropyLevels();
+
+
 	public:
 
 		static int GetHWTextureWarpParam(TextureAddressMode mode);
@@ -34,11 +39,20 @@ namespace Sapphire
 		static int GetHWTextureFormat(PixelFormat eFormat);
 
 		static int GetSWTextureFormat(PixelFormat eFormat);
+
+		static uint GetHWTextureDataType(PixelFormat format);
+		
 		
 	private:
 
+		void CheckFeature();
+
 		ITextureMgr*   m_pTextureMgr;
 		IImageMgr*     m_pImageMgr;
+
+		
+		bool		   m_bAnisotropySupport;
+		uint           m_nMaxTextureUnits;
 		
 
 	};

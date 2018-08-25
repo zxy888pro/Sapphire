@@ -9,12 +9,10 @@ namespace Sapphire
 	class GPUObject
 	{
 	public:
-		GPUObject();
-		virtual ~GPUObject();
+		GPUObject(){};
+		virtual ~GPUObject(){};
 
 		virtual void Release();
-
-		virtual void GPUObjectInit();
 
 		uint GetGPUHandle(){ return m_uHwUID; }
 

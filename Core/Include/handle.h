@@ -47,6 +47,8 @@ namespace Sapphire
 		bool IsNull(void) const { return (!m_Handle); }
 
 		operator uint (void) const { return m_Handle; }  //类型转换运算符，直接转换uint，不用显示转换
+
+		void Discard(void){ m_Handle = 0; }
 	};
 
 	template<typename TAG>
@@ -122,10 +124,20 @@ namespace Sapphire
 			return !!GetUsedHandleCount();
 		}
 
-
+		bool VerifyHandle(HANDLE& handle);
+		 
 
 
 	};
+
+	template <typename DATA, typename HANDLE>
+	bool Sapphire::HandleMgr<DATA, HANDLE>::VerifyHandle(HANDLE& handle)
+	{
+		// 取得句柄对应资源的索引
+		unsigned int index = handle.GetIndex();
+		// 验证有效性
+		return ((index < m_UserData.size()) && (m_MagicNumbers[index] == handle.GetMagic()));
+	}
 
 	//释放一个句柄
 	template <typename DATA, typename HANDLE>
@@ -135,8 +147,13 @@ namespace Sapphire
 		unsigned int index = handle.GetIndex();
 
 		// 验证资源有效性
-		assert(index < m_UserData.size());
-		assert(m_MagicNumbers[index] == handle.GetMagic());
+		//assert(index < m_UserData.size());
+		//assert(m_MagicNumbers[index] == handle.GetMagic());
+		if (!VerifyHandle(handle))
+		{
+			LogUtil::LogMsgLn("Invalid Handle!");
+			return;
+		}
 
 		//移除它,添加到空闲列表
 		this->m_MagicNumbers[index] = 0;  //资源索引对应的魔法数置为NULL
@@ -178,14 +195,19 @@ namespace Sapphire
 		if (handle.IsNull())  return (0);
 
 		//检查句柄有效性， 
-		uint index = handle.GetIndex();
-		if ((index >= m_UserData.size())
-			|| (m_MagicNumbers[index] != handle.GetMagic()))
+		if (!VerifyHandle(handle))
 		{
-			//无效句柄
-			assert(0);
-			return (0);
+			LogUtil::LogMsgLn("Invalid Handle!");
+			return NULL;
 		}
+		uint index = handle.GetIndex();
+		//if ((index >= m_UserData.size())
+		//	|| (m_MagicNumbers[index] != handle.GetMagic()))
+		//{
+		//	//无效句柄
+		//	assert(0);
+		//	return (0);
+		//}
 
 		return &(m_UserData[index]);
 	}

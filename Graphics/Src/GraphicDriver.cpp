@@ -20,7 +20,7 @@ namespace Sapphire
 
 	void GraphicDriver::Init()
 	{
-
+		CheckFeature();
 	}
 
 	void GraphicDriver::Release()
@@ -47,6 +47,13 @@ namespace Sapphire
 	bool GraphicDriver::IsDeviceLost()
 	{
 		return false;
+	}
+
+	uint GraphicDriver::GetMaxAnisotropyLevels()
+	{
+		GLfloat maxAniLevel;    //查询允许的各向异性数量
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniLevel);
+		return (uint)maxAniLevel;
 	}
 
 	int GraphicDriver::GetHWTextureWarpParam(TextureAddressMode mode)
@@ -152,5 +159,36 @@ namespace Sapphire
 		}
 	}
 
+
+	uint GraphicDriver::GetHWTextureDataType(PixelFormat ePformat)
+	{
+		uint format = GetHWTextureFormat(ePformat);
+
+#ifndef GL_ES_VERSION_2_0
+			if (format == GL_DEPTH24_STENCIL8_EXT)
+				return GL_UNSIGNED_INT_24_8_EXT;
+			else if (format == GL_RG16 || format == GL_RGBA16)
+				return GL_UNSIGNED_SHORT;
+			else if (format == GL_RGBA32F_ARB || format == GL_RG32F || format == GL_R32F)
+				return GL_FLOAT;
+			else if (format == GL_RGBA16F_ARB || format == GL_RG16F || format == GL_R16F)
+				return GL_HALF_FLOAT_ARB;
+			else
+				return GL_UNSIGNED_BYTE;
+#else
+			if (format == GL_DEPTH_COMPONENT || format == GL_DEPTH_COMPONENT24_OES)
+				return GL_UNSIGNED_INT;
+			else if (format == GL_DEPTH_COMPONENT16)
+				return GL_UNSIGNED_SHORT;
+			else
+				return GL_UNSIGNED_BYTE;
+#endif
+	}
+
+	void GraphicDriver::CheckFeature()
+	{
+		m_bAnisotropySupport = GLEW_EXT_texture_filter_anisotropic != 0;
+		m_nMaxTextureUnits = GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS;
+	}
 
 }

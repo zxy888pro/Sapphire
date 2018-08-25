@@ -1,5 +1,7 @@
 #pragma once
-#include "Sapphire.h"
+#include <Sapphire.h>
+#include <fstream>
+
 
 namespace Sapphire
 {
@@ -39,8 +41,8 @@ namespace Sapphire
 		std::vector<TString> m_logCache;
 		TString m_logFilePath;
 		FILE* m_pLogFile;
+		TFStream m_fstream;
 		int   m_nCacheNum;
-
 		TCHAR szBuf[LOGUTIL_MAX_CHARBUFFER_SIZE];
 
 		LogUtil();
