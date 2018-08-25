@@ -5,7 +5,7 @@
 
 namespace Sapphire
 {
-	class TextureMgr :public ITextureMgr
+	class TextureMgr :public ITextureMgr, ResourceMgr
 	{
 	public:
 
@@ -49,6 +49,8 @@ namespace Sapphire
 		ITexture*      m_textures[MAX_TEXTURE_UNITS];
 		uint           m_textureTypes[MAX_TEXTURE_UNITS];
 		int            m_nCurActiveTexUnit;
+
+		GraphicDriver* m_pGraphicDriver;
 
 	};
 }

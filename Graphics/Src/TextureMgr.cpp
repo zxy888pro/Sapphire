@@ -1,10 +1,12 @@
 #include <Graphics.h>
+#include <GraphicDriver.h>
 #include "TextureMgr.h"
 #include "Texture2D.h"
 #include <Core.h>
 #include <GraphicException.h>
 #include <stringHelper.h>
 #include <Image.h>
+#include "ImageMgr.h"
 #include <BaseResource.h>
 #include <logUtil.h>
 
@@ -14,50 +16,46 @@ namespace Sapphire
 
 	TextureMgr::TextureMgr()
 	{
+		//设置最大内存上限
+		SetMaximumMemory(1024 * 1024 * 512);
+		//先预分配内存
+		ReserveMemory(1024 * 1024 * 64);
+		
 		m_nCurActiveTexUnit = 0;
 		for (int i = 0; i < MAX_TEXTURE_UNITS; ++i)
 		{
 			m_textures[i] = NULL;
 			m_textureTypes[i] = NULL;
 		}
-			
+		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
 
 
 	}
 
 	TextureMgr::~TextureMgr()
 	{
-
+		Destroy();
 	}
 
 	Sapphire::ITexture* TextureMgr::CreateTexture2DFromFile(std::string filePath, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_WRAP*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_WRAP*/, bool bDynamic /*= false*/)
 	{
-		//ImageMgr* pImageMgr = ImageMgr::GetSingletonPtr();
-		//Core* pCore = Core::GetSingletonPtr();
-		//if (pImageMgr == NULL || pCore == NULL)
-		//{
-		//	throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
-		//}
-		//HIMAGE himg = pImageMgr->GetImage(filePath.c_str());
-		//if (!himg.IsNull())
-		//{
-		//	LogUtil::LogMsgLn(StringFormatA("Create Texture Failed! Not found %s", filePath.c_str()));
-		//	return NULL;
-		//}
-		//PRAWIMAGE pImgData = pImageMgr->GetTexture(himg);
-		//uint width = pImageMgr->GetWidth(himg);
-		//uint height = pImageMgr->GetHeight(himg);
-		////通道数相当于占用字节数
-		//uint nChannels = pImageMgr->GetNumChannels(himg);
-		//if (pImgData == NULL)
-		//{
-		//	LogUtil::LogMsgLn("Create Texture Failed! RawData is Null");
-		//}
-		//Texture2D*  pTexture = new Texture2D(width,height,nChannels);
-		//pTexture->GPUObjectInit(pImgData);
-		//pTexture->SetSize(pImageMgr->GetImageSize(himg));
-		//return pTexture;
-		return NULL;
+		IImageMgr* pImageMgr = m_pGraphicDriver->getImageMgr();
+		Core* pCore = Core::GetSingletonPtr();
+		if (pImageMgr == NULL || pCore == NULL)
+		{
+			throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
+		}
+		HIMAGE himg = pImageMgr->GetImage(filePath.c_str());
+		if (!himg.IsNull())
+		{
+			LogUtil::LogMsgLn(StringFormatA("Create Texture Failed! Not found %s", filePath.c_str()));
+			return NULL;
+		}
+		Texture2D* pTexture = new Texture2D();
+		pTexture->Load(himg);
+		RHANDLE handle = 0;
+		InsertResource(&handle, pTexture);
+		return pTexture;
 
 	}
 
@@ -78,12 +76,14 @@ namespace Sapphire
 
 	Sapphire::ITexture* TextureMgr::RequestTexture(RHANDLE handle)
 	{
-		return NULL;
+		Texture2D* pTexture = (Texture2D*) GetResource(handle);
+
+		return pTexture;
 	}
 
 	void TextureMgr::DiscardTexture(ITexture* pTexture)
 	{
-		 
+		DestroyResource((BaseResource*)pTexture);
 	}
 
 	void TextureMgr::SetTexture(ITexture* pTexture, TextureUnit index)

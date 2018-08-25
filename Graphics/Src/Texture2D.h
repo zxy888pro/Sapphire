@@ -24,7 +24,8 @@ namespace Sapphire
 		virtual bool Recreate();//重新创建纹理对象
 		virtual void Dispose();
 		virtual bool  IsDisposed();
-		virtual size_t GetSize() override;
+		virtual size_t GetSize();
+		virtual uint GetDataSize() const override;
 		virtual uint  GetRowSize() const override;
 		virtual void Load(HIMAGE himg);  //通过图像句柄加载纹理
 		virtual void OnDeviceLost() override;

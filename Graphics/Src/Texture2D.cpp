@@ -59,6 +59,7 @@ namespace Sapphire
 	{
 		if (m_uHwUID != 0 && m_pGraphicDriver != NULL)
 		{
+			//释放占用纹理对象
 			if (!m_pGraphicDriver->IsDeviceLost())
 			{
 				for (int i = 0; i < MAX_TEXTURE_UNITS; ++i)
@@ -88,6 +89,12 @@ namespace Sapphire
 
 
 	size_t Texture2D::GetSize()
+	{
+		//返回纹理对象大小和该类对象大小
+		return m_uSize + sizeof(Texture2D);
+	}
+
+	size_t Texture2D::GetDataSize() const
 	{
 		if (m_bIsCompress)
 		{
@@ -164,9 +171,7 @@ namespace Sapphire
 		}
 		//创建纹理对象
 		Create();
-
 		SetData(m_mipLevel, 0, 0, width, height, pImgData);
-
 
 	}
 

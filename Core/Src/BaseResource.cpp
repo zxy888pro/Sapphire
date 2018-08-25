@@ -57,7 +57,8 @@ void Sapphire::ResourceMgr::Destroy()
 	{
 		if (!((*itor).second)->IsLocked())
 		{
-			delete ((*itor).second);
+			//delete ((*itor).second);
+			safeDelete(((*itor).second));
 		}
 	}
 	m_ResourceMap.clear();
@@ -123,7 +124,8 @@ bool Sapphire::ResourceMgr::DestroyResource(BaseResource* pResource)
 {
 	if (!RemoveResource(pResource))
 		return false;
-	delete pResource;
+	//delete pResource;
+	safeDelete(pResource);
 	return true;
 }
 
@@ -205,7 +207,7 @@ bool Sapphire::ResourceMgr::CheckForOverallocation()
 	//当前使用内存大于最大内存上限
 	if (m_nCurrentUsedMemory > m_nMaximumMemory)
 	{
-
+		//要清理内存了
 		int iMemToPurge = m_nCurrentUsedMemory - m_nMaximumMemory;
 
 		// 创建个有限队列来保存托管的对象

@@ -122,6 +122,7 @@ namespace Sapphire
 		// 资源字典迭代
 
 		//直接跨dll访问ResMap会导致栈指针错误，必须通过包装间接访问才能保证安全
+		//定位到第一个资源
 		inline void GotoBegin()
 		{
 			m_CurrentResource = m_ResourceMap.begin();
@@ -131,7 +132,7 @@ namespace Sapphire
 		{
 			return (*m_CurrentResource).second;
 		}
-		//下一个
+		//下一个资源
 		inline bool GotoNext()
 		{
 			m_CurrentResource++;  return IsValid();
@@ -185,11 +186,11 @@ namespace Sapphire
 
 	protected:
 		RHANDLE			m_rhNextResHandle;
-		size_t			m_nCurrentUsedMemory;
-		size_t			m_nMaximumMemory;
-		bool			m_bResourceReserved;
-		ResMapItor		m_CurrentResource;
-		ResMap			m_ResourceMap;
+		size_t			m_nCurrentUsedMemory;	//当前内存占用
+		size_t			m_nMaximumMemory;		//最大内存上限
+		bool			m_bResourceReserved;   //是否预分配内存
+		ResMapItor		m_CurrentResource;     //当前资源迭代器
+		ResMap			m_ResourceMap;         //资源容器
 	};
 
 }

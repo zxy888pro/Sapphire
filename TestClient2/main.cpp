@@ -49,6 +49,8 @@ void Init()
 
 	new Sapphire::GraphicDriver();
 
+	Sapphire::GraphicDriver::GetSingletonPtr()->Init();
+
 	Sapphire::IImageMgr* pImgMgr = Sapphire::GraphicDriver::GetSingletonPtr()->getImageMgr();
 	new Sapphire::Camera();
 	
