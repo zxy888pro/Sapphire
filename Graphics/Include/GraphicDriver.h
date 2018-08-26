@@ -23,6 +23,8 @@ namespace Sapphire
 		Sapphire::IImageMgr* getImageMgr() const { return m_pImageMgr; }
 
 		//绑定一个纹理到指定的纹理单元
+		//先激活对应的纹理单元
+		//然后绑定纹理对象
 		void BindTexture(ITexture* pTexture, TextureUnit unit);
 
 		bool  IsDeviceLost();
@@ -30,6 +32,8 @@ namespace Sapphire
 		bool GetAnisotropySupport(){ return m_bAnisotropySupport; }
 
 		uint GetMaxAnisotropyLevels();
+
+		PixelFormat GetPixelFormat(ImageType eImgType);
 
 
 	public:

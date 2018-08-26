@@ -3,7 +3,7 @@
 #include <ITextureMgr.h>
 #include "ImageMgr.h"
 #include <mathHelper.h>
-
+#include "GraphicException.h"
 
 namespace Sapphire
 {
@@ -84,9 +84,14 @@ namespace Sapphire
 
 	void Texture2D::Dispose()
 	{
-
+		 
 	}
 
+
+	bool Texture2D::IsDisposed()
+	{
+		return false;
+	}
 
 	size_t Texture2D::GetSize()
 	{
@@ -163,6 +168,11 @@ namespace Sapphire
 		m_uHeight = height;
 		//通道数相当于占用字节数
 		uint nChannels = pImageMgr->GetNumChannels(himg);
+		m_ePixelFormat = m_pGraphicDriver->GetPixelFormat(pImageMgr->GetImageType(himg));
+		if (m_ePixelFormat == PixelFormat::PF_UNDEFINED)
+		{
+			throw GraphicDriverException("Error Unknown Pixelformat !", GraphicDriverException::GDError_UnknownPixelFormat);
+		}
 		m_uSize = width * height * nChannels;
 		if (pImgData == NULL)
 		{
@@ -194,8 +204,11 @@ namespace Sapphire
 		Release();
 
 		if (m_pGraphicDriver == NULL || m_uWidth == 0 || m_uHeight == 0)
+		{
+			LogUtil::LogMsgLn("GraphicDriver is not initialized!");
 			return false;
-
+		}
+			
 		if (m_pGraphicDriver->IsDeviceLost())
 		{
 			LogUtil::LogMsgLn("Texture Creation While Device is Lost!");
@@ -295,6 +308,7 @@ namespace Sapphire
 			LogUtil::LogMsgLn("Error HwUID is invalid!");
 			return false;
 		}
+		
 		int format = GraphicDriver::GetSWTextureFormat(m_ePixelFormat);
 		int internalFormat = GraphicDriver::GetHWTextureFormat(m_ePixelFormat);
 

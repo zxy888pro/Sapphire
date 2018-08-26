@@ -1,4 +1,7 @@
-#include "Sapphire.h"
+#include <Graphics.h>
+#include <GraphicDriver.h>
+#include <ITexture.h>
+#include <ITextureMgr.h>
 #include "AssimpTest.h"
 #include <logUtil.h>
 #include <stringHelper.h>
@@ -12,8 +15,8 @@ namespace Sapphire
 		std::string filename = std::string(path);
 		filename = directory + '/' + filename;
 
-		unsigned int textureID;
-		glGenTextures(1, &textureID);
+		unsigned int textureID = 0;
+		//glGenTextures(1, &textureID);
 
 		/*int width, height, nrComponents;
 		unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
@@ -47,7 +50,7 @@ namespace Sapphire
 		return textureID;
 	}
 
-	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture2D> textures)
+	Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<ITexture*> textures)
 	{
 		this->vertices = vertices;
 		this->indices = indices;
@@ -60,28 +63,39 @@ namespace Sapphire
 	{
 		unsigned int diffuseNr = 1;
 		unsigned int specularNr = 1;
+		GraphicDriver* pGD = GraphicDriver::GetSingletonPtr();
 		//遍历所有纹理
 		for (unsigned int i = 0; i < textures.size(); i++)
 		{
 			glActiveTexture(GL_TEXTURE0 + i); // 在绑定之前激活相应的纹理单元
 			// 获取纹理序号（diffuse_textureN 中的 N）
 			std::string number;
-			std::string name = textures[i].type;
-			if (name == "texture_diffuse")
+			ITexture* pTexture = textures[i];
+			if (pTexture && pGD->getTextureMgr()->VerifyHWUID(pTexture->getUID())==1)
+			{
+				/*std::string name = pTexture.type;
+				if (name == "texture_diffuse")
 				number = std::to_string(diffuseNr++);
-			else if (name == "texture_specular")
-				number = std::to_string(specularNr++);
+				else if (name == "texture_specular")
+				number = std::to_string(specularNr++);*/
 
-			shader.setFloat(("material." + name + number).c_str(), i);
-			glBindTexture(GL_TEXTURE_2D, textures[i].id);
+				//为每个sampler2D设置纹理单元
+				std::string  samplerName = StringFormatA("texture_diffuse%d",i);
+				shader.setFloat(samplerName, i);
+				pGD->BindTexture(pTexture, (TextureUnit)i);
+			}
+			
 		}
+		glEnable(GL_DEPTH_TEST);
 		//绑定回默认纹理
 		glActiveTexture(GL_TEXTURE0);
-
+		
 		// 绘制网格
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
+		pGD->BindTexture(0, TextureUnit::TU_DIFFUSE);
+		glDisable(GL_DEPTH_TEST);
 	}
 
 	void Mesh::setupMesh()
@@ -169,7 +183,7 @@ namespace Sapphire
 	{
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
-		std::vector<Texture2D> textures;
+		std::vector<ITexture*> textures;
 
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 		{
@@ -213,11 +227,11 @@ namespace Sapphire
 			{
 				aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 				//加载漫反射纹理
-				std::vector<Texture2D> diffuseMaps = loadMaterialTextures(material,
+				std::vector<ITexture*> diffuseMaps = loadMaterialTextures(material,
 					aiTextureType_DIFFUSE, "texture_diffuse");
 				textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 				//加载高光纹理
-				std::vector<Texture2D> specularMaps = loadMaterialTextures(material,
+				std::vector<ITexture*> specularMaps = loadMaterialTextures(material,
 					aiTextureType_SPECULAR, "texture_specular");
 				textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 			}
@@ -225,18 +239,35 @@ namespace Sapphire
 		return Mesh(vertices, indices, textures);
 	}
 
-	std::vector<Sapphire::Texture2D> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)
+	std::vector<ITexture*> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)
 	{
-		std::vector<Texture2D> textures;
+		std::vector<ITexture*> textures;
 		for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 		{
 			aiString str;
 			mat->GetTexture(type, i, &str);
-			Texture2D texture;
+			ITexture* pTexture = NULL;
+			Path path = directory;
+			path = path.getParentDir();
+			path = path.addTailSlash() + str.C_Str();
+			GraphicDriver* pGraphicDriver = GraphicDriver::GetSingletonPtr();
+			pTexture = pGraphicDriver->getTextureMgr()->CreateTexture2DFromFile(path.c_str());
+			if (pTexture == NULL)
+			{
+				LogUtil::LogMsgLn(StringFormatA("Load %s Failed!", path.c_str()));
+			}
+			else
+			{
+				/*if (typeName == "texture_specular")
+				{
+					pGraphicDriver->BindTexture(pTexture, TU_SPECULAR);
+				}*/
+				textures.push_back(pTexture);
+			}
 			//texture.id = TextureFromFile(str.C_Str(), directory);
-			texture.type = typeName;
-			texture.path = str;
-			textures.push_back(texture);
+			//texture.type = typeName;
+			//texture.path = str;
+			
 		}
 		return textures;
 	}

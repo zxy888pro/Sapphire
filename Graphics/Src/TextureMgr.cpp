@@ -46,13 +46,14 @@ namespace Sapphire
 			throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
 		}
 		HIMAGE himg = pImageMgr->GetImage(filePath.c_str());
-		if (!himg.IsNull())
+		if (himg.IsNull())
 		{
 			LogUtil::LogMsgLn(StringFormatA("Create Texture Failed! Not found %s", filePath.c_str()));
 			return NULL;
 		}
 		Texture2D* pTexture = new Texture2D();
 		pTexture->Load(himg);
+		pTexture->setName(filePath);
 		RHANDLE handle = 0;
 		InsertResource(&handle, pTexture);
 		return pTexture;
@@ -109,9 +110,9 @@ namespace Sapphire
 				if (m_textureTypes[index] && m_textureTypes[index] != glType)
 				{
 					glBindTexture(m_textureTypes[index], 0);
-					glBindTexture(glType, pTexture->getUID());
-					m_textureTypes[index] = glType;
 				}
+				glBindTexture(glType, pTexture->getUID());
+				m_textureTypes[index] = glType;
 			}
 			else if (m_textureTypes[index])
 			{
@@ -152,7 +153,8 @@ namespace Sapphire
 
 	bool TextureMgr::VerifyHWUID(uint uHwuid)
 	{
-		return glIsTexture(uHwuid);
+		GLboolean bRet = glIsTexture(uHwuid);
+		return bRet;
 	}
 
 }

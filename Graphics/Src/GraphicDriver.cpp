@@ -56,6 +56,32 @@ namespace Sapphire
 		return (uint)maxAniLevel;
 	}
 
+	PixelFormat GraphicDriver::GetPixelFormat(ImageType eImgType)
+	{
+		switch (eImgType)
+		{
+		case Sapphire::ImageType_Bmp_R8G8B8:
+			return PF_R8G8B8;
+		case Sapphire::ImageType_Bmp_A8R8G8B8:
+			return PF_R8G8B8A8;
+		case Sapphire::ImageType_Jpeg:
+			return PF_R8G8B8;
+		case Sapphire::ImageType_Png:
+			return PF_R8G8B8A8;
+		case Sapphire::ImageType_Tga:
+			return PF_R8G8B8A8;
+		case Sapphire::ImageType_RAW_R8G8B8A8:
+			return PF_R8G8B8A8;
+		case Sapphire::ImageType_RAW_R8G8B8:
+			return PF_R8G8B8;
+		case Sapphire::ImageType_Unknown:
+			return PF_UNDEFINED;
+		default:
+			break;
+		}
+		return PF_UNDEFINED;
+	}
+
 	int GraphicDriver::GetHWTextureWarpParam(TextureAddressMode mode)
 	{
 		switch (mode)

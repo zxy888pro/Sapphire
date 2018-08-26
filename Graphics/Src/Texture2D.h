@@ -56,6 +56,7 @@ namespace Sapphire
 		virtual Sapphire::TextureAddressMode getAddressMode(TextureCoordinate crood){ return m_eAddressMode_[crood]; }
 		virtual void setAddressMode(TextureCoordinate crood, TextureAddressMode mode){ m_eAddressMode_[crood] = mode; }
 		virtual std::string getName() const { return m_szName; }
+		virtual void setName(std::string val) { m_szName = val; }
 		virtual uint  getAnisotropyLevel() const { return m_uAnisotropyLevel; }
 		virtual void setAnisotropyLevel(uint val) { m_uAnisotropyLevel = val; }
 		virtual Sapphire::TextureUsage getUsage() const { return m_eUsage; }

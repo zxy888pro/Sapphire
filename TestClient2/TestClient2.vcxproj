@@ -92,6 +92,8 @@
   <ItemGroup>
     <None Include="..\bin\FontFs.glsl" />
     <None Include="..\bin\FontVs.glsl" />
+    <None Include="..\bin\ObjModelFS.glsl" />
+    <None Include="..\bin\ObjModelVS.glsl" />
     <None Include="..\bin\SDFFs.glsl" />
     <None Include="..\bin\SDFVs.glsl" />
     <None Include="..\bin\test2Fs.glsl" />

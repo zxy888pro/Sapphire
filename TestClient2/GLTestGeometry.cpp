@@ -150,6 +150,7 @@ void Sapphire::GLTestGeometry::Render()
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	RestoreState();
+	glBindTexture(GL_TEXTURE_2D, 0);
 	m_shader->UnUse();
 }
 

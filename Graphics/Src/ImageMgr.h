@@ -47,11 +47,14 @@ namespace Sapphire
 			Image*  pImg = (Image*) m_Images.Dereference(himg);
 			if (pImg)
 			{
-				return pImg->getMipmap(mip)->getData();
+				return pImg->getMipmap(mip);
 			}
 			return NULL;
 		}
 
+
+
+		virtual ImageType GetImageType(HIMAGE himg) const override;
 
 	private:
 

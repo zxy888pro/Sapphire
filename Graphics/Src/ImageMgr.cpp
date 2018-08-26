@@ -50,11 +50,19 @@ void Sapphire::ImageMgr::DeleteTexture(HIMAGE himg)
 	Image* pImg = m_Images.Dereference(himg);
 	if (pImg != 0)
 	{
-		// 通过索引从Map中删除
-		m_imageMap.erase(m_imageMap.find(pImg->getName()));
-
+		std::map<std::string, HIMAGE, istring_less >::iterator it = m_imageMap.find(pImg->getName());
+		if (it != m_imageMap.end())
+		{
+			// 通过索引从Map中删除
+			m_imageMap.erase(it);
+		}
 		// 从数据库中删除
 		pImg->Unload();
 		m_Images.Release(himg);
 	}
+}
+
+Sapphire::ImageType Sapphire::ImageMgr::GetImageType(HIMAGE himg) const
+{
+	return m_Images.Dereference(himg)->getImageType();
 }

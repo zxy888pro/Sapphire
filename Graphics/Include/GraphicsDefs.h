@@ -5,11 +5,13 @@ namespace Sapphire
 
 	enum ImageType
 	{
-		ImageType_Bmp,
+		ImageType_Bmp_R8G8B8,
+		ImageType_Bmp_A8R8G8B8,
 		ImageType_Jpeg,
 		ImageType_Png,
 		ImageType_Tga,
-		ImageType_RAW,
+		ImageType_RAW_R8G8B8A8,
+		ImageType_RAW_R8G8B8,
 		ImageType_Unknown
 	};
 
@@ -73,6 +75,7 @@ namespace Sapphire
 		PF_R8G8B8,
 		PF_B8G8R8,
 		PF_R8,
+		PF_UNDEFINED,
 		MAX_PIXELFORMATS
 	};
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Sapphire.h>
+#include <Graphics.h>
 #include <string>
 #include <glm.hpp>
 #include <gtc/vec1.inl>
@@ -22,12 +22,14 @@ namespace Sapphire
 	};
 
 
-	struct Texture2D {
+	class ITexture;
+
+	/*struct Texture2D {
 
 		uint id;
 		std::string type;
 		aiString path;
-	};
+		};*/
 
 
 	unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma);
@@ -38,9 +40,9 @@ namespace Sapphire
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
 		//网格纹理列表
-		std::vector<Texture2D> textures;
+		std::vector<ITexture*> textures;
 		/*  函数  */
-		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture2D> textures);
+		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<ITexture*> textures);
 		void Draw(Shader shader);
 	private:
 		/*  渲染数据  */
@@ -67,10 +69,12 @@ namespace Sapphire
 		std::string directory;
 		/*  函数   */
 		void loadModel(std::string path);
+		//解析Assimp节点
 		void processNode(aiNode *node, const aiScene *scene);
+		//解析网格
 		Mesh processMesh(aiMesh *mesh, const aiScene *scene);
 		//加载纹理
-		std::vector<Texture2D> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
+		std::vector<ITexture*> loadMaterialTextures(aiMaterial *mat, aiTextureType type,
 			std::string typeName);
 	};
 }

@@ -22,11 +22,12 @@ namespace Sapphire
 			m_nWidth = 0;
 			m_nMipmapNum = 0;
 			m_nChannels = 0;
+			m_mipmaps.clear();
 		};
 
 		friend class ImageMgr;
 
-		typedef std::vector <Image*> MipmapArray;
+		typedef std::vector <PRAWIMAGE> MipmapArray;
 
 		virtual ~Image();
 
@@ -38,13 +39,15 @@ namespace Sapphire
 
 		int getWidth() const { return m_nWidth; }
 
+		ImageType getImageType() const { return m_imgType; }
+
 		//RAWDATA 统一为4通道RGBA  3通道RGB  2通道GA  1通道G
 		virtual PRAWIMAGE getData() const
 		{
 			return m_pbData;
 		}
 
-		virtual const Image* getMipmap(uint nMipmap = 0) const
+		virtual const PRAWIMAGE getMipmap(uint nMipmap = 0) const
 		{
 			assert(nMipmap < m_nMipmapNum);
 			return m_mipmaps[nMipmap];

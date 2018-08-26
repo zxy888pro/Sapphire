@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Sapphire.h"
+#include <Core.h>
 #include <GraphicDriver.h>
 #include "stringHelper.h"
 #include "logUtil.h"
@@ -9,6 +10,7 @@
 #include "Camera.h"
 #include "GLUITest.h"
 #include "SDFTest.h"
+#include "AssimpTest.h"
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -18,6 +20,8 @@ Sapphire::SDFTest*  sdfTest = NULL;
 Sapphire::Shader* shader = NULL;
 Sapphire::Shader* textShader = NULL;
 Sapphire::Shader* sdfShader = NULL;
+Sapphire::Shader* modelShader = NULL;
+Sapphire::Model*  model = NULL;
 
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
@@ -47,12 +51,15 @@ void Init()
 	Sapphire::LogUtil::getInstancePtr()->Init("log.txt");
 	Sapphire::LogUtil::LogMsgLn("³õÊ¼»¯³ÌÐò");
 
+	new Sapphire::Core();
 	new Sapphire::GraphicDriver();
+
 
 	Sapphire::GraphicDriver::GetSingletonPtr()->Init();
 
 	Sapphire::IImageMgr* pImgMgr = Sapphire::GraphicDriver::GetSingletonPtr()->getImageMgr();
 	new Sapphire::Camera();
+	
 	
 }
 
@@ -164,7 +171,12 @@ int main()
 		sdfTest = new Sapphire::SDFTest(sdfShader);
 		sdfTest->init("arial", 32, 32);
 	}
+	model = new Sapphire::Model("Models\\PanzerD\\PanzerD.obj");
+	modelShader = new Sapphire::Shader("ObjModelVS.glsl", "ObjModelFS.glsl","");
+	
+
 	glViewport(0, 0, 800, 600);
+	
 	glTestGeo->Init();
 	glUiTest->Init(Sapphire::FontRenderMode::FONT_RENDER_MODE_NORMAL, "fonts/arial.ttf", 0, 32);
 	while (!glfwWindowShouldClose(window))
@@ -176,6 +188,21 @@ int main()
 		glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glTestGeo->Render();
+		if (modelShader != NULL)
+		{
+			modelShader->Use();
+			glm::mat4 projectionMat = glm::perspective(glm::radians(Sapphire::Camera::GetSingletonPtr()->getZoom()), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+			glm::mat4 view = Sapphire::Camera::GetSingletonPtr()->GetViewMatrix();
+			modelShader->setMat4("projection", projectionMat);
+			modelShader->setMat4("view", view);
+
+			// render the loaded model
+			glm::mat4 modelMat;
+			modelMat = glm::translate(modelMat, glm::vec3(0.0f, -1.75f, 10.0f)); // translate it down so it's at the center of the scene
+			modelMat = glm::scale(modelMat, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
+			modelShader->setMat4("model", modelMat);
+			model->Draw(*modelShader);
+		}
 		glUiTest->RenderText("Test FreeType Font", 125.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
 		sdfTest->RenderText("Hello World!", 320.0f, 110.0f, 0.05f, glm::vec3(0.3, 0.7f, 0.9f));
 		glfwSwapBuffers(window);

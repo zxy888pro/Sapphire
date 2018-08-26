@@ -22,6 +22,11 @@ namespace Sapphire
 
 		virtual PRAWIMAGE  GetTexture(HIMAGE himg, uint mip = 0) const = 0;
 
+		virtual ImageType  GetImageType(HIMAGE himg) const = 0;
+
 	};
+
+	 
+
 }
 

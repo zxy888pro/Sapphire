@@ -36,13 +36,13 @@ bool Sapphire::Image::Load(const std::string& imagePath)
 	}
 	else if (ext == "bmp")
 	{
-		m_imgType = ImageType::ImageType_Bmp;
+		m_imgType = ImageType::ImageType_Bmp_R8G8B8;
 	}
 	else if (ext == "tga")
 	{
 		m_imgType = ImageType::ImageType_Tga;
 	}
-	m_mipmaps.push_back(this);
+	m_mipmaps.push_back(m_pbData);
 	++m_nMipmapNum;
 	return true;
 }
@@ -56,7 +56,9 @@ void Sapphire::Image::Unload(void)
 	}
 	for (int i = 1; i < m_mipmaps.size(); ++i)
 	{
-		m_mipmaps[i]->Unload();
+
+		safeDeleteArray(m_mipmaps[i]);
+		//m_mipmaps[i]->Unload();
 	}
 	LogUtil::LogMsgLn(StringFormatA(" Ð¶ÔØÍ¼Æ¬ :%s ", m_Name.c_str()));
 	m_nWidth = 0;
@@ -78,7 +80,10 @@ void Sapphire::Image::SetRAWData(void* dataPtr, int width, int height, int nChan
 	m_pbData = (PRAWIMAGE)dataPtr;
 	m_nWidth = width;
 	m_nHeight = height;
-	m_imgType = ImageType::ImageType_RAW;
+	if (nChannels == 4)
+		m_imgType = ImageType::ImageType_RAW_R8G8B8A8;
+	else
+	    m_imgType = ImageType::ImageType_RAW_R8G8B8;
 	m_nChannels = nChannels;
 	m_mipmaps.clear();
 	m_nMipmapNum = 0;
@@ -107,9 +112,9 @@ void Sapphire::Image::GenerateMipmaps()
 		Image* imgPtr = new Image();
 		int totalSize = subHeight*subWidth*m_nChannels;
 		byte* pbDate = new byte[totalSize];
-		int ret = stbir_resize_uint8(m_pbData, parentWidth, parentHeight, 0, pbDate, subWidth, subHeight, 0, m_nChannels);
-		imgPtr->SetRAWData(pbDate, subWidth, subHeight, m_nChannels);
-		m_mipmaps.push_back(imgPtr);
+		/*int ret = stbir_resize_uint8(m_pbData, parentWidth, parentHeight, 0, pbDate, subWidth, subHeight, 0, m_nChannels);
+		imgPtr->SetRAWData(pbDate, subWidth, subHeight, m_nChannels);*/
+		m_mipmaps.push_back(pbDate);
 		++m_nMipmapNum;
 	}
 

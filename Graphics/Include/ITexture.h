@@ -28,6 +28,7 @@ namespace Sapphire
 		virtual uint  GetDataSize() const = 0;
 		virtual uint  GetRowSize() const = 0;
 		virtual std::string getName() const = 0;
+		virtual void setName(std::string val) = 0;
 		virtual uint  getAnisotropyLevel() const = 0;
 		virtual void setAnisotropyLevel(uint val) = 0;
 		virtual Sapphire::TextureUsage getUsage() const = 0;

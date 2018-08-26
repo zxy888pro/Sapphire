@@ -13,6 +13,7 @@ namespace Sapphire
 			GDError_NullPointerError,
 			GDError_ComponentNotCreate,
 			GDError_TextureOperationError,
+			GDError_UnknownPixelFormat,
 			GDError_UnknownError,
 		};
 
