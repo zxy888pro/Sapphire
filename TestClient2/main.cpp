@@ -11,6 +11,7 @@
 #include "GLUITest.h"
 #include "SDFTest.h"
 #include "AssimpTest.h"
+#include "lightAndColor.h"
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -22,6 +23,7 @@ Sapphire::Shader* textShader = NULL;
 Sapphire::Shader* sdfShader = NULL;
 Sapphire::Shader* modelShader = NULL;
 Sapphire::Model*  model = NULL;
+Sapphire::LightAndColor* pLightAndColor = NULL;
 
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
@@ -89,6 +91,7 @@ void Release()
 	}
 	
 	delete Sapphire::Camera::GetSingletonPtr();
+	safeDelete(pLightAndColor);
 }
 
 void OnScreenSizeChanged(GLFWwindow* window, int width, int height)
@@ -174,6 +177,8 @@ int main()
 	model = new Sapphire::Model("Models\\PanzerD\\PanzerD.obj");
 	modelShader = new Sapphire::Shader("ObjModelVS.glsl", "ObjModelFS.glsl","");
 	
+	pLightAndColor = new Sapphire::LightAndColor();
+	pLightAndColor->Init("ConstantVS.glsl", "ConstantFS.glsl", "ObjModelVS.glsl", "ObjModelFS.glsl");
 
 	glViewport(0, 0, 800, 600);
 	
@@ -185,9 +190,10 @@ int main()
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 		ProcessInput(window);
-		glClearColor(0.0f, 0.5f, 0.5f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glTestGeo->Render();
+		pLightAndColor->Render();
 		if (modelShader != NULL)
 		{
 			modelShader->Use();

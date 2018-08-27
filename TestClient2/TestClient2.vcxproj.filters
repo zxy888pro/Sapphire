@@ -36,6 +36,9 @@
     <ClInclude Include="AssimpTest.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="lightAndColor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -62,6 +65,9 @@
     <ClCompile Include="AssimpTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="LightAndColor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\test2Vs.glsl" />
@@ -72,5 +78,9 @@
     <None Include="..\bin\SDFVs.glsl" />
     <None Include="..\bin\ObjModelVS.glsl" />
     <None Include="..\bin\ObjModelFS.glsl" />
+    <None Include="..\bin\ConstantVS.glsl" />
+    <None Include="..\bin\ConstantFS.glsl" />
+    <None Include="..\bin\LampVS.glsl" />
+    <None Include="..\bin\LampFS.glsl" />
   </ItemGroup>
 </Project>

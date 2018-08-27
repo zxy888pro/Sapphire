@@ -75,6 +75,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="GLTestGeometry.h" />
     <ClInclude Include="GLUITest.h" />
+    <ClInclude Include="lightAndColor.h" />
     <ClInclude Include="SDFTest.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stdafx.h" />
@@ -84,14 +85,19 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="GLTestGeometry.cpp" />
     <ClCompile Include="GLUITest.cpp" />
+    <ClCompile Include="LightAndColor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SDFTest.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\bin\ConstantFS.glsl" />
+    <None Include="..\bin\ConstantVS.glsl" />
     <None Include="..\bin\FontFs.glsl" />
     <None Include="..\bin\FontVs.glsl" />
+    <None Include="..\bin\LampFS.glsl" />
+    <None Include="..\bin\LampVS.glsl" />
     <None Include="..\bin\ObjModelFS.glsl" />
     <None Include="..\bin\ObjModelVS.glsl" />
     <None Include="..\bin\SDFFs.glsl" />
