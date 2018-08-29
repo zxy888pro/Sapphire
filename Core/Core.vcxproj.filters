@@ -60,6 +60,15 @@
     <ClInclude Include="Include\BaseResource.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\RefCounter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Ptr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\SapphireDef.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -67,9 +76,6 @@
     </ClCompile>
     <ClCompile Include="Src\BaseException.cpp">
       <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\stringHelper.cpp">
-      <Filter>头文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\charset.cpp">
       <Filter>源文件</Filter>
@@ -93,6 +99,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\BaseResource.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RefCounter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\stringHelper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

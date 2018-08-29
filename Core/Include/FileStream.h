@@ -1,7 +1,7 @@
 #ifndef __FILE_STREAM__
 #define __FILE_STREAM__
 
-#include "Sapphire.h"
+#include "SapphireDef.h"
 #include "path.h"
 #include <fstream>
 #include <exception>

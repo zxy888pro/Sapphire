@@ -1,6 +1,6 @@
 #ifndef _INIFILE_H
 #define _INIFILE_H
-#include "Sapphire.h"
+#include "SapphireDef.h"
 #include <map>
 #include <vector>
 #include <string>

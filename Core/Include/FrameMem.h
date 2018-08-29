@@ -1,7 +1,7 @@
 #ifndef __MEMORY_H__
 #define __MEMORY_H__
 
-#include "Sapphire.h"
+#include "SapphireDef.h"
 
 #define ALIGNUP( nAddress, nBytes ) ( (((uint)nAddress) + (nBytes)-1) & (~((nBytes)-1)) )
 

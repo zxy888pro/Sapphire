@@ -1,7 +1,7 @@
 #ifndef  __PATH__H__
 #define  __PATH__H__
 
-#include "Sapphire.h"
+#include "SapphireDef.h"
 
 #define  CHAR_SLASH			'\\'
 #define  CHAR_DOT			'.'

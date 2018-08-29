@@ -1,6 +1,6 @@
 #ifndef __SAPPHIRE_CORE_H__
 #define __SAPPHIRE_CORE_H__
-#include "Sapphire.h"
+#include "SapphireDef.h"
 #include <singleton.h>
 #include <BaseResource.h>
 

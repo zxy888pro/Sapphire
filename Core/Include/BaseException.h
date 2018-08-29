@@ -1,6 +1,6 @@
 #ifndef __BASE_EXCEPTION_H__
 #define __BASE_EXCEPTION_H__
-#include "Sapphire.h"
+#include "SapphireDef.h"
 
 namespace Sapphire
 {

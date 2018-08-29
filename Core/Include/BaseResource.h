@@ -1,7 +1,7 @@
 #ifndef _BASE_RESOURCE_H_
 #define _BASE_RESOURCE_H_
 
-#include "Sapphire.h"
+#include "SapphireDef.h"
 #include "handle.h"
 
 
