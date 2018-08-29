@@ -1,4 +1,4 @@
-#include "Sapphire.h"
+#include <SapphireDef.h>
 #include "Core.h"
 #ifdef SAPPHIRE_WIN
 #include <windows.h>
@@ -6,6 +6,8 @@
 #else
 
 #endif
+#include <Sapphire.h>
+#include <BaseResource.h>
 
 namespace Sapphire
 {
@@ -71,6 +73,11 @@ namespace Sapphire
 		safeDelete(m_resMgr);
 	}
 
+
+	Sapphire::ResourceMgr* Core::GetResourceManager()
+	{
+		return m_resMgr;
+	}
 
 }
 

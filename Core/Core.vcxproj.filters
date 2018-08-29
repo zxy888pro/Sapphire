@@ -69,6 +69,15 @@
     <ClInclude Include="Include\SapphireDef.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ArrayPtr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Thread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Mutex.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -105,6 +114,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\stringHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Mutex.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

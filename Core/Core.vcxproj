@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArrayPtr.h" />
     <ClInclude Include="Include\BaseException.h" />
     <ClInclude Include="Include\BaseResource.h" />
     <ClInclude Include="Include\charset.h" />
@@ -22,6 +23,7 @@
     <ClInclude Include="Include\mathHelper.h" />
     <ClInclude Include="Include\md5.h" />
     <ClInclude Include="Include\FrameMem.h" />
+    <ClInclude Include="Include\Mutex.h" />
     <ClInclude Include="Include\path.h" />
     <ClInclude Include="Include\Ptr.h" />
     <ClInclude Include="Include\RefCounter.h" />
@@ -29,6 +31,7 @@
     <ClInclude Include="Include\SapphireDef.h" />
     <ClInclude Include="Include\singleton.h" />
     <ClInclude Include="Include\stringHelper.h" />
+    <ClInclude Include="Include\Thread.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\BaseException.cpp" />
@@ -40,6 +43,7 @@
     <ClCompile Include="Src\logUtil.cpp" />
     <ClCompile Include="Src\md5.cpp" />
     <ClCompile Include="Src\FrameMem.cpp" />
+    <ClCompile Include="Src\Mutex.cpp" />
     <ClCompile Include="Src\path.cpp" />
     <ClCompile Include="Src\RefCounter.cpp" />
     <ClCompile Include="Src\stringHelper.cpp" />

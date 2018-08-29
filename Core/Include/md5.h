@@ -1,7 +1,7 @@
 #ifndef MD5_H
 #define MD5_H
 
-#include "Sapphire.h"
+#include <SapphireDef.h>
 
 namespace Sapphire
 {

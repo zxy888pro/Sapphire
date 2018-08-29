@@ -2,12 +2,13 @@
 #define __SAPPHIRE_CORE_H__
 #include "SapphireDef.h"
 #include <singleton.h>
-#include <BaseResource.h>
 
 namespace Sapphire
 {
 
 	bool Is64bitSystem();
+
+	class ResourceMgr;
 
 	 SAPPHIRE_API void Mem_Set_WORD(void *dest, ushort data, int count);
 	 SAPPHIRE_API void Mem_Set_QUAD(void *dest, uint   data, int count);
@@ -18,7 +19,7 @@ namespace Sapphire
 		 Core();
 		 virtual ~Core();
 
-		 ResourceMgr*  GetResourceManager() { return m_resMgr; }
+		 ResourceMgr*  GetResourceManager();
 
 	 private:
 

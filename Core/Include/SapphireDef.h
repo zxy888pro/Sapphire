@@ -7,8 +7,12 @@
 // 平台定义
 #if defined( __WIN32__ ) || defined( _WIN32 ) || defined( WIN32 ) || defined(_WIN64)
 #	define SAPPHIRE_WIN
+#elif defined(ANDROID) 
+#	define SAPPHIRE_ANDROID
+#elif defined(IOS)
+#	define IOS
 #else
-#	define SAPPHIRE_LINUX
+# define SAPPHIRE_LINUX
 #endif
 
 #define MAXPATH 260
