@@ -20,9 +20,9 @@ namespace Sapphire
 
 		Shader*  m_uCubeShader;
 		Shader*  m_uLampShader;
-		GLuint  m_uVAO;
+		GLuint  m_uCubeVAO;
 		GLuint  m_uLightVAO;
-		GLuint  m_uVBO;
+		GLuint  m_uCubeVBO;
 		GLuint  m_uLightVBO;
 		GLuint  m_uEBO;
 

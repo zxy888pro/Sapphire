@@ -14,8 +14,8 @@ namespace Sapphire
 	{
 		m_uCubeShader = NULL;
 		m_uLampShader = NULL;
-		m_uVAO = 0;
-		m_uVBO = 0;
+		m_uCubeVAO = 0;
+		m_uCubeVBO = 0;
 		m_uEBO = 0;
 		m_uLightVAO = 0;
 	}
@@ -82,18 +82,18 @@ namespace Sapphire
 			-0.5f, 0.5f, 0.5f,
 			-0.5f, 0.5f, -0.5f,
 		};
-		glGenVertexArrays(1, &m_uVAO);
-		glGenBuffers(1, &m_uVBO);
-		glBindBuffer(GL_VERTEX_ARRAY, m_uVBO);
-		glBufferData(GL_VERTEX_ARRAY, sizeof(vertices), vertices, GL_STATIC_DRAW);
-		glBindVertexArray(m_uVAO);
+		glGenVertexArrays(1, &m_uCubeVAO);
+		glGenBuffers(1, &m_uCubeVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, m_uCubeVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		glBindVertexArray(m_uCubeVAO);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
 
 		glGenVertexArrays(1, &m_uLightVAO);
 		glBindVertexArray(m_uLightVAO);
 		//和Cube相同的，用同樣的頂點數據，不需要再重新填充VBO對象了
-		glBindBuffer(GL_VERTEX_ARRAY, m_uVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, m_uCubeVBO);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
 
@@ -118,15 +118,17 @@ namespace Sapphire
 
 		// world transformation
 		glm::mat4 model;
+		model = glm::translate(model, glm::vec3(10, 0, 10));
 		m_uCubeShader->setMat4("model", model);
 
-		glBindVertexArray(m_uVAO);
+		glBindVertexArray(m_uCubeVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		m_uLampShader->Use();
 		m_uLampShader->setMat4("projection", projection);
 		m_uLampShader->setMat4("view", view);
 
+		glBindVertexArray(0);
 		model = glm::mat4();
 		model = glm::translate(model, lightPos);
 		model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
@@ -134,7 +136,7 @@ namespace Sapphire
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		glBindVertexArray(0);
-		glDisable(GL_DEPTH_TEST);
+		//glDisable(GL_DEPTH_TEST);
 		m_uCubeShader->UnUse();
 	}
 
@@ -152,16 +154,16 @@ namespace Sapphire
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
-		glBindVertexArray(m_uVAO);
-		glDeleteVertexArrays(1, &m_uVAO);
+		glBindVertexArray(m_uCubeVAO);
+		glDeleteVertexArrays(1, &m_uCubeVAO);
 		glBindVertexArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, m_uVBO);
-		glDeleteBuffers(1, &m_uVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, m_uCubeVBO);
+		glDeleteBuffers(1, &m_uCubeVBO);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		m_uCubeShader = NULL;
 		m_uLampShader = NULL;
-		m_uVAO = 0;
-		m_uVBO = 0;
+		m_uCubeVAO = 0;
+		m_uCubeVBO = 0;
 		m_uEBO = 0;
 		m_uLightVAO = 0;
 
