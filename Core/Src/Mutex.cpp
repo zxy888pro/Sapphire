@@ -69,12 +69,12 @@ namespace Sapphire
 
 #endif
 
-	MutexLock::MutexLock(Mutex& mutex) :mutexRef(mutex)
+	MutexAutoLock::MutexAutoLock(Mutex& mutex) :mutexRef(mutex)
 	{
 		mutexRef.Acquire();
 	}
 
-	MutexLock::~MutexLock()
+	MutexAutoLock::~MutexAutoLock()
 	{
 		mutexRef.Release();
 	}

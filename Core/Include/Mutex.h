@@ -4,7 +4,7 @@
 
 namespace Sapphire
 {
-	class SAPPHIRE_API Mutex
+	class SAPPHIRE_CLASS Mutex
 	{
 	public:
 		Mutex();
@@ -19,12 +19,12 @@ namespace Sapphire
 	};
 
 	//×Ô¶¯Ëø
-	class SAPPHIRE_API MutexLock
+	class SAPPHIRE_CLASS MutexAutoLock
 	{
 	public:
 
-		MutexLock(Mutex& mutex);
-		~MutexLock();
+		MutexAutoLock(Mutex& mutex);
+		~MutexAutoLock();
 
 	private:
 

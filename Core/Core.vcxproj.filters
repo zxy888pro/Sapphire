@@ -78,6 +78,9 @@
     <ClInclude Include="Include\Mutex.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\MemoryMgr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -117,6 +120,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\Mutex.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Thread.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\MemoryMgr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

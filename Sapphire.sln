@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestClient2", "TestClient2\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestEtc1", "TestEtc1\TestEtc1.vcxproj", "{1523AE02-0A83-45D3-9149-786E482D3FED}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestMemAlloc", "TestMemAlloc\TestMemAlloc.vcxproj", "{6EFE2011-93BF-424B-82E7-2E2060B6E424}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -39,6 +41,10 @@ Global
 		{1523AE02-0A83-45D3-9149-786E482D3FED}.Debug|Win32.Build.0 = Debug|Win32
 		{1523AE02-0A83-45D3-9149-786E482D3FED}.Release|Win32.ActiveCfg = Release|Win32
 		{1523AE02-0A83-45D3-9149-786E482D3FED}.Release|Win32.Build.0 = Release|Win32
+		{6EFE2011-93BF-424B-82E7-2E2060B6E424}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6EFE2011-93BF-424B-82E7-2E2060B6E424}.Debug|Win32.Build.0 = Debug|Win32
+		{6EFE2011-93BF-424B-82E7-2E2060B6E424}.Release|Win32.ActiveCfg = Release|Win32
+		{6EFE2011-93BF-424B-82E7-2E2060B6E424}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

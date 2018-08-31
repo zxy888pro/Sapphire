@@ -21,7 +21,7 @@ namespace Sapphire
 		int weakRefs_;
 	};
 
-	class SAPPHIRE_API RefCounter
+	class SAPPHIRE_CLASS RefCounter
 	{
 	public:
 		RefCounter();

@@ -22,12 +22,15 @@
 
 #ifdef SAPPHIRE_WIN
 //WIN
+#include <ctype.h>
+#include <string.h>
 #include <string>
 #include <cstring>
 #include <vector>
 #include <map>
 #include <tchar.h>
 #include<time.h>
+#include <stdlib.h>
 #include <unordered_map>
 
 #if defined(SAPPHIRE_STATIC_LIB) && defined(SAPPHIRE_LIB)
@@ -94,6 +97,46 @@
 #endif
 #ifndef safeRelease
 #	define safeRelease(ptr)		if ((ptr)) {(ptr)->release(); (ptr) = 0;}
+#endif
+
+
+//内存管理器
+#ifdef _DEBUG 
+#define ACTIVATE_MEMORY_MANAGER
+#endif
+
+#ifdef ACTIVATE_MEMORY_MANAGER
+//#undef new
+//#undef delete
+//#undef malloc
+//#undef calloc
+//#undef realloc
+//#undef free
+//#define new              new( __FILE__, __LINE__ )
+//#define delete           (setOwner( __FILE__, __LINE__ ), false) ? setOwner( "", 0 ) : delete
+//#define malloc(sz)       AllocateMemory(   __FILE__, __LINE__, sz,     AT_Malloc       )
+//#define calloc(num, sz)  AllocateMemory(   __FILE__, __LINE__, sz*num, AT_Calloc       )
+//#define realloc(ptr, sz) AllocateMemory(   __FILE__, __LINE__, sz,     AT_Realloc, ptr )
+//#define free(sz)         deAllocateMemory( __FILE__, __LINE__, sz,     AT_Free         )
+#endif // ACTIVATE_MEMORY_MANAGER
+
+
+
+enum MemAllocType
+{
+	MAT_Unknown,
+	MAT_New,
+	MAT_NewArray,
+	MAT_Malloc,
+	MAT_Calloc,
+	MAT_Realloc,
+	MAT_Delete,
+	MAT_DeleteArray,
+	MAT_Free
+};
+
+#ifdef _DEBUG 
+#define ACTIVATE_MEMORY_MANAGER
 #endif
 
 //数据类型
