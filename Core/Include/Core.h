@@ -9,22 +9,27 @@ namespace Sapphire
 	bool Is64bitSystem();
 
 	class ResourceMgr;
+	class MemoryManager;
 
 	 SAPPHIRE_API void Mem_Set_WORD(void *dest, ushort data, int count);
 	 SAPPHIRE_API void Mem_Set_QUAD(void *dest, uint   data, int count);
 
-	 class SAPPHIRE_API Core:public Singleton<Core>
+	 class SAPPHIRE_CLASS Core:public Singleton<Core>
 	 {
 	 public:
 		 Core();
 		 virtual ~Core();
+		 void Init();
+		 void Release();
 
 		 ResourceMgr*  GetResourceManager();
+		 Sapphire::MemoryManager* GetMemoryMgr();
 
 	 private:
 
 		 //资源管理器
 		 ResourceMgr*  m_resMgr;
+		 MemoryManager*  m_memMgr;
 
 
 	 };

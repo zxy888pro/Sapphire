@@ -56,8 +56,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	delete pstr;*/
 	/*testClass* ptc = new testClass();
 	delete ptc;*/
-	/*int* b = new int(5);
-	delete b;*/
+	int* b = _New int(5);
+	_Delete b;
 	dumpLogReport();
 	dumpMemoryAllocations();
 	

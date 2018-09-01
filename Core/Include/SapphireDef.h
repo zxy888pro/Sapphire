@@ -101,25 +101,11 @@
 
 
 //内存管理器
-#ifdef _DEBUG 
+//#ifdef _DEBUG 
+//#define ACTIVATE_MEMORY_MANAGER
+//#endif
+
 #define ACTIVATE_MEMORY_MANAGER
-#endif
-
-#ifdef ACTIVATE_MEMORY_MANAGER
-//#undef new
-//#undef delete
-//#undef malloc
-//#undef calloc
-//#undef realloc
-//#undef free
-//#define new              new( __FILE__, __LINE__ )
-//#define delete           (setOwner( __FILE__, __LINE__ ), false) ? setOwner( "", 0 ) : delete
-//#define malloc(sz)       AllocateMemory(   __FILE__, __LINE__, sz,     AT_Malloc       )
-//#define calloc(num, sz)  AllocateMemory(   __FILE__, __LINE__, sz*num, AT_Calloc       )
-//#define realloc(ptr, sz) AllocateMemory(   __FILE__, __LINE__, sz,     AT_Realloc, ptr )
-//#define free(sz)         deAllocateMemory( __FILE__, __LINE__, sz,     AT_Free         )
-#endif // ACTIVATE_MEMORY_MANAGER
-
 
 
 enum MemAllocType
@@ -135,9 +121,15 @@ enum MemAllocType
 	MAT_Free
 };
 
-#ifdef _DEBUG 
-#define ACTIVATE_MEMORY_MANAGER
-#endif
+
+//#define ACTIVATE_MEMORY_MANAGER
+
+#ifdef SAPPHIRE_WIN
+#define m_assert(x) if ((x) == false) __asm { int 3 }
+#else
+#define m_assert(x) assert(x)
+#endif // !SAPPHIRE_WIN
+
 
 //数据类型
 typedef unsigned char byte;

@@ -8,6 +8,7 @@
 #endif
 #include <Sapphire.h>
 #include <BaseResource.h>
+#include <MemoryMgr.h>
 
 namespace Sapphire
 {
@@ -63,20 +64,40 @@ namespace Sapphire
 
 	Core::Core()
 	{
+		m_memMgr = new MemoryManager();
+		m_memMgr->initialize();
 		m_resMgr = new ResourceMgr();
 	}
 
 	Core::~Core()
 	{
-		m_resMgr->Clear();
-
-		safeDelete(m_resMgr);
+		
 	}
 
+
+ 
+
+	void Core::Init()
+	{
+
+	}
+
+	void Core::Release()
+	{
+		m_resMgr->Clear();
+		safeDelete(m_resMgr);
+		m_memMgr->release();
+		safeDelete(m_memMgr);
+	}
 
 	Sapphire::ResourceMgr* Core::GetResourceManager()
 	{
 		return m_resMgr;
+	}
+
+	Sapphire::MemoryManager* Core::GetMemoryMgr()
+	{
+		return m_memMgr;
 	}
 
 }
