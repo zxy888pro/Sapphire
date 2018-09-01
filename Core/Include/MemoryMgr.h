@@ -125,18 +125,18 @@ namespace Sapphire
 	   void log(char *s, ...);
 
 
-	   int           m_breakOnAllocationCount;
-	   unsigned int  m_paddingSize;
+	   int           m_breakOnAllocationCount;	//分配中断数
+	   unsigned int  m_paddingSize;     //padding大小
 	   bool          m_logAlways;
 	   bool          m_cleanLogFileOnFirstRun;
 
 
-	   int          m_totalMemoryAllocations;  
-	   unsigned int m_totalMemoryAllocated;   
-	   unsigned int m_totalMemoryUsed;         
+	   int          m_totalMemoryAllocations;       
+	   unsigned int m_totalMemoryAllocated;   //总分配内存
+	   unsigned int m_totalMemoryUsed;         //总使用内存
 
-	   unsigned int m_peakMemoryAllocation;    
-	   unsigned int m_peakTotalNumAllocations; 
+	   unsigned int m_peakMemoryAllocation;    //分配内存峰值
+	   unsigned int m_peakTotalNumAllocations; //分配数峰值
 	   unsigned int m_overheadMemoryCost;     
 	   unsigned int m_peakOverHeadMemoryCost; 
 	   unsigned int m_totalOverHeadMemoryCost;

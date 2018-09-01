@@ -16,37 +16,46 @@
 class testClass
 {
 public:
-	std::string m_name;
-	std::map<int, std::string> m_map;
+	
+	int a;
+	float b;
+	const char* str;
 
-	std::string getName(){ return m_name; }
-	std::string getValue(int key)
+	testClass()
 	{
-		std::map<int, std::string>::iterator it = m_map.find(key);
-		if (it != m_map.end())
-		{
-			return it->second;
-		}
-
+		a = 5;
+		b = 10.2;
+		str = "hello world!";
 	}
+	//std::string m_name;
+	//std::map<int, std::string> m_map;
+
+	//std::string getName(){ return m_name; }
+	//std::string getValue(int key)
+	//{
+		//std::map<int, std::string>::iterator it = m_map.find(key);
+		//if (it != m_map.end())
+		//{
+			//return it->second;
+		//}
+
+	//}
 };
 
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	/*std::string str = "abc";
-	std::string* pstr = new std::string("test");
+	std::string str = "abc";
+	std::vector<std::string> v;
+	/*std::string* pstr = new std::string("test");
 	int size1 = sizeof(std::string);
 	std::vector<std::string>* pv = new std::vector<std::string>();
 	int size2 = sizeof(*pv);
 	pv->push_back(str);
 	delete pv;
-	delete pstr;
-	testClass* ptc = new testClass();
-	ptc->m_name = "wah";*/
-	testClass* ptc = new testClass();
-	ptc->m_name = "wah";
-	delete ptc;
+	delete pstr;*/
+	/*testClass* ptc = new testClass();
+	delete ptc;*/
 	/*int* b = new int(5);
 	delete b;*/
 	dumpLogReport();
