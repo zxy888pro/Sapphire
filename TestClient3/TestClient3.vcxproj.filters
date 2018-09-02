@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{51950aa7-004b-418c-a2aa-620c5591ba92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -22,6 +25,15 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLightMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderState.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -38,5 +50,28 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="BaseMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLightMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderState.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin\shaders\BaseLightVs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\BaseLightFs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\BaseEmissionLightVs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\BaseEmissionLightFs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

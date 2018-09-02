@@ -591,7 +591,7 @@ namespace Sapphire
 		m_totalMemoryUsed += totalBytesUsed;
 
 		//使用的字节不等于节点分配大小
-		//有泄漏
+		//有分配后，未使用的内存
 		if (m_logAlways && totalBytesUsed != node->reportedSize) {          //报告百分比
 			this->log("Unused Memory Detected   : %-40s %8s(0x%08p) : %s",   //  浪费掉的空间
 				formatOwnerString(node->sourceFile, node->sourceLine),

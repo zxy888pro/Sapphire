@@ -135,7 +135,7 @@ int main()
 
 
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "test", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "test", NULL, NULL);
 
 	if (window == NULL)
 	{

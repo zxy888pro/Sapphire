@@ -71,15 +71,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BaseLightMesh.h" />
+    <ClInclude Include="BaseMesh.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="RenderState.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseLightMesh.cpp" />
+    <ClCompile Include="BaseMesh.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RenderState.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin\shaders\BaseEmissionLightFs.glsl" />
+    <None Include="..\bin\shaders\BaseEmissionLightVs.glsl" />
+    <None Include="..\bin\shaders\BaseLightFs.glsl" />
+    <None Include="..\bin\shaders\BaseLightVs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
