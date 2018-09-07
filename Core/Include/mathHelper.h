@@ -72,6 +72,9 @@ namespace Sapphire
 	*/
 #define EPSILON_E6 (float)(1E-6)
 
+//默认用精度5
+#define  M_EPSILON  EPSILON_E5
+
 	//判断大小,去较大或较小值
 	/**
 	@brief 取两者最小值
@@ -123,13 +126,23 @@ namespace Sapphire
 	@param 浮点数B
 	@return 比较结果
 	*/
-#define FCMP(a,b) ((fabs(a-b) <EPSILON_E3)?1:0)
+#define FCMP(a,b) ((fabs(a-b) <M_EPSILON)?1:0)
+
+
+
+
+enum Intersection
+{
+	OUTSIDE,
+	INTERSECTS,
+	INSIDE
+};
 
 	class MathHelper
 	{
 	public:
 
-		static void initialize()
+		static void Initialize()
 		{
 			Build_Sin_Cos_Tables();
 			Build_Inverse_Cos_Table(dp_inverse_cos, 360);
@@ -148,7 +161,7 @@ namespace Sapphire
 
 #endif
 
-		static inline float Fast_Sin(float theta)
+		static inline float FastSin(float theta)
 		{
 			//取余数， 将theta转换到0~360度以内
 			theta = fmodf(theta, 360);
@@ -169,7 +182,7 @@ namespace Sapphire
 		}
 
 
-		static inline float Fast_Cos(float theta)
+		static inline float FastCos(float theta)
 		{
 			theta = fmodf(theta, 360);
 
@@ -184,14 +197,47 @@ namespace Sapphire
 		}
 
 
+		static inline float ACos(float x)
+		{
+			return RAD_TO_DEG(asinf(Clamp(x, -1.0f, 1.0f)));
+		}
+
+
+		static inline float ASin(float x)
+		{
+			return RAD_TO_DEG(acosf(Clamp(x, -1.0f, 1.0f)));
+		}
+
+		static inline float Tan(float angle) 
+		{ 
+			return tanf(DEG_TO_RAD(angle)); 
+		}
+
+		static inline float Cos(float angle) 
+		{ 
+			return cosf(DEG_TO_RAD(angle)); 
+		}
+
+		static inline float Sin(float angle)
+		{
+			return sin(DEG_TO_RAD(angle));
+		}
+
 		/**
 		@brief 查表法快速计算反余弦
 		因为数组下标不能为浮点型和负数，所以将索引域范围[-1,1] 平移1位 =  [0,2],并将扩大180倍，将[-1,1]分为360份,单位步进到0.01
 		@param  x取值在[-1,1]之间，|x| >= 0.01
 		*/
-		static inline float Fast_Inv_Cos(int x)
+		static inline float FastACos(int x)
 		{
 			return dp_inverse_cos[(int)(((float)x + 1)*(float)180)];
+		}
+		/**
+		@brief 快速反正弦
+		*/
+		static inline float FastASin(int x)
+		{
+			return 90 - FastACos(x);
 		}
 		
 		static inline int Fast_Distance_2D(int x, int y)
@@ -208,7 +254,7 @@ namespace Sapphire
 		}
 
 
-		static inline float Fast_Distance_3D(float fx, float fy, float fz)
+		static inline float FastDistance3D(float fx, float fy, float fz)
 		{
 
 			int temp;
@@ -333,6 +379,91 @@ namespace Sapphire
 		// 用给的8位值和SDBM算法更新hash
 		static inline unsigned SDBMHash(unsigned hash, unsigned char c) { return c + (hash << 6) + (hash << 16) - hash; }
 
+		//浮点数比较
+		static inline bool Equals(float lhs, float rhs) { return lhs + M_EPSILON >= rhs && lhs - M_EPSILON <= rhs; }
+
+		//线性插值
+		static inline float Lerp(float lhs, float rhs, float t) { return lhs * (1.0f - t) + rhs * t; }
+
+		//双精度线性插值
+		static inline double Lerp(double lhs, double rhs, float t) { return lhs * (1.0f - t) + rhs * t; }
+		
+		//绝对值
+		static inline float Abs(float value) { return value >= 0.0f ? value : -value; }
+
+		//取符号
+		static inline float Sign(float value) { return value > 0.0f ? 1.0f : (value < 0.0f ? -1.0f : 0.0f); }
+
+
+		static inline float Clamp(float value, float min, float max)
+		{
+			if (value < min)
+				return min;
+			else if (value > max)
+				return max;
+			else
+				return value;
+		}
+
+		static inline unsigned short FloatToHalf(float value)
+		{
+			unsigned inu = *((unsigned*)&value);
+			unsigned t1 = inu & 0x7fffffff;         // Non-sign bits
+			unsigned t2 = inu & 0x80000000;         // Sign bit
+			unsigned t3 = inu & 0x7f800000;         // Exponent
+
+			t1 >>= 13;                              // Align mantissa on MSB
+			t2 >>= 16;                              // Shift sign bit into position
+
+			t1 -= 0x1c000;                          // Adjust bias
+
+			t1 = (t3 < 0x38800000) ? 0 : t1;        // Flush-to-zero
+			t1 = (t3 > 0x47000000) ? 0x7bff : t1;   // Clamp-to-max
+			t1 = (t3 == 0 ? 0 : t1);                // Denormals-as-zero
+
+			t1 |= t2;                               // Re-insert sign bit
+
+			return (unsigned short)t1;
+		}
+
+		/// Convert half float to float. From https://gist.github.com/martinkallman/5049614
+		static inline float HalfToFloat(unsigned short value)
+		{
+			unsigned t1 = value & 0x7fff;           // Non-sign bits
+			unsigned t2 = value & 0x8000;           // Sign bit
+			unsigned t3 = value & 0x7c00;           // Exponent
+
+			t1 <<= 13;                              // Align mantissa on MSB
+			t2 <<= 16;                              // Shift sign bit into position
+
+			t1 += 0x38000000;                       // Adjust bias
+
+			t1 = (t3 == 0 ? 0 : t1);                // Denormals-as-zero
+
+			t1 |= t2;                               // Re-insert sign bit
+
+			float out;
+			*((unsigned*)&out) = t1;
+			return out;
+		}
+
+		static inline bool IsPowerOfTwo(unsigned value)
+		{
+			if (!value)
+				return true;
+			while (!(value & 1))
+				value >>= 1;
+			return value == 1;
+		}
+
+		static inline unsigned NextPowerOfTwo(unsigned value)
+		{
+			unsigned ret = 1;
+			while (ret < value && ret < 0x80000000)
+				ret <<= 1;
+			return ret;
+		}
+
 	private:
 
 		//构建正弦和余弦表
@@ -433,7 +564,7 @@ namespace Sapphire
 
 
 	// 返回一个随机数
-	static float asm_rand()
+	static float AsmRand()
 	{
 
 #if  SAPPHIRE_COMPILER == SAPPHIRE_COMPILER_MSVC &&  SAPPHIRE_ARCH_TYPE == SAPPHIRE_ARCHITECTURE_32
@@ -485,7 +616,7 @@ namespace Sapphire
 	}
 
 	//解一元二次方程
-	inline static bool quadratic_formula
+	inline static bool QuadraticFormula
 		(
 		const double a,
 		const double b,

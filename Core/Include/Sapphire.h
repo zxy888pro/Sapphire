@@ -4,6 +4,7 @@
 #include <SapphireDef.h>
 #include <RefCounter.h>
 #include <Ptr.h>
+#include <mathHelper.h>
 #include <singleton.h>
 #include <stringHelper.h>
 #include <path.h>

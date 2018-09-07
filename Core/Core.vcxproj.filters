@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\Math">
+      <UniqueIdentifier>{9d76b9d5-b19f-432e-b4bf-120f56aae47a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Math">
+      <UniqueIdentifier>{51e0c43f-f5e7-4617-bacf-f33dc2dde9a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Sapphire.h">
@@ -81,6 +87,12 @@
     <ClInclude Include="Include\MemoryMgr.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Math\Vector2.h">
+      <Filter>头文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Math\Vector3.h">
+      <Filter>头文件\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -127,6 +139,12 @@
     </ClCompile>
     <ClCompile Include="Src\MemoryMgr.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Math\Vector2.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Math\Vector3.cpp">
+      <Filter>源文件\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
