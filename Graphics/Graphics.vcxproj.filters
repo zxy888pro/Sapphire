@@ -63,6 +63,9 @@
     <ClInclude Include="Src\ImageMgr.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">

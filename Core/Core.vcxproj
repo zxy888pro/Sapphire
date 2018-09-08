@@ -15,17 +15,24 @@
     <ClInclude Include="Include\BaseException.h" />
     <ClInclude Include="Include\BaseResource.h" />
     <ClInclude Include="Include\charset.h" />
+    <ClInclude Include="Include\Color.h" />
     <ClInclude Include="Include\Core.h" />
     <ClInclude Include="Include\FileStream.h" />
     <ClInclude Include="Include\handle.h" />
     <ClInclude Include="Include\inifile.h" />
     <ClInclude Include="Include\logUtil.h" />
     <ClInclude Include="Include\mathHelper.h" />
+    <ClInclude Include="Include\Math\Matrix3x3.h" />
+    <ClInclude Include="Include\Math\Matrix3x4.h" />
+    <ClInclude Include="Include\Math\Matrix4x4.h" />
+    <ClInclude Include="Include\Math\Quaternion.h" />
     <ClInclude Include="Include\Math\Vector2.h" />
     <ClInclude Include="Include\Math\Vector3.h" />
+    <ClInclude Include="Include\Math\Vector4.h" />
     <ClInclude Include="Include\md5.h" />
     <ClInclude Include="Include\FrameMem.h" />
     <ClInclude Include="Include\MemoryMgr.h" />
+    <ClInclude Include="Include\MemoryStream.h" />
     <ClInclude Include="Include\Mutex.h" />
     <ClInclude Include="Include\path.h" />
     <ClInclude Include="Include\Ptr.h" />
@@ -33,27 +40,38 @@
     <ClInclude Include="Include\Sapphire.h" />
     <ClInclude Include="Include\SapphireDef.h" />
     <ClInclude Include="Include\singleton.h" />
+    <ClInclude Include="Include\Str.h" />
     <ClInclude Include="Include\stringHelper.h" />
     <ClInclude Include="Include\Thread.h" />
+    <ClInclude Include="Include\Variant.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\BaseException.cpp" />
     <ClCompile Include="Src\BaseResource.cpp" />
     <ClCompile Include="Src\charset.cpp" />
+    <ClCompile Include="Src\Color.cpp" />
     <ClCompile Include="Src\Core.cpp" />
     <ClCompile Include="Src\FileStream.cpp" />
     <ClCompile Include="Src\inifile.cpp" />
     <ClCompile Include="Src\logUtil.cpp" />
+    <ClCompile Include="Src\Math\Matrix4x4.cpp" />
+    <ClCompile Include="Src\Math\Matrix3x3.cpp" />
+    <ClCompile Include="Src\Math\Matrix3x4.cpp" />
+    <ClCompile Include="Src\Math\Quaternion.cpp" />
     <ClCompile Include="Src\Math\Vector2.cpp" />
     <ClCompile Include="Src\Math\Vector3.cpp" />
+    <ClCompile Include="Src\Math\Vector4.cpp" />
     <ClCompile Include="Src\md5.cpp" />
     <ClCompile Include="Src\FrameMem.cpp" />
     <ClCompile Include="Src\MemoryMgr.cpp" />
+    <ClCompile Include="Src\MemoryStream.cpp" />
     <ClCompile Include="Src\Mutex.cpp" />
     <ClCompile Include="Src\path.cpp" />
     <ClCompile Include="Src\RefCounter.cpp" />
+    <ClCompile Include="Src\Str.cpp" />
     <ClCompile Include="Src\stringHelper.cpp" />
     <ClCompile Include="Src\Thread.cpp" />
+    <ClCompile Include="Src\Variant.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{24788D97-0E75-453E-A528-03EF9E9C6D55}</ProjectGuid>

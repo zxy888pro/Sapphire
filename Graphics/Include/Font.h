@@ -2,7 +2,6 @@
 #define  __FONT__H__
 
 #include <Graphics.h>
-#include <handle.h>
 
 namespace Sapphire
 {

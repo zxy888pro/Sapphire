@@ -6,7 +6,7 @@ namespace Sapphire
 
 	std::string Vector3::ToString() const
 	{
-		char tempBuffer[128];
+		char tempBuffer[STRING_BUFFERSIZE];
 		sprintf(tempBuffer, "%g %g %g", x_, y_, z_);
 		return std::string(tempBuffer);
 	}

@@ -78,6 +78,7 @@
     <ClInclude Include="Include\Graphics.h" />
     <ClInclude Include="Include\ITexture.h" />
     <ClInclude Include="Include\ITextureMgr.h" />
+    <ClInclude Include="Include\Material.h" />
     <ClInclude Include="Src\GPUObject.h" />
     <ClInclude Include="Src\ImageMgr.h" />
     <ClInclude Include="Src\stb_image.h" />

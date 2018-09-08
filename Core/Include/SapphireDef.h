@@ -16,6 +16,7 @@
 #endif
 
 #define MAXPATH 260
+#define STRING_BUFFERSIZE  256
 
 ///ìo‘BŽì/„Ó‘BŽì
 //#define SAPPHIRE_STATIC_LIB
@@ -84,6 +85,7 @@
 
 #endif //END PARTFORM
 
+
 #ifndef NULL
 #define NULL 0
 #endif
@@ -126,7 +128,13 @@ enum MemAllocType
 
 #ifdef SAPPHIRE_WIN
 #define m_assert(x) if ((x) == false) __asm { int 3 }
+
+//template<class _Kty,class _Ty,class _Hasher = hash<_Kty>,class _Keyeq = equal_to<_Kty>,class _Alloc = allocator<pair<const _Kty, _Ty> >
+//using HashMap = std::unordered_map < _Kty, _Ty, _Hasher, _Keyeq > ;
+ 
+
 #else
+
 #define m_assert(x) assert(x)
 #endif // !SAPPHIRE_WIN
 

@@ -6,6 +6,7 @@
 #include <Ptr.h>
 #include <mathHelper.h>
 #include <singleton.h>
+#include <Str.h>
 #include <stringHelper.h>
 #include <path.h>
 #include <BaseException.h>

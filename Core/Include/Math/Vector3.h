@@ -1,4 +1,4 @@
-#pragma 
+#pragma once
 
 #include <Sapphire.h>
 #include <Math/Vector2.h>

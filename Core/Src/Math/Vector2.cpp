@@ -7,7 +7,7 @@ namespace Sapphire
 
 	std::string Vector2::ToString() const
 	{
-		char tempBuffer[128];
+		char tempBuffer[STRING_BUFFERSIZE];
 		sprintf(tempBuffer, "%g %g", x_, y_);
 		return std::string(tempBuffer);
 	}
@@ -26,7 +26,7 @@ namespace Sapphire
 
 	std::string IntVector2::ToString() const
 	{
-		char tempBuffer[128];
+		char tempBuffer[STRING_BUFFERSIZE];
 		sprintf(tempBuffer, "%g %g", x_, y_);
 		return std::string(tempBuffer);
 	}
