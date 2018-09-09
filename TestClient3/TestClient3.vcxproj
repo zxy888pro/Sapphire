@@ -71,6 +71,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BaseLightMapMesh.h" />
     <ClInclude Include="BaseLightMesh.h" />
     <ClInclude Include="BaseMesh.h" />
     <ClInclude Include="Camera.h" />
@@ -79,6 +80,7 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseLightMapMesh.cpp" />
     <ClCompile Include="BaseLightMesh.cpp" />
     <ClCompile Include="BaseMesh.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -91,6 +93,8 @@
     <None Include="..\bin\shaders\BaseEmissionLightFs.glsl" />
     <None Include="..\bin\shaders\BaseEmissionLightVs.glsl" />
     <None Include="..\bin\shaders\BaseLightFs.glsl" />
+    <None Include="..\bin\shaders\BaseLightMapFs.glsl" />
+    <None Include="..\bin\shaders\BaseLightMapVs.glsl" />
     <None Include="..\bin\shaders\BaseLightVs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

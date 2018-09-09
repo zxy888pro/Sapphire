@@ -6,9 +6,9 @@ namespace Sapphire
 
 	BaseMesh::BaseMesh()
 	{
-		m_pos = glm::vec3(0, 0, 0);
-		m_rot = glm::vec3(0, 0, 0);
-		m_scale = glm::vec3(1, 1, 1);
+		setPos(glm::vec3(0, 0, 0));
+		setRot(glm::vec3(0, 0, 0));
+		setScale(glm::vec3(1, 1, 1));
 			 
 	}
 

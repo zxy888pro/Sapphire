@@ -36,6 +36,9 @@
     <ClInclude Include="RenderState.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="BaseLightMapMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -59,6 +62,9 @@
     <ClCompile Include="RenderState.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="BaseLightMapMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\shaders\BaseLightVs.glsl">
@@ -71,6 +77,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="..\bin\shaders\BaseEmissionLightFs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\BaseLightMapVs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\BaseLightMapFs.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

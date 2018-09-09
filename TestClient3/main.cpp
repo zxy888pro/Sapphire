@@ -6,6 +6,7 @@
 #include <MemoryMgr.h>
 #include "BaseMesh.h"
 #include "BaseLightMesh.h"
+#include "BaseLightMapMesh.h"
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -17,6 +18,7 @@ float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 GLFWwindow* window = NULL;
 Sapphire::BaseLightMesh* pMesh;
+Sapphire::BaseLightMapMesh* pMesh2;
 
 void OnMouseMove(GLFWwindow* window, double xpos, double ypos);
 void OnMouseScroll(GLFWwindow* window, double xoffset, double yoffset);
@@ -158,6 +160,12 @@ int main()
 	pMesh->LoadBaseShader("shaders\\BaseLightVs.glsl", "shaders\\BaseLightFs.glsl");
 	pMesh->Init();
 	pMesh->setLightPos(glm::vec3(3, 3, 2));
+	pMesh2 = new BaseLightMapMesh();
+	pMesh2->LoadBaseShader("shaders\\BaseLightMapVs.glsl", "shaders\\BaseLightMapFs.glsl");
+	pMesh2->Init();
+	pMesh2->SetDiffuseMap("container2.png");
+	pMesh2->SetSepcularMap("container2_specular.png");
+	pMesh2->setLightPos(glm::vec3(2, 1, 2));
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();
@@ -166,7 +174,8 @@ int main()
 		ProcessInput(window);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		pMesh->Render();
+		//pMesh->Render();
+		pMesh2->Render();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

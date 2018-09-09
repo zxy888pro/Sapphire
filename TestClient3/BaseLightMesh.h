@@ -32,11 +32,12 @@ namespace Sapphire
 		
 
 		virtual void Release() override;
+		glm::vec3  m_lightPos;
 
 	private:
 
 		float*  m_vertices;
-		glm::vec3  m_lightPos;
+		
 
 		virtual void BackupRenderState() override;
 
