@@ -96,6 +96,8 @@
     <None Include="..\bin\shaders\BaseLightMapFs.glsl" />
     <None Include="..\bin\shaders\BaseLightMapVs.glsl" />
     <None Include="..\bin\shaders\BaseLightVs.glsl" />
+    <None Include="..\bin\shaders\StandardMaterialFs.glsl" />
+    <None Include="..\bin\shaders\StandardMaterialVs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

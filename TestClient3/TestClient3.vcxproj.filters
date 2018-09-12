@@ -85,5 +85,11 @@
     <None Include="..\bin\shaders\BaseLightMapFs.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\bin\shaders\StandardMaterialVs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\StandardMaterialFs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
