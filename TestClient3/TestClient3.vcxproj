@@ -71,6 +71,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BaseEmissionMesh.h" />
     <ClInclude Include="BaseLightMapMesh.h" />
     <ClInclude Include="BaseLightMesh.h" />
     <ClInclude Include="BaseMesh.h" />
@@ -80,6 +81,7 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseEmissionMesh.cpp" />
     <ClCompile Include="BaseLightMapMesh.cpp" />
     <ClCompile Include="BaseLightMesh.cpp" />
     <ClCompile Include="BaseMesh.cpp" />

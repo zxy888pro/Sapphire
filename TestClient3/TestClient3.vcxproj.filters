@@ -39,6 +39,9 @@
     <ClInclude Include="BaseLightMapMesh.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="BaseEmissionMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -63,6 +66,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="BaseLightMapMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseEmissionMesh.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
