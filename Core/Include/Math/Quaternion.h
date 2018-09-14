@@ -50,10 +50,27 @@ namespace Sapphire
 
 		}
 
+		explicit Quaternion(float angle)
+		{
+			FromAngleAxis(angle, Vector3::FORWARD);
+		}
+
+		Quaternion(float x, float y, float z)
+		{
+			FromEulerAngles(x, y, z);
+		}
+		Quaternion(const Vector3& start, const Vector3& end)
+		{
+			FromRotationTo(start, end);
+		}
 
 		Quaternion(float angle, const Vector3& axis)
 		{
 			FromAngleAxis(angle, axis);
+		}
+		Quaternion(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis)
+		{
+			FromAxes(xAxis, yAxis, zAxis);
 		}
 
 		explicit Quaternion(const Matrix3x3& matrix)

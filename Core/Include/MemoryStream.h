@@ -1,10 +1,11 @@
 #pragma once
 
 #include "SapphireDef.h"
+#include <IStream.h>
 
 namespace Sapphire
 {
-	class SAPPHIRE_CLASS MemoryStream
+	class SAPPHIRE_CLASS MemoryStream : public IStream
 	{
 	public:
 
@@ -17,6 +18,8 @@ namespace Sapphire
 		virtual ~MemoryStream();
 
 		virtual bool Open(void* pData, ulong size);
+
+		virtual bool Open(Path filePath, uint mode);
 
 		virtual ulonglong Read(void* buffer, ulong toRead);
 
@@ -35,6 +38,11 @@ namespace Sapphire
 		virtual ulonglong  GetLength();
 
 		virtual bool Release();
+
+		virtual std::string ReadString(int nCharCount) override;
+
+		virtual bool ReadLine(std::string& str) override;
+
 
 	private:
 

@@ -19,7 +19,7 @@ namespace Sapphire
 		unsigned ToHash() const
 		{
 			unsigned hash = 0;
-			const char* ptr = data;
+			const char* ptr = std::basic_string < _Elem, _Traits, _Alloc >::data();
 			while (*ptr)
 			{
 				hash = *ptr + (hash << 6) + (hash << 16) - hash;
@@ -27,6 +27,60 @@ namespace Sapphire
 			}
 
 			return hash;
+		}
+
+		static int Compare(const char* lhs, const char* rhs, bool caseSensitive)
+		{
+			if (!lhs || !rhs)
+				return lhs ? 1 : (rhs ? -1 : 0);
+
+			if (caseSensitive)
+				return strcmp(lhs, rhs);
+			else
+			{
+				for (;;)
+				{
+					char l = (char)tolower(*lhs);
+					char r = (char)tolower(*rhs);
+					if (!l || !r)
+						return l ? 1 : (r ? -1 : 0);
+					if (l < r)
+						return -1;
+					if (l > r)
+						return 1;
+
+					++lhs;
+					++rhs;
+				}
+			}
+		}
+
+		int Compare(const char* str, bool caseSensitive) const
+		{
+			return Compare(c_str(), str, caseSensitive);
+		}
+
+		static std::vector<String> Split(const char* str, char separator, bool keepEmptyStrings)
+		{
+			std::vector<String> ret;
+			const char* strEnd = str + String::CStringLength(str);
+
+			for (const char* splitEnd = str; splitEnd != strEnd; ++splitEnd)
+			{
+				if (*splitEnd == separator)
+				{
+					const ptrdiff_t splitLen = splitEnd - str;
+					if (splitLen > 0 || keepEmptyStrings)
+						ret.Push(String(str, splitLen));
+					str = splitEnd + 1;
+				}
+			}
+
+			const ptrdiff_t splitLen = strEnd - str;
+			if (splitLen > 0 || keepEmptyStrings)
+				ret.Push(String(str, splitLen));
+
+			return ret;
 		}
 
 	};

@@ -3,6 +3,7 @@
 
 #include "SapphireDef.h"
 #include "path.h"
+#include <IStream.h>
 #include <fstream>
 #include <exception>
 
@@ -22,7 +23,7 @@ namespace Sapphire
 
 	
 
-	class SAPPHIRE_CLASS FileStream
+	class SAPPHIRE_CLASS FileStream : public IStream
 	{
 	public:
 
@@ -65,6 +66,7 @@ namespace Sapphire
 
 		virtual bool ReadLine(std::string& str);
 
+		virtual bool Open(void* pData, ulong size) override;
 
 	private:
 

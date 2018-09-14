@@ -79,6 +79,11 @@ namespace Sapphire
 		return true;
 	}
 
+	bool FileStream::Open(void* pData, ulong size)
+	{
+		return false;
+	}
+
 	ulonglong FileStream::Read(void* buffer, ulong toRead)
 	{
 		if (!IsOpen())

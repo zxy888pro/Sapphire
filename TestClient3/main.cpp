@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <Sapphire.h>
+#include <Str.h>
 #include <Graphics.h>
 #include <GraphicDriver.h>
 #include "Camera.h"
@@ -8,6 +9,7 @@
 #include "BaseLightMesh.h"
 #include "BaseLightMapMesh.h"
 #include "BaseEmissionMesh.h"
+
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -50,6 +52,10 @@ void ProcessInput(GLFWwindow* pWnd)
 
 void init()
 {
+	Sapphire::String  str = "abcdefg";
+	str += "hijklmn";
+	uint hashcode =  str.ToHash();
+
 	Sapphire::LogUtil::getInstancePtr()->Init("log.txt");
 	Sapphire::LogUtil::LogMsgLn("≥ı ºªØ≥Ã–Ú");
 	new Sapphire::Core();

@@ -139,6 +139,8 @@ enum MemAllocType
 #endif // !SAPPHIRE_WIN
 
 
+
+
 //数据类型
 typedef unsigned char byte;
 typedef unsigned int bit32;

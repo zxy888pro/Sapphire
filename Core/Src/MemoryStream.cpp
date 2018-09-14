@@ -30,6 +30,11 @@ namespace Sapphire
 		return false;
 	}
 
+	bool MemoryStream::Open(Path filePath, uint mode)
+	{
+		return false;
+	}
+
 	ulonglong MemoryStream::Read(void* buffer, ulong toRead)
 	{
 		return 0;
@@ -73,6 +78,16 @@ namespace Sapphire
 	bool MemoryStream::Release()
 	{
 		return false;
+	}
+
+	std::string MemoryStream::ReadString(int nCharCount)
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
+	bool MemoryStream::ReadLine(std::string& str)
+	{
+		throw std::logic_error("The method or operation is not implemented.");
 	}
 
 }

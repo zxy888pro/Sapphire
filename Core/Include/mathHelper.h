@@ -23,6 +23,11 @@ namespace Sapphire
 #define SAPPHIRE_COMP_VER _MSC_VER
 
 	//////////////////////////数学常量//////////////////////////////////
+
+	#define HUGE_VAL _HUGE
+	//最大浮点
+	#define INFINITY  (float)HUGE_VAL
+
 	//PI相关
 	/**
 	@brief
