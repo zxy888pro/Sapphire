@@ -19,6 +19,7 @@ namespace Sapphire
 
 	void BaseEmissionMesh::Init()
 	{
+		LoadBaseShader("shaders\\BaseEmissionLightVs.glsl", "shaders\\BaseEmissionLightFs.glsl");
 		m_vertices = _New float[108]{
 			-0.5f, -0.5f, -0.5f,
 			0.5f, -0.5f, -0.5f,

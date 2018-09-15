@@ -393,7 +393,7 @@ namespace Sapphire
 
 		const float* Data() const { return &m00_; }
 
-		std::string ToString() const;
+		String ToString() const;
 
 		bool Equals(const Matrix3x4& rhs) const
 		{

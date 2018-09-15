@@ -24,11 +24,11 @@ namespace Sapphire
 
 	const Sapphire::Vector2 Vector2::ONE(1.0f, 1.0f);
 
-	std::string IntVector2::ToString() const
+	String IntVector2::ToString() const
 	{
 		char tempBuffer[STRING_BUFFERSIZE];
 		sprintf(tempBuffer, "%g %g", x_, y_);
-		return std::string(tempBuffer);
+		return String(tempBuffer);
 	}
 
 	const Sapphire::IntVector2 IntVector2::ZERO;

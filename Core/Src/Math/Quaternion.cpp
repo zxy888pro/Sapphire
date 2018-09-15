@@ -13,11 +13,11 @@ namespace Sapphire
 
 	}
 
-	std::string Quaternion::ToString() const
+	String Quaternion::ToString() const
 	{
 		char tempBuffer[STRING_BUFFERSIZE];
 		sprintf(tempBuffer, "%g %g %g %g", w_, x_, y_, z_);
-		return std::string(tempBuffer);
+		return String(tempBuffer);
 	}
 
 	void Quaternion::FromAngleAxis(float angle, const Vector3& axis)

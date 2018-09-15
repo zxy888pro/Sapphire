@@ -12,6 +12,7 @@
 #include <Math/Vector2.h>
 #include <Color.h>
 #include <Variant.h>
+#include "BaseScene.h"
 
 
 const unsigned int SCR_WIDTH = 800;
@@ -26,6 +27,7 @@ GLFWwindow* window = NULL;
 Sapphire::BaseLightMesh* pMesh;
 Sapphire::BaseLightMapMesh* pMesh2;
 Sapphire::BaseEmissionMesh* pMesh3;
+Sapphire::Scene* pScene;
 
 void OnMouseMove(GLFWwindow* window, double xpos, double ypos);
 void OnMouseScroll(GLFWwindow* window, double xoffset, double yoffset);
@@ -51,10 +53,9 @@ void ProcessInput(GLFWwindow* pWnd)
 		Sapphire::Camera::GetSingletonPtr()->ProcessKeyboard(Sapphire::RIGHT, deltaTime);
 }
 
-
-
 void init()
 {
+
 	
 
 	Sapphire::LogUtil::getInstancePtr()->Init("log.txt");
@@ -100,6 +101,7 @@ void init()
 
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
+	pScene = new Sapphire::Scene();
 }
 
 void release()
@@ -165,20 +167,20 @@ int main()
 
 	init();
 	TestMemoryTrack();
-	pMesh3 = _New BaseEmissionMesh();
-	pMesh3->LoadBaseShader("shaders\\BaseEmissionLightVs.glsl", "shaders\\BaseEmissionLightFs.glsl");
-	pMesh3->Init();
-	pMesh3->setColor(glm::vec3(1.0, 0.3, 0.3));
-	/*pMesh = new BaseLightMesh();
-	pMesh->LoadBaseShader("shaders\\BaseLightVs.glsl", "shaders\\BaseLightFs.glsl");
-	pMesh->Init();
-	pMesh->setLightPos(glm::vec3(3, 3, 2));
-	pMesh2 = new BaseLightMapMesh();
-	pMesh2->LoadBaseShader("shaders\\BaseLightMapVs.glsl", "shaders\\BaseLightMapFs.glsl");
-	pMesh2->Init();
-	pMesh2->SetDiffuseMap("container2.png");
-	pMesh2->SetSepcularMap("container2_specular.png");
-	pMesh2->setLightPos(glm::vec3(2, 1, 2));*/
+	//pMesh3 = _New BaseEmissionMesh();
+	////pMesh3->LoadBaseShader("shaders\\BaseEmissionLightVs.glsl", "shaders\\BaseEmissionLightFs.glsl");
+	//pMesh3->Init();
+	//pMesh3->setColor(glm::vec3(1.0, 0.3, 0.3));
+	//pMesh = new BaseLightMesh();
+	////pMesh->LoadBaseShader("shaders\\BaseLightVs.glsl", "shaders\\BaseLightFs.glsl");
+	//pMesh->Init();
+	//pMesh->setLightPos(glm::vec3(3, 3, 2));
+	//pMesh2 = new BaseLightMapMesh();
+	////pMesh2->LoadBaseShader("shaders\\BaseLightMapVs.glsl", "shaders\\BaseLightMapFs.glsl");
+	//pMesh2->Init();
+	//pMesh2->SetDiffuseMap("container2.png");
+	//pMesh2->SetSepcularMap("container2_specular.png");
+	//pMesh2->setLightPos(glm::vec3(2, 1, 2));
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();
@@ -187,9 +189,11 @@ int main()
 		ProcessInput(window);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//pMesh->Render();
-		//pMesh2->Render();
-		pMesh3->Render();
+		pScene->Upate();
+		pScene->Render();
+		/*pMesh->Render();
+		pMesh2->Render();
+		pMesh3->Render();*/
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

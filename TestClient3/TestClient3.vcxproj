@@ -48,6 +48,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\Core\Include;..\Graphics\Include;..\dependences\glew\include;..\dependences\glfw\include;..\dependences\freetype\include;..\ThirdParty\glm;..\dependences\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -75,20 +76,26 @@
     <ClInclude Include="BaseLightMapMesh.h" />
     <ClInclude Include="BaseLightMesh.h" />
     <ClInclude Include="BaseMesh.h" />
+    <ClInclude Include="BaseScene.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="BaseLight.h" />
     <ClInclude Include="RenderState.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="StandardMaterialMesh.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseEmissionMesh.cpp" />
+    <ClCompile Include="BaseLight.cpp" />
     <ClCompile Include="BaseLightMapMesh.cpp" />
     <ClCompile Include="BaseLightMesh.cpp" />
     <ClCompile Include="BaseMesh.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RenderState.cpp" />
+    <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="StandardMaterialMesh.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>

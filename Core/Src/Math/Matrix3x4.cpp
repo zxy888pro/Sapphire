@@ -73,12 +73,12 @@ namespace Sapphire
 		rotation = Quaternion(ToMatrix3x3().Scaled(invScale));
 	}
 
-	std::string Matrix3x4::ToString() const
+	String Matrix3x4::ToString() const
 	{
 		char tempBuffer[STRING_BUFFERSIZE];
 		sprintf(tempBuffer, "%g %g %g %g %g %g %g %g %g %g %g %g", m00_, m01_, m02_, m03_, m10_, m11_, m12_, m13_, m20_, m21_, m22_,
 			m23_);
-		return std::string(tempBuffer);
+		return String(tempBuffer);
 	}
 
 	const Sapphire::Matrix3x4 Matrix3x4::ZERO(

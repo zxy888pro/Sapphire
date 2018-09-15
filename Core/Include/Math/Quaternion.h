@@ -144,7 +144,7 @@ namespace Sapphire
 
 		const float* Data() const { return &w_; }
 
-		std::string ToString() const;
+		String ToString() const;
 
 		bool IsNaN() const { return MathHelper::IsNaN(w_) || MathHelper::IsNaN(x_) || MathHelper::IsNaN(y_) || MathHelper::IsNaN(z_); }
 

@@ -42,6 +42,15 @@
     <ClInclude Include="BaseEmissionMesh.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="StandardMaterialMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLight.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseScene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -69,6 +78,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="BaseEmissionMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="StandardMaterialMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseScene.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

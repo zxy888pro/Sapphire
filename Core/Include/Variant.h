@@ -137,7 +137,8 @@ namespace Sapphire
 		bool operator !=(const ResourceRefList& rhs) const;
 	};
 
-	// 支持一个固定类型的集合的变体类型
+	// 支持一个不能超过16字节固定类型的集合的变体类型
+	// 超过16字节只能以指针方式保存
 	class SAPPHIRE_CLASS Variant
 	{
 	public:

@@ -33,6 +33,7 @@
 #include<time.h>
 #include <stdlib.h>
 #include <unordered_map>
+#include <assert.h>
 
 #if defined(SAPPHIRE_STATIC_LIB) && defined(SAPPHIRE_LIB)
 #  define SAPPHIRE_CLASS
@@ -133,11 +134,13 @@ enum MemAllocType
 //using HashMap = std::unordered_map < _Kty, _Ty, _Hasher, _Keyeq > ;
 #ifndef FORCEINLINE
 #define FORCEINLINE __forceinline
-#endif 
+#else 
 #define FORCEINLINE inline
-#else
-
+#endif
+#ifndef  m_assert
 #define m_assert(x) assert(x)
+#endif // ! m_assert
+
 #endif // !SAPPHIRE_WIN
 
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <SapphireDef.h>
+#include <Str.h>
 
 namespace Sapphire
 {
@@ -101,7 +102,7 @@ namespace Sapphire
 
 		float Luma() const { return r_ * 0.299f + g_ * 0.587f + b_ * 0.114f; }
 		
-		std::string ToString() const;
+		String ToString() const;
 
 		float r_;
 		float g_;

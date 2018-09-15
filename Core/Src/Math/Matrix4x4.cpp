@@ -104,12 +104,12 @@ namespace Sapphire
 			i30, i31, i32, i33);
 	}
 
-	std::string Matrix4x4::ToString() const
+	String Matrix4x4::ToString() const
 	{
 		char tempBuffer[STRING_BUFFERSIZE];
 		sprintf(tempBuffer, "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g", m00_, m01_, m02_, m03_, m10_, m11_, m12_, m13_, m20_,
 			m21_, m22_, m23_, m30_, m31_, m32_, m33_);
-		return std::string(tempBuffer);
+		return String(tempBuffer);
 	}
 
 	const Sapphire::Matrix4x4 Matrix4x4::ZERO(

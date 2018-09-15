@@ -88,11 +88,11 @@ namespace Sapphire
 		return MathHelper::Equals(r_, rhs.r_) && MathHelper::Equals(g_, rhs.g_) && MathHelper::Equals(b_, rhs.b_) && MathHelper::Equals(a_, rhs.a_);
 	}
 
-	std::string Color::ToString() const
+	String Color::ToString() const
 	{
 		char tempBuffer[STRING_BUFFERSIZE];
 		sprintf(tempBuffer, "%g %g %g %g", r_, g_, b_, a_);
-		return std::string(tempBuffer);
+		return String(tempBuffer);
 	}
 
 	const Color Color::WHITE;

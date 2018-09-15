@@ -38,14 +38,15 @@ namespace Sapphire
 		glm::vec3   m_ambientColor;
 		float     m_shinniess;
 
+		float*  m_vertices;
+		GLuint   m_diffMapObj;
+		GLuint   m_sepcMapObj;
 
 		virtual void Release() override;
 
 	private:
 
-		float*  m_vertices;
-		GLuint   m_diffMapObj;
-		GLuint   m_sepcMapObj;
+		
 
 		virtual void BackupRenderState() override;
 		virtual void RestoreRenderState() override;

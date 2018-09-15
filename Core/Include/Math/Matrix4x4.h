@@ -406,7 +406,7 @@ namespace Sapphire
 
 		const float* Data() const { return &m00_; }
 
-		std::string ToString() const;
+		String ToString() const;
 
 		float m00_;
 		float m01_;

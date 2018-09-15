@@ -53,11 +53,11 @@ namespace Sapphire
 			);
 	}
 
-	std::string Matrix3x3::ToString() const
+	String Matrix3x3::ToString() const
 	{
 		char tempBuffer[STRING_BUFFERSIZE];
 		sprintf(tempBuffer, "%g %g %g %g %g %g %g %g %g", m00_, m01_, m02_, m10_, m11_, m12_, m20_, m21_, m22_);
-		return std::string(tempBuffer);
+		return String(tempBuffer);
 	}
 
 	const Sapphire::Matrix3x3 Matrix3x3::ZERO(0.0f, 0.0f, 0.0f,

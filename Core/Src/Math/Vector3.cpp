@@ -4,11 +4,11 @@ namespace Sapphire
 {
 
 
-	std::string Vector3::ToString() const
+	String Vector3::ToString() const
 	{
 		char tempBuffer[STRING_BUFFERSIZE];
 		sprintf(tempBuffer, "%g %g %g", x_, y_, z_);
-		return std::string(tempBuffer);
+		return String(tempBuffer);
 	}
 
 	const Vector3 Vector3::ZERO;

@@ -199,7 +199,7 @@ namespace Sapphire
 
 		Matrix3x3 Inverse() const;
 
-		std::string ToString() const;
+		String ToString() const;
 
 		float m00_;
 		float m01_;

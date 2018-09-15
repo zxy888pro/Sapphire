@@ -27,8 +27,10 @@ struct PointLight {
     vec3 diffuse;
     vec3 specular;
 };  
-//总共的点光源
+//用到的点光源数量
 #define POINT_LIGHTS_NUM 4
+//最大点光源数组数量
+#define POINT_LIGHTS_MAX_NUM 16
 
 //聚光灯属性
 struct SpotLight {
@@ -54,7 +56,7 @@ struct SpotLight {
 //场景中的方向光，一般就一个
 uniform DirLight dirLight;
 //点光源数组
-uniform PointLight pointLights[POINT_LIGHTS_NUM];
+uniform PointLight pointLights[POINT_LIGHTS_MAX_NUM];
 //聚光灯
 uniform SpotLight spotLight;
 //材质

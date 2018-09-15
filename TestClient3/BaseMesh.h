@@ -8,7 +8,7 @@
 namespace Sapphire
 {
 
-	class BaseMesh
+	class BaseMesh :public RefCounter
 	{
 	public:
 

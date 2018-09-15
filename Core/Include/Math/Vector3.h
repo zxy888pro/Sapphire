@@ -230,7 +230,7 @@ namespace Sapphire
 		const float* Data() const { return &x_; }
 
 		/// Return as string.
-		std::string ToString() const;
+		String ToString() const;
 
 		/// X coordinate.
 		float x_;
