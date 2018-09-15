@@ -1,10 +1,21 @@
 #pragma once
 #include "SapphireDef.h"
-#include <Variant.h>
+#include <Str.h>
+//#include <Variant.h>
 #include <Color.h>
 
 namespace Sapphire
 {
+	class Quaternion;
+	class Vector2;
+	class Vector4;
+	class Matrix3x3;
+	class Matrix3x4;
+	class Matrix4x4;
+	class Rect;
+	class IntRect;
+	class IntVector2;
+	class Vector3;
 
 #define FORMAT_MSG_BUFFER_SIZE (204800)
 
@@ -97,7 +108,6 @@ namespace Sapphire
 	SAPPHIRE_API String ToString(void* value);
 	/// Convert an unsigned integer to string as hexadecimal.
 	SAPPHIRE_API String ToStringHex(unsigned value);
-	/// Convert a byte buffer to a string.
-	SAPPHIRE_API void BufferToString(String& dest, const void* data, unsigned size);
+
 
 }

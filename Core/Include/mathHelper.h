@@ -26,7 +26,7 @@ namespace Sapphire
 
 	#define HUGE_VAL _HUGE
 	//最大浮点
-	#define INFINITY  (float)HUGE_VAL
+	#define M_INFINITY  (float)HUGE_VAL
 
 	//PI相关
 	/**

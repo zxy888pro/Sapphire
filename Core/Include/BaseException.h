@@ -40,6 +40,28 @@ namespace Sapphire
 		FSErrorCode m_errorCode;
 	};
 
+	class SAPPHIRE_CLASS StringException :public BaseException
+	{
+	public:
+		enum SErrorCode
+		{
+			SError_InvalidIndex,
+			SError_OutOfRange,
+			SError_CodeError,
+			SError_UnknownError
+
+		};
+
+		StringException();
+		StringException(SErrorCode ecode);
+		StringException(std::string msg);
+		StringException(std::string msg, SErrorCode ecode);
+
+		SErrorCode GetErrorCode();
+	private:
+		SErrorCode m_errorCode;
+	};
+
 
 	
 }

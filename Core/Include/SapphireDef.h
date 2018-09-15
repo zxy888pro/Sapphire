@@ -131,8 +131,10 @@ enum MemAllocType
 
 //template<class _Kty,class _Ty,class _Hasher = hash<_Kty>,class _Keyeq = equal_to<_Kty>,class _Alloc = allocator<pair<const _Kty, _Ty> >
 //using HashMap = std::unordered_map < _Kty, _Ty, _Hasher, _Keyeq > ;
- 
-
+#ifndef FORCEINLINE
+#define FORCEINLINE __forceinline
+#endif 
+#define FORCEINLINE inline
 #else
 
 #define m_assert(x) assert(x)

@@ -388,7 +388,7 @@ namespace Sapphire
 		{
 			if (refCount_)
 			{
-				assert(refCount_->weakRefs_ >= 0);
+				m_assert(refCount_->weakRefs_ >= 0);
 				++(refCount_->weakRefs_);
 			}
 		}
@@ -398,7 +398,7 @@ namespace Sapphire
 		{
 			if (refCount_)
 			{
-				assert(refCount_->weakRefs_ > 0);
+				m_assert(refCount_->weakRefs_ > 0);
 				--(refCount_->weakRefs_);
 
 				if (Expired() && !refCount_->weakRefs_)

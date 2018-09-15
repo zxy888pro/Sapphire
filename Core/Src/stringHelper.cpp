@@ -1,6 +1,15 @@
+#include <Str.h>
 #include "stringHelper.h"
 #include <time.h>
 #include <stdarg.h>
+#include <Math/Vector2.h>
+#include <Math/Vector3.h>
+#include <Math/Vector4.h>
+#include <Math/Matrix3x3.h>
+#include <Math/Matrix3x4.h>
+#include <Math/Matrix4x4.h>
+#include <Math/Quaternion.h>
+#include <Math/Rect.h>
 
 
 namespace Sapphire
@@ -354,6 +363,50 @@ namespace Sapphire
 		return ret;
 	}
 
+	Rect ToRect(const String& source)
+	{
+		return ToRect(source.c_str());
+	}
+
+	Rect ToRect(const char* source)
+	{
+		Rect ret(Rect::ZERO);
+
+		unsigned elements = CountElements(source, ' ');
+		if (elements < 4)
+			return ret;
+
+		char* ptr = (char*)source;
+		ret.min_.x_ = (float)strtod(ptr, &ptr);
+		ret.min_.y_ = (float)strtod(ptr, &ptr);
+		ret.max_.x_ = (float)strtod(ptr, &ptr);
+		ret.max_.y_ = (float)strtod(ptr, &ptr);
+
+		return ret;
+	}
+
+	IntRect ToIntRect(const String& source)
+	{
+		return ToIntRect(source.c_str());
+	}
+
+	IntRect ToIntRect(const char* source)
+	{
+		IntRect ret(IntRect::ZERO);
+
+		unsigned elements = CountElements(source, ' ');
+		if (elements < 4)
+			return ret;
+
+		char* ptr = (char*)source;
+		ret.left_ = (int)strtol(ptr, &ptr, 10);
+		ret.top_ = (int)strtol(ptr, &ptr, 10);
+		ret.right_ = (int)strtol(ptr, &ptr, 10);
+		ret.bottom_ = (int)strtol(ptr, &ptr, 10);
+
+		return ret;
+	}
+
 	Vector4 ToVector4(const String& source, bool allowMissingCoords)
 	{
 		return ToVector4(source.c_str(), allowMissingCoords);
@@ -393,34 +446,13 @@ namespace Sapphire
 		}
 	}
 
-	Rect ToRect(const String& source)
+
+	Matrix3x3 ToMatrix3x3(const String& source)
 	{
-		return ToRect(source.c_str());
+		return ToMatrix3x3(source.c_str());
 	}
 
-	Rect ToRect(const char* source)
-	{
-		Rect ret(Rect::ZERO);
-
-		unsigned elements = CountElements(source, ' ');
-		if (elements < 4)
-			return ret;
-
-		char* ptr = (char*)source;
-		ret.min_.x_ = (float)strtod(ptr, &ptr);
-		ret.min_.y_ = (float)strtod(ptr, &ptr);
-		ret.max_.x_ = (float)strtod(ptr, &ptr);
-		ret.max_.y_ = (float)strtod(ptr, &ptr);
-
-		return ret;
-	}
-
-	Matrix3x3 ToMatrix3(const String& source)
-	{
-		return ToMatrix3(source.c_str());
-	}
-
-	Matrix3x3 ToMatrix3(const char* source)
+	Matrix3x3 ToMatrix3x3(const char* source)
 	{
 		Matrix3x3 ret(Matrix3x3::ZERO);
 
@@ -472,12 +504,12 @@ namespace Sapphire
 		return ret;
 	}
 
-	Matrix4x4 ToMatrix4(const String& source)
+	Matrix4x4 ToMatrix4x4(const String& source)
 	{
-		return ToMatrix4(source.c_str());
+		return ToMatrix4x4(source.c_str());
 	}
 
-	Matrix4x4 ToMatrix4(const char* source)
+	Matrix4x4 ToMatrix4x4(const char* source)
 	{
 		Matrix4x4 ret(Matrix4x4::ZERO);
 
@@ -508,7 +540,7 @@ namespace Sapphire
 
 	IntVector2 ToIntVector2(const String& source)
 	{
-		return ToIntVector2(source.CString());
+		return ToIntVector2(source.c_str());
 	}
 
 	IntVector2 ToIntVector2(const char* source)
@@ -538,50 +570,5 @@ namespace Sapphire
 		return String(tempBuffer);
 	}
 
-	void BufferToString(String& dest, const void* data, unsigned size)
-	{
-		// Precalculate needed string size
-		const unsigned char* bytes = (const unsigned char*)data;
-		unsigned length = 0;
-		for (unsigned i = 0; i < size; ++i)
-		{
-			// Room for separator
-			if (i)
-				++length;
-
-			// Room for the value
-			if (bytes[i] < 10)
-				++length;
-			else if (bytes[i] < 100)
-				length += 2;
-			else
-				length += 3;
-		}
-
-		dest.resize(length);
-		unsigned index = 0;
-
-		// Convert values
-		for (unsigned i = 0; i < size; ++i)
-		{
-			if (i)
-				dest[index++] = ' ';
-
-			if (bytes[i] < 10)
-			{
-				dest[index++] = '0' + bytes[i];
-			}
-			else if (bytes[i] < 100)
-			{
-				dest[index++] = (char)('0' + bytes[i] / 10);
-				dest[index++] = (char)('0' + bytes[i] % 10);
-			}
-			else
-			{
-				dest[index++] = (char)('0' + bytes[i] / 100);
-				dest[index++] = (char)('0' + bytes[i] % 100 / 10);
-				dest[index++] = (char)('0' + bytes[i] % 10);
-			}
-		}
-	}
+	
 }

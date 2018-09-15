@@ -48,3 +48,32 @@ Sapphire::FileStreamException::FSErrorCode Sapphire::FileStreamException::GetErr
 {
 	return m_errorCode;
 }
+
+Sapphire::StringException::StringException()
+{
+	m_message = "";
+	m_errorCode = SError_UnknownError;
+}
+
+Sapphire::StringException::SErrorCode Sapphire::StringException::GetErrorCode()
+{
+	return m_errorCode;
+}
+
+Sapphire::StringException::StringException(std::string msg, SErrorCode ecode)
+{
+	m_message = msg;
+	m_errorCode = ecode;
+}
+
+Sapphire::StringException::StringException(std::string msg)
+{
+	m_message = msg;
+	m_errorCode = SError_UnknownError;
+}
+
+Sapphire::StringException::StringException(SErrorCode ecode)
+{
+	m_message = "";
+	m_errorCode = ecode;
+}

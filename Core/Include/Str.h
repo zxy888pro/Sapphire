@@ -1,186 +1,218 @@
 #pragma once
 #include <SapphireDef.h>
 #include <string>
+
 namespace Sapphire
 {
-	template<class _Elem,
-	class _Traits,
-	class _Alloc>
-	class SAPPHIRE_CLASS _String : public std::basic_string < _Elem, _Traits, _Alloc >
+	class SAPPHIRE_CLASS String
 	{
 	public:
 
-		_String();
+		String();
 
-		_String(const _Elem*  pstr);
+		String(const char* pstr);
 
-		_String(const std::basic_string< _Elem, _Traits, _Alloc > str);
+		String(const wchar_t* pstr);
 
-		unsigned ToHash() const
+		String(std::string& str);
+
+		String(char c, uint count);
+
+
+		virtual ~String();
+
+		const std::string& str() const;
+
+		const std::wstring& wstr() const;
+
+		const char* c_str() const;
+
+		const wchar_t*  c_wstr() const;
+
+		bool empty() const
 		{
-			unsigned hash = 0;
-			const char* ptr = std::basic_string < _Elem, _Traits, _Alloc >::data();
-			while (*ptr)
-			{
-				hash = *ptr + (hash << 6) + (hash << 16) - hash;
-				++ptr;
-			}
-
-			return hash;
+			return m_str.empty();
 		}
 
-		static int Compare(const char* lhs, const char* rhs, bool caseSensitive)
+		String& operator =(const char* rhs)
 		{
-			if (!lhs || !rhs)
-				return lhs ? 1 : (rhs ? -1 : 0);
 
-			if (caseSensitive)
-				return strcmp(lhs, rhs);
-			else
-			{
-				for (;;)
-				{
-					char l = (char)tolower(*lhs);
-					char r = (char)tolower(*rhs);
-					if (!l || !r)
-						return l ? 1 : (r ? -1 : 0);
-					if (l < r)
-						return -1;
-					if (l > r)
-						return 1;
-
-					++lhs;
-					++rhs;
-				}
-			}
+			m_str = rhs;
+			return *this;
 		}
 
-		int Compare(const char* str, bool caseSensitive) const
+		String& operator =(std::string& rhs)
 		{
-			return Compare(c_str(), str, caseSensitive);
+
+			m_str = rhs.c_str();
+			return *this;
 		}
 
-		static std::vector<String> Split(const char* str, char separator, bool keepEmptyStrings)
+
+		String& operator =(const String& rhs)
 		{
-			std::vector<String> ret;
-			const char* strEnd = str + String::CStringLength(str);
-
-			for (const char* splitEnd = str; splitEnd != strEnd; ++splitEnd)
-			{
-				if (*splitEnd == separator)
-				{
-					const ptrdiff_t splitLen = splitEnd - str;
-					if (splitLen > 0 || keepEmptyStrings)
-						ret.Push(String(str, splitLen));
-					str = splitEnd + 1;
-				}
-			}
-
-			const ptrdiff_t splitLen = strEnd - str;
-			if (splitLen > 0 || keepEmptyStrings)
-				ret.Push(String(str, splitLen));
-
-			return ret;
+			m_str = rhs.c_str();
+			return *this;
 		}
+
+		String& operator +=(const String& rhs)
+		{
+			m_str += rhs.str();
+			return *this;
+		}
+
+		String& operator +=(const char* rhs)
+		{
+			m_str += rhs;
+			return *this;
+		}
+
+		String& operator +=(char rhs)
+		{
+			m_str += rhs;
+			return *this;
+		}
+
+		bool operator ==(const String& rhs) const { return m_str == rhs.str(); }
+
+		bool operator !=(const String& rhs) const { return m_str != rhs.str(); }
+
+		char& operator [](unsigned index)
+		{
+			m_assert(index < m_str.length());
+			return m_str[index];
+		}
+
+		const char& operator [](unsigned index) const
+		{
+			m_assert(index < m_str.length());
+			return m_str[index];
+		}
+
+		char& At(unsigned index)
+		{
+			m_assert(index < m_str.length());
+			return m_str[index];
+		}
+
+		const char& At(unsigned index) const
+		{
+			m_assert(index < m_str.length());
+			return m_str[index];
+		}
+
+		unsigned ToHash() const;
+
+		int Compare(const char* str, bool caseSensitive) const;
+
+		int Compare(String& rhs);
+
+		int Find(const char* pstr, int beginPos, int strNo = 0, bool reverse = false);
+
+		int Find(String rhs, int beginPos, int strNo = 0, bool reverse = false, bool caseSensitive = true);
+
+		int Replace(const String& replaceThis, const String& replaceWith, bool caseSensitive = true);
+
+		int Replace(const char* replaceThis, const char* replaceWith, bool caseSensitive = true);
+
+		int ReplaceAll(const String& replaceThis, const String& replaceWith, bool caseSensitive = true);
+
+		int ReplaceAll(const char* replaceThis, const char* replaceWith, bool caseSensitive = true);
+
+		String GetSubString(int nBeginPos, int nEndPos);
+
+
+		static int Compare(const char* lhs, const char* rhs, bool caseSensitive);
+
+
+		static std::vector<String> Split(const char* str, char separator, bool keepEmptyStrings = false);
+
+
+	private:
+
+		std::string m_str;
+		std::wstring m_wstr;
 
 	};
 
-	template<class _Elem,
-	class _Traits,
-	class _Alloc>
-		Sapphire::_String<_Elem, _Traits, _Alloc>::_String(const std::basic_string< _Elem, _Traits, _Alloc > str)
-	{
-		:std::basic_string< _Elem, _Traits, _Alloc >(str);
-	}
+	FORCEINLINE String operator +(const char* lhs, const String& rhs);
 
-	template<class _Elem,
-	class _Traits,
-	class _Alloc>
-		Sapphire::_String<_Elem, _Traits, _Alloc>::_String(const _Elem* pstr)
-	{
-		_Tidy();
-		assign(pstr);
-	}
 
-	template<class _Elem,
-	class _Traits,
-	class _Alloc>
-		Sapphire::_String<_Elem, _Traits, _Alloc>::_String()
-	{
 
-	}
+	FORCEINLINE String operator +(const wchar_t* lhs, const String& rhs);
 
-	typedef _String<char, std::char_traits<char>, std::allocator<char> > String;
-	typedef _String<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >  WString;
+
 
 	class SAPPHIRE_CLASS StringHash
 	{
 	public:
 
-	StringHash() :
-	value_(0)
-	{
-	}
+		StringHash() :
+			value_(0)
+		{
+		}
 
-	StringHash(const StringHash& rhs) :
-	value_(rhs.value_)
-	{
-	}
-	explicit StringHash(unsigned value) :
-	value_(value)
-	{
-	}
+		StringHash(const StringHash& rhs) :
+			value_(rhs.value_)
+		{
+		}
+		explicit StringHash(unsigned value) :
+			value_(value)
+		{
+		}
 
-	StringHash(const char* str);
+		StringHash(const char* str);
 
-	StringHash(const String& str);
+		StringHash(const String& str);
 
-	StringHash& operator =(const StringHash& rhs)
-	{
-	value_ = rhs.value_;
-	return *this;
-	}
+		StringHash& operator =(const StringHash& rhs)
+		{
+			value_ = rhs.value_;
+			return *this;
+		}
 
-	StringHash operator +(const StringHash& rhs) const
-	{
-	StringHash ret;
-	ret.value_ = value_ + rhs.value_;
-	return ret;
-	}
+		StringHash operator +(const StringHash& rhs) const
+		{
+			StringHash ret;
+			ret.value_ = value_ + rhs.value_;
+			return ret;
+		}
 
-	StringHash& operator +=(const StringHash& rhs)
-	{
-	value_ += rhs.value_;
-	return *this;
-	}
+		StringHash& operator +=(const StringHash& rhs)
+		{
+			value_ += rhs.value_;
+			return *this;
+		}
 
-	bool operator ==(const StringHash& rhs) const { return value_ == rhs.value_; }
 
-	bool operator !=(const StringHash& rhs) const { return value_ != rhs.value_; }
 
-	bool operator <(const StringHash& rhs) const { return value_ < rhs.value_; }
+		bool operator ==(const StringHash& rhs) const { return value_ == rhs.value_; }
 
-	bool operator >(const StringHash& rhs) const { return value_ > rhs.value_; }
+		bool operator !=(const StringHash& rhs) const { return value_ != rhs.value_; }
 
-	operator bool() const { return value_ != 0; }
+		bool operator <(const StringHash& rhs) const { return value_ < rhs.value_; }
 
-	unsigned Value() const { return value_; }
+		bool operator >(const StringHash& rhs) const { return value_ > rhs.value_; }
 
-	String ToString() const;
+		operator bool() const { return value_ != 0; }
 
-	unsigned ToHash() const { return value_; }
+		unsigned Value() const { return value_; }
 
-	static unsigned Calculate(const char* str);
+		String  ToString() const;
 
-	static const StringHash ZERO;
+		unsigned ToHash() const { return value_; }
+
+		static unsigned Calculate(const char* str);
+
+		static const StringHash ZERO;
 
 	private:
 
-	uint value_;
+		uint value_;
 
 	};
 
-	
-	
-	 
+
+
+
 }

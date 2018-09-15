@@ -120,6 +120,18 @@
     <ClInclude Include="Include\Str.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Vector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Math\Rect.h">
+      <Filter>头文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\IStream.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\HashMap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -199,6 +211,12 @@
     </ClCompile>
     <ClCompile Include="Src\Variant.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Vector.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Math\Rect.cpp">
+      <Filter>源文件\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

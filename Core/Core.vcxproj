@@ -19,13 +19,16 @@
     <ClInclude Include="Include\Core.h" />
     <ClInclude Include="Include\FileStream.h" />
     <ClInclude Include="Include\handle.h" />
+    <ClInclude Include="Include\HashMap.h" />
     <ClInclude Include="Include\inifile.h" />
+    <ClInclude Include="Include\IStream.h" />
     <ClInclude Include="Include\logUtil.h" />
     <ClInclude Include="Include\mathHelper.h" />
     <ClInclude Include="Include\Math\Matrix3x3.h" />
     <ClInclude Include="Include\Math\Matrix3x4.h" />
     <ClInclude Include="Include\Math\Matrix4x4.h" />
     <ClInclude Include="Include\Math\Quaternion.h" />
+    <ClInclude Include="Include\Math\Rect.h" />
     <ClInclude Include="Include\Math\Vector2.h" />
     <ClInclude Include="Include\Math\Vector3.h" />
     <ClInclude Include="Include\Math\Vector4.h" />
@@ -44,6 +47,7 @@
     <ClInclude Include="Include\stringHelper.h" />
     <ClInclude Include="Include\Thread.h" />
     <ClInclude Include="Include\Variant.h" />
+    <ClInclude Include="Include\Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\BaseException.cpp" />
@@ -58,6 +62,7 @@
     <ClCompile Include="Src\Math\Matrix3x3.cpp" />
     <ClCompile Include="Src\Math\Matrix3x4.cpp" />
     <ClCompile Include="Src\Math\Quaternion.cpp" />
+    <ClCompile Include="Src\Math\Rect.cpp" />
     <ClCompile Include="Src\Math\Vector2.cpp" />
     <ClCompile Include="Src\Math\Vector3.cpp" />
     <ClCompile Include="Src\Math\Vector4.cpp" />
@@ -72,6 +77,7 @@
     <ClCompile Include="Src\stringHelper.cpp" />
     <ClCompile Include="Src\Thread.cpp" />
     <ClCompile Include="Src\Variant.cpp" />
+    <ClCompile Include="Src\Vector.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{24788D97-0E75-453E-A528-03EF9E9C6D55}</ProjectGuid>

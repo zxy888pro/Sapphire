@@ -1,5 +1,5 @@
 #pragma once
-#include <Sapphire.h>
+#include <SapphireDef.h>
 
 namespace Sapphire
 {
@@ -117,7 +117,7 @@ namespace Sapphire
 		static const Color CYAN;
 		static const Color MAGENTA;
 		static const Color YELLOW;
-		static const Color TRANSPARENT;
+		//static const Color TRANSPARENT;
 
 	protected:
 

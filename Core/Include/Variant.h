@@ -10,11 +10,10 @@
 #include <Math/Quaternion.h>
 #include <Math/Matrix3x3.h>
 #include <Math/Matrix3x4.h>
-#include <Math/Matrix4x4.h>
 
 namespace Sapphire
 {
-	/// 变体类型
+	///// 变体类型
 	enum VariantType
 	{
 		VAR_NONE = 0,
@@ -26,8 +25,7 @@ namespace Sapphire
 		VAR_VECTOR4,
 		VAR_QUATERNION,
 		VAR_COLOR,
-		VAR_STRING,
-		VAR_STREAM,
+		//VAR_STRING,
 		VAR_VOIDPTR,
 		VAR_RESOURCEREF,
 		VAR_RESOURCEREFLIST,
@@ -114,7 +112,7 @@ namespace Sapphire
 	typedef std::vector<String> StringVector;
 
 	/// 变体Map  Key字符串Hash，   Value:變體
-	typedef std::unordered_map<StringHash, Variant> VariantMap;
+	typedef std::unordered_map<uint, Variant> VariantMap;
 
 
 	//资源引用类型列表
@@ -142,6 +140,7 @@ namespace Sapphire
 	// 支持一个固定类型的集合的变体类型
 	class SAPPHIRE_CLASS Variant
 	{
+	public:
 		Variant() :
 			type_(VAR_NONE)
 		{
@@ -215,17 +214,11 @@ namespace Sapphire
 			*this = value;
 		}
 
-		Variant(const String& value) :
+		/*Variant(const String& value) :
 			type_(VAR_NONE)
 		{
 			*this = value;
-		}
-
-		Variant(const IStream& value) :
-			type_(VAR_NONE)
-		{
-			*this = value;
-		}
+		}*/
 
 		Variant(void* value) :
 			type_(VAR_NONE)
@@ -427,29 +420,21 @@ namespace Sapphire
 			return *this;
 		}
 
-		/// Assign from a string.
-		Variant& operator =(const String& rhs)
-		{
-			SetType(VAR_STRING);
-			*(reinterpret_cast<String*>(&value_)) = rhs;
-			return *this;
-		}
+		///// Assign from a string.
+		//Variant& operator =(const String& rhs)
+		//{
+		//	SetType(VAR_STRING);
+		//	*(reinterpret_cast<String*>(&value_)) = rhs;
+		//	return *this;
+		//}
 
 		/// Assign from a C string.
-		Variant& operator =(const char* rhs)
+		/*Variant& operator =(const char* rhs)
 		{
 			SetType(VAR_STRING);
 			*(reinterpret_cast<String*>(&value_)) = String(rhs);
 			return *this;
-		}
-
-
-		Variant& operator =(const IStream& rhs)
-		{
-			SetType(VAR_STREAM);
-			*(reinterpret_cast<IStream*>(&value_)) = rhs;
-			return *this;
-		}
+		}*/
 
 		/// Assign from a void pointer.
 		Variant& operator =(void* rhs)
@@ -596,13 +581,10 @@ namespace Sapphire
 		}
 
 		/// Test for equality with a string. To return true, both the type and value must match.
-		bool operator ==(const String& rhs) const
+		/*bool operator ==(const String& rhs) const
 		{
 			return type_ == VAR_STRING ? *(reinterpret_cast<const String*>(&value_)) == rhs : false;
-		}
-
-		/// Test for equality with a %VectorBuffer. To return true, both the type and value must match.
-		bool operator ==(const IStream& rhs) const;
+		}*/
 
 		/// Test for equality with a void pointer. To return true, both the type and value must match, with the exception that a RefCounted pointer is also allowed.
 		bool operator ==(void* rhs) const
@@ -721,9 +703,6 @@ namespace Sapphire
 
 		/// Test for inequality with a string.
 		bool operator !=(const String& rhs) const { return !(*this == rhs); }
-
-		/// Test for inequality with a %VectorBuffer.
-		bool operator !=(const IStream& rhs) const { return !(*this == rhs); }
 
 		/// Test for inequality with a pointer.
 		bool operator !=(void* rhs) const { return !(*this == rhs); }
@@ -861,11 +840,8 @@ namespace Sapphire
 		const Color& GetColor() const { return type_ == VAR_COLOR ? *reinterpret_cast<const Color*>(&value_) : Color::WHITE; }
 
 		/// Return string or empty on type mismatch.
-		const String& GetString() const { return type_ == VAR_STRING ? *reinterpret_cast<const String*>(&value_) : ""; }
+		//const String& GetString() const { return type_ == VAR_STRING ? *reinterpret_cast<const String*>(&value_) : ""; }
 
-
-		/// Return %VectorBuffer containing the buffer or empty on type mismatch.
-		const IStream& GetStream() const;
 
 		/// Return void pointer or null on type mismatch. RefCounted pointer will be converted.
 		void* GetVoidPtr() const
@@ -944,6 +920,29 @@ namespace Sapphire
 		/// Return value's type.
 		VariantType GetType() const { return type_; }
 
+		/// Convert value to string. Pointers are returned as null, and VariantBuffer or VariantMap are not supported and return empty.
+		String ToString() const;
+
+		/// Return true when the variant value is considered zero according to its actual type.
+		bool IsZero() const;
+
+		/// Return true when the variant is empty (i.e. not initialized yet).
+		bool IsEmpty() const { return type_ == VAR_NONE; }
+
+		/// Return the value, template version.
+		template <class T> T Get() const;
+
+		/// Return a pointer to a modifiable variant vector or null on type mismatch.
+		VariantVector* GetVariantVectorPtr() { return type_ == VAR_VARIANTVECTOR ? reinterpret_cast<VariantVector*>(&value_) : 0; }
+
+		/// Return a pointer to a modifiable string vector or null on type mismatch.
+		StringVector* GetStringVectorPtr() { return type_ == VAR_STRINGVECTOR ? reinterpret_cast<StringVector*>(&value_) : 0; }
+
+		/// Return a pointer to a modifiable variant map or null on type mismatch.
+		VariantMap* GetVariantMapPtr() { return type_ == VAR_VARIANTMAP ? reinterpret_cast<VariantMap*>(&value_) : 0; }
+
+
+
 		/// Empty variant.
 		static const Variant EMPTY;
 		/// Empty resource reference.
@@ -961,5 +960,51 @@ namespace Sapphire
 		VariantValue value_;
 	};
 
+	/// Return variant type from type.
+	template <typename T> VariantType GetVariantType();
 
+	/// Return variant type from concrete types.
+	template <> inline VariantType GetVariantType<int>() { return VAR_INT; }
+
+	template <> inline VariantType GetVariantType<unsigned>() { return VAR_INT; }
+
+	template <> inline VariantType GetVariantType<bool>() { return VAR_BOOL; }
+
+	template <> inline VariantType GetVariantType<float>() { return VAR_FLOAT; }
+
+	template <> inline VariantType GetVariantType<double>() { return VAR_DOUBLE; }
+
+	template <> inline VariantType GetVariantType<Vector2>() { return VAR_VECTOR2; }
+
+	template <> inline VariantType GetVariantType<Vector3>() { return VAR_VECTOR3; }
+
+	template <> inline VariantType GetVariantType<Vector4>() { return VAR_VECTOR4; }
+
+	template <> inline VariantType GetVariantType<Quaternion>() { return VAR_QUATERNION; }
+
+	template <> inline VariantType GetVariantType<Color>() { return VAR_COLOR; }
+
+	//template <> inline VariantType GetVariantType<String>() { return VAR_STRING; }
+
+	template <> inline VariantType GetVariantType<StringHash>() { return VAR_INT; }
+
+	template <> inline VariantType GetVariantType<ResourceRef>() { return VAR_RESOURCEREF; }
+
+	template <> inline VariantType GetVariantType<ResourceRefList>() { return VAR_RESOURCEREFLIST; }
+
+	template <> inline VariantType GetVariantType<VariantVector>() { return VAR_VARIANTVECTOR; }
+
+	template <> inline VariantType GetVariantType<StringVector >() { return VAR_STRINGVECTOR; }
+
+	template <> inline VariantType GetVariantType<VariantMap>() { return VAR_VARIANTMAP; }
+
+	template <> inline VariantType GetVariantType<IntRect>() { return VAR_INTRECT; }
+
+	template <> inline VariantType GetVariantType<IntVector2>() { return VAR_INTVECTOR2; }
+
+	template <> inline VariantType GetVariantType<Matrix3x3>() { return VAR_MATRIX3X3; }
+
+	template <> inline VariantType GetVariantType<Matrix3x4>() { return VAR_MATRIX3X4; }
+
+	template <> inline VariantType GetVariantType<Matrix4x4>() { return VAR_MATRIX4X4; }
 }

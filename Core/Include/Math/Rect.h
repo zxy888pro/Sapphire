@@ -12,8 +12,8 @@ namespace Sapphire
 
 		/// Construct an undefined rect.
 		Rect() :
-			min_(INFINITY, INFINITY),
-			max_(-INFINITY, -INFINITY)
+			min_(M_INFINITY, M_INFINITY),
+			max_(-M_INFINITY, -M_INFINITY)
 		{
 		}
 
@@ -115,8 +115,8 @@ namespace Sapphire
 		/// Clear to undefined state.
 		void Clear()
 		{
-			min_ = Vector2(INFINITY, INFINITY);
-			max_ = Vector2(-INFINITY, -INFINITY);
+			min_ = Vector2(M_INFINITY, M_INFINITY);
+			max_ = Vector2(-M_INFINITY, -M_INFINITY);
 		}
 
 		/// Clip with another rect.
@@ -125,7 +125,7 @@ namespace Sapphire
 		/// Return true if this rect is defined via a previous call to Define() or Merge().
 		bool Defined() const
 		{
-			return min_.x_ != INFINITY;
+			return min_.x_ != M_INFINITY;
 		}
 
 		/// Return center.

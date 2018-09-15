@@ -7,7 +7,7 @@ namespace Sapphire
 
 	void Color::Bounds(float* min, float* max, bool clipped /*= false*/) const
 	{
-		assert(min && max);
+		m_assert(min && max);
 
 		if (r_ > g_)
 		{
@@ -104,7 +104,7 @@ namespace Sapphire
 	const Color Color::CYAN(0.0f, 1.0f, 1.0f);
 	const Color Color::MAGENTA(1.0f, 0.0f, 1.0f);
 	const Color Color::YELLOW(1.0f, 1.0f, 0.0f);
-	const Color Color::TRANSPARENT(0.0f, 0.0f, 0.0f, 0.0f);
+	//const Color Color::TRANSPARENT(0.0f, 0.0f, 0.0f, 0.0f);
 
 
 

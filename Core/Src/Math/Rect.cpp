@@ -36,8 +36,8 @@ namespace Sapphire
 
 		if (min_.x_ > max_.x_ || min_.y_ > max_.y_)
 		{
-			min_ = Vector2(INFINITY, INFINITY);
-			max_ = Vector2(-INFINITY, -INFINITY);
+			min_ = Vector2(M_INFINITY, M_INFINITY);
+			max_ = Vector2(-M_INFINITY, -M_INFINITY);
 		}
 	}
 }

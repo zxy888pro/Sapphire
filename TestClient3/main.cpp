@@ -9,6 +9,9 @@
 #include "BaseLightMesh.h"
 #include "BaseLightMapMesh.h"
 #include "BaseEmissionMesh.h"
+#include <Math/Vector2.h>
+#include <Color.h>
+#include <Variant.h>
 
 
 const unsigned int SCR_WIDTH = 800;
@@ -52,9 +55,7 @@ void ProcessInput(GLFWwindow* pWnd)
 
 void init()
 {
-	Sapphire::String  str = "abcdefg";
-	str += "hijklmn";
-	uint hashcode =  str.ToHash();
+	
 
 	Sapphire::LogUtil::getInstancePtr()->Init("log.txt");
 	Sapphire::LogUtil::LogMsgLn("≥ı ºªØ≥Ã–Ú");
