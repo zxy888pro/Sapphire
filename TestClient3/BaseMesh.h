@@ -5,6 +5,7 @@
 #include <glm.hpp>
 #include "RenderState.h"
 
+
 namespace Sapphire
 {
 	enum MeshType
@@ -17,6 +18,8 @@ namespace Sapphire
 		MT_MaxCount
 	};
 
+	class BaseLight;
+
 	class BaseMesh :public RefCounter
 	{
 	public:
@@ -26,7 +29,7 @@ namespace Sapphire
 		virtual void LoadBaseShader(const char* vs, const char* ps);
 		virtual void Init();
 		virtual void Render();
-		
+		virtual void Update(std::vector<SharedPtr<BaseLight>>& lightVec);
 
 		glm::vec3 getPos() const { return m_pos; }
 		void setPos(glm::vec3 val) { m_pos = val; }

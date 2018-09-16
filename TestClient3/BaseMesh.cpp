@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "BaseMesh.h"
+#include <BaseLight.h>
 
 namespace Sapphire
 {
@@ -35,6 +36,11 @@ namespace Sapphire
 	void BaseMesh::Render()
 	{
 
+	}
+
+	void BaseMesh::Update(std::vector<SharedPtr<BaseLight>>& lightVec)
+	{
+		return;
 	}
 
 	void BaseMesh::Release()

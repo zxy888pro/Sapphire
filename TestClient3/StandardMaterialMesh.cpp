@@ -6,6 +6,7 @@
 #include <ITexture.h>
 #include <ITextureMgr.h>
 #include "Camera.h"
+#include "BaseLight.h"
 
 namespace Sapphire
 {
@@ -108,6 +109,46 @@ namespace Sapphire
 		//glActiveTexture(GL_TEXTURE0 + TU_SPECULAR);
 		//glBindTexture(GL_TEXTURE_2D, 0);
 		RestoreRenderState();
+	}
+
+	void StandardMaterialMesh::Update(std::vector<SharedPtr<BaseLight>>& lightVec)
+	{
+		SharedPtr<BaseLight> dirLight;
+		std::vector<SharedPtr<BaseLight>> pointLights;
+		SharedPtr<BaseLight> spotLight;
+
+		for (int i = 0; i < lightVec.size(); ++i)
+		{
+			switch (lightVec[i]->getType())
+			{
+			case  LT_DIRECTION:
+			{
+				if (dirLight.NotNull())
+				{
+					continue;
+				}
+				dirLight = lightVec[i];
+			}
+			break;
+			case LT_POINT:
+			{
+				pointLights.push_back(lightVec[i]);
+			}
+				break;
+			case LT_SPOT:
+			{
+				if (spotLight.NotNull())
+				{
+					continue;
+				}
+				spotLight = lightVec[i];
+			}
+				break;
+			default:
+				break;
+			}
+		}
+		m_pShader->setVec3()
 	}
 
 	void StandardMaterialMesh::Release()

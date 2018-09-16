@@ -33,6 +33,7 @@ namespace Sapphire
 
 		virtual void Release() override;
 		glm::vec3  m_lightPos;
+		
 
 	private:
 

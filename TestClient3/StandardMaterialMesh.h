@@ -19,6 +19,9 @@ namespace Sapphire
 		virtual void Init() override;
 		virtual void Render() override;
 
+
+		virtual void Update(std::vector<SharedPtr<BaseLight>>& lightVec) override;
+
 	protected:
 
 
@@ -28,9 +31,8 @@ namespace Sapphire
 		virtual void Release() override;
 
 	private:
+
 		virtual void BackupRenderState() override;
-
-
 		virtual void RestoreRenderState() override;
 
 	};
