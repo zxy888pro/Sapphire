@@ -13,7 +13,7 @@ namespace Sapphire
 
 	BaseLightMapMesh::BaseLightMapMesh()
 	{
-
+		m_type = MT_BaseLightMapMesh;
 	}
 
 	BaseLightMapMesh::~BaseLightMapMesh()
@@ -122,7 +122,7 @@ namespace Sapphire
 		m_pShader->setMat4("projection", projection);
 		m_pShader->setMat4("view", view);
 		glm::mat4 model;
-		glm::translate(model, m_pos);
+		model = glm::translate(model, m_pos);
 		m_pShader->setMat4("model", model);
 
 		// bind diffuse map

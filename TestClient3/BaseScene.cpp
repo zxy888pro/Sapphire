@@ -51,6 +51,7 @@ namespace Sapphire
 
 	bool Scene::AddLight(SharedPtr<BaseLight> pLight)
 	{
+		pLight->Init();
 		m_lights.push_back(pLight);
 		return true;
 	}
@@ -58,6 +59,7 @@ namespace Sapphire
 	bool Scene::AddMesh(std::string name, SharedPtr<BaseMesh> pMesh)
 	{
 		std::pair<std::string, SharedPtr<BaseMesh>> it(name, pMesh);
+		pMesh->Init();
 		m_meshMap.insert(it);
 		return true;
 	}

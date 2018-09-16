@@ -11,6 +11,7 @@ namespace Sapphire
 	BaseLightMesh::BaseLightMesh()
 	{
 		m_lightPos = glm::vec3(0, 0, 0);
+		m_type = MT_BaseLighMesh;
 	}
 
 	BaseLightMesh::~BaseLightMesh()

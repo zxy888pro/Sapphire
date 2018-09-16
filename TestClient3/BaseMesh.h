@@ -7,6 +7,15 @@
 
 namespace Sapphire
 {
+	enum MeshType
+	{
+		MT_BaseMesh,
+		MT_BaseLighMesh,
+		MT_BaseLightMapMesh,
+		MT_EmissionMesh,
+		MT_StandardMaterialMesh,
+		MT_MaxCount
+	};
 
 	class BaseMesh :public RefCounter
 	{
@@ -25,6 +34,8 @@ namespace Sapphire
 		void setRot(glm::vec3 val) { m_rot = val; }
 		glm::vec3 getScale() const { return m_scale; }
 		void setScale(glm::vec3 val) { m_scale = val; }
+		MeshType getType(){ return m_type; }
+
 
 
 	protected:
@@ -39,6 +50,7 @@ namespace Sapphire
 		glm::vec3  m_scale;
 		RenderState  m_state;
 		Shader* m_pShader;
+		MeshType m_type;
 
 	private:
 

@@ -9,7 +9,7 @@ namespace Sapphire
 		setPos(glm::vec3(0, 0, 0));
 		setRot(glm::vec3(0, 0, 0));
 		setScale(glm::vec3(1, 1, 1));
-			 
+		m_type = MT_BaseMesh;
 	}
 
 	BaseMesh::~BaseMesh()

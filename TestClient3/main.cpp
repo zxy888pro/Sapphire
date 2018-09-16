@@ -24,9 +24,9 @@ float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 GLFWwindow* window = NULL;
-Sapphire::BaseLightMesh* pMesh;
-Sapphire::BaseLightMapMesh* pMesh2;
-Sapphire::BaseEmissionMesh* pMesh3;
+//Sapphire::BaseLightMesh* pMesh;
+//Sapphire::BaseLightMapMesh* pMesh2;
+//Sapphire::BaseEmissionMesh* pMesh3;
 Sapphire::Scene* pScene;
 
 void OnMouseMove(GLFWwindow* window, double xpos, double ypos);
@@ -40,7 +40,6 @@ void ProcessInput(GLFWwindow* pWnd)
 	{
 		glfwTerminate();
 		Sapphire::Core::GetSingletonPtr()->GetMemoryMgr()->dumpLogReport();
-		release();
 		return;
 	}
 	if (glfwGetKey(pWnd, GLFW_KEY_W) == GLFW_PRESS)
@@ -55,7 +54,7 @@ void ProcessInput(GLFWwindow* pWnd)
 
 void init()
 {
-
+	using namespace Sapphire;
 	
 
 	Sapphire::LogUtil::getInstancePtr()->Init("log.txt");
@@ -98,7 +97,8 @@ void init()
 		Sapphire::LogUtil::LogMsgLn(Sapphire::StringFormatA("glew init error! errorCode:! %d", glGetError()));
 		glfwTerminate();
 	}
-
+	pScene = new Scene();
+	
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 
 	pScene = new Sapphire::Scene();
@@ -181,6 +181,25 @@ int main()
 	//pMesh2->SetDiffuseMap("container2.png");
 	//pMesh2->SetSepcularMap("container2_specular.png");
 	//pMesh2->setLightPos(glm::vec3(2, 1, 2));
+
+	SharedPtr<BaseLight> pLight1 = SharedPtr<BaseLight>(new BaseLight());
+	pScene->AddLight(pLight1);
+	pLight1->setAmbient(glm::vec3(1.0, 0.3, 0.3));
+	pLight1->setDiffuse(glm::vec3(1.0, 0.3, 0.3));
+	pLight1->setAmbient(glm::vec3(1.0, 0.3, 0.3));
+	pLight1->setPos(glm::vec3(0.0, 4.0, 0.0));
+
+	SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new BaseLightMapMesh());
+	pMesh->setPos(glm::vec3(0.0, 0.0, 4.0));
+	SharedPtr<BaseLightMapMesh> pLMesh;
+	pLMesh.DynamicCast(pMesh);
+	pScene->AddMesh("lightMapBox1", pMesh);
+	pLMesh->SetDiffuseMap("container2.png");
+	pLMesh->SetSepcularMap("container2_specular.png");
+	pLMesh->setLightPos(pLight1->getPos());
+	 
+
+
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();
@@ -199,8 +218,6 @@ int main()
 	}
 	glfwTerminate();
 	release();
-
-
 
 	return 0;
 }

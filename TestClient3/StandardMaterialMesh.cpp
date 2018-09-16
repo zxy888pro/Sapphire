@@ -10,6 +10,16 @@
 namespace Sapphire
 {
 
+	StandardMaterialMesh::StandardMaterialMesh()
+	{
+		m_type = MT_StandardMaterialMesh;
+	}
+
+	StandardMaterialMesh::~StandardMaterialMesh()
+	{
+
+	}
+
 	void StandardMaterialMesh::Init()
 	{
 		LoadBaseShader("shaders\\StandardMaterialVs.glsl", "shaders\\StandardMaterialFs.glsl");

@@ -26,7 +26,7 @@ namespace Sapphire
 		void Update();
 
 		glm::vec3 getPos() const { return m_pos; }
-		void setPos(glm::vec3 val);
+		void setPos(glm::vec3 val){ m_pos = val; };
 
 		float getConstant() const { return m_constant; }
 		void setConstant(float val) { m_constant = val; }
@@ -42,8 +42,8 @@ namespace Sapphire
 		void setOuterCutOff(float val) { m_outerCutOff = val; }
 		Sapphire::LightType getType() const { return m_type; }
 		void setType(Sapphire::LightType val) { m_type = val; }
-		glm::vec3 getAmbient() const { return getAmbient(); }
-		void setAmbient(glm::vec3 val) { setAmbient(val); }
+		glm::vec3 getAmbient() const { return m_ambient; }
+		void setAmbient(glm::vec3 val) { m_ambient =val; }
 		glm::vec3 getDiffuse() const { return m_diffuse; }
 		void setDiffuse(glm::vec3 val) { m_diffuse = val; }
 		glm::vec3 getSpecular() const { return m_specular; }

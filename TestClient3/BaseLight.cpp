@@ -21,6 +21,7 @@ namespace Sapphire
 		m_cutOff = 0.5;
 		m_outerCutOff = 0.2;
 		m_pMesh = new BaseEmissionMesh();
+		
 	}
 
 	BaseLight::BaseLight(glm::vec3 pos, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, LightType type) :
