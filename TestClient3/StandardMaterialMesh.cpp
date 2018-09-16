@@ -7,6 +7,7 @@
 #include <ITextureMgr.h>
 #include "Camera.h"
 #include "BaseLight.h"
+#include <glm.hpp>
 
 namespace Sapphire
 {
@@ -14,6 +15,7 @@ namespace Sapphire
 	StandardMaterialMesh::StandardMaterialMesh()
 	{
 		m_type = MT_StandardMaterialMesh;
+		m_shininess = 12;
 	}
 
 	StandardMaterialMesh::~StandardMaterialMesh()
@@ -91,6 +93,9 @@ namespace Sapphire
 
 	void StandardMaterialMesh::Render()
 	{
+		m_pShader->Use();
+		BackupRenderState();
+		glEnable(GL_DEPTH_TEST);
 		// bind diffuse map
 		glActiveTexture(GL_TEXTURE0 + TU_DIFFUSE);
 		glBindTexture(GL_TEXTURE_2D, m_diffMapObj);
@@ -102,12 +107,12 @@ namespace Sapphire
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 		m_pShader->UnUse();
-		//// bind diffuse map
-		//glActiveTexture(GL_TEXTURE0 + TU_DIFFUSE);
-		//glBindTexture(GL_TEXTURE_2D, 0);
-		//// bind specular map
-		//glActiveTexture(GL_TEXTURE0 + TU_SPECULAR);
-		//glBindTexture(GL_TEXTURE_2D, 0);
+		// unbind diffuse map
+		glActiveTexture(GL_TEXTURE0 + TU_DIFFUSE);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		// unbind specular map
+		glActiveTexture(GL_TEXTURE0 + TU_SPECULAR);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		RestoreRenderState();
 	}
 
@@ -132,7 +137,11 @@ namespace Sapphire
 			break;
 			case LT_POINT:
 			{
-				pointLights.push_back(lightVec[i]);
+				if (pointLights.size() < 8)
+				{
+					pointLights.push_back(lightVec[i]);
+				}
+				continue;
 			}
 				break;
 			case LT_SPOT:
@@ -148,7 +157,95 @@ namespace Sapphire
 				break;
 			}
 		}
-		m_pShader->setVec3()
+		m_pShader->Use();
+		if (dirLight.NotNull())
+		{
+			//方向光
+			m_pShader->setVec3("dirLight.direction", dirLight->getDirection());
+			m_pShader->setVec3("dirLight.ambient", dirLight->getAmbient());
+			m_pShader->setVec3("dirLight.diffuse", dirLight->getDiffuse());
+			m_pShader->setVec3("dirLight.specular", dirLight->getSpecular());
+		}
+		else
+		{
+			//设一个默认值，可能除0异常
+			m_pShader->setVec3("dirLight.direction", glm::vec3(0, 0, 0));
+			m_pShader->setVec3("dirLight.ambient", glm::vec3(0, 0, 0));
+			m_pShader->setVec3("dirLight.diffuse", glm::vec3(0, 0, 0));
+			m_pShader->setVec3("dirLight.specular", glm::vec3(0, 0, 0));
+
+		}
+		
+		//聚光灯
+		if (spotLight.NotNull())
+		{
+			m_pShader->setVec3("spotLight.position", spotLight->getPos());
+			m_pShader->setVec3("spotLight.direction", spotLight->getDirection());
+			m_pShader->setFloat("spotLight.outerCutOff", spotLight->getOuterCutOff());
+			m_pShader->setFloat("spotLight.cutOff", spotLight->getCutOff());
+			m_pShader->setFloat("spotLight.constant", spotLight->getConstant());
+			m_pShader->setFloat("spotLight.linear", spotLight->getLinear());
+			m_pShader->setFloat("spotLight.quadratic", spotLight->getQuadratic());
+			m_pShader->setVec3("spotLight.ambient", spotLight->getAmbient());
+			m_pShader->setVec3("spotLight.diffuse", spotLight->getDiffuse());
+			m_pShader->setVec3("spotLight.specular", spotLight->getSpecular());
+		}
+		else
+		{
+			//设一个默认值，可能除0异常
+			m_pShader->setVec3("spotLight.position", glm::vec3(0,0,0));
+			m_pShader->setVec3("spotLight.direction", glm::vec3(0, 0, 0));
+			m_pShader->setFloat("spotLight.outerCutOff", 0);
+			m_pShader->setFloat("spotLight.cutOff", 0);
+			m_pShader->setFloat("spotLight.constant", 1);
+			m_pShader->setFloat("spotLight.linear", 0);
+			m_pShader->setFloat("spotLight.quadratic", 0);
+			m_pShader->setVec3("spotLight.ambient", glm::vec3(0, 0, 0));
+			m_pShader->setVec3("spotLight.diffuse", glm::vec3(0, 0, 0));
+			m_pShader->setVec3("spotLight.specular", glm::vec3(0, 0, 0));
+		}
+		//动态设置光源数目
+		if (pointLights.size() > 0)
+		{
+			m_pShader->setInt("pointLightCount", pointLights.size());
+			std::string tmp;
+			for (int i = 0; i < pointLights.size(); ++i)
+			{ 
+				tmp = StringFormatA("pointLights[%d].position", i);
+				m_pShader->setVec3(tmp.c_str(), pointLights[i]->getPos());
+				tmp = StringFormatA("pointLights[%d].direction", i);
+				m_pShader->setVec3(tmp.c_str(), pointLights[i]->getDirection());
+				tmp = StringFormatA("pointLights[%d].constant", i);
+				m_pShader->setFloat(tmp.c_str(), pointLights[i]->getConstant());
+				tmp = StringFormatA("pointLights[%d].linear", i);
+				m_pShader->setFloat(tmp.c_str(), pointLights[i]->getLinear());
+				tmp = StringFormatA("pointLights[%d].quadratic", i);
+				m_pShader->setFloat(tmp.c_str(), pointLights[i]->getQuadratic());
+				tmp = StringFormatA("pointLights[%d].ambient", i);
+				m_pShader->setVec3(tmp.c_str(), pointLights[i]->getAmbient());
+				tmp = StringFormatA("pointLights[%d].diffuse", i);
+				m_pShader->setVec3(tmp.c_str(), pointLights[i]->getDiffuse());
+				tmp = StringFormatA("pointLights[%d].specular", i);
+				m_pShader->setVec3(tmp.c_str(), pointLights[i]->getSpecular());
+			}
+		}
+		m_pShader->setFloat("material.shininess", m_shininess);
+		Camera* pCam = Camera::GetSingletonPtr();
+		if (pCam == NULL)
+		{
+			return;
+		}
+
+		glm::mat4 projection = glm::perspective(glm::radians(pCam->getZoom()), (float)800 / (float)600, 0.1f, 100.0f);
+		glm::mat4 view = pCam->GetViewMatrix();
+		m_pShader->setVec3("viewPos", pCam->getPosition());
+		m_pShader->setMat4("projection", projection);
+		m_pShader->setMat4("view", view);
+		glm::mat4 model;
+		model = glm::translate(model, m_pos);
+		m_pShader->setMat4("model", model);
+		m_pShader->UnUse();
+
 	}
 
 	void StandardMaterialMesh::Release()

@@ -16,7 +16,7 @@ namespace Sapphire
 			m_lights.erase(m_lights.begin() + i);
 		}
 		std::map<std::string, SharedPtr<BaseMesh>>::iterator it = m_meshMap.begin();
-		if (it != m_meshMap.end())
+		while (it != m_meshMap.end())
 		{
 			std::map<std::string, SharedPtr<BaseMesh>>::iterator _it = it;
 			++it;
@@ -31,6 +31,12 @@ namespace Sapphire
 		{
 			m_lights[i]->Update();
 		}
+		std::map<std::string, SharedPtr<BaseMesh>>::iterator it = m_meshMap.begin();
+		while (it != m_meshMap.end())
+		{
+			it->second->Update(m_lights);
+			++it;
+		} 
 		
 	}
 

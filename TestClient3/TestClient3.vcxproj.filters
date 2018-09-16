@@ -51,6 +51,9 @@
     <ClInclude Include="BaseScene.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="BaseMaterial.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">

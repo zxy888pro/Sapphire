@@ -1,6 +1,5 @@
-#ifndef __MATH_HELPER_H__
-#define __MATH_HELPER_H__
-
+#pragma once
+#include <time.h>
 #include <math.h>
 
 namespace Sapphire
@@ -652,4 +651,3 @@ enum Intersection
 
 //unsigned Sapphire::MathHelper::randomSeed = 1;
 
-#endif

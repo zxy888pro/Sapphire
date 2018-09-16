@@ -1,14 +1,24 @@
 #version 330 core
 
+//输出
+out vec4 FragColor;
+
+//用到的点光源数量
+#define POINT_LIGHTS_NUM 4
+//最大点光源数组数量
+#define POINT_LIGHTS_MAX_NUM 16
+
 //材质
-struct Material {
+struct Material 
+{
     sampler2D diffuse;
     sampler2D specular;
     float shininess;
 }; 
 
 //方向光属性
-struct DirLight {
+struct DirLight
+{
 	//方向
     vec3 direction;
     vec3 ambient;
@@ -16,7 +26,8 @@ struct DirLight {
     vec3 specular;
 };  
 //点光源属性
-struct PointLight {
+struct PointLight 
+{
 
     vec3 position;
     float constant;
@@ -27,13 +38,11 @@ struct PointLight {
     vec3 diffuse;
     vec3 specular;
 };  
-//用到的点光源数量
-#define POINT_LIGHTS_NUM 4
-//最大点光源数组数量
-#define POINT_LIGHTS_MAX_NUM 16
+
 
 //聚光灯属性
-struct SpotLight {
+struct SpotLight 
+{
 
     vec3 position;
     vec3 direction;
@@ -53,6 +62,13 @@ struct SpotLight {
     vec3 specular;       
 };
 
+//输入流属性
+in vec3 FragPos;
+in vec3 Normal;
+in vec2 TexCoords;
+
+//观察点
+uniform vec3 viewPos;
 //场景中的方向光，一般就一个
 uniform DirLight dirLight;
 //点光源数组
@@ -62,14 +78,8 @@ uniform SpotLight spotLight;
 //材质
 uniform Material material;
 
+uniform int  pointLightCount;
 
-//输入流属性
-in vec3 FragPos;
-in vec3 Normal;
-in vec2 TexCoords;
-
-//输出
-out vec4 FragColor;
 
 vec3  calcDirectionalLight(DirLight light, vec3 normal, vec3 viewDir)
 {
@@ -103,9 +113,9 @@ vec3  calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     vec3 ambient  = light.ambient  * vec3(texture(material.diffuse, TexCoords));
     vec3 diffuse  = light.diffuse  * diff * vec3(texture(material.diffuse, TexCoords));
     vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoords));
-    ambient  *= attenuation;
-    diffuse  *= attenuation;
-    specular *= attenuation;
+    ambient  = ambient * attenuation;
+    diffuse  = diffuse * attenuation;
+    specular = specular * attenuation;
     return (ambient + diffuse + specular);
 }
 
@@ -129,9 +139,9 @@ vec3 calcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoords));
     vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoords));
 	//距离衰减 基础上再加上聚光灯衰减
-    ambient *= attenuation * intensity;
-    diffuse *= attenuation * intensity;
-    specular *= attenuation * intensity;
+    ambient  = ambient * attenuation;
+    diffuse  = diffuse * attenuation;
+    specular = specular * attenuation;
     return (ambient + diffuse + specular);
 }
 
@@ -141,13 +151,16 @@ void main()
 	 vec3 viewDir = normalize(viewPos - FragPos);
 	// 定义一个输出颜色值
 	vec3 outCol;
-	//计算定向光照明
-	outCol += calcDirectionalLight();
-	//计算所有点光源照明
-	 for(int i = 0; i < POINT_LIGHTS_NUM; i++)
+	 outCol = vec3(texture(material.diffuse, TexCoords));
+	////计算定向光照明
+	outCol = calcDirectionalLight(dirLight, norm, viewDir);
+	////计算所有点光源照明
+	 for(int i = 0; i < pointLightCount; i++)
         outCol += calcPointLight(pointLights[i], norm, FragPos, viewDir); 
-	//计算聚光灯照明
+	////计算聚光灯照明
 	outCol += calcSpotLight(spotLight, norm, FragPos, viewDir);
-	FragColor = vec4(output,1.0);
+	outCol += vec3(0,0,0);
+   
+	FragColor = vec4(outCol,1.0);
 
 }

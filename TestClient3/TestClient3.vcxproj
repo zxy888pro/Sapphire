@@ -75,6 +75,7 @@
     <ClInclude Include="BaseEmissionMesh.h" />
     <ClInclude Include="BaseLightMapMesh.h" />
     <ClInclude Include="BaseLightMesh.h" />
+    <ClInclude Include="BaseMaterial.h" />
     <ClInclude Include="BaseMesh.h" />
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="Camera.h" />

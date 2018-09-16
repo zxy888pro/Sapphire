@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <windows.h>
 #include <Sapphire.h>
 #include <Str.h>
 #include <Graphics.h>
@@ -12,6 +13,7 @@
 #include <Math/Vector2.h>
 #include <Color.h>
 #include <Variant.h>
+#include "StandardMaterialMesh.h"
 #include "BaseScene.h"
 
 
@@ -184,22 +186,54 @@ int main()
 
 	SharedPtr<BaseLight> pLight1 = SharedPtr<BaseLight>(new BaseLight());
 	pScene->AddLight(pLight1);
-	pLight1->setAmbient(glm::vec3(1.0, 0.3, 0.3));
+	pLight1->setAmbient(glm::vec3(0.1, 0.2, 0.1));
 	pLight1->setDiffuse(glm::vec3(1.0, 0.3, 0.3));
-	pLight1->setAmbient(glm::vec3(1.0, 0.3, 0.3));
+	pLight1->setSpecular(glm::vec3(1.0, 0.3, 0.3));
+	pLight1->setLinear(0.5);
+	pLight1->setQuadratic(0.055);
 	pLight1->setPos(glm::vec3(0.0, 4.0, 0.0));
 
-	SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new BaseLightMapMesh());
+	SharedPtr<BaseLight> pLight2 = SharedPtr<BaseLight>(new BaseLight());
+	pLight2->setType(Sapphire::LT_POINT);
+	pScene->AddLight(pLight2);
+	pLight2->setAmbient(glm::vec3(0.1, 0.2, 0.1));
+	pLight2->setDiffuse(glm::vec3(1.0, 1.0, 0.3));
+	pLight2->setSpecular(glm::vec3(-2.0, 3.0, 1.3));
+	pLight2->setLinear(0.3);
+	pLight2->setQuadratic(0.025);
+	pLight2->setPos(glm::vec3(1.0, 0, 3.0));
+
+	/*SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new StandardMaterialMesh());
 	pMesh->setPos(glm::vec3(0.0, 0.0, 4.0));
-	SharedPtr<BaseLightMapMesh> pLMesh;
+	SharedPtr<StandardMaterialMesh> pLMesh;
 	pLMesh.DynamicCast(pMesh);
-	pScene->AddMesh("lightMapBox1", pMesh);
+	pScene->AddMesh("StandardMaterialBox1", pMesh);
 	pLMesh->SetDiffuseMap("container2.png");
 	pLMesh->SetSepcularMap("container2_specular.png");
-	pLMesh->setLightPos(pLight1->getPos());
-	 
 
 
+	SharedPtr<BaseMesh> pMesh2 = SharedPtr<BaseMesh>(new StandardMaterialMesh());
+	SharedPtr<StandardMaterialMesh> pSMesh2;
+	pSMesh2.DynamicCast(pMesh2);
+	pMesh2->setPos(glm::vec3(0.2, 1.0, 0.5));
+	pScene->AddMesh("StandardMaterialBox2", pMesh2);
+	pSMesh2->SetDiffuseMap("container2.png");
+	pSMesh2->SetSepcularMap("container2_specular.png");*/
+
+	MathHelper::SetRandomSeed(GetTickCount());
+	for (int i = 0; i < 5; i++)
+	{
+		SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new StandardMaterialMesh());
+		SharedPtr<StandardMaterialMesh> pSMesh;
+		pSMesh.DynamicCast(pMesh);
+		float x = MathHelper::RandomNormal(4, 3);
+		float y = MathHelper::RandomNormal(4, 3);
+		float z = MathHelper::RandomNormal(4, 3);
+		pMesh->setPos(glm::vec3(x, y, z));
+		pScene->AddMesh(StringFormatA("StandardMaterialBox%d",i).c_str(), pMesh);
+		pSMesh->SetDiffuseMap("container2.png");
+		pSMesh->SetSepcularMap("container2_specular.png");
+	}
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();

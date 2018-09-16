@@ -22,13 +22,13 @@ namespace Sapphire
 
 		virtual void Update(std::vector<SharedPtr<BaseLight>>& lightVec) override;
 
+		float getShininess() const { return m_shininess; }
+		void setShininess(float val) { m_shininess = val; }
 	protected:
 
-
-
-
-
 		virtual void Release() override;
+
+		float m_shininess;
 
 	private:
 

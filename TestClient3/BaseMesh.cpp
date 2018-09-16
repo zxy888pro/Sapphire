@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "BaseMesh.h"
-#include <BaseLight.h>
+#include "BaseLight.h"
 
 namespace Sapphire
 {

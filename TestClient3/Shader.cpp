@@ -17,13 +17,13 @@ namespace Sapphire
 			LogUtil::LogMsgLn("ÕÒµ½shaderÎÄ¼þ");
 			FileStream fs;
 			fs.Open(vsPath, FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_STRING);
-			m_vertexShaderStr = fs.ReadString(4096);
+			m_vertexShaderStr = fs.ReadString(8192);
 			ulong len = m_vertexShaderStr.size();
 			GLchar* lpszVsBuf = new GLchar[len + 1];
 			strcpy(lpszVsBuf, m_vertexShaderStr.c_str());
 			fs.Release();
 			fs.Open(psPath, FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_STRING);
-			m_fragShaderStr = fs.ReadString(4096);
+			m_fragShaderStr = fs.ReadString(8192);
 			len = m_fragShaderStr.size();
 			GLchar* lpszPsBuf = new GLchar[len + 1];
 			strcpy(lpszPsBuf, m_fragShaderStr.c_str());
@@ -34,7 +34,7 @@ namespace Sapphire
 			if (FileIsExistA(gsPath))
 			{
 				fs.Open(gsPath, FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_STRING);
-				m_geometryShaderStr = fs.ReadString(4096);
+				m_geometryShaderStr = fs.ReadString(8192);
 				len = m_geometryShaderStr.size();
 				lpszGsBuf = new GLchar[len + 1];
 				strcpy(lpszGsBuf, m_geometryShaderStr.c_str());

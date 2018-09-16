@@ -218,5 +218,8 @@
     <ClCompile Include="Src\Math\Rect.cpp">
       <Filter>源文件\Math</Filter>
     </ClCompile>
+    <ClCompile Include="Src\MathHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
