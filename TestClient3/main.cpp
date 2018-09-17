@@ -203,23 +203,18 @@ int main()
 	pLight2->setQuadratic(0.025);
 	pLight2->setPos(glm::vec3(1.0, 0, 3.0));
 
-	/*SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new StandardMaterialMesh());
-	pMesh->setPos(glm::vec3(0.0, 0.0, 4.0));
-	SharedPtr<StandardMaterialMesh> pLMesh;
-	pLMesh.DynamicCast(pMesh);
-	pScene->AddMesh("StandardMaterialBox1", pMesh);
-	pLMesh->SetDiffuseMap("container2.png");
-	pLMesh->SetSepcularMap("container2_specular.png");
-
-
-	SharedPtr<BaseMesh> pMesh2 = SharedPtr<BaseMesh>(new StandardMaterialMesh());
-	SharedPtr<StandardMaterialMesh> pSMesh2;
-	pSMesh2.DynamicCast(pMesh2);
-	pMesh2->setPos(glm::vec3(0.2, 1.0, 0.5));
-	pScene->AddMesh("StandardMaterialBox2", pMesh2);
-	pSMesh2->SetDiffuseMap("container2.png");
-	pSMesh2->SetSepcularMap("container2_specular.png");*/
-
+	{
+		SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new StandardMaterialMesh());
+		pMesh->setPos(glm::vec3(0.0, 0.0, 4.0));
+		SharedPtr<StandardMaterialMesh> pSMesh;
+		pSMesh.DynamicCast(pMesh);
+		pSMesh->setShowOutline(true);
+		pSMesh->setOutlineSize(0.2);
+		pScene->AddMesh("StandardMaterialBox1", pMesh);
+		pSMesh->SetDiffuseMap("container2.png");
+		pSMesh->SetSepcularMap("container2_specular.png");
+	}
+	
 	MathHelper::SetRandomSeed(GetTickCount());
 	for (int i = 0; i < 5; i++)
 	{
@@ -241,7 +236,7 @@ int main()
 		lastFrame = currentFrame;
 		ProcessInput(window);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		pScene->Upate();
 		pScene->Render();
 		/*pMesh->Render();

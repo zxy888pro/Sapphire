@@ -118,5 +118,11 @@
     <None Include="..\bin\shaders\StandardMaterialFs.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\bin\shaders\OutlineVs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\OutlineFs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

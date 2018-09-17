@@ -106,6 +106,8 @@
     <None Include="..\bin\shaders\BaseLightMapFs.glsl" />
     <None Include="..\bin\shaders\BaseLightMapVs.glsl" />
     <None Include="..\bin\shaders\BaseLightVs.glsl" />
+    <None Include="..\bin\shaders\OutlineFs.glsl" />
+    <None Include="..\bin\shaders\OutlineVs.glsl" />
     <None Include="..\bin\shaders\StandardMaterialFs.glsl" />
     <None Include="..\bin\shaders\StandardMaterialVs.glsl" />
   </ItemGroup>

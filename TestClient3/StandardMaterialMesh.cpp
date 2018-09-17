@@ -16,16 +16,18 @@ namespace Sapphire
 	{
 		m_type = MT_StandardMaterialMesh;
 		m_shininess = 12;
+		m_showOutline = false;
 	}
 
 	StandardMaterialMesh::~StandardMaterialMesh()
 	{
-
+		setOutlineSize(0.1);
 	}
 
 	void StandardMaterialMesh::Init()
 	{
 		LoadBaseShader("shaders\\StandardMaterialVs.glsl", "shaders\\StandardMaterialFs.glsl");
+		LoadOutlineShader("shaders\\OutlineVs.glsl", "shaders\\OutlineFs.glsl");
 		m_vertices = _New float[288]{
 			// positions          // normals   // texture coords
 			-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
@@ -93,27 +95,91 @@ namespace Sapphire
 
 	void StandardMaterialMesh::Render()
 	{
-		m_pShader->Use();
-		BackupRenderState();
-		glEnable(GL_DEPTH_TEST);
-		// bind diffuse map
-		glActiveTexture(GL_TEXTURE0 + TU_DIFFUSE);
-		glBindTexture(GL_TEXTURE_2D, m_diffMapObj);
-		// bind specular map
-		glActiveTexture(GL_TEXTURE0 + TU_SPECULAR);
-		glBindTexture(GL_TEXTURE_2D, m_sepcMapObj);
 
-		glBindVertexArray(m_mVao);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
-		m_pShader->UnUse();
-		// unbind diffuse map
-		glActiveTexture(GL_TEXTURE0 + TU_DIFFUSE);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		// unbind specular map
-		glActiveTexture(GL_TEXTURE0 + TU_SPECULAR);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		RestoreRenderState();
+		if (m_showOutline)
+		{
+			BackupRenderState();
+			//打开模板测试
+			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_STENCIL_TEST);
+			glStencilFunc(GL_NOTEQUAL, 1, 0xFF);   //模板测试函数 不等于参考值
+			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);  //如果模板/深度测试都通过替换模板缓冲区的值为ref参考值
+			//先正常绘制并更新模板缓冲区的值为1
+			glStencilFunc(GL_ALWAYS, 1, 0xFF); //更新模板缓冲区
+			glStencilMask(0xFF);
+			m_pShader->Use();
+			glActiveTexture(GL_TEXTURE0 + TU_DIFFUSE);
+			glBindTexture(GL_TEXTURE_2D, m_diffMapObj);
+			glActiveTexture(GL_TEXTURE0 + TU_SPECULAR);
+			glBindTexture(GL_TEXTURE_2D, m_sepcMapObj);
+			glBindVertexArray(m_mVao);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+			glBindVertexArray(0);
+			m_pShader->UnUse();
+			// unbind diffuse map
+			glActiveTexture(GL_TEXTURE0 + TU_DIFFUSE);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			// unbind specular map
+			glActiveTexture(GL_TEXTURE0 + TU_SPECULAR);
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			//第二次绘制边框
+			glStencilFunc(GL_NOTEQUAL, 1, 0xFF);  //模板不能在模板值=1的地方绘制
+			glStencilMask(0x00);  //不更新只读模板缓冲区
+			glDisable(GL_DEPTH_TEST);
+			m_pOutlineShader->Use();
+			Camera* pCam = Camera::GetSingletonPtr();
+			if (pCam == NULL)
+			{
+				return;
+			}
+			glm::mat4 projection = glm::perspective(glm::radians(pCam->getZoom()), (float)800 / (float)600, 0.1f, 100.0f);
+			glm::mat4 view = pCam->GetViewMatrix();
+			m_pOutlineShader->setMat4("projection", projection);
+			m_pOutlineShader->setMat4("view", view);
+			glm::mat4 model = glm::mat4();
+			model = glm::translate(model, m_pos);
+			float outlineScale = 1 + getOutlineSize();
+			model = glm::scale(model, glm::vec3(outlineScale, outlineScale, outlineScale));
+			m_pOutlineShader->setMat4("model", model);
+			glBindVertexArray(m_mVao);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+			glBindVertexArray(0);
+			glStencilMask(0xFF);
+			glEnable(GL_DEPTH_TEST);
+			m_pOutlineShader->UnUse();
+
+
+
+
+			RestoreRenderState();
+		}
+		else
+		{
+			m_pShader->Use();
+			BackupRenderState();
+			glEnable(GL_DEPTH_TEST);
+			// bind diffuse map
+			glActiveTexture(GL_TEXTURE0 + TU_DIFFUSE);
+			glBindTexture(GL_TEXTURE_2D, m_diffMapObj);
+			// bind specular map
+			glActiveTexture(GL_TEXTURE0 + TU_SPECULAR);
+			glBindTexture(GL_TEXTURE_2D, m_sepcMapObj);
+
+			glBindVertexArray(m_mVao);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+			glBindVertexArray(0);
+			m_pShader->UnUse();
+			// unbind diffuse map
+			glActiveTexture(GL_TEXTURE0 + TU_DIFFUSE);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			// unbind specular map
+			glActiveTexture(GL_TEXTURE0 + TU_SPECULAR);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			RestoreRenderState();
+		}
+
+		
 	}
 
 	void StandardMaterialMesh::Update(std::vector<SharedPtr<BaseLight>>& lightVec)
@@ -255,6 +321,17 @@ namespace Sapphire
 		{
 			_Delete[] m_vertices;
 		}
+	}
+
+	bool StandardMaterialMesh::LoadOutlineShader(const char* vs, const char* ps)
+	{
+		m_pOutlineShader = new Shader(vs, ps, "");
+		if (m_pOutlineShader == NULL)
+		{
+			LogUtil::LogMsgLn(StringFormatA("Create %s %s Shader Failed!", vs, ps));
+			return false;
+		}
+		return true;
 	}
 
 	void StandardMaterialMesh::BackupRenderState()

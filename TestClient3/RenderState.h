@@ -16,5 +16,12 @@ namespace Sapphire
 		GLboolean bDepthTest;
 		GLboolean bCullFace;
 		GLboolean bAlphaBlend;
+		GLint     nStencilFunc;
+		GLint     nStencilRef;
+		GLint     nStencilMask;
+		GLint     nStencilFailFunc;
+		GLint     nStencilPassDepthFailFunc;
+		GLint     nStencilPassDepthPassFunc;
+		GLboolean     bStencilTest;
 	};
 }
