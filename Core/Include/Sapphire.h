@@ -2,6 +2,7 @@
 #define  __SAPPHIRE__
 
 #include <SapphireDef.h>
+#include <CoreEventDef.h>
 #include <RefCounter.h>
 #include <Ptr.h>
 #include <mathHelper.h>

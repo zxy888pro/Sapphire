@@ -89,5 +89,6 @@ typedef  byte* PRAWIMAGE;
 
 
 #include <GraphicsDefs.h>
+#include <GraphicEventDef.h>
 
 #endif // !__SAPPHIRE_GRAPHICS__H__

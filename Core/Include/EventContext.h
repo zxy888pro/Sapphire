@@ -5,6 +5,7 @@
 
 namespace Sapphire
 {
+	
 
 	class SAPPHIRE_CLASS EventContext
 	{

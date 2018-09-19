@@ -125,6 +125,14 @@ enum MemAllocType
 };
 
 
+enum EventType
+{
+	EventType_Core,
+	EventType_Graphic,
+	EventType_UI
+};
+
+
 //#define ACTIVATE_MEMORY_MANAGER
 
 #ifdef SAPPHIRE_WIN
