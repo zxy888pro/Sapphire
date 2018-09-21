@@ -1,5 +1,6 @@
 #pragma once
 #include <SapphireDef.h>
+#include <SubSystem.h>
 #include <stdlib.h>
 
 
@@ -155,8 +156,9 @@ namespace Sapphire
 	   int m_count;
    };
 
-   class MemoryManager
+   class MemoryManager : public SubSystem
    {
+	   SAPPHIRE_SUBSYSTEM(ESST_MEMORYMGR)
    public:
 	   MemoryManager(void);
 	   ~MemoryManager(void);

@@ -4,4 +4,8 @@
     <LocalDebuggerWorkingDirectory>F:\CPlusPlusProject\Sapphire\bin</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug32|Win32'">
+    <LocalDebuggerWorkingDirectory>F:\CPlusPlusProject\Sapphire\bin</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
 </Project>

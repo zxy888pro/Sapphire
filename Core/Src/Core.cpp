@@ -79,6 +79,7 @@ namespace Sapphire
 
 	void Core::Init()
 	{
+		
 
 	}
 
@@ -88,6 +89,25 @@ namespace Sapphire
 		safeDelete(m_resMgr);
 		m_memMgr->release();
 		safeDelete(m_memMgr);
+		m_subSystems.clear();
+	}
+
+	Sapphire::SubSystem* Core::GetSubSystemWithName(std::string name)
+	{
+		SubSystem* pss = NULL;
+		SUBSYTEM_ITEM it = m_subSystems.find(name);
+		if (it == m_subSystems.end())
+		{
+			return pss;
+		}
+		pss = it->second;
+		return pss;
+	}
+
+	Sapphire::SubSystem* Core::GetSubSystemWithType(ESubSystemType type)
+	{
+		std::string name = ENUM2STR(type);
+		return GetSubSystemWithName(name);
 	}
 
 	Sapphire::ResourceMgr* Core::GetResourceManager()

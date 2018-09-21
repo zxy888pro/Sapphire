@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug32|Win32">
+      <Configuration>Debug32</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
@@ -13,12 +17,14 @@
   <ItemGroup>
     <ClInclude Include="ArrayPtr.h" />
     <ClInclude Include="Include\BaseException.h" />
+    <ClInclude Include="Include\BaseObject.h" />
     <ClInclude Include="Include\BaseResource.h" />
     <ClInclude Include="Include\charset.h" />
     <ClInclude Include="Include\Color.h" />
     <ClInclude Include="Include\Core.h" />
     <ClInclude Include="Include\FileStream.h" />
     <ClInclude Include="Include\handle.h" />
+    <ClInclude Include="Include\Hash.h" />
     <ClInclude Include="Include\HashMap.h" />
     <ClInclude Include="Include\inifile.h" />
     <ClInclude Include="Include\IStream.h" />
@@ -42,12 +48,15 @@
     <ClInclude Include="Include\RefCounter.h" />
     <ClInclude Include="Include\Sapphire.h" />
     <ClInclude Include="Include\SapphireDef.h" />
+    <ClInclude Include="Include\sigslot\sigslot.h" />
     <ClInclude Include="Include\singleton.h" />
     <ClInclude Include="Include\Str.h" />
     <ClInclude Include="Include\stringHelper.h" />
+    <ClInclude Include="Include\SubSystem.h" />
     <ClInclude Include="Include\Thread.h" />
     <ClInclude Include="Include\Variant.h" />
     <ClInclude Include="Include\Vector.h" />
+    <ClInclude Include="Include\WorkerQueue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\BaseException.cpp" />
@@ -76,9 +85,11 @@
     <ClCompile Include="Src\RefCounter.cpp" />
     <ClCompile Include="Src\Str.cpp" />
     <ClCompile Include="Src\stringHelper.cpp" />
+    <ClCompile Include="Src\SubSystem.cpp" />
     <ClCompile Include="Src\Thread.cpp" />
     <ClCompile Include="Src\Variant.cpp" />
     <ClCompile Include="Src\Vector.cpp" />
+    <ClCompile Include="Src\WorkerQueue.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{24788D97-0E75-453E-A528-03EF9E9C6D55}</ProjectGuid>
@@ -86,6 +97,12 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug32|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
@@ -104,6 +121,9 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug32|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -111,7 +131,23 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>..\libs</OutDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug32|Win32'">
+    <OutDir>..\libs</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug32|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>

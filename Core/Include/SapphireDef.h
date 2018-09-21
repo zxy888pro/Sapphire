@@ -7,6 +7,9 @@
 // 平台定义
 #if defined( __WIN32__ ) || defined( _WIN32 ) || defined( WIN32 ) || defined(_WIN64)
 #	define SAPPHIRE_WIN
+#ifndef WIN32
+#	define WIN32
+#endif
 #elif defined(ANDROID) 
 #	define SAPPHIRE_ANDROID
 #elif defined(IOS)
@@ -132,6 +135,8 @@ enum EventType
 	EventType_UI
 };
 
+//枚举转字符串
+#define ENUM2STR(val) #val
 
 //#define ACTIVATE_MEMORY_MANAGER
 
@@ -161,3 +166,5 @@ typedef unsigned int  uint;
 typedef unsigned long ulong;
 typedef unsigned short ushort;
 typedef unsigned long long  ulonglong;
+
+

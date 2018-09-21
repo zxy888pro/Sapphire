@@ -1,18 +1,13 @@
 #pragma once
 
 #include <SapphireDef.h>
-
+#include <sigslot/sigslot.h>
 
 namespace Sapphire
 {
-	
-
-	class SAPPHIRE_CLASS EventContext
+	class BaseObject
 	{
 	public:
 
-	private:
-
 	};
-
 }

@@ -19,6 +19,9 @@
     <Filter Include="源文件\Math">
       <UniqueIdentifier>{51e0c43f-f5e7-4617-bacf-f33dc2dde9a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Event">
+      <UniqueIdentifier>{e2087212-3231-4a6a-a91a-9dac2fc931d8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Sapphire.h">
@@ -132,6 +135,21 @@
     <ClInclude Include="Include\HashMap.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\sigslot\sigslot.h">
+      <Filter>头文件\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Hash.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\SubSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\BaseObject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\WorkerQueue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -219,6 +237,12 @@
       <Filter>源文件\Math</Filter>
     </ClCompile>
     <ClCompile Include="Src\MathHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\SubSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\WorkerQueue.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

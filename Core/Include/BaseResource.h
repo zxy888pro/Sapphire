@@ -2,6 +2,7 @@
 #define _BASE_RESOURCE_H_
 
 #include "SapphireDef.h"
+#include <SubSystem.h>
 #include "handle.h"
 
 
@@ -100,8 +101,9 @@ namespace Sapphire
 
 	//////////////////////////////////////////////////////////////////////////
 	//基础资源管理类
-	class ResourceMgr
+	class ResourceMgr : public SubSystem
 	{
+		SAPPHIRE_SUBSYSTEM(ESST_RESOURCEMGR)
 
 	public:
 
