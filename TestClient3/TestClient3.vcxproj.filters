@@ -54,6 +54,12 @@
     <ClInclude Include="BaseMaterial.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="BaseAlphaTestMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseAlphaBlendMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp">
@@ -92,6 +98,12 @@
     <ClCompile Include="BaseScene.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="BaseAlphaTestMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseAlphaBlendMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\shaders\BaseLightVs.glsl">
@@ -122,6 +134,15 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="..\bin\shaders\OutlineFs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\BaseAlphaTestVs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\BaseAlphaTestFs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\BaseAlphaBlendVs.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

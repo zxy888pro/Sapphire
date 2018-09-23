@@ -14,6 +14,7 @@
 #include <Color.h>
 #include <Variant.h>
 #include "StandardMaterialMesh.h"
+#include "BaseAlphaTestMesh.h"
 #include "BaseScene.h"
 
 
@@ -211,10 +212,19 @@ int main()
 		pSMesh->setShowOutline(true);
 		pSMesh->setOutlineSize(0.2);
 		pScene->AddMesh("StandardMaterialBox1", pMesh);
-		pSMesh->SetDiffuseMap("container2.png");
+		pSMesh->SetDiffuseMap("container2_specular.png");
 		pSMesh->SetSepcularMap("container2_specular.png");
 	}
 	
+	{
+		SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new BaseAlphaTestMesh());
+		pMesh->setPos(glm::vec3(3.0, 0.0, 1.0));
+		SharedPtr<BaseAlphaTestMesh> pSMesh;
+		pSMesh.DynamicCast(pMesh);
+		pScene->AddMesh("AlphaTestMesj1", pMesh);
+		pSMesh->SetDiffuseMap("grass.png");
+	}
+
 	MathHelper::SetRandomSeed(GetTickCount());
 	for (int i = 0; i < 5; i++)
 	{

@@ -65,12 +65,12 @@ namespace Sapphire
 
 	void BaseMesh::BackupRenderState()
 	{
-		
+		m_state.LoadCurRenderState();
 	}
 
 	void BaseMesh::RestoreRenderState()
 	{
-
+		m_state.SetState();
 	}
 
 }

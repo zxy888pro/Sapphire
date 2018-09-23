@@ -9,11 +9,12 @@ namespace Sapphire
 	public:
 		RenderState();
 		virtual ~RenderState();
-	    
+
 		void LoadCurRenderState();
 		void SetState();
 
 		GLboolean bDepthTest;
+		GLboolean bAlphaTest;
 		GLboolean bCullFace;
 		GLboolean bAlphaBlend;
 		GLint     nStencilFunc;
@@ -22,6 +23,9 @@ namespace Sapphire
 		GLint     nStencilFailFunc;
 		GLint     nStencilPassDepthFailFunc;
 		GLint     nStencilPassDepthPassFunc;
+		GLint     nBlendSrcFactor;
+		GLint     nBlendDstFactor;
+		GLint     nBlendEquation;
 		GLboolean     bStencilTest;
 	};
 }

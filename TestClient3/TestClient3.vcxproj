@@ -72,6 +72,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BaseAlphaBlendMesh.h" />
+    <ClInclude Include="BaseAlphaTestMesh.h" />
     <ClInclude Include="BaseEmissionMesh.h" />
     <ClInclude Include="BaseLightMapMesh.h" />
     <ClInclude Include="BaseLightMesh.h" />
@@ -86,6 +88,8 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseAlphaBlendMesh.cpp" />
+    <ClCompile Include="BaseAlphaTestMesh.cpp" />
     <ClCompile Include="BaseEmissionMesh.cpp" />
     <ClCompile Include="BaseLight.cpp" />
     <ClCompile Include="BaseLightMapMesh.cpp" />
@@ -100,6 +104,9 @@
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\bin\shaders\BaseAlphaBlendVs.glsl" />
+    <None Include="..\bin\shaders\BaseAlphaTestFs.glsl" />
+    <None Include="..\bin\shaders\BaseAlphaTestVs.glsl" />
     <None Include="..\bin\shaders\BaseEmissionLightFs.glsl" />
     <None Include="..\bin\shaders\BaseEmissionLightVs.glsl" />
     <None Include="..\bin\shaders\BaseLightFs.glsl" />

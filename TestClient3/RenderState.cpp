@@ -18,6 +18,7 @@ namespace Sapphire
 	void RenderState::LoadCurRenderState()
 	{
 		glGetBooleanv(GL_DEPTH_TEST, &bDepthTest);
+		glGetBooleanv(GL_ALPHA_TEST, &bAlphaTest);
 		glGetBooleanv(GL_CULL_FACE, &bCullFace);
 		glGetBooleanv(GL_BLEND, &bAlphaBlend);
 		glGetBooleanv(GL_STENCIL_TEST, &bStencilTest);
@@ -27,6 +28,9 @@ namespace Sapphire
 		glGetIntegerv(GL_STENCIL_FAIL, &nStencilFailFunc);
 		glGetIntegerv(GL_STENCIL_PASS_DEPTH_FAIL, &nStencilPassDepthFailFunc);
 		glGetIntegerv(GL_STENCIL_PASS_DEPTH_PASS, &nStencilPassDepthPassFunc);
+		glGetIntegerv(GL_BLEND_SRC, &nBlendSrcFactor);
+		glGetIntegerv(GL_BLEND_DST, &nBlendDstFactor);
+		glGetIntegerv(GL_BLEND_EQUATION, &nBlendEquation);
 		
 	}
 
@@ -39,6 +43,14 @@ namespace Sapphire
 		else
 		{
 			glDisable(GL_DEPTH_TEST);
+		}
+		if (bAlphaTest)
+		{
+			glEnable(GL_ALPHA_TEST);
+		}
+		else
+		{
+			glDisable(GL_ALPHA_TEST);
 		}
 		if (bCullFace)
 		{
@@ -67,6 +79,9 @@ namespace Sapphire
 		}
 		glStencilOp(nStencilFailFunc, nStencilPassDepthFailFunc, nStencilPassDepthPassFunc);
 		glStencilFunc(nStencilFunc, nStencilRef, nStencilMask);
+		glBlendFunc(nBlendSrcFactor , nBlendDstFactor);
+		glBlendEquation(nBlendEquation);
+		 
 	}
 
 }

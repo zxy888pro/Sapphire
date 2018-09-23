@@ -44,6 +44,8 @@ namespace Sapphire
 	protected:
 
 		virtual void Release();
+		virtual void BackupRenderState();
+		virtual void RestoreRenderState();
 
 		GLuint m_mVbo;
 		GLuint m_mVao;
@@ -58,8 +60,7 @@ namespace Sapphire
 	private:
 
 		
-		virtual void BackupRenderState();
-		virtual void RestoreRenderState();
+		
 
 	};
 
