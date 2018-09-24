@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{59DDA33D-40AB-4005-9811-F1AB73790907}</ProjectGuid>
-    <RootNamespace>TestClient3</RootNamespace>
+    <ProjectGuid>{4C284694-5A43-4166-9670-7DCC839D65A7}</ProjectGuid>
+    <RootNamespace>TestClient4</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -48,7 +48,6 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\Core\Include;..\Graphics\Include;..\dependences\glew\include;..\dependences\glfw\include;..\dependences\freetype\include;..\ThirdParty\glm;..\dependences\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -72,52 +71,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BaseAlphaBlendMesh.h" />
-    <ClInclude Include="BaseAlphaTestMesh.h" />
     <ClInclude Include="BaseEmissionMesh.h" />
+    <ClInclude Include="BaseLight.h" />
     <ClInclude Include="BaseLightMapMesh.h" />
     <ClInclude Include="BaseLightMesh.h" />
-    <ClInclude Include="BaseMaterial.h" />
     <ClInclude Include="BaseMesh.h" />
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="BaseLight.h" />
     <ClInclude Include="RenderState.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="StandardMaterialMesh.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BaseAlphaBlendMesh.cpp" />
-    <ClCompile Include="BaseAlphaTestMesh.cpp" />
     <ClCompile Include="BaseEmissionMesh.cpp" />
     <ClCompile Include="BaseLight.cpp" />
     <ClCompile Include="BaseLightMapMesh.cpp" />
     <ClCompile Include="BaseLightMesh.cpp" />
     <ClCompile Include="BaseMesh.cpp" />
+    <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RenderState.cpp" />
-    <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="StandardMaterialMesh.cpp" />
-    <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\bin\shaders\BaseAlphaBlendFs.glsl" />
-    <None Include="..\bin\shaders\BaseAlphaBlendVs.glsl" />
-    <None Include="..\bin\shaders\BaseAlphaTestFs.glsl" />
-    <None Include="..\bin\shaders\BaseAlphaTestVs.glsl" />
-    <None Include="..\bin\shaders\BaseEmissionLightFs.glsl" />
-    <None Include="..\bin\shaders\BaseEmissionLightVs.glsl" />
-    <None Include="..\bin\shaders\BaseLightFs.glsl" />
-    <None Include="..\bin\shaders\BaseLightMapFs.glsl" />
-    <None Include="..\bin\shaders\BaseLightMapVs.glsl" />
-    <None Include="..\bin\shaders\BaseLightVs.glsl" />
-    <None Include="..\bin\shaders\OutlineFs.glsl" />
-    <None Include="..\bin\shaders\OutlineVs.glsl" />
-    <None Include="..\bin\shaders\StandardMaterialFs.glsl" />
-    <None Include="..\bin\shaders\StandardMaterialVs.glsl" />
+    <None Include="..\bin\shaders\BaseLight2Fs.glsl" />
+    <None Include="..\bin\shaders\BaseLight2Vs.glsl" />
+    <None Include="..\bin\shaders\BaseLightMapMesh2Vs.glsl" />
+    <None Include="..\bin\shaders\BaseLightMapMesh2Fs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

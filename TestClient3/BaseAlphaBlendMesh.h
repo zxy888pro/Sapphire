@@ -25,11 +25,15 @@ namespace Sapphire
 
 		float*  m_vertices;
 
-		GLuint   m_diffMapObj;
-
 		virtual void Release() override;
 
 	private:
+
+
+		virtual void BackupRenderState() override;
+
+
+		virtual void RestoreRenderState() override;
 
 	};
 }

@@ -6,18 +6,11 @@
 #include <GraphicDriver.h>
 #include "Camera.h"
 #include <MemoryMgr.h>
+#include "BaseLight.h"
 #include "BaseMesh.h"
 #include "BaseLightMesh.h"
 #include "BaseLightMapMesh.h"
-#include "BaseEmissionMesh.h"
-#include <Math/Vector2.h>
-#include <Color.h>
-#include <Variant.h>
-#include "StandardMaterialMesh.h"
-#include "BaseAlphaTestMesh.h"
-#include "BaseAlphaBlendMesh.h"
 #include "BaseScene.h"
-
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -28,9 +21,6 @@ float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 GLFWwindow* window = NULL;
-//Sapphire::BaseLightMesh* pMesh;
-//Sapphire::BaseLightMapMesh* pMesh2;
-//Sapphire::BaseEmissionMesh* pMesh3;
 Sapphire::Scene* pScene;
 
 void OnMouseMove(GLFWwindow* window, double xpos, double ypos);
@@ -56,17 +46,19 @@ void ProcessInput(GLFWwindow* pWnd)
 		Sapphire::Camera::GetSingletonPtr()->ProcessKeyboard(Sapphire::RIGHT, deltaTime);
 }
 
+
+
 void init()
 {
 	using namespace Sapphire;
-	
+
 
 	Sapphire::LogUtil::getInstancePtr()->Init("log.txt");
 	Sapphire::LogUtil::LogMsgLn("初始化程序");
 	new Sapphire::Core();
 	new Sapphire::GraphicDriver();
 
-
+	MathHelper::SetRandomSeed(GetTickCount());
 	Sapphire::GraphicDriver::GetSingletonPtr()->Init();
 
 	Sapphire::IImageMgr* pImgMgr = Sapphire::GraphicDriver::GetSingletonPtr()->getImageMgr();
@@ -101,23 +93,13 @@ void init()
 		Sapphire::LogUtil::LogMsgLn(Sapphire::StringFormatA("glew init error! errorCode:! %d", glGetError()));
 		glfwTerminate();
 	}
-	pScene = new Scene();
-	
+
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+	pScene = new Scene();
 
 }
 
-void release()
-{
-	Sapphire::Camera* pcam = Sapphire::Camera::GetSingletonPtr();
-	safeDelete(pcam);
-	Sapphire::GraphicDriver* pGd = Sapphire::GraphicDriver::GetSingletonPtr();
-	pGd->Release();
-	safeDelete(pGd);
-	Sapphire::Core* pCore = Sapphire::Core::GetSingletonPtr();
-	pCore->Release();
-	safeDelete(pCore);
-}
+
 
 void OnScreenSizeChanged(GLFWwindow* window, int width, int height)
 {
@@ -147,44 +129,9 @@ void OnMouseScroll(GLFWwindow* window, double xoffset, double yoffset)
 	Sapphire::Camera::GetSingletonPtr()->ProcessMouseScroll(yoffset);
 }
 
-void TestMemoryTrack()
+void Prepare()
 {
 	using namespace Sapphire;
-
-	/*int* p2 = _New int[5];
-	_Delete[] p2;*/
-
-	int* p1 = (int*)_Malloc(sizeof(int));
-	*p1 = 5;
-	_Free(p1);
-
-	/*char* pszTmp = _New char[256];
-	memset(pszTmp, 0, 256);
-	_Delete[] pszTmp;
-	*/
-}
-
-int main()
-{
-	using namespace Sapphire;
-
-	init();
-	TestMemoryTrack();
-	//pMesh3 = _New BaseEmissionMesh();
-	////pMesh3->LoadBaseShader("shaders\\BaseEmissionLightVs.glsl", "shaders\\BaseEmissionLightFs.glsl");
-	//pMesh3->Init();
-	//pMesh3->setColor(glm::vec3(1.0, 0.3, 0.3));
-	//pMesh = new BaseLightMesh();
-	////pMesh->LoadBaseShader("shaders\\BaseLightVs.glsl", "shaders\\BaseLightFs.glsl");
-	//pMesh->Init();
-	//pMesh->setLightPos(glm::vec3(3, 3, 2));
-	//pMesh2 = new BaseLightMapMesh();
-	////pMesh2->LoadBaseShader("shaders\\BaseLightMapVs.glsl", "shaders\\BaseLightMapFs.glsl");
-	//pMesh2->Init();
-	//pMesh2->SetDiffuseMap("container2.png");
-	//pMesh2->SetSepcularMap("container2_specular.png");
-	//pMesh2->setLightPos(glm::vec3(2, 1, 2));
-
 	SharedPtr<BaseLight> pLight1 = SharedPtr<BaseLight>(new BaseLight());
 	pScene->AddLight(pLight1);
 	pLight1->setAmbient(glm::vec3(0.1, 0.2, 0.1));
@@ -204,52 +151,48 @@ int main()
 	pLight2->setQuadratic(0.025);
 	pLight2->setPos(glm::vec3(1.0, 0, 3.0));
 
+
 	{
-		SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new StandardMaterialMesh());
+		SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new BaseLightMesh());
 		pMesh->setPos(glm::vec3(0.0, 0.0, 4.0));
-		SharedPtr<StandardMaterialMesh> pSMesh;
+		SharedPtr<BaseLightMesh> pSMesh;
 		pSMesh.DynamicCast(pMesh);
-		pSMesh->setShowOutline(true);
-		pSMesh->setOutlineSize(0.2);
-		pScene->AddMesh("StandardMaterialBox1", pMesh);
+		pSMesh->setColor(glm::vec3(1.0, 0.0, 0.0));
+		pScene->AddMesh("LightBox1", pMesh);
+	}
+
+	{
+		SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new BaseLightMapMesh());
+		pMesh->setPos(glm::vec3(2.0, 0.0, 6.0));
+		SharedPtr<BaseLightMapMesh> pSMesh;
+		pSMesh.DynamicCast(pMesh);
+		pSMesh->setColor(glm::vec3(0.8, 0.32, 0.42));
+		pSMesh->setShinniess(12);
+		pScene->AddMesh("LightBox2", pMesh);
 		pSMesh->SetDiffuseMap("container2.png");
 		pSMesh->SetSepcularMap("container2_specular.png");
+		
 	}
+
+}
+void Update()
+{
+	pScene->Upate();
+}
+
+void Render()
+{
 	
-	{
-		SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new BaseAlphaTestMesh());
-		pMesh->setPos(glm::vec3(3.0, 0.0, 1.0));
-		SharedPtr<BaseAlphaTestMesh> pSMesh;
-		pSMesh.DynamicCast(pMesh);
-		pScene->AddMesh("AlphaTestMesj1", pMesh);
-		pSMesh->SetDiffuseMap("grass.png");
-	}
+	pScene->Render();
+}
 
-	MathHelper::SetRandomSeed(GetTickCount());
-	for (int i = 0; i < 5; i++)
-	{
-		SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new StandardMaterialMesh());
-		SharedPtr<StandardMaterialMesh> pSMesh;
-		pSMesh.DynamicCast(pMesh);
-		float x = MathHelper::RandomNormal(4, 3);
-		float y = MathHelper::RandomNormal(4, 3);
-		float z = MathHelper::RandomNormal(4, 3);
-		pMesh->setPos(glm::vec3(x, y, z));
-		pScene->AddMesh(StringFormatA("StandardMaterialBox%d",i).c_str(), pMesh);
-		pSMesh->SetDiffuseMap("container2.png");
-		pSMesh->SetSepcularMap("container2_specular.png");
-	}
+int main()
+{
+	using namespace Sapphire;
 
-	//未实现渲染队列,不能排序
-	//{
-	//	SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new BaseAlphaBlendMesh());
-	//	pMesh->setPos(glm::vec3(3.0, 0.0, 1.0));
-	//	SharedPtr<BaseAlphaBlendMesh> pSMesh;
-	//	pSMesh.DynamicCast(pMesh);
-	//	//pScene->AddMesh("AlphaBlendMesj1", pMesh);
-	//	pMesh->Init();
-	//	pSMesh->SetDiffuseMap("blending_transparent_window.png");
-	//}
+	init();
+
+	Prepare();
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -259,27 +202,13 @@ int main()
 		ProcessInput(window);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-		pScene->Upate();
-		pScene->Render();
-		//暂时将半透明物体手动放在最后渲染， 顺序应该先渲染不透明物体-》对半透明物体排序-》按顺序渲染半透明物体
-		{
-			SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new BaseAlphaBlendMesh());
-			pMesh->setPos(glm::vec3(3.0, 0.0, 1.0));
-			SharedPtr<BaseAlphaBlendMesh> pSMesh;
-			pSMesh.DynamicCast(pMesh);
-			//pScene->AddMesh("AlphaBlendMesj1", pMesh);
-			pMesh->Init();
-			pSMesh->SetDiffuseMap("blending_transparent_window.png");
-			pSMesh->Render();
-		}
-		/*pMesh->Render();
-		pMesh2->Render();
-		pMesh3->Render();*/
+		Update();
+		Render();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 	glfwTerminate();
-	release();
+
 
 	return 0;
 }

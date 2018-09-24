@@ -14,8 +14,6 @@ namespace Sapphire
 		MT_BaseLighMesh,
 		MT_BaseLightMapMesh,
 		MT_EmissionMesh,
-		MT_AlphaTestMesh,
-		MT_AlphaBlendMesh,
 		MT_StandardMaterialMesh,
 		MT_MaxCount
 	};
@@ -57,12 +55,13 @@ namespace Sapphire
 		glm::vec3  m_scale;
 		RenderState  m_state;
 		Shader* m_pShader;
+		float*  m_vertices;
 		MeshType m_type;
 
 	private:
 
-		
-		
+
+
 
 	};
 
