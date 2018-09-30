@@ -22,10 +22,13 @@
     <ClInclude Include="Include\charset.h" />
     <ClInclude Include="Include\Color.h" />
     <ClInclude Include="Include\Core.h" />
+    <ClInclude Include="Include\EventContext.h" />
+    <ClInclude Include="Include\EventDef.h" />
     <ClInclude Include="Include\FileStream.h" />
     <ClInclude Include="Include\handle.h" />
     <ClInclude Include="Include\Hash.h" />
     <ClInclude Include="Include\HashMap.h" />
+    <ClInclude Include="Include\IEventMgr.h" />
     <ClInclude Include="Include\inifile.h" />
     <ClInclude Include="Include\IStream.h" />
     <ClInclude Include="Include\logUtil.h" />
@@ -56,7 +59,8 @@
     <ClInclude Include="Include\Thread.h" />
     <ClInclude Include="Include\Variant.h" />
     <ClInclude Include="Include\Vector.h" />
-    <ClInclude Include="Include\WorkerQueue.h" />
+    <ClInclude Include="Include\WorkQueue.h" />
+    <ClInclude Include="Src\EventMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\BaseException.cpp" />
@@ -64,6 +68,8 @@
     <ClCompile Include="Src\charset.cpp" />
     <ClCompile Include="Src\Color.cpp" />
     <ClCompile Include="Src\Core.cpp" />
+    <ClCompile Include="Src\EventContext.cpp" />
+    <ClCompile Include="Src\EventMgr.cpp" />
     <ClCompile Include="Src\FileStream.cpp" />
     <ClCompile Include="Src\inifile.cpp" />
     <ClCompile Include="Src\logUtil.cpp" />
@@ -89,7 +95,7 @@
     <ClCompile Include="Src\Thread.cpp" />
     <ClCompile Include="Src\Variant.cpp" />
     <ClCompile Include="Src\Vector.cpp" />
-    <ClCompile Include="Src\WorkerQueue.cpp" />
+    <ClCompile Include="Src\WorkQueue.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{24788D97-0E75-453E-A528-03EF9E9C6D55}</ProjectGuid>

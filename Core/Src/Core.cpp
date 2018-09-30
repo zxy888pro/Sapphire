@@ -9,6 +9,7 @@
 #include <Sapphire.h>
 #include <BaseResource.h>
 #include <MemoryMgr.h>
+#include "EventMgr.h"
 
 namespace Sapphire
 {
@@ -64,9 +65,11 @@ namespace Sapphire
 
 	Core::Core()
 	{
+		m_eventMgr = new EventMgr();
 		m_memMgr = new MemoryManager();
-		m_memMgr->initialize();
 		m_resMgr = new ResourceMgr();
+		m_memMgr->initialize();
+		
 	}
 
 	Core::~Core()

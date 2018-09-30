@@ -128,12 +128,6 @@ enum MemAllocType
 };
 
 
-enum EventType
-{
-	EventType_Core,
-	EventType_Graphic,
-	EventType_UI
-};
 
 //Ã¶¾Ù×ª×Ö·û´®
 #define ENUM2STR(val) #val
@@ -168,3 +162,4 @@ typedef unsigned short ushort;
 typedef unsigned long long  ulonglong;
 
 
+#include <EventDef.h>

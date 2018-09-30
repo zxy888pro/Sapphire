@@ -22,6 +22,9 @@
     <Filter Include="头文件\Event">
       <UniqueIdentifier>{e2087212-3231-4a6a-a91a-9dac2fc931d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Event">
+      <UniqueIdentifier>{bdb41ee1-06ff-4161-a5e9-5637e0f354a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Sapphire.h">
@@ -147,8 +150,20 @@
     <ClInclude Include="Include\BaseObject.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Include\WorkerQueue.h">
+    <ClInclude Include="Include\WorkQueue.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\EventDef.h">
+      <Filter>头文件\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\EventMgr.h">
+      <Filter>头文件\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\EventContext.h">
+      <Filter>头文件\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\IEventMgr.h">
+      <Filter>头文件\Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -242,8 +257,14 @@
     <ClCompile Include="Src\SubSystem.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Src\WorkerQueue.cpp">
+    <ClCompile Include="Src\WorkQueue.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\EventMgr.cpp">
+      <Filter>源文件\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\EventContext.cpp">
+      <Filter>源文件\Event</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

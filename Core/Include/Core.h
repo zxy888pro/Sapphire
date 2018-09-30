@@ -1,9 +1,10 @@
 #ifndef __SAPPHIRE_CORE_H__
 #define __SAPPHIRE_CORE_H__
 #include "SapphireDef.h"
-#include <SubSystem.h>
 #include <singleton.h>
 #include <Ptr.h>
+#include <SubSystem.h>
+#include <IEventMgr.h>
 
 namespace Sapphire
 {
@@ -28,10 +29,12 @@ namespace Sapphire
 		 virtual ~Core();
 		 void Init();
 		 void Release();
+		 IEventMgr*  GetEventManager(){ return m_eventMgr; }
+
 		 SubSystem*  GetSubSystemWithName(std::string name);
 		 SubSystem*  GetSubSystemWithType(ESubSystemType type);
 		 template<class T>  T* GetSubSystem();
-		
+		 
 		  
 
 		 ResourceMgr*  GetResourceManager();
@@ -39,11 +42,16 @@ namespace Sapphire
 
 	 private:
 
+		 //以后子系统通通放到SUBSYTEM_MAP中, 用一个通用模板函数取到
 		 //资源管理器
 		 ResourceMgr*  m_resMgr;
 		 MemoryManager*  m_memMgr;
 
 		 SUBSYTEM_MAP m_subSystems;
+		 
+		 //事件系统作为核心系统，不在子系统中
+		 IEventMgr*      m_eventMgr;
+		 
 
 
 	 };

@@ -8,4 +8,10 @@ namespace Sapphire
 		return ENUM2STR(m_type);
 	}
 
+
+	void SubSystem::Update()
+	{
+
+	}
+
 }

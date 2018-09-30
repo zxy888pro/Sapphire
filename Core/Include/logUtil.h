@@ -50,4 +50,8 @@ namespace Sapphire
 		static LogUtil* s_pLogUtil;
 
 	};
+
+#define  SAPPHIRE_LOG(info) Sapphire::LogUtil::LogMsgLn(info)
+#define  SAPPHIRE_LOGWARNING(info) Sapphire::LogUtil::LogMsgLn(info)
+#define  SAPPHIRE_LOGERROR(info) Sapphire::LogUtil::LogMsgLn(info)
 }

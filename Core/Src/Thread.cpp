@@ -13,10 +13,13 @@
 
 namespace Sapphire
 {
+
+//线程函数入口
 #ifdef SAPPHIRE_WIN
 	DWORD	WINAPI  ThreadFuncEntry(void* pdata)
 	{
 		Thread* pThread = static_cast<Thread*>(pdata);
+		//执行线程函数
 		pThread->ThreadFunc();
 		return 0;
 	}
@@ -55,6 +58,7 @@ namespace Sapphire
 
 		m_shouldRun = true;
 #ifdef SAPPHIRE_WIN
+		//用一个静态函数做统一入口， 在把自己做参数传进去
 		m_handle = CreateThread(0, 0, ThreadFuncEntry, this, 0, 0);
 
 #else
