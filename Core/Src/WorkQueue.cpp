@@ -141,7 +141,8 @@ namespace Sapphire
 
 	void WorkQueue::Update()
 	{
-		 
+		//清理完成的任务
+		PurgeCompletedQueue();
 	}
 
 	ulong WorkQueue::CreateID()
@@ -164,7 +165,7 @@ namespace Sapphire
 		{
 			if ((*it)->bSendEvent == true)
 			{
-				FireEvent(ET_SUBSYTEM_EVENT, ESSE_WORKCOMPLETED, (NULL));
+				FireEvent(ET_SUBSYTEM_EVENT, ESSE_WORKCOMPLETED, (*it)->GetData());
 			}
 		}
 
@@ -193,5 +194,7 @@ namespace Sapphire
 			m_mutexB.Release();
 		}
 	}
+
+	 
 
 }

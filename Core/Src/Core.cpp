@@ -113,6 +113,17 @@ namespace Sapphire
 		return GetSubSystemWithName(name);
 	}
 
+	void Core::Update()
+	{
+		for (SUBSYTEM_MAP::iterator it = m_subSystems.begin(); it != m_subSystems.end(); ++it)
+		{
+			if (it->second != NULL)
+			{
+				it->second->Update();
+			}
+		}
+	}
+
 	Sapphire::ResourceMgr* Core::GetResourceManager()
 	{
 		return m_resMgr;

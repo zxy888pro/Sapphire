@@ -35,7 +35,8 @@ namespace Sapphire
 		 SubSystem*  GetSubSystemWithType(ESubSystemType type);
 		 template<class T>  T* GetSubSystem();
 		 
-		  
+		 //更新所有子系统
+		 void Update();
 
 		 ResourceMgr*  GetResourceManager();
 		 Sapphire::MemoryManager* GetMemoryMgr();

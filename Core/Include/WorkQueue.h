@@ -34,7 +34,7 @@ namespace Sapphire
 		uint uPriority;
 		bool bSendEvent;
 		volatile bool bCompleted; 
-		
+		virtual void* GetData() { return NULL; }
 
 	private:
 		bool bPooled;
