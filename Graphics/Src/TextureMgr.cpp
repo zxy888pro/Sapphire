@@ -72,7 +72,10 @@ namespace Sapphire
 
 	Sapphire::ITexture* TextureMgr::CreateEmptyTexture2D(uint width, uint height, PixelFormat pFormat /*= PF_R8G8B8A8*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/)
 	{
-		return NULL;
+		Texture2D* pTexture = new Texture2D(width, height, pFormat);
+		pTexture->Create();
+		pTexture->SetData(pTexture->getMipLevel(),0,0, width, height, NULL);
+		return pTexture;
 	}
 
 	Sapphire::ITexture* TextureMgr::RequestTexture(RHANDLE handle)
