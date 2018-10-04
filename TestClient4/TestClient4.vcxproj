@@ -79,6 +79,7 @@
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="RenderState.h" />
+    <ClInclude Include="BaseRenderTarget.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
@@ -88,6 +89,7 @@
     <ClCompile Include="BaseLightMapMesh.cpp" />
     <ClCompile Include="BaseLightMesh.cpp" />
     <ClCompile Include="BaseMesh.cpp" />
+    <ClCompile Include="BaseRenderTarget.cpp" />
     <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
