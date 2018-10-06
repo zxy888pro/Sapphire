@@ -1,12 +1,18 @@
 #include "Sapphire.h"
+#include <ITexture.h>
 #include "BaseScene.h"
+#include "BaseRenderTarget.h"
+#include "BaseRenderSurface.h"
+
 
 namespace Sapphire
 {
 
-	Scene::Scene()
+	Scene::Scene() :
+		m_bEnablePost(false),
+		m_PostRtt(NULL)
 	{
-
+		
 	}
 
 	Scene::~Scene()
@@ -22,7 +28,17 @@ namespace Sapphire
 			++it;
 			m_meshMap.erase(_it);
 		}
+		m_PostRtt->Release();
+		safeDelete(m_PostRtt);
+	}
 
+	void Scene::Initialize()
+	{
+		m_PostRtt = new BaseRenderTarget();
+		m_PostRtt->Initialize(800, 600);
+		m_PostRs = new BaseRenderSurface();
+		m_PostRs->Init();
+		m_PostRs->SetTexture(m_PostRtt->GetTexture(0)->getUID());
 	}
 
 	void Scene::Upate()
@@ -42,12 +58,34 @@ namespace Sapphire
 
 	void Scene::Render()
 	{
+		//第一次渲染
+		if (m_bEnablePost)
+		{
+			m_PostRtt->BindRT();
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // 暂时不使用模板缓冲
+		}
 		std::map<std::string, SharedPtr<BaseMesh>>::iterator it = m_meshMap.begin();
 		while (it != m_meshMap.end())
 		{
 			it->second->Render();
 			++it;
 		}
+		if (m_bEnablePost)
+		{
+			m_PostRtt->UnBindRT();
+			m_PostRs->SetTexture(m_PostRtt->GetTexture(0)->getUID());
+			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+			//后期渲染
+			m_PostRs->Render();
+		}
+		
+	}
+
+	void Scene::DrawPostEffect()
+	{
+
 	}
 
 	int Scene::GetLightCount()

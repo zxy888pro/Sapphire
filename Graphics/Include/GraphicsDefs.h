@@ -60,6 +60,7 @@ namespace Sapphire
 		TU_LIGHTRAMP = 5,
 		TU_LIGHTSHAPE = 6,
 		TU_SHADOWMAP = 7,
+		TU_POSTEFFECT = 8,
 		MAX_TEXTURE_UNITS
 	};
 

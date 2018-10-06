@@ -75,6 +75,8 @@ namespace Sapphire
 		Texture2D* pTexture = new Texture2D(width, height, pFormat);
 		pTexture->Create();
 		pTexture->SetData(pTexture->getMipLevel(),0,0, width, height, NULL);
+		RHANDLE handle = 0;
+		InsertResource(&handle, pTexture);
 		return pTexture;
 	}
 

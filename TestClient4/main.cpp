@@ -96,7 +96,8 @@ void init()
 
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 	pScene = new Scene();
-
+	pScene->Initialize();
+	pScene->setEnablePost(true);
 }
 
 
@@ -173,7 +174,7 @@ void Prepare()
 		pSMesh->SetSepcularMap("container2_specular.png");
 		
 	}
-
+	
 }
 void Update()
 {

@@ -76,6 +76,7 @@
     <ClInclude Include="BaseLightMapMesh.h" />
     <ClInclude Include="BaseLightMesh.h" />
     <ClInclude Include="BaseMesh.h" />
+    <ClInclude Include="BaseRenderSurface.h" />
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="RenderState.h" />
@@ -89,6 +90,7 @@
     <ClCompile Include="BaseLightMapMesh.cpp" />
     <ClCompile Include="BaseLightMesh.cpp" />
     <ClCompile Include="BaseMesh.cpp" />
+    <ClCompile Include="BaseRenderSurface.cpp" />
     <ClCompile Include="BaseRenderTarget.cpp" />
     <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -101,6 +103,8 @@
     <None Include="..\bin\shaders\BaseLight2Vs.glsl" />
     <None Include="..\bin\shaders\BaseLightMapMesh2Vs.glsl" />
     <None Include="..\bin\shaders\BaseLightMapMesh2Fs.glsl" />
+    <None Include="..\bin\shaders\PostEffectFs.glsl" />
+    <None Include="..\bin\shaders\PostEffectVs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
