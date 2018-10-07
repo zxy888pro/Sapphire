@@ -66,6 +66,12 @@
     <ClInclude Include="Include\Material.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ICubeTexture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\CubeTexture.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
@@ -90,6 +96,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\ImageMgr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\CubeTexture.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

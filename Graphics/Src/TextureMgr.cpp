@@ -162,4 +162,14 @@ namespace Sapphire
 		return bRet;
 	}
 
+	Sapphire::ITexture* TextureMgr::CreateCubeTextureFromImage(HIMAGE himg, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/)
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
+	Sapphire::ITexture* TextureMgr::CreateCubeTextureFromFile(std::string filePath, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/, bool bDynamic /*= false*/)
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
 }

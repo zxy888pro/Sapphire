@@ -39,6 +39,12 @@ namespace Sapphire
 		//检验硬件纹理对象ID是否已分配
 		virtual bool VerifyHWUID(uint uHwuid) override;
 
+
+		virtual ITexture* CreateCubeTextureFromImage(HIMAGE himg, TextureFilterMode filterMode = TextureFilterMode::FILTER_BILINEAR, TextureAddressMode s = TextureAddressMode::ADDRESS_REPEAT, TextureAddressMode t = TextureAddressMode::ADDRESS_REPEAT) override;
+
+
+		virtual ITexture* CreateCubeTextureFromFile(std::string filePath, TextureFilterMode filterMode = TextureFilterMode::FILTER_BILINEAR, TextureAddressMode s = TextureAddressMode::ADDRESS_REPEAT, TextureAddressMode t = TextureAddressMode::ADDRESS_REPEAT, bool bDynamic = false) override;
+
 	protected:
 
 
