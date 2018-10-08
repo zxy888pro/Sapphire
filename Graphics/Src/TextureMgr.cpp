@@ -72,7 +72,12 @@ namespace Sapphire
 
 	Sapphire::ITexture* TextureMgr::CreateEmptyTexture2D(uint width, uint height, PixelFormat pFormat /*= PF_R8G8B8A8*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/)
 	{
-		return NULL;
+		Texture2D* pTexture = new Texture2D(width, height, pFormat);
+		pTexture->Create();
+		pTexture->SetData(pTexture->getMipLevel(),0,0, width, height, NULL);
+		RHANDLE handle = 0;
+		InsertResource(&handle, pTexture);
+		return pTexture;
 	}
 
 	Sapphire::ITexture* TextureMgr::RequestTexture(RHANDLE handle)
@@ -155,6 +160,16 @@ namespace Sapphire
 	{
 		GLboolean bRet = glIsTexture(uHwuid);
 		return bRet;
+	}
+
+	Sapphire::ITexture* TextureMgr::CreateCubeTextureFromImage(HIMAGE himg, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/)
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
+	Sapphire::ITexture* TextureMgr::CreateCubeTextureFromFile(std::string filePath, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/, bool bDynamic /*= false*/)
+	{
+		throw std::logic_error("The method or operation is not implemented.");
 	}
 
 }

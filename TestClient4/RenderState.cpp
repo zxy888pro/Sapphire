@@ -31,7 +31,7 @@ namespace Sapphire
 		glGetIntegerv(GL_BLEND_SRC, &nBlendSrcFactor);
 		glGetIntegerv(GL_BLEND_DST, &nBlendDstFactor);
 		glGetIntegerv(GL_BLEND_EQUATION, &nBlendEquation);
-		
+
 	}
 
 	void RenderState::SetState()
@@ -79,9 +79,9 @@ namespace Sapphire
 		}
 		glStencilOp(nStencilFailFunc, nStencilPassDepthFailFunc, nStencilPassDepthPassFunc);
 		glStencilFunc(nStencilFunc, nStencilRef, nStencilMask);
-		glBlendFunc(nBlendSrcFactor , nBlendDstFactor);
+		glBlendFunc(nBlendSrcFactor, nBlendDstFactor);
 		glBlendEquation(nBlendEquation);
-		 
+
 	}
 
 }

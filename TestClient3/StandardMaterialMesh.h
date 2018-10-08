@@ -38,6 +38,7 @@ namespace Sapphire
 		float m_outlineSize;
 		Shader* m_pOutlineShader;
 
+
 	private:
 
 		virtual void BackupRenderState() override;

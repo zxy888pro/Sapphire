@@ -15,17 +15,17 @@ namespace Sapphire
 
 	BaseMesh::~BaseMesh()
 	{
-
+		m_vertices = NULL;
 	}
 
 	void BaseMesh::LoadBaseShader(const char* vs, const char* ps)
 	{
-	   m_pShader = new Shader(vs, ps, "");
-	   if (m_pShader == NULL)
-	   {
-		   LogUtil::LogMsgLn(StringFormatA("Create %s %s Shader Failed!", vs, ps));
-		   return;
-	   }
+		m_pShader = new Shader(vs, ps, "");
+		if (m_pShader == NULL)
+		{
+			LogUtil::LogMsgLn(StringFormatA("Create %s %s Shader Failed!", vs, ps));
+			return;
+		}
 	}
 
 	void BaseMesh::Init()
@@ -49,14 +49,14 @@ namespace Sapphire
 		{
 			glDeleteProgram(m_pShader->getShaderProgram());
 			safeDelete(m_pShader);
-			
+
 		}
 		glBindVertexArray(m_mVao);
 		glDeleteVertexArrays(1, &m_mVao);
 		glBindBuffer(GL_ARRAY_BUFFER, m_mVbo);
 		glDeleteBuffers(1, &m_mVbo);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+		safeDeleteArray(m_vertices);
 		m_pShader = NULL;
 		m_mVbo = 0;
 		m_mVao = 0;
