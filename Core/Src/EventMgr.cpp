@@ -4,6 +4,16 @@
 namespace Sapphire
 {
 
+	EventMgr::EventMgr()
+	{
+
+	}
+
+	EventMgr::~EventMgr()
+	{
+
+	}
+
 	void EventMgr::BroadcastEvent(ushort eEventType, ushort eEvent, void* eventData /*= NULL*/)
 	{
 		EventDataMap::iterator evtTypeMap = m_listenerMap.find(eEventType);

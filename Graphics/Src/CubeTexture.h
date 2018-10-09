@@ -8,6 +8,7 @@
 
 namespace Sapphire
 {
+	//包含上下左右前后6个面的Texture， 每个面大小长宽纹理格式都一样
 	class CubeTexture : public GPUObject, public BaseResource, public ICubeTexture
 	{
 	public:
@@ -24,9 +25,8 @@ namespace Sapphire
 		virtual bool  IsDisposed();
 		virtual size_t GetSize();
 		virtual uint GetDataSize() const override;
-		virtual uint  GetRowSize() const override;
-		virtual void Load(HIMAGE himg, CubeMapFace face);  //通过图像句柄加载纹理(6张贴图)
-		virtual void Load(HIMAGE himg); //通过图像句柄加载纹理(一张贴图)
+		virtual uint  GetRowSize() const override;  //注意只返回6个面中一个面
+		virtual void Load(HIMAGE leftImg, HIMAGE topImg, HIMAGE rightImg, HIMAGE bottomImg, HIMAGE frontImg, HIMAGE backImg); //通过图像句柄加载完整纹理(6张贴图)
 		virtual void OnDeviceLost() override;
 		virtual void OnDeviceReset() override;
 		virtual bool Create() override; //创建纹理对象
@@ -96,6 +96,8 @@ namespace Sapphire
 		int  m_glType;
 
 		GraphicDriver*  m_pGraphicDriver;
+
+		virtual void Load(HIMAGE himg, CubeMapFace face);  //加载6个纹理中的一个面
 	private:
 
 	};

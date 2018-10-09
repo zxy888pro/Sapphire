@@ -60,7 +60,6 @@ namespace Sapphire
 
 	 template <class T> T* Core::GetSubSystem(){ return GetSubSystemWithName(T::GetTypeNameStatic());}
 	 
-
 }
 
 #endif // !__SAPPHIRE_CORE_H__

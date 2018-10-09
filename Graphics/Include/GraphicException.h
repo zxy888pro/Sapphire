@@ -14,6 +14,7 @@ namespace Sapphire
 			GDError_ComponentNotCreate,
 			GDError_TextureOperationError,
 			GDError_UnknownPixelFormat,
+			GDError_CubeMapSizeError,
 			GDError_UnknownError,
 		};
 
