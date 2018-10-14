@@ -5,6 +5,7 @@
 
 namespace Sapphire
 {
+	//暂时未加入资源缓存管理功能
 	class ImageMgr : public IImageMgr
 	{
 	public:

@@ -28,12 +28,13 @@ namespace Sapphire
 		virtual uint GetDataSize() const override;
 		virtual uint  GetRowSize() const override;
 		virtual void Load(HIMAGE himg);  //通过图像句柄加载纹理
+		virtual void ReRequest();  //通过名字重新去请求纹理
 		virtual void OnDeviceLost() override;
 		virtual void OnDeviceReset() override;
 		virtual bool Create() override; //创建纹理对象
 
 		virtual bool SetSize(int width, int height, PixelFormat eformat, TextureUsage usage = TEXTURE_STATIC);
-		virtual bool SetData(uint level, int x, int y, int width, int height, const void* data);
+		virtual bool SetData(uint level, int x, int y, int width, int height, const void* data); //设置纹理数据
 		virtual uint getLevelWidth(uint level) const override;
 		virtual uint getLevelHeight(uint level) const override;
 

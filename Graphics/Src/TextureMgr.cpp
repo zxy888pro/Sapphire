@@ -9,6 +9,8 @@
 #include "ImageMgr.h"
 #include <BaseResource.h>
 #include <logUtil.h>
+#include <FileStream.h>
+#include "CubeTexture.h"
 
 
 namespace Sapphire
@@ -169,7 +171,75 @@ namespace Sapphire
 
 	Sapphire::ITexture* TextureMgr::CreateCubeTextureFromFile(std::string filePath, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/, bool bDynamic /*= false*/)
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		FileStream fs(filePath.c_str(), FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ);
+		if (fs.IsOpen())
+		{
+			uint width = 0;
+			uint height = 0;
+			uint channel = 0;
+			std::string widthStr;
+			if (fs.ReadLine(widthStr))
+			{
+				width = ToInt(widthStr);
+			}
+			std::string heightStr;
+			if (fs.ReadLine(heightStr))
+			{
+				height = ToInt(heightStr);
+			}
+			uint nChannel = 0;
+			std::string channelStr;
+			if (fs.ReadLine(channelStr))
+			{
+				channel = ToInt(channelStr);
+			}
+			std::vector<std::string> imgFiles;
+			std::string imgFile;
+			for (int i = 0; i < 6; i++)
+			{
+				
+				if (fs.ReadLine(imgFile))
+				{
+					imgFiles.push_back(imgFile);
+				}
+				else
+				{
+					break;
+				}
+
+			}
+
+			fs.Release();
+			if (imgFiles.size() == 6)
+			{
+				IImageMgr* pImageMgr = m_pGraphicDriver->getImageMgr();
+				Core* pCore = Core::GetSingletonPtr();
+				if (pImageMgr == NULL || pCore == NULL)
+				{
+					throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
+				}
+				
+				HIMAGE  imgs[6];
+				for (int i = 0; i < imgFiles.size(); ++i)
+				{
+
+					imgs[i] = pImageMgr->GetImage(filePath.c_str());
+					if (imgs[i].IsNull())
+					{
+						LogUtil::LogMsgLn(StringFormatA("Load ImageFile Failed! Not found %s", filePath.c_str()));
+						return NULL;
+					}
+					
+				}
+				CubeTexture* pTexture = new CubeTexture(width,channel);
+				pTexture->Load(imgs[FACE_NEGATIVE_X], imgs[FACE_POSITIVE_Y], imgs[FACE_POSITIVE_X], imgs[FACE_NEGATIVE_Y], imgs[FACE_POSITIVE_Z], imgs[FACE_NEGATIVE_Z]);
+				pTexture->setName(filePath);
+				RHANDLE handle = 0;
+				InsertResource(&handle, pTexture);  //加入TextureManager管理
+				return pTexture;
+			}
+		}
+		return NULL;
 	}
 
 }

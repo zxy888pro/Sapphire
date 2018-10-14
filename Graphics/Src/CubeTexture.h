@@ -21,6 +21,7 @@ namespace Sapphire
 
 		virtual void Release();//释放掉纹理对象
 		virtual bool Recreate();//重新创建纹理对象
+		virtual void ReRequest();  //通过名字重新去请求纹理
 		virtual void Dispose();
 		virtual bool  IsDisposed();
 		virtual size_t GetSize();

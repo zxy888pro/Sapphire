@@ -5,6 +5,7 @@
 namespace Sapphire
 {
 
+	//注意纹理用Texture不能直接删除，用TextureManager
 	struct ITexture
 	{
 		virtual uint getWidth() const = 0;

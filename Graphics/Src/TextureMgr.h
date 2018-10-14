@@ -42,7 +42,7 @@ namespace Sapphire
 
 		virtual ITexture* CreateCubeTextureFromImage(HIMAGE himg, TextureFilterMode filterMode = TextureFilterMode::FILTER_BILINEAR, TextureAddressMode s = TextureAddressMode::ADDRESS_REPEAT, TextureAddressMode t = TextureAddressMode::ADDRESS_REPEAT) override;
 
-
+		//CubeTexture文件暂时定义为后缀名为.cub的一个保存6个图片的文本文件
 		virtual ITexture* CreateCubeTextureFromFile(std::string filePath, TextureFilterMode filterMode = TextureFilterMode::FILTER_BILINEAR, TextureAddressMode s = TextureAddressMode::ADDRESS_REPEAT, TextureAddressMode t = TextureAddressMode::ADDRESS_REPEAT, bool bDynamic = false) override;
 
 	protected:

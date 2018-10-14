@@ -16,7 +16,7 @@ namespace Sapphire
 		m_bIsCompress(false),
 		m_mipLevel(0),
 		m_uNumMipmaps(1),
-		m_bIsDisposed(false),
+		m_bIsDisposed(true),
 		m_uAnisotropyLevel(8),
 		m_ePixelFormat(PixelFormat::PF_R8G8B8A8),
 		m_eFilterMode(TextureFilterMode::FILTER_NEAREST),
@@ -42,7 +42,7 @@ namespace Sapphire
 		m_eFilterMode = filterMode;
 		m_szName = "";
 		m_bIsCompress = false;
-		m_bIsDisposed = false;
+		m_bIsDisposed = true;
 		m_eUsage = eUsage;
 		m_mipLevel = 0;
 		m_uAnisotropyLevel = 8;
@@ -52,7 +52,7 @@ namespace Sapphire
 
 	Texture2D::~Texture2D()
 	{
-		Release();
+		Dispose();
 	}
 
 	void Texture2D::Release()
@@ -77,20 +77,28 @@ namespace Sapphire
 
 	bool Texture2D::Recreate()
 	{
-		Release();
-		Create();
+		Dispose();
+		if (m_szName != "")
+		{
+			ReRequest();  //重新请求纹理
+		}
 		return true;
 	}
 
 	void Texture2D::Dispose()
 	{
-		 
+		Release();
+		m_bIsDisposed =true;
 	}
 
 
 	bool Texture2D::IsDisposed()
 	{
-		return false;
+		if (glIsTexture(m_uHwUID) == false)
+		{
+			m_bIsDisposed = true;
+		}
+		return m_bIsDisposed;
 	}
 
 	size_t Texture2D::GetSize()
@@ -149,16 +157,16 @@ namespace Sapphire
 			return;
 		}
 		//先释放之前的纹理对象
-		Release();
+		Dispose();
 		if (himg.IsNull())
 		{
-			LogUtil::LogMsgLn("Texture2D Load Image Failed! handle is Null!");
+			SAPPHIRE_LOGERROR("Texture2D Load Image Failed! handle is Null!");
 			return;
 		}
 		IImageMgr* pImageMgr =  m_pGraphicDriver->getImageMgr();
 		if (!pImageMgr)
 		{
-			LogUtil::LogMsgLn("ImageMgr is not initialized!");
+			SAPPHIRE_LOGERROR("ImageMgr is not initialized!");
 			return;
 		}
 		PRAWIMAGE pImgData = pImageMgr->GetTexture(himg);
@@ -176,12 +184,34 @@ namespace Sapphire
 		m_uSize = width * height * nChannels;
 		if (pImgData == NULL)
 		{
-			LogUtil::LogMsgLn("Create Texture Failed! RawData is Null");
+			SAPPHIRE_LOGERROR("Create Texture Failed! RawData is Null");
 			return;
 		}
 		//创建纹理对象
 		Create();
 		SetData(m_mipLevel, 0, 0, width, height, pImgData);
+
+	}
+
+	void Texture2D::ReRequest()
+	{
+		if (IsDisposed())
+		{
+			//请求纹理
+			IImageMgr* pImageMgr = m_pGraphicDriver->getImageMgr();
+			Core* pCore = Core::GetSingletonPtr();
+			if (pImageMgr == NULL || pCore == NULL)
+			{
+				throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
+			}
+			HIMAGE himg = pImageMgr->GetImage(m_szName.c_str());
+			if (himg.IsNull())
+			{
+				LogUtil::LogMsgLn(StringFormatA("Request Texture Failed! Not found %s", m_szName.c_str()));
+				return;
+			}
+			Load(himg);
+		}
 
 	}
 
@@ -201,17 +231,17 @@ namespace Sapphire
 	bool Texture2D::Create()
 	{
 		//先释放旧的
-		Release();
+		//Dispose();
 
 		if (m_pGraphicDriver == NULL || m_uWidth == 0 || m_uHeight == 0)
 		{
-			LogUtil::LogMsgLn("GraphicDriver is not initialized!");
+			SAPPHIRE_LOGERROR("GraphicDriver is not initialized!");
 			return false;
 		}
 			
 		if (m_pGraphicDriver->IsDeviceLost())
 		{
-			LogUtil::LogMsgLn("Texture Creation While Device is Lost!");
+			SAPPHIRE_LOGERROR("Texture Creation While Device is Lost!");
 			return true;
 		}
 
@@ -285,8 +315,9 @@ namespace Sapphire
 		m_uWidth = width;
 		m_uHeight = height;
 		m_ePixelFormat = eformat;
-		//大小改变重新创建
+		//大小改变重新创建空纹理
 		Create();
+		SetData(m_mipLevel, 0, 0, width, height, NULL); //空纹理
 		return true;
 	}
 
@@ -294,7 +325,7 @@ namespace Sapphire
 	{
 		if (!m_pGraphicDriver)
 		{
-			LogUtil::LogMsgLn("Error GraphicDriver is Null!");
+			SAPPHIRE_LOGERROR("Error GraphicDriver is Null!");
 			return false;
 		}
 		ITextureMgr* pTexMgr = m_pGraphicDriver->getTextureMgr();
@@ -305,7 +336,7 @@ namespace Sapphire
 		}
 		if (!pTexMgr->VerifyHWUID(m_uHwUID))
 		{
-			LogUtil::LogMsgLn("Error HwUID is invalid!");
+			SAPPHIRE_LOGERROR("Error HwUID is invalid!");
 			return false;
 		}
 		
@@ -319,7 +350,7 @@ namespace Sapphire
 		//检查是否越界
 		if (x < 0 || x + width > levelWidth || y < 0 || y + height > levelHeight || width <= 0 || height <= 0)
 		{
-			LogUtil::LogMsgLn("Illegal dimensions for setting data");
+			SAPPHIRE_LOGERROR("Illegal dimensions for setting data");
 			return false;
 		}
 
