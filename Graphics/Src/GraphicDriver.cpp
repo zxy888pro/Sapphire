@@ -7,10 +7,13 @@
 namespace Sapphire
 {
 
+	
+
 	GraphicDriver::GraphicDriver()
 	{
 		m_pTextureMgr = new TextureMgr();
 		m_pImageMgr = new ImageMgr();
+		
 	}
 
 	GraphicDriver::~GraphicDriver()
@@ -20,6 +23,14 @@ namespace Sapphire
 
 	void GraphicDriver::Init()
 	{
+		m_imagetypeNames.clear();
+		m_imagetypeNames[ENUM2STR(ImageType_Bmp_A8R8G8B8)] = ImageType_Bmp_A8R8G8B8;
+		m_imagetypeNames[ENUM2STR(ImageType_Bmp_R8G8B8)] = ImageType_Bmp_R8G8B8;
+		m_imagetypeNames[ENUM2STR(ImageType_Jpeg)] = ImageType_Jpeg;
+		m_imagetypeNames[ENUM2STR(ImageType_Png)] = ImageType_Png;
+		m_imagetypeNames[ENUM2STR(ImageType_RAW_R8G8B8)] = ImageType_RAW_R8G8B8;
+		m_imagetypeNames[ENUM2STR(ImageType_RAW_R8G8B8A8)] = ImageType_RAW_R8G8B8A8;
+		m_imagetypeNames[ENUM2STR(ImageType_Tga)] = ImageType_Tga;
 		CheckFeature();
 	}
 
@@ -78,6 +89,15 @@ namespace Sapphire
 			return PF_UNDEFINED;
 		default:
 			break;
+		}
+		return PF_UNDEFINED;
+	}
+
+	PixelFormat GraphicDriver::GetPixelFormat(std::string szImageType)
+	{
+		if (m_imagetypeNames.find(szImageType) != m_imagetypeNames.end())
+		{
+			return GetPixelFormat(m_imagetypeNames[szImageType]);
 		}
 		return PF_UNDEFINED;
 	}

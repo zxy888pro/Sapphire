@@ -11,6 +11,7 @@
 #include <logUtil.h>
 #include <FileStream.h>
 #include "CubeTexture.h"
+#include "json/json.h"
 
 
 namespace Sapphire
@@ -166,6 +167,7 @@ namespace Sapphire
 
 	Sapphire::ITexture* TextureMgr::CreateCubeTextureFromImage(HIMAGE himg, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/)
 	{
+		//通过切图来加载,还没想好怎么定义
 		throw std::logic_error("The method or operation is not implemented.");
 	}
 
@@ -174,69 +176,69 @@ namespace Sapphire
 		FileStream fs(filePath.c_str(), FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ);
 		if (fs.IsOpen())
 		{
-			uint width = 0;
-			uint height = 0;
-			uint channel = 0;
-			std::string widthStr;
-			if (fs.ReadLine(widthStr))
+			//暂时写在这里加载
+			IImageMgr* pImageMgr = m_pGraphicDriver->getImageMgr();
+			Core* pCore = Core::GetSingletonPtr();
+			if (pImageMgr == NULL || pCore == NULL)
 			{
-				width = ToInt(widthStr);
+				throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
 			}
-			std::string heightStr;
-			if (fs.ReadLine(heightStr))
-			{
-				height = ToInt(heightStr);
-			}
-			uint nChannel = 0;
-			std::string channelStr;
-			if (fs.ReadLine(channelStr))
-			{
-				channel = ToInt(channelStr);
-			}
-			std::vector<std::string> imgFiles;
-			std::string imgFile;
-			for (int i = 0; i < 6; i++)
-			{
-				
-				if (fs.ReadLine(imgFile))
-				{
-					imgFiles.push_back(imgFile);
-				}
-				else
-				{
-					break;
-				}
-
-			}
-
+			std::string jsonStr = fs.ReadString(MAX_JSON_LENGTH);
 			fs.Release();
-			if (imgFiles.size() == 6)
+			Json::CharReaderBuilder builder;
+			Json::CharReader* reader = builder.newCharReader();
+			JSONCPP_STRING errs;
+			Json::Value rootNode;
+			HIMAGE  imgs[6];
+			if (reader->parse(jsonStr.c_str(), jsonStr.c_str() + strlen(jsonStr.c_str()), &rootNode, &errs))
 			{
-				IImageMgr* pImageMgr = m_pGraphicDriver->getImageMgr();
-				Core* pCore = Core::GetSingletonPtr();
-				if (pImageMgr == NULL || pCore == NULL)
+				int width = rootNode["size"].asInt();
+				int height = width;
+				if (width == 0 || height == 0)
 				{
-					throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
+					throw GraphicDriverException("Parse Cubmap File Failed!", GraphicDriverException::GDError_TextureFileParseError);
 				}
-				
-				HIMAGE  imgs[6];
-				for (int i = 0; i < imgFiles.size(); ++i)
+				int channel = rootNode["channel"].asInt();
+				if (channel < 3 || channel > 4)
 				{
-
-					imgs[i] = pImageMgr->GetImage(filePath.c_str());
+					throw GraphicDriverException("Parse Cubmap File Failed!", GraphicDriverException::GDError_TextureFileParseError);
+				}
+				//取得图像格式
+				std::string imageType = rootNode["imageType"].asString();
+				//取得图像格式对应的纹理格式
+				PixelFormat ePixelFormat = m_pGraphicDriver->GetPixelFormat(imageType);
+				if (ePixelFormat == PF_UNDEFINED)
+				{
+					throw GraphicDriverException("Parse Cubmap File Failed!", GraphicDriverException::GDError_TextureFileParseError);
+				}
+				std::string faceNames[6];
+				faceNames[FACE_NEGATIVE_X] = rootNode["-x"].asString();
+				faceNames[FACE_POSITIVE_Y] = rootNode["+y"].asString();
+				faceNames[FACE_POSITIVE_X] = rootNode["+x"].asString();
+				faceNames[FACE_NEGATIVE_Y] = rootNode["-y"].asString();
+				faceNames[FACE_POSITIVE_Z] = rootNode["+z"].asString();
+				faceNames[FACE_NEGATIVE_Z] = rootNode["-z"].asString();
+				for (int i = 0; i < 6; ++i)
+				{
+					imgs[i] = pImageMgr->GetImage(faceNames[i].c_str());
 					if (imgs[i].IsNull())
 					{
-						LogUtil::LogMsgLn(StringFormatA("Load ImageFile Failed! Not found %s", filePath.c_str()));
-						return NULL;
+						LogUtil::LogMsgLn(StringFormatA("Load ImageFile Failed! Not found %s", faceNames[i].c_str()));
+						throw GraphicDriverException("Parse Cubmap File Failed!", GraphicDriverException::GDError_TextureFileParseError);
 					}
-					
 				}
-				CubeTexture* pTexture = new CubeTexture(width,channel);
+				CubeTexture* pTexture = new CubeTexture(width, channel);
 				pTexture->Load(imgs[FACE_NEGATIVE_X], imgs[FACE_POSITIVE_Y], imgs[FACE_POSITIVE_X], imgs[FACE_NEGATIVE_Y], imgs[FACE_POSITIVE_Z], imgs[FACE_NEGATIVE_Z]);
 				pTexture->setName(filePath);
+				pTexture->setPixelFormat(ePixelFormat);
+				pTexture->setChannelNum(channel);
 				RHANDLE handle = 0;
 				InsertResource(&handle, pTexture);  //加入TextureManager管理
 				return pTexture;
+			}
+			else
+			{
+				throw GraphicDriverException("Parse Cubmap File Failed!", GraphicDriverException::GDError_TextureFileParseError);
 			}
 		}
 		return NULL;

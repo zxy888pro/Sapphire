@@ -11,6 +11,7 @@
 #include "BaseLightMesh.h"
 #include "BaseLightMapMesh.h"
 #include "BaseScene.h"
+#include <json/json.h>
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;

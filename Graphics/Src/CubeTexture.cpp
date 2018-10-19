@@ -7,6 +7,7 @@
 #include <FileStream.h>
 #include "GraphicException.h"
 #include <stringHelper.h>
+#include <json/json.h>
 
 
 namespace Sapphire
@@ -20,6 +21,7 @@ namespace Sapphire
 		m_uDepth(0),
 		m_bIsCompress(false),
 		m_mipLevel(0),
+		m_maxMipLevel(0),
 		m_uNumMipmaps(1),
 		m_bIsDisposed(true),
 		m_uAnisotropyLevel(8),
@@ -27,6 +29,7 @@ namespace Sapphire
 		m_eFilterMode(TextureFilterMode::FILTER_NEAREST),
 		m_eUsage(TextureUsage::TEXTURE_STATIC),
 		m_szName(""),
+		m_channelNum(0),
 		m_glType(GL_TEXTURE_CUBE_MAP)
 	{
 		m_eType = ResoureType_Texture;
@@ -51,8 +54,10 @@ namespace Sapphire
 		m_bIsDisposed = true;
 		m_eUsage = eUsage;
 		m_mipLevel = 0;
+		m_maxMipLevel = 0;
 		m_uAnisotropyLevel = 8;
 		m_glType = glTargerType;
+		m_channelNum = 0;
 		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
 	}
 
@@ -101,64 +106,68 @@ namespace Sapphire
 			FileStream fs(m_szName.c_str(), FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ);
 			if (fs.IsOpen())
 			{
-				std::string widthStr;
-				if (fs.ReadLine(widthStr))
+				//暂时写在这里加载
+				IImageMgr* pImageMgr = m_pGraphicDriver->getImageMgr();
+				Core* pCore = Core::GetSingletonPtr();
+				if (pImageMgr == NULL || pCore == NULL)
 				{
-					m_uWidth = ToInt(widthStr);
+					throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
 				}
-				std::string heightStr;
-				if (fs.ReadLine(heightStr))
-				{
-					m_uHeight = ToInt(heightStr);
-				}
-				uint nChannel = 0;
-				std::string channelStr;
-				if (fs.ReadLine(channelStr))
-				{
-					m_uHeight = ToInt(channelStr);
-				}
-				std::vector<std::string> imgFiles;
-				std::string imgFile;
-				for (int i = 0; i < 6; i++)
-				{
-
-					if (fs.ReadLine(imgFile))
-					{
-						imgFiles.push_back(imgFile);
-					}
-					else
-					{
-						break;
-					}
-
-				}
-
+				std::string jsonStr = fs.ReadString(MAX_JSON_LENGTH);
 				fs.Release();
-				if (imgFiles.size() == 6)
+				Json::CharReaderBuilder builder;
+				Json::CharReader* reader = builder.newCharReader();
+				JSONCPP_STRING errs;
+				Json::Value rootNode;
+				HIMAGE  imgs[6];
+				if (reader->parse(jsonStr.c_str(), jsonStr.c_str() + strlen(jsonStr.c_str()), &rootNode, &errs))
 				{
-					IImageMgr* pImageMgr = m_pGraphicDriver->getImageMgr();
-					Core* pCore = Core::GetSingletonPtr();
-					if (pImageMgr == NULL || pCore == NULL)
+					int width = rootNode["size"].asInt();
+					int height = width;
+					if (width == 0 || height == 0)
 					{
-						throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
+						throw GraphicDriverException("Parse Cubmap File Failed!", GraphicDriverException::GDError_TextureFileParseError);
 					}
-
-					HIMAGE  imgs[6];
-					for (int i = 0; i < imgFiles.size(); ++i)
+					m_channelNum = rootNode["channel"].asInt();
+					if (m_channelNum < 3 || m_channelNum > 4)
 					{
-
-						imgs[i] = pImageMgr->GetImage(m_szName.c_str());
+						throw GraphicDriverException("Parse Cubmap File Failed!", GraphicDriverException::GDError_TextureFileParseError);
+					}
+					//取得图像格式
+					std::string imageType = rootNode["imageType"].asString();
+					//取得图像格式对应的纹理格式
+					m_ePixelFormat = m_pGraphicDriver->GetPixelFormat(imageType);
+					if (m_ePixelFormat == PF_UNDEFINED)
+					{
+						throw GraphicDriverException("Parse Cubmap File Failed!", GraphicDriverException::GDError_TextureFileParseError);
+					}
+					std::string faceNames[6];
+					faceNames[FACE_NEGATIVE_X] = rootNode["-x"].asString();
+					faceNames[FACE_POSITIVE_Y] = rootNode["+y"].asString();
+					faceNames[FACE_POSITIVE_X] = rootNode["+x"].asString();
+					faceNames[FACE_NEGATIVE_Y] = rootNode["-y"].asString();
+					faceNames[FACE_POSITIVE_Z] = rootNode["+z"].asString();
+					faceNames[FACE_NEGATIVE_Z] = rootNode["-z"].asString();
+					for (int i = 0; i < 6; ++i)
+					{
+						imgs[i] = pImageMgr->GetImage(faceNames[i].c_str());
 						if (imgs[i].IsNull())
 						{
-							LogUtil::LogMsgLn(StringFormatA("Load ImageFile Failed! Not found %s", m_szName.c_str()));
-							return;
+							LogUtil::LogMsgLn(StringFormatA("Load ImageFile Failed! Not found %s", faceNames[i].c_str()));
+							throw GraphicDriverException("Parse Cubmap File Failed!", GraphicDriverException::GDError_TextureFileParseError);
 						}
-
 					}
-					CubeTexture* pTexture = new CubeTexture();
-					pTexture->Load(imgs[FACE_NEGATIVE_X], imgs[FACE_POSITIVE_Y], imgs[FACE_POSITIVE_X], imgs[FACE_NEGATIVE_Y], imgs[FACE_POSITIVE_Z], imgs[FACE_NEGATIVE_Z]);
+					//直接重新加载6个面
+					Load(imgs[FACE_NEGATIVE_X], imgs[FACE_POSITIVE_Y], imgs[FACE_POSITIVE_X], imgs[FACE_NEGATIVE_Y], imgs[FACE_POSITIVE_Z], imgs[FACE_NEGATIVE_Z]);
+					//计算大小
+					m_uSize = width * height * m_channelNum * 6;
 				}
-			}
+				else
+				{
+					throw GraphicDriverException("Parse Cubmap File Failed!", GraphicDriverException::GDError_TextureFileParseError);
+				}
+			} 
+
 		}
 	}
 
@@ -248,14 +257,16 @@ namespace Sapphire
 		{
 			throw GraphicDriverException("CubeMap Width Is Not Equal Height!", GraphicDriverException::GDError_CubeMapSizeError);
 		}
-
-		uint nChannels = pImageMgr->GetNumChannels(himg);
-		m_ePixelFormat = m_pGraphicDriver->GetPixelFormat(pImageMgr->GetImageType(himg));
-		if (m_ePixelFormat == PixelFormat::PF_UNDEFINED)
+		//读取通道数,从json文件中读取
+		//uint nChannels = pImageMgr->GetNumChannels(himg);
+		//获取图像格式
+		PixelFormat ePixelFormat = m_pGraphicDriver->GetPixelFormat(pImageMgr->GetImageType(himg));
+		//图像格式和配置不一致
+		if (ePixelFormat == PixelFormat::PF_UNDEFINED && m_ePixelFormat != ePixelFormat)
 		{
 			throw GraphicDriverException("Error Unknown Pixelformat !", GraphicDriverException::GDError_UnknownPixelFormat);
 		}
-		m_uSize = width * height * nChannels;
+		//m_uSize = width * height * nChannels;
 		if (pImgData == NULL)
 		{
 			SAPPHIRE_LOGERROR("Create Texture Failed! RawData is Null");
@@ -386,6 +397,18 @@ namespace Sapphire
 		}
 		//解除绑定
 		m_pGraphicDriver->BindTexture(NULL, TextureUnit::TU_CUBEMAP);
+
+		//calculate mipmap level
+		m_mipLevel = 0;
+		if (!m_mipLevel)
+		{
+			unsigned maxSize = (unsigned)MAX(m_uWidth, m_uHeight);
+			while (maxSize)
+			{
+				maxSize >>= 1;
+				++m_mipLevel;
+			}
+		}
 		return true;
 	}
 
@@ -410,9 +433,60 @@ namespace Sapphire
 		return true;
 	}
 
-	bool CubeTexture::SetData(CubeMapFace face, uint level, int x, int y, int width, int height, const void* data)
+	bool CubeTexture::SetData(CubeMapFace face, uint level, int x, int y, int width, int height, const void* pData)
 	{
-		return false;
+		if (!m_pGraphicDriver)
+		{
+			SAPPHIRE_LOGERROR("Error GraphicDriver is Null!");
+			return false;
+		}
+		ITextureMgr* pTexMgr = m_pGraphicDriver->getTextureMgr();
+		if (!pTexMgr)
+		{
+			LogUtil::LogMsgLn("Error TextureMgr is Null!");
+			return false;
+		}
+		if (!pTexMgr->VerifyHWUID(m_uHwUID))
+		{
+			SAPPHIRE_LOGERROR("Error HwUID is invalid!");
+			return false;
+		}
+		int format = GraphicDriver::GetSWTextureFormat(m_ePixelFormat);
+		int internalFormat = GraphicDriver::GetHWTextureFormat(m_ePixelFormat);
+
+		//获取level级下mipmap宽高
+		int levelWidth = getLevelWidth(level);
+		int levelHeight = getLevelHeight(level);
+
+		//检查是否越界
+		if (x < 0 || x + width > levelWidth || y < 0 || y + height > levelHeight || width <= 0 || height <= 0)
+		{
+			SAPPHIRE_LOGERROR("Illegal dimensions for setting data");
+			return false;
+		}
+		//绑定纹理对象，默认Diffuse
+		m_pGraphicDriver->BindTexture(this, TU_CUBEMAP);
+		//是否全范围
+		bool wholeLevel = x == 0 && y == 0 && width == levelWidth && height == levelHeight;
+
+		uint dataType = GraphicDriver::GetHWTextureDataType(m_ePixelFormat);
+		if (!m_bIsCompress)
+		{
+			if (wholeLevel)
+				glTexImage2D((GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face), level, internalFormat, width, height, 0, format, dataType, pData);
+			else
+				glTexSubImage2D((GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face), level, x, y, width, height, internalFormat, dataType, pData); //更新局部
+		}
+		else
+		{
+			if (wholeLevel)
+				glCompressedTexImage2D((GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face), level, internalFormat, width, height, 0, GetSize(), pData);
+			else
+				glCompressedTexSubImage2D((GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face), level, x, y, width, height, internalFormat, dataType, pData);  //更新局部
+		}
+		m_pGraphicDriver->BindTexture(NULL, TextureUnit::TU_CUBEMAP);
+
+		return true;
 	}
 
 	bool CubeTexture::GetData(CubeMapFace face, unsigned level, void* dest) const

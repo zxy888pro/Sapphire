@@ -84,6 +84,7 @@ namespace Sapphire
 		std::string m_szName;
 		ResoureType m_eType;
 		size_t  m_uSize;
+		uint m_maxMipLevel;
 
 		//OpenGL 纹理目标类型  采样器
 		//GL_TEXTURE_1D  :  Sampler1D

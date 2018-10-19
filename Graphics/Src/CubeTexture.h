@@ -38,6 +38,8 @@ namespace Sapphire
 		//获取某个面的数据
 		virtual bool GetData(CubeMapFace face, unsigned level, void* dest) const;
 
+		int getChannelNum() const { return m_channelNum; }
+		void setChannelNum(int val) { m_channelNum = val; }
 	public:
 		 
 		virtual uint getWidth() const { return m_uWidth; }
@@ -72,6 +74,7 @@ namespace Sapphire
 		uint m_uDepth;
 		uint m_uNumMipmaps;
 		uint m_mipLevel;
+		uint m_maxMipLevel;
 		uint m_uAnisotropyLevel;
 		bool m_bIsCompress;
 		bool m_bIsDisposed;
@@ -83,6 +86,7 @@ namespace Sapphire
 		std::string m_szName;
 		ResoureType m_eType;
 		size_t  m_uSize;
+		int m_channelNum;
 		//OpenGL 纹理目标类型  采样器
 		//GL_TEXTURE_1D  :  Sampler1D
 		//GL_TEXTURE_1D_ARRAY  : Sampler1DArray

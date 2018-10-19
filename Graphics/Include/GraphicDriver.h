@@ -11,6 +11,8 @@ namespace Sapphire
 	{
 	public:
 
+		typedef std::unordered_map<std::string, ImageType>   ImageTypeNameMap;
+
 		GraphicDriver();
 		virtual ~GraphicDriver();
 
@@ -35,6 +37,8 @@ namespace Sapphire
 
 		PixelFormat GetPixelFormat(ImageType eImgType);
 
+		PixelFormat GetPixelFormat(std::string szImageType);
+
 
 	public:
 
@@ -57,7 +61,7 @@ namespace Sapphire
 		
 		bool		   m_bAnisotropySupport;
 		uint           m_nMaxTextureUnits;
-		
+		ImageTypeNameMap   m_imagetypeNames;
 
 	};
 

@@ -151,7 +151,7 @@ enum MemAllocType
 #endif // !SAPPHIRE_WIN
 
 
-
+#define MAX_JSON_LENGTH   4096
 
 //数据类型
 typedef unsigned char byte;

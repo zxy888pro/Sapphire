@@ -15,6 +15,7 @@ namespace Sapphire
 		m_uDepth(0),
 		m_bIsCompress(false),
 		m_mipLevel(0),
+		m_maxMipLevel(0),
 		m_uNumMipmaps(1),
 		m_bIsDisposed(true),
 		m_uAnisotropyLevel(8),
@@ -45,6 +46,7 @@ namespace Sapphire
 		m_bIsDisposed = true;
 		m_eUsage = eUsage;
 		m_mipLevel = 0;
+		m_maxMipLevel = 0;
 		m_uAnisotropyLevel = 8;
 		m_glType = glTargerType;
 		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
@@ -300,6 +302,18 @@ namespace Sapphire
 
 		//解除绑定
 		m_pGraphicDriver->BindTexture(NULL, TextureUnit::TU_DIFFUSE);
+
+		//calculate mipmap level
+		m_mipLevel = 0;
+		if (!m_mipLevel)
+		{
+			unsigned maxSize = (unsigned)MAX(m_uWidth, m_uHeight);
+			while (maxSize)
+			{
+				maxSize >>= 1;
+				++m_mipLevel;
+			}
+		}
 		return true;
 	}
 
@@ -362,9 +376,11 @@ namespace Sapphire
 		uint dataType = GraphicDriver::GetHWTextureDataType(m_ePixelFormat);
 		if (!m_bIsCompress)
 		{
+			//是更新整个纹理数据区
 			if (wholeLevel)
 				glTexImage2D(m_glType, level, internalFormat, width, height, 0, format, dataType, pData);
 			else
+				//更新部分
 				glTexSubImage2D(m_glType, level, x, y, width, height, internalFormat, dataType, pData);
 		}
 		else

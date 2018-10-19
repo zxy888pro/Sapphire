@@ -15,6 +15,7 @@ namespace Sapphire
 		ImageType_Unknown
 	};
 
+
 	enum TextureUsage
 	{
 		TEXTURE_STATIC = 0,

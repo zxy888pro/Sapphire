@@ -63,7 +63,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Core\Include;..\dependences\glew\include;..\dependences\glfw\include;..\ThirdParty\glm;..\dependences\assimp\include;Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Core\Include;..\dependences\glew\include;..\dependences\glfw\include;..\ThirdParty\glm;..\dependences\assimp\include;Include\;..\dependences\jsoncpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>

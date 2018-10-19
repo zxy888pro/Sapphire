@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestClient3", "TestClient3\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestClient4", "TestClient4\TestClient4.vcxproj", "{4C284694-5A43-4166-9670-7DCC839D65A7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestJsonCpp", "TestJsonCpp\TestJsonCpp.vcxproj", "{F9FC6097-44AE-4B96-AA01-57F2463F6AFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -57,6 +59,10 @@ Global
 		{4C284694-5A43-4166-9670-7DCC839D65A7}.Debug|Win32.Build.0 = Debug|Win32
 		{4C284694-5A43-4166-9670-7DCC839D65A7}.Release|Win32.ActiveCfg = Release|Win32
 		{4C284694-5A43-4166-9670-7DCC839D65A7}.Release|Win32.Build.0 = Release|Win32
+		{F9FC6097-44AE-4B96-AA01-57F2463F6AFC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F9FC6097-44AE-4B96-AA01-57F2463F6AFC}.Debug|Win32.Build.0 = Debug|Win32
+		{F9FC6097-44AE-4B96-AA01-57F2463F6AFC}.Release|Win32.ActiveCfg = Release|Win32
+		{F9FC6097-44AE-4B96-AA01-57F2463F6AFC}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
