@@ -436,7 +436,7 @@ namespace Sapphire
 			int channels = pImageMgr->GetNumChannels(himg);  //获取通道数
 			PixelFormat ePixelFormat = m_pGraphicDriver->GetPixelFormat(pImageMgr->GetImageType(himg));
 			int format = 0;
-			int nextLv = 0;
+			int nextLv = 1;
 			//根据画质设置，跳过指定mip等级, 质量越高，跳过的mipmap越少
 			for (unsigned i = 0; i < mipsToSkip_[quality]; ++i)
 			{
