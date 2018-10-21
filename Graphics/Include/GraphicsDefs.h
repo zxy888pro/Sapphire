@@ -94,7 +94,11 @@ namespace Sapphire
 	};
 
 
- 
+#define	QUALITY_LOW  0
+#define	QUALITY_MEDIUM  1
+#define	QUALITY_HIGH  2
+#define	QUALITY_MAX  15
+#define MAX_TEXTURE_QUALITY_LEVELS  3
 
 }
 

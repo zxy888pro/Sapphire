@@ -29,6 +29,8 @@ namespace Sapphire
 		for (int i = 0; i < MAX_COORDS; ++i)
 			m_eAddressMode_[i] = ADDRESS_REPEAT; m_eAddressMode_;
 		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
+		for (int i = 0; i < MAX_TEXTURE_QUALITY_LEVELS; ++i)
+			mipsToSkip_[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);
 	}
 
 	Texture2D::Texture2D(uint width, uint height, uint depth, PixelFormat pf /*= PF_R8G8B8A8*/, uint NumMipmaps /*= 1*/,int glTargerType /*= GL_TEXTURE_2D*/, TextureUsage eUsage /*= TextureUsage::TEXTURE_STATIC*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_WRAP*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_WRAP*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/)
@@ -50,6 +52,8 @@ namespace Sapphire
 		m_uAnisotropyLevel = 8;
 		m_glType = glTargerType;
 		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
+		for (int i = 0; i < MAX_TEXTURE_QUALITY_LEVELS; ++i)
+			mipsToSkip_[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);  //质量越高,跳过的mip越小
 	}
 
 	Texture2D::~Texture2D()
@@ -176,6 +180,8 @@ namespace Sapphire
 		uint height = pImageMgr->GetHeight(himg);
 		m_uWidth = width;
 		m_uHeight = height;
+		//读取Mipmaps数
+		m_uNumMipmaps = pImageMgr->GetNumMipmaps(himg);
 		//通道数相当于占用字节数
 		uint nChannels = pImageMgr->GetNumChannels(himg);
 		m_ePixelFormat = m_pGraphicDriver->GetPixelFormat(pImageMgr->GetImageType(himg));
@@ -190,13 +196,16 @@ namespace Sapphire
 			return;
 		}
 		//创建纹理对象
-		Create();
-		SetData(m_mipLevel, 0, 0, width, height, pImgData);
+		//Create();
+		//默認alpha==false，只有一個通道的話默認為明度
+		SetData(himg, false); //SetSize時創建紋理對象
+		//SetData(m_mipLevel, 0, 0, width, height, pImgData);
 
 	}
 
 	void Texture2D::ReRequest()
 	{
+		//重新去請求資源
 		if (IsDisposed())
 		{
 			//请求纹理
@@ -251,6 +260,8 @@ namespace Sapphire
 		//glBindTexture(GL_TEXTURE_2D, m_uHwUID);
 		//Diffuse作为默认单元
 		m_pGraphicDriver->BindTexture(this, TextureUnit::TU_DIFFUSE);
+		ITextureMgr* pTexMgr = m_pGraphicDriver->getTextureMgr();
+		int b = pTexMgr->VerifyHWUID(m_uHwUID);
 
 		glTexParameteri(m_glType, GL_TEXTURE_WRAP_S, GraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_U]));
 		glTexParameteri(m_glType, GL_TEXTURE_WRAP_T, GraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_V]));
@@ -299,21 +310,26 @@ namespace Sapphire
 		}
 		break;
 		}
-
+		
+////設置mipmap
+//#ifndef GL_ES_VERSION_2_0
+//		glTexParameteri(m_glType, GL_TEXTURE_BASE_LEVEL, 0);
+//		glTexParameteri(m_glType, GL_TEXTURE_MAX_LEVEL, m_uNumMipmaps - 1);
+//#endif
 		//解除绑定
-		m_pGraphicDriver->BindTexture(NULL, TextureUnit::TU_DIFFUSE);
+		//m_pGraphicDriver->BindTexture(NULL, TextureUnit::TU_DIFFUSE);
 
 		//calculate mipmap level
-		m_mipLevel = 0;
+		/*m_mipLevel = 0;
 		if (!m_mipLevel)
 		{
-			unsigned maxSize = (unsigned)MAX(m_uWidth, m_uHeight);
-			while (maxSize)
-			{
-				maxSize >>= 1;
-				++m_mipLevel;
-			}
+		unsigned maxSize = (unsigned)MAX(m_uWidth, m_uHeight);
+		while (maxSize)
+		{
+		maxSize >>= 1;
+		++m_mipLevel;
 		}
+		}*/
 		return true;
 	}
 
@@ -331,7 +347,7 @@ namespace Sapphire
 		m_ePixelFormat = eformat;
 		//大小改变重新创建空纹理
 		Create();
-		SetData(m_mipLevel, 0, 0, width, height, NULL); //空纹理
+		//SetData(m_mipLevel, 0, 0, width, height, NULL); //空纹理
 		return true;
 	}
 
@@ -395,16 +411,115 @@ namespace Sapphire
 	}
 
 
+	bool Texture2D::SetData(HIMAGE himg, bool useAlpha)
+	{
+		if (himg.IsNull())
+		{
+			SAPPHIRE_LOGERROR("Null image, can not set data");
+			return false;
+		}
+		//获取当前纹理质量
+		int quality = m_pGraphicDriver->getTextureQuality();
+		IImageMgr* pImageMgr = m_pGraphicDriver->getImageMgr();
+		if (!pImageMgr)
+		{
+			SAPPHIRE_LOGERROR("ImageMgr is not initialized!");
+			return false;
+		}
+		unsigned memoryUse = sizeof(Texture2D);
+		if (!pImageMgr->IsCompressd(himg))
+		{
+			//mip等级0，最大分辨率
+			PRAWIMAGE levelData = pImageMgr->GetTexture(himg);
+			int levelWidth = pImageMgr->GetWidth(himg);
+			int levelHeight = pImageMgr->GetHeight(himg);
+			int channels = pImageMgr->GetNumChannels(himg);  //获取通道数
+			PixelFormat ePixelFormat = m_pGraphicDriver->GetPixelFormat(pImageMgr->GetImageType(himg));
+			int format = 0;
+			int nextLv = 0;
+			//根据画质设置，跳过指定mip等级, 质量越高，跳过的mipmap越少
+			for (unsigned i = 0; i < mipsToSkip_[quality]; ++i)
+			{
+				levelData = pImageMgr->GetTexture(himg, i);
+				levelWidth = pImageMgr->GetWidth(himg, i);
+				levelHeight = pImageMgr->GetHeight(himg, i);
+				++nextLv;
+			}
+
+			//通过通道转换位对应的格式
+			/*switch (channels)
+			{
+			case 1:
+			format = useAlpha ? GraphicDriver::GetHWAlphaFormat() : GraphicDriver::GetHWLuminanceFormat();
+			break;
+
+			case 2:
+			format = GraphicDriver::GetHWLuminanceAlphaFormat();
+			break;
+
+			case 3:
+			format = GraphicDriver::GetHWRGBFormat();
+			break;
+
+			case 4:
+			format = GraphicDriver::GetHWRGBAFormat();
+			break;
+
+			default:
+			{
+			SAPPHIRE_LOGERROR("HWFormat format illegal !");
+			assert(false);
+			}
+			break;
+			}*/
+			//m_glType = format;
+			//纹理质量设置，会改变纹理0的大小
+			SetSize(levelWidth, levelHeight, ePixelFormat);
+			for (unsigned i = 0; i < m_uNumMipmaps; ++i)
+			{
+				//mip0從跳過的mipmap lv開始
+				SetData(i, 0, 0, levelWidth, levelHeight, levelData);
+				memoryUse += levelWidth * levelHeight * channels;
+
+				//if (i < m_uNumMipmaps - 1)
+				if (nextLv < m_uNumMipmaps)
+				{
+					levelData = pImageMgr->GetTexture(himg, nextLv);
+					levelWidth = pImageMgr->GetWidth(himg, nextLv);
+					levelHeight = pImageMgr->GetHeight(himg, nextLv);
+					++nextLv;
+				}
+				else
+				{
+					break;
+				}
+			}
+			//設置mipmap
+#ifndef GL_ES_VERSION_2_0
+			glTexParameteri(m_glType, GL_TEXTURE_BASE_LEVEL, 0);
+			glTexParameteri(m_glType, GL_TEXTURE_MAX_LEVEL, nextLv - 1);
+#endif
+		}
+		else
+		{
+			//压缩纹理格式dds/s3tc/etc.....
+			return false;
+		}
+		
+
+		
+	}
+
 	uint Texture2D::getLevelWidth(uint level) const
 	{
-		if (level > m_mipLevel)
+		if (level > m_uNumMipmaps)
 			return 0;
 		return MAX(m_uWidth >> level, 1);
 	}
 
 	uint Texture2D::getLevelHeight(uint level) const
 	{
-		if (level > m_mipLevel)
+		if (level > m_uNumMipmaps)
 			return 0;
 		return MAX(m_uHeight >> level, 1);
 	}

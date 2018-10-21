@@ -26,13 +26,13 @@ namespace Sapphire
 		{
 			return (m_Images.Dereference(himg)->getName());
 		}
-		uint GetWidth(HIMAGE himg) const
+		uint GetWidth(HIMAGE himg, uint nMipmap = 0) const
 		{
-			return (m_Images.Dereference(himg)->getWidth());
+			return (m_Images.Dereference(himg)->getWidth(nMipmap));
 		}
-		uint GetHeight(HIMAGE himg) const
+		uint GetHeight(HIMAGE himg, uint nMipmap = 0) const
 		{
-			return (m_Images.Dereference(himg)->getHeight());
+			return (m_Images.Dereference(himg)->getHeight(nMipmap));
 		}
 		uint GetNumChannels(HIMAGE himg) const
 		{
@@ -41,6 +41,10 @@ namespace Sapphire
 		ulonglong GetImageSize(HIMAGE himg) const
 		{
 			return (m_Images.Dereference(himg)->getDataSize());
+		}
+		uint GetNumMipmaps(HIMAGE himg) const
+		{
+			return  (m_Images.Dereference(himg)->getMipmapNum());
 		}
 
 		PRAWIMAGE  GetTexture(HIMAGE himg, uint mip = 0) const
@@ -53,7 +57,10 @@ namespace Sapphire
 			return NULL;
 		}
 
-
+		bool IsCompressd(HIMAGE himg) const
+		{
+			return  (m_Images.Dereference(himg)->IsCompressd());;
+		}
 
 		virtual ImageType GetImageType(HIMAGE himg) const override;
 

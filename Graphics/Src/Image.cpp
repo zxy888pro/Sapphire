@@ -9,7 +9,7 @@ Sapphire::Image::~Image()
 
 }
 
-bool Sapphire::Image::Load(const std::string& imagePath)
+bool Sapphire::Image::Load(const std::string& imagePath, bool bCreateMipmap)
 {
 	Path fpath = imagePath;
 	if (!FileIsExistA(fpath.c_str()))
@@ -44,6 +44,7 @@ bool Sapphire::Image::Load(const std::string& imagePath)
 	}
 	m_mipmaps.push_back(m_pbData);
 	++m_nMipmapNum;
+	GenerateMipmaps();
 	return true;
 }
 
@@ -98,23 +99,25 @@ void Sapphire::Image::GenerateMipmaps()
 	int subWidth = m_nWidth;
 	int subHeight = m_nHeight;
 
-	int nMipmap = 0;
+	//int nMipmap = 0;
 	
 
 	while (subHeight > 1 && subWidth>1)
 	{
-		++nMipmap;
+		//++nMipmap;
 		int parentWidth = subWidth;
 		int parentHeight = subHeight;
 		subWidth /= 2;
 		subHeight /= 2;
 
 		Image* imgPtr = new Image();
+		//SharedPtr<Image> pSubImg = SharedPtr<Image>(imgPtr);
 		int totalSize = subHeight*subWidth*m_nChannels;
 		byte* pbDate = new byte[totalSize];
-		/*int ret = stbir_resize_uint8(m_pbData, parentWidth, parentHeight, 0, pbDate, subWidth, subHeight, 0, m_nChannels);
-		imgPtr->SetRAWData(pbDate, subWidth, subHeight, m_nChannels);*/
+		int ret = stbir_resize_uint8(m_pbData, parentWidth, parentHeight, 0, pbDate, subWidth, subHeight, 0, m_nChannels);
+		imgPtr->SetRAWData(pbDate, subWidth, subHeight, m_nChannels);
 		m_mipmaps.push_back(pbDate);
+		m_subImgs.push_back(imgPtr);
 		++m_nMipmapNum;
 	}
 

@@ -399,7 +399,7 @@ namespace Sapphire
 		m_pGraphicDriver->BindTexture(NULL, TextureUnit::TU_CUBEMAP);
 
 		//calculate mipmap level
-		m_mipLevel = 0;
+		/*m_mipLevel = 0;
 		if (!m_mipLevel)
 		{
 			unsigned maxSize = (unsigned)MAX(m_uWidth, m_uHeight);
@@ -408,7 +408,7 @@ namespace Sapphire
 				maxSize >>= 1;
 				++m_mipLevel;
 			}
-		}
+		}*/
 		return true;
 	}
 

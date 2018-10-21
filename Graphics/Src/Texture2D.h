@@ -31,10 +31,11 @@ namespace Sapphire
 		virtual void ReRequest();  //通过名字重新去请求纹理
 		virtual void OnDeviceLost() override;
 		virtual void OnDeviceReset() override;
-		virtual bool Create() override; //创建纹理对象
+		virtual bool Create() override; //创建纹理对象,完成紋理對象的初始設置
 
-		virtual bool SetSize(int width, int height, PixelFormat eformat, TextureUsage usage = TEXTURE_STATIC);
-		virtual bool SetData(uint level, int x, int y, int width, int height, const void* data); //设置纹理数据
+		virtual bool SetSize(int width, int height, PixelFormat eformat, TextureUsage usage = TEXTURE_STATIC);  //改變紋理對象的大小
+		virtual bool SetData(uint level, int x, int y, int width, int height, const void* data); //设置纹理数据 
+		virtual bool SetData(HIMAGE himg, bool useAlpha);  //设置纹理数据,-包括mipmap ,  在只有一個通道的時候useAlpha表示是alpha還是明度
 		virtual uint getLevelWidth(uint level) const override;
 		virtual uint getLevelHeight(uint level) const override;
 
@@ -85,6 +86,7 @@ namespace Sapphire
 		ResoureType m_eType;
 		size_t  m_uSize;
 		uint m_maxMipLevel;
+		unsigned mipsToSkip_[MAX_TEXTURE_QUALITY_LEVELS];
 
 		//OpenGL 纹理目标类型  采样器
 		//GL_TEXTURE_1D  :  Sampler1D

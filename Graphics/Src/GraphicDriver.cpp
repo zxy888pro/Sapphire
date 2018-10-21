@@ -13,6 +13,7 @@ namespace Sapphire
 	{
 		m_pTextureMgr = new TextureMgr();
 		m_pImageMgr = new ImageMgr();
+		m_nTextureQuality = QUALITY_HIGH;
 		
 	}
 
@@ -229,6 +230,31 @@ namespace Sapphire
 			else
 				return GL_UNSIGNED_BYTE;
 #endif
+	}
+
+	int GraphicDriver::GetHWAlphaFormat()
+	{
+		return GL_ALPHA;
+	}
+
+	int GraphicDriver::GetHWLuminanceFormat()
+	{
+		return GL_LUMINANCE;
+	}
+
+	int GraphicDriver::GetHWLuminanceAlphaFormat()
+	{
+		return GL_LUMINANCE_ALPHA;
+	}
+
+	int GraphicDriver::GetHWRGBFormat()
+	{
+		return GL_RGB;
+	}
+
+	int GraphicDriver::GetHWRGBAFormat()
+	{
+		return GL_RGBA;
 	}
 
 	void GraphicDriver::CheckFeature()

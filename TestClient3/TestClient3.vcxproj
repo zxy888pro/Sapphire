@@ -68,8 +68,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\libs;..\dependences\glew\lib\Release\Win32;..\dependences\glfw\lib-vc2013;..\dependences\freetype\lib;..\dependences\assimp\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Core.lib;Graphics.lib;opengl32.lib;glfw3.lib;glew32s.lib;freetyped.lib;assimp-vc120-mt.lib;IrrXML.lib;zlibstaticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\libs;..\dependences\glew\lib\Release\Win32;..\dependences\glfw\lib-vc2013;..\dependences\freetype\lib;..\dependences\assimp\lib;..\dependences\jsoncpp\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Core.lib;Graphics.lib;opengl32.lib;glfw3.lib;glew32s.lib;jsoncpp.lib;freetyped.lib;assimp-vc120-mt.lib;IrrXML.lib;zlibstaticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

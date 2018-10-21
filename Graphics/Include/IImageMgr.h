@@ -12,9 +12,9 @@ namespace Sapphire
 
 		virtual const std::string& GetName(HIMAGE himg) const = 0;
 
-		virtual uint GetWidth(HIMAGE himg) const = 0;
+		virtual uint GetWidth(HIMAGE himg, uint nMipmap = 0) const = 0;
 
-		virtual uint GetHeight(HIMAGE himg) const = 0;
+		virtual uint GetHeight(HIMAGE himg, uint nMipmap = 0) const = 0;
 
 		virtual uint GetNumChannels(HIMAGE himg) const = 0;
 
@@ -23,6 +23,10 @@ namespace Sapphire
 		virtual PRAWIMAGE  GetTexture(HIMAGE himg, uint mip = 0) const = 0;
 
 		virtual ImageType  GetImageType(HIMAGE himg) const = 0;
+
+		virtual uint GetNumMipmaps(HIMAGE himg) const = 0;
+
+		virtual bool IsCompressd(HIMAGE himg) const = 0;
 
 	};
 

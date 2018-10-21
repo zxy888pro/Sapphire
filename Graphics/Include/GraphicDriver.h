@@ -40,6 +40,10 @@ namespace Sapphire
 		PixelFormat GetPixelFormat(std::string szImageType);
 
 
+		int getTextureQuality() const { return m_nTextureQuality; }
+
+		void setTextureQuality(int val) { m_nTextureQuality = val; }
+
 	public:
 
 		static int GetHWTextureWarpParam(TextureAddressMode mode);
@@ -49,6 +53,16 @@ namespace Sapphire
 		static int GetSWTextureFormat(PixelFormat eFormat);
 
 		static uint GetHWTextureDataType(PixelFormat format);
+		//硬件Alpha格式
+		static int GetHWAlphaFormat();
+		//硬件明度格式
+		static int GetHWLuminanceFormat();
+		//硬件明度和alpha格式
+		static int GetHWLuminanceAlphaFormat();
+		//硬件RGB格式
+		static int GetHWRGBFormat();
+		//硬件RGBA格式
+		static int GetHWRGBAFormat();
 		
 		
 	private:
@@ -58,7 +72,7 @@ namespace Sapphire
 		ITextureMgr*   m_pTextureMgr;
 		IImageMgr*     m_pImageMgr;
 
-		
+		int            m_nTextureQuality;
 		bool		   m_bAnisotropySupport;
 		uint           m_nMaxTextureUnits;
 		ImageTypeNameMap   m_imagetypeNames;
