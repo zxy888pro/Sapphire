@@ -346,6 +346,7 @@ namespace Sapphire
 		m_uHeight = height;
 		m_ePixelFormat = eformat;
 		//大小改变重新创建空纹理
+		Dispose();
 		Create();
 		//SetData(m_mipLevel, 0, 0, width, height, NULL); //空纹理
 		return true;
@@ -364,6 +365,8 @@ namespace Sapphire
 			LogUtil::LogMsgLn("Error TextureMgr is Null!");
 			return false;
 		}
+		//绑定纹理对象，默认Diffuse
+		m_pGraphicDriver->BindTexture(this, TU_DIFFUSE);
 		if (!pTexMgr->VerifyHWUID(m_uHwUID))
 		{
 			SAPPHIRE_LOGERROR("Error HwUID is invalid!");
@@ -384,8 +387,7 @@ namespace Sapphire
 			return false;
 		}
 
-		//绑定纹理对象，默认Diffuse
-		m_pGraphicDriver->BindTexture(this, TU_DIFFUSE);
+		
 		//是否全范围
 		bool wholeLevel = x == 0 && y == 0 && width == levelWidth && height == levelHeight;
 

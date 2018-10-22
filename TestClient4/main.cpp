@@ -34,6 +34,7 @@ void ProcessInput(GLFWwindow* pWnd)
 	if (glfwGetKey(pWnd, GLFW_KEY_ESCAPE) == GLFW_TRUE)
 	{
 		glfwTerminate();
+		Sapphire::Core::GetSingletonPtr()->GetMemoryMgr()->dumpMemoryAllocations();
 		Sapphire::Core::GetSingletonPtr()->GetMemoryMgr()->dumpLogReport();
 		return;
 	}
