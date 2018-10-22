@@ -30,7 +30,7 @@ namespace Sapphire
 			m_eAddressMode_[i] = ADDRESS_REPEAT; m_eAddressMode_;
 		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
 		for (int i = 0; i < MAX_TEXTURE_QUALITY_LEVELS; ++i)
-			mipsToSkip_[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);
+			m_skipMips[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);
 	}
 
 	Texture2D::Texture2D(uint width, uint height, uint depth, PixelFormat pf /*= PF_R8G8B8A8*/, uint NumMipmaps /*= 1*/,int glTargerType /*= GL_TEXTURE_2D*/, TextureUsage eUsage /*= TextureUsage::TEXTURE_STATIC*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_WRAP*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_WRAP*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/)
@@ -53,7 +53,7 @@ namespace Sapphire
 		m_glType = glTargerType;
 		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
 		for (int i = 0; i < MAX_TEXTURE_QUALITY_LEVELS; ++i)
-			mipsToSkip_[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);  //质量越高,跳过的mip越小
+			m_skipMips[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);  //质量越高,跳过的mip越小
 	}
 
 	Texture2D::~Texture2D()
@@ -166,7 +166,7 @@ namespace Sapphire
 		Dispose();
 		if (himg.IsNull())
 		{
-			SAPPHIRE_LOGERROR("Texture2D Load Image Failed! handle is Null!");
+			SAPPHIRE_LOGERROR("Texture2D Load Imsage Failed! handle is Null!");
 			return;
 		}
 		IImageMgr* pImageMgr =  m_pGraphicDriver->getImageMgr();
@@ -175,7 +175,7 @@ namespace Sapphire
 			SAPPHIRE_LOGERROR("ImageMgr is not initialized!");
 			return;
 		}
-		PRAWIMAGE pImgData = pImageMgr->GetTexture(himg);
+		PRAWIMAGE pImgData = pImageMgr->GetImageRaw(himg);
 		uint width = pImageMgr->GetWidth(himg);
 		uint height = pImageMgr->GetHeight(himg);
 		m_uWidth = width;
@@ -260,8 +260,8 @@ namespace Sapphire
 		//glBindTexture(GL_TEXTURE_2D, m_uHwUID);
 		//Diffuse作为默认单元
 		m_pGraphicDriver->BindTexture(this, TextureUnit::TU_DIFFUSE);
-		ITextureMgr* pTexMgr = m_pGraphicDriver->getTextureMgr();
-		int b = pTexMgr->VerifyHWUID(m_uHwUID);
+		/*ITextureMgr* pTexMgr = m_pGraphicDriver->getTextureMgr();
+		int b = pTexMgr->VerifyHWUID(m_uHwUID);*/
 
 		glTexParameteri(m_glType, GL_TEXTURE_WRAP_S, GraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_U]));
 		glTexParameteri(m_glType, GL_TEXTURE_WRAP_T, GraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_V]));
@@ -317,7 +317,7 @@ namespace Sapphire
 //		glTexParameteri(m_glType, GL_TEXTURE_MAX_LEVEL, m_uNumMipmaps - 1);
 //#endif
 		//解除绑定
-		//m_pGraphicDriver->BindTexture(NULL, TextureUnit::TU_DIFFUSE);
+		m_pGraphicDriver->BindTexture(NULL, TextureUnit::TU_DIFFUSE);
 
 		//calculate mipmap level
 		/*m_mipLevel = 0;
@@ -413,6 +413,7 @@ namespace Sapphire
 
 	bool Texture2D::SetData(HIMAGE himg, bool useAlpha)
 	{
+		//设置图像数据
 		if (himg.IsNull())
 		{
 			SAPPHIRE_LOGERROR("Null image, can not set data");
@@ -427,10 +428,13 @@ namespace Sapphire
 			return false;
 		}
 		unsigned memoryUse = sizeof(Texture2D);
+		//先绑定纹理对象
+		m_pGraphicDriver->BindTexture(this, TextureUnit::TU_DIFFUSE); 
+
 		if (!pImageMgr->IsCompressd(himg))
 		{
 			//mip等级0，最大分辨率
-			PRAWIMAGE levelData = pImageMgr->GetTexture(himg);
+			PRAWIMAGE levelData = pImageMgr->GetImageRaw(himg);
 			int levelWidth = pImageMgr->GetWidth(himg);
 			int levelHeight = pImageMgr->GetHeight(himg);
 			int channels = pImageMgr->GetNumChannels(himg);  //获取通道数
@@ -438,9 +442,9 @@ namespace Sapphire
 			int format = 0;
 			int nextLv = 1;
 			//根据画质设置，跳过指定mip等级, 质量越高，跳过的mipmap越少
-			for (unsigned i = 0; i < mipsToSkip_[quality]; ++i)
+			for (unsigned i = 0; i < m_skipMips[quality]; ++i)
 			{
-				levelData = pImageMgr->GetTexture(himg, i);
+				levelData = pImageMgr->GetImageRaw(himg, i);
 				levelWidth = pImageMgr->GetWidth(himg, i);
 				levelHeight = pImageMgr->GetHeight(himg, i);
 				++nextLv;
@@ -484,7 +488,7 @@ namespace Sapphire
 				//if (i < m_uNumMipmaps - 1)
 				if (nextLv < m_uNumMipmaps)
 				{
-					levelData = pImageMgr->GetTexture(himg, nextLv);
+					levelData = pImageMgr->GetImageRaw(himg, nextLv);
 					levelWidth = pImageMgr->GetWidth(himg, nextLv);
 					levelHeight = pImageMgr->GetHeight(himg, nextLv);
 					++nextLv;
@@ -505,8 +509,8 @@ namespace Sapphire
 			//压缩纹理格式dds/s3tc/etc.....
 			return false;
 		}
-		
-
+		//接触绑定
+		m_pGraphicDriver->BindTexture(0, TextureUnit::TU_DIFFUSE);
 		
 	}
 

@@ -35,7 +35,10 @@ namespace Sapphire
 		m_eType = ResoureType_Texture;
 		for (int i = 0; i < MAX_COORDS; ++i)
 			m_eAddressMode_[i] = ADDRESS_REPEAT; m_eAddressMode_;
+		for (int i = 0; i < MAX_TEXTURE_QUALITY_LEVELS; ++i)
+			m_skipMips[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);
 		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
+
 	}
 
 	CubeTexture::CubeTexture(uint size, uint depth, PixelFormat pf /*= PF_R8G8B8A8*/, uint NumMipmaps /*= 1*/, int glTargerType /*= GL_TEXTURE_2D*/, TextureUsage eUsage /*= TextureUsage::TEXTURE_STATIC*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode r /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/)
@@ -59,6 +62,9 @@ namespace Sapphire
 		m_glType = glTargerType;
 		m_channelNum = 0;
 		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
+		for (int i = 0; i < MAX_TEXTURE_QUALITY_LEVELS; ++i)
+			m_skipMips[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);
+
 	}
 
 	CubeTexture::~CubeTexture()
@@ -247,7 +253,7 @@ namespace Sapphire
 			SAPPHIRE_LOGERROR("ImageMgr is not initialized!");
 			return;
 		}
-		PRAWIMAGE pImgData = pImageMgr->GetTexture(himg);
+		PRAWIMAGE pImgData = pImageMgr->GetImageRaw(himg);
 		uint width = pImageMgr->GetWidth(himg);
 		uint height = pImageMgr->GetHeight(himg);
 		m_uWidth = width;
@@ -292,10 +298,11 @@ namespace Sapphire
 			SAPPHIRE_LOGERROR("GraphicDevice Is Lost! Load CubeTexture Failed!");
 			return;
 		}
-		//创建纹理对象
-		Create();
+		
 		//先释放之前的纹理对象
 		Dispose();
+		//创建纹理对象
+		Create();
 		try
 		{
 			Load(leftImg, FACE_NEGATIVE_X);

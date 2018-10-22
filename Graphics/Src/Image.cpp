@@ -55,12 +55,23 @@ void Sapphire::Image::Unload(void)
 	{
 		stbi_image_free(m_pbData);
 	}
-	for (int i = 1; i < m_mipmaps.size(); ++i)
+	//卸载子图像资源
+	for (int i = 0; i < m_subImgs.size(); ++i)
 	{
-
-		safeDeleteArray(m_mipmaps[i]);
-		//m_mipmaps[i]->Unload();
+		if (m_subImgs[i] != NULL)
+		{
+			m_subImgs[i]->Unload();
+			safeDelete(m_subImgs[i]);
+		}
 	}
+	m_subImgs.clear();
+	//for (int i = 1; i < m_mipmaps.size(); ++i)
+	//{
+
+	//	safeDeleteArray(m_mipmaps[i]);
+	//	//m_mipmaps[i]->Unload();
+	//}
+	m_mipmaps.clear();
 	LogUtil::LogMsgLn(StringFormatA(" 卸载图片 :%s ", m_Name.c_str()));
 	m_nWidth = 0;
 	m_nHeight = 0;
@@ -111,10 +122,9 @@ void Sapphire::Image::GenerateMipmaps()
 		subHeight /= 2;
 
 		Image* imgPtr = new Image();
-		//SharedPtr<Image> pSubImg = SharedPtr<Image>(imgPtr);
 		int totalSize = subHeight*subWidth*m_nChannels;
 		byte* pbDate = new byte[totalSize];
-		int ret = stbir_resize_uint8(m_pbData, parentWidth, parentHeight, 0, pbDate, subWidth, subHeight, 0, m_nChannels);
+		int ret = stbir_resize_uint8(m_pbData, parentWidth, parentHeight, 0, pbDate, subWidth, subHeight, 0, m_nChannels); //重新改变大小
 		imgPtr->SetRAWData(pbDate, subWidth, subHeight, m_nChannels);
 		m_mipmaps.push_back(pbDate);
 		m_subImgs.push_back(imgPtr);

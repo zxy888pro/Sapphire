@@ -47,7 +47,7 @@ namespace Sapphire
 			return  (m_Images.Dereference(himg)->getMipmapNum());
 		}
 
-		PRAWIMAGE  GetTexture(HIMAGE himg, uint mip = 0) const
+		PRAWIMAGE  GetImageRaw(HIMAGE himg, uint mip = 0) const
 		{
 			Image*  pImg = (Image*) m_Images.Dereference(himg);
 			if (pImg)

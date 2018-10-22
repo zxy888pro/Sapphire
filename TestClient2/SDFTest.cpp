@@ -71,7 +71,7 @@ namespace Sapphire
 		HIMAGE himg = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetImage(fontImgPath.c_str());
 		if (!himg.IsNull())
 		{
-			PRAWIMAGE pImgData = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetTexture(himg);
+			PRAWIMAGE pImgData = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetImageRaw(himg);
 			uTextureWidth = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetWidth(himg);
 			uTextrueHeight = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetHeight(himg);
 			uTextureChannel = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetNumChannels(himg);

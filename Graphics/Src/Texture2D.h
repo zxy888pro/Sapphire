@@ -86,7 +86,7 @@ namespace Sapphire
 		ResoureType m_eType;
 		size_t  m_uSize;
 		uint m_maxMipLevel;
-		unsigned mipsToSkip_[MAX_TEXTURE_QUALITY_LEVELS];
+		unsigned m_skipMips[MAX_TEXTURE_QUALITY_LEVELS];
 
 		//OpenGL 纹理目标类型  采样器
 		//GL_TEXTURE_1D  :  Sampler1D

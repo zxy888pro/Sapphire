@@ -104,7 +104,7 @@ void Sapphire::GLTestGeometry::Init()
 	 HIMAGE himg = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetImage("1.jpg");
 	 if (!himg.IsNull())
 	 {
-		 PRAWIMAGE pImgData = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetTexture(himg);
+		 PRAWIMAGE pImgData = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetImageRaw(himg);
 		 uint width = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetWidth(himg);
 		 uint height = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetHeight(himg);
 		 uint nrChannels = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetNumChannels(himg);
@@ -121,7 +121,7 @@ void Sapphire::GLTestGeometry::Init()
 	 }
 	 GraphicDriver::GetSingletonPtr()->getImageMgr()->DeleteTexture(himg);
 	// himg.Discard();
-	 PRAWIMAGE pdata = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetTexture(himg);
+	 PRAWIMAGE pdata = GraphicDriver::GetSingletonPtr()->getImageMgr()->GetImageRaw(himg);
 	 m_shader->Use();
 	 //glUseProgram(m_shader->getShaderProgram());
 	 //glUniform1i(glGetUniformLocation(m_shader->getShaderProgram(), "myTexture1"), 0); //设置纹理单元0
