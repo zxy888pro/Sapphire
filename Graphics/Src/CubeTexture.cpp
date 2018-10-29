@@ -134,6 +134,8 @@ namespace Sapphire
 					{
 						throw GraphicDriverException("Parse Cubmap File Failed!", GraphicDriverException::GDError_TextureFileParseError);
 					}
+					m_uWidth = width;
+					m_uHeight = height;
 					m_channelNum = rootNode["channel"].asInt();
 					if (m_channelNum < 3 || m_channelNum > 4)
 					{
@@ -253,36 +255,72 @@ namespace Sapphire
 			SAPPHIRE_LOGERROR("ImageMgr is not initialized!");
 			return;
 		}
-		PRAWIMAGE pImgData = pImageMgr->GetImageRaw(himg);
-		uint width = pImageMgr->GetWidth(himg);
-		uint height = pImageMgr->GetHeight(himg);
-		m_uWidth = width;
-		m_uHeight = height;
-		//6个子纹理大小和纹理必须一致
-		if (m_uWidth != m_uHeight)
+		if (!pImageMgr->IsCompressd(himg))
 		{
-			throw GraphicDriverException("CubeMap Width Is Not Equal Height!", GraphicDriverException::GDError_CubeMapSizeError);
+			//获取当前纹理质量
+			int quality = m_pGraphicDriver->getTextureQuality();
+			PRAWIMAGE levelData = pImageMgr->GetImageRaw(himg);
+			uint levelWidth = pImageMgr->GetWidth(himg);
+			uint levelHeight = pImageMgr->GetHeight(himg);
+			//6个子纹理大小和纹理必须一致
+			if (levelWidth != levelHeight && levelHeight != m_uHeight && levelWidth != m_uWidth)
+			{
+				throw GraphicDriverException("CubeMap Width Is Not Equal Height!", GraphicDriverException::GDError_CubeMapSizeError);
+			}
+			int channels = pImageMgr->GetNumChannels(himg);  //获取通道数
+			PixelFormat ePixelFormat = m_pGraphicDriver->GetPixelFormat(pImageMgr->GetImageType(himg));
+			m_uWidth = levelWidth;
+			m_uHeight = levelHeight;
+			int nextLv = 1;
+			unsigned memoryUse = sizeof(CubeTexture);
+			//根据画质设置，跳过指定mip等级, 质量越高，跳过的mipmap越少
+			for (unsigned i = 0; i < m_skipMips[quality]; ++i)
+			{
+				levelData = pImageMgr->GetImageRaw(himg, i);
+				levelWidth = pImageMgr->GetWidth(himg, i);
+				levelHeight = pImageMgr->GetHeight(himg, i);
+				++nextLv;
+			}
+			//face为第一个面是创建纹理完成初始化，之后不再创建
+			if (face == FACE_POSITIVE_X)
+			{
+				//纹理质量设置，会改变纹理0的大小
+				SetSize(levelWidth, levelHeight, ePixelFormat);
+			}
+			for (unsigned i = 0; i < m_uNumMipmaps; ++i)
+			{
+				//mip0從跳過的mipmap lv開始
+				SetData(face,i, 0, 0, levelWidth, levelHeight, levelData);
+				memoryUse += levelWidth * levelHeight * channels;
+
+				//if (i < m_uNumMipmaps - 1)
+				if (nextLv < m_uNumMipmaps)
+				{
+					levelData = pImageMgr->GetImageRaw(himg, nextLv);
+					levelWidth = pImageMgr->GetWidth(himg, nextLv);
+					levelHeight = pImageMgr->GetHeight(himg, nextLv);
+					++nextLv;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+
+
+			//应先创建纹理对象后才能设置数据
+			//应该先读取所有面纹理后再统一创建
+			//SetData(face, m_mipLevel, 0, 0, levelWidth, levelHeight, levelData);
 		}
-		//读取通道数,从json文件中读取
-		//uint nChannels = pImageMgr->GetNumChannels(himg);
-		//获取图像格式
-		PixelFormat ePixelFormat = m_pGraphicDriver->GetPixelFormat(pImageMgr->GetImageType(himg));
-		//图像格式和配置不一致
-		if (ePixelFormat == PixelFormat::PF_UNDEFINED && m_ePixelFormat != ePixelFormat)
+		else
 		{
-			throw GraphicDriverException("Error Unknown Pixelformat !", GraphicDriverException::GDError_UnknownPixelFormat);
-		}
-		//m_uSize = width * height * nChannels;
-		if (pImgData == NULL)
-		{
-			SAPPHIRE_LOGERROR("Create Texture Failed! RawData is Null");
+			//压缩纹理格式dds/s3tc/etc.....
 			return;
 		}
-
-
-		//应先创建纹理对象后才能设置数据
-		//应该先读取所有面纹理后再统一创建
-		SetData(face, m_mipLevel, 0, 0, width, height, pImgData);
+		
+ 
+		
 	}
 
 	void CubeTexture::Load(HIMAGE leftImg, HIMAGE topImg, HIMAGE rightImg, HIMAGE bottomImg, HIMAGE frontImg, HIMAGE backImg)
@@ -302,7 +340,7 @@ namespace Sapphire
 		//先释放之前的纹理对象
 		Dispose();
 		//创建纹理对象
-		Create();
+		//Create();
 		try
 		{
 			Load(leftImg, FACE_NEGATIVE_X);
@@ -402,6 +440,10 @@ namespace Sapphire
 		}
 		break;
 		}
+#ifndef GL_ES_VERSION_2_0
+		glTexParameteri(m_uHwUID, GL_TEXTURE_BASE_LEVEL, 0);
+		glTexParameteri(m_uHwUID, GL_TEXTURE_MAX_LEVEL, m_uNumMipmaps-1);
+#endif
 		//解除绑定
 		m_pGraphicDriver->BindTexture(NULL, TextureUnit::TU_CUBEMAP);
 
@@ -431,12 +473,12 @@ namespace Sapphire
 		m_ePixelFormat = eformat;
 		m_eUsage = usage;
 		Create();
-		SetData(CubeMapFace::FACE_NEGATIVE_X, m_mipLevel, 0, 0, width, height, NULL); //空纹理
-		SetData(CubeMapFace::FACE_POSITIVE_Y, m_mipLevel, 0, 0, width, height, NULL); //空纹理
-		SetData(CubeMapFace::FACE_POSITIVE_X, m_mipLevel, 0, 0, width, height, NULL); //空纹理
-		SetData(CubeMapFace::FACE_NEGATIVE_Y, m_mipLevel, 0, 0, width, height, NULL); //空纹理
-		SetData(CubeMapFace::FACE_POSITIVE_Z, m_mipLevel, 0, 0, width, height, NULL); //空纹理
-		SetData(CubeMapFace::FACE_NEGATIVE_Z, m_mipLevel, 0, 0, width, height, NULL); //空纹理
+		//SetData(CubeMapFace::FACE_NEGATIVE_X, m_mipLevel, 0, 0, width, height, NULL); //空纹理
+		//SetData(CubeMapFace::FACE_POSITIVE_Y, m_mipLevel, 0, 0, width, height, NULL); //空纹理
+		//SetData(CubeMapFace::FACE_POSITIVE_X, m_mipLevel, 0, 0, width, height, NULL); //空纹理
+		//SetData(CubeMapFace::FACE_NEGATIVE_Y, m_mipLevel, 0, 0, width, height, NULL); //空纹理
+		//SetData(CubeMapFace::FACE_POSITIVE_Z, m_mipLevel, 0, 0, width, height, NULL); //空纹理
+		//SetData(CubeMapFace::FACE_NEGATIVE_Z, m_mipLevel, 0, 0, width, height, NULL); //空纹理
 		return true;
 	}
 
@@ -472,7 +514,7 @@ namespace Sapphire
 			return false;
 		}
 		//绑定纹理对象，默认Diffuse
-		m_pGraphicDriver->BindTexture(this, TU_CUBEMAP);
+		m_pGraphicDriver->BindTexture(this, TU_DIFFUSE);
 		//是否全范围
 		bool wholeLevel = x == 0 && y == 0 && width == levelWidth && height == levelHeight;
 
@@ -491,7 +533,7 @@ namespace Sapphire
 			else
 				glCompressedTexSubImage2D((GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face), level, x, y, width, height, internalFormat, dataType, pData);  //更新局部
 		}
-		m_pGraphicDriver->BindTexture(NULL, TextureUnit::TU_CUBEMAP);
+		m_pGraphicDriver->BindTexture(NULL, TextureUnit::TU_DIFFUSE);
 
 		return true;
 	}

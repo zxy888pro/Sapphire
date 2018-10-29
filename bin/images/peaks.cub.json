@@ -1,0 +1,11 @@
+{
+  "+x": "cubemap\\peaks\\peaks_lf",
+  "-x": "cubemap\\peaks\\peaks_rt",
+  "+y": "cubemap\\peaks\\peaks_up",
+  "-y": "cubemap\\peaks\\peaks_dn",
+  "+z": "cubemap\\peaks\\peaks_ft",
+  "-z": "cubemap\\peaks\\peaks_bk",
+  "imageType": "ImageType_Tga",
+  "size": "512",
+  "name": "peaks"
+}
