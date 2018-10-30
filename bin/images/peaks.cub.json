@@ -1,11 +1,12 @@
 {
-  "+x": "cubemap\\peaks\\peaks_lf",
-  "-x": "cubemap\\peaks\\peaks_rt",
-  "+y": "cubemap\\peaks\\peaks_up",
-  "-y": "cubemap\\peaks\\peaks_dn",
-  "+z": "cubemap\\peaks\\peaks_ft",
-  "-z": "cubemap\\peaks\\peaks_bk",
-  "imageType": "ImageType_Tga",
-  "size": "512",
-  "name": "peaks"
+  "+x": "images\\cubemap\\peaks\\peaks_lf.tga",
+  "-x": "images\\cubemap\\peaks\\peaks_rt.tga",
+  "+y": "images\\cubemap\\peaks\\peaks_up.tga",
+  "-y": "images\\cubemap\\peaks\\peaks_dn.tga",
+  "+z": "images\\cubemap\\peaks\\peaks_ft.tga",
+  "-z": "images\\cubemap\\peaks\\peaks_bk.tga",
+  "imageType": "ImageType_Tga24",
+  "size": 512,
+  "name": "peaks",
+  "channel": 3
 }

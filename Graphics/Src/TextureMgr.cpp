@@ -173,7 +173,7 @@ namespace Sapphire
 
 	Sapphire::ITexture* TextureMgr::CreateCubeTextureFromFile(std::string filePath, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/, bool bDynamic /*= false*/)
 	{
-		FileStream fs(filePath.c_str(), FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ);
+		FileStream fs(filePath.c_str(), FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
 		if (fs.IsOpen())
 		{
 			//暂时写在这里加载

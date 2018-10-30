@@ -31,7 +31,8 @@ namespace Sapphire
 		m_imagetypeNames[ENUM2STR(ImageType_Png)] = ImageType_Png;
 		m_imagetypeNames[ENUM2STR(ImageType_RAW_R8G8B8)] = ImageType_RAW_R8G8B8;
 		m_imagetypeNames[ENUM2STR(ImageType_RAW_R8G8B8A8)] = ImageType_RAW_R8G8B8A8;
-		m_imagetypeNames[ENUM2STR(ImageType_Tga)] = ImageType_Tga;
+		m_imagetypeNames[ENUM2STR(ImageType_Tga32)] = ImageType_Tga32;
+		m_imagetypeNames[ENUM2STR(ImageType_Tga24)] = ImageType_Tga24;
 		CheckFeature();
 	}
 
@@ -80,8 +81,10 @@ namespace Sapphire
 			return PF_R8G8B8;
 		case Sapphire::ImageType_Png:
 			return PF_R8G8B8A8;
-		case Sapphire::ImageType_Tga:
+		case Sapphire::ImageType_Tga32:
 			return PF_R8G8B8A8;
+		case Sapphire::ImageType_Tga24:
+			return PF_R8G8B8;
 		case Sapphire::ImageType_RAW_R8G8B8A8:
 			return PF_R8G8B8A8;
 		case Sapphire::ImageType_RAW_R8G8B8:

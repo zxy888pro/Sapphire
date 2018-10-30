@@ -82,6 +82,7 @@
     <ClInclude Include="RenderState.h" />
     <ClInclude Include="BaseRenderTarget.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SkyBoxMesh.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +98,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RenderState.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SkyBoxMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\shaders\BaseLight2Fs.glsl" />
@@ -105,6 +107,8 @@
     <None Include="..\bin\shaders\BaseLightMapMesh2Fs.glsl" />
     <None Include="..\bin\shaders\PostEffectFs.glsl" />
     <None Include="..\bin\shaders\PostEffectVs.glsl" />
+    <None Include="..\bin\shaders\SkyboxFs.glsl" />
+    <None Include="..\bin\shaders\SkyboxVs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

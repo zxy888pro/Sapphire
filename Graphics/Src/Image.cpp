@@ -40,7 +40,15 @@ bool Sapphire::Image::Load(const std::string& imagePath, bool bCreateMipmap)
 	}
 	else if (ext == "tga")
 	{
-		m_imgType = ImageType::ImageType_Tga;
+		if (m_nChannels == 3)
+		{
+			m_imgType = ImageType::ImageType_Tga24;
+		}
+		else
+		{
+			m_imgType = ImageType::ImageType_Tga32;
+		}
+		
 	}
 	m_mipmaps.push_back(m_pbData);
 	++m_nMipmapNum;

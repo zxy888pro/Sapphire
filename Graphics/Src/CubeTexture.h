@@ -40,6 +40,10 @@ namespace Sapphire
 
 		int getChannelNum() const { return m_channelNum; }
 		void setChannelNum(int val) { m_channelNum = val; }
+
+		virtual uint getLevelWidth(uint level) const override;
+
+		virtual uint getLevelHeight(uint level) const override;
 	public:
 		 
 		virtual uint getWidth() const { return m_uWidth; }

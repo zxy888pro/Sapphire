@@ -59,7 +59,7 @@ namespace Sapphire
 		m_mipLevel = 0;
 		m_maxMipLevel = 0;
 		m_uAnisotropyLevel = 8;
-		m_glType = glTargerType;
+		m_glType = GL_TEXTURE_CUBE_MAP;
 		m_channelNum = 0;
 		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
 		for (int i = 0; i < MAX_TEXTURE_QUALITY_LEVELS; ++i)
@@ -343,8 +343,8 @@ namespace Sapphire
 		//Create();
 		try
 		{
-			Load(leftImg, FACE_NEGATIVE_X);
 			Load(rightImg, FACE_POSITIVE_X);
+			Load(leftImg, FACE_NEGATIVE_X);
 			Load(topImg, FACE_POSITIVE_Y);
 			Load(bottomImg, FACE_NEGATIVE_Y);
 			Load(frontImg, FACE_POSITIVE_Z);
@@ -553,6 +553,20 @@ namespace Sapphire
 
 		//½â³ý°ó¶¨
 		m_pGraphicDriver->BindTexture(NULL, TextureUnit::TU_CUBEMAP);
+	}
+
+	uint CubeTexture::getLevelWidth(uint level) const
+	{
+		if (level > m_uNumMipmaps)
+			return 0;
+		return MAX(m_uWidth >> level, 1);
+	}
+
+	uint CubeTexture::getLevelHeight(uint level) const
+	{
+		if (level > m_uNumMipmaps)
+			return 0;
+		return MAX(m_uWidth >> level, 1);
 	}
 
 	uint CubeTexture::getUID() const

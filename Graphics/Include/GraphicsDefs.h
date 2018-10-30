@@ -9,7 +9,8 @@ namespace Sapphire
 		ImageType_Bmp_A8R8G8B8,
 		ImageType_Jpeg,
 		ImageType_Png,
-		ImageType_Tga,
+		ImageType_Tga32,
+		ImageType_Tga24,
 		ImageType_RAW_R8G8B8A8,
 		ImageType_RAW_R8G8B8,
 		ImageType_Unknown

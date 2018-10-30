@@ -10,6 +10,7 @@
 #include "BaseMesh.h"
 #include "BaseLightMesh.h"
 #include "BaseLightMapMesh.h"
+#include "SkyBoxMesh.h"
 #include "BaseScene.h"
 #include <json/json.h>
 
@@ -99,7 +100,7 @@ void init()
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 	pScene = new Scene();
 	pScene->Initialize();
-	pScene->setEnablePost(true);
+	pScene->setEnablePost(false);
 }
 
 
@@ -175,6 +176,14 @@ void Prepare()
 		pSMesh->SetDiffuseMap("container2.png");
 		pSMesh->SetSepcularMap("container2_specular.png");
 		
+	}
+
+	{
+		SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new SkyBoxMesh());
+		SharedPtr<SkyBoxMesh> pSMesh;
+		pSMesh.DynamicCast(pMesh);
+		pScene->AddMesh("SkyBox", pMesh);
+		pSMesh->LoadCubeMap("images\\peaks.cub.json");
 	}
 	
 }
