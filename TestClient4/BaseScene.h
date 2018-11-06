@@ -9,6 +9,7 @@ namespace Sapphire
 
 	class BaseRenderTarget;
 	class BaseRenderSurface;
+	
 
 	class Scene
 	{
@@ -27,7 +28,8 @@ namespace Sapphire
 		bool RemoveLight(int index);
 		bool RemoveLight(SharedPtr<BaseLight> pLight);
 		bool RemoveMesh(std::string name);
-		
+		uint GetSkyBoxMap();
+		void  SetSkyBox(std::string cubemapPath);
 
 		bool getEnablePost() const { return m_bEnablePost; }
 		void setEnablePost(bool val) { m_bEnablePost = val; }
@@ -35,6 +37,7 @@ namespace Sapphire
 	protected:
 
 		std::map<std::string, SharedPtr<BaseMesh>>  m_meshMap;
+		
 		std::vector < SharedPtr<BaseLight> >  m_lights;
 		bool m_bEnablePost;
 

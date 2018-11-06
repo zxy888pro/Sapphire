@@ -144,6 +144,11 @@ namespace Sapphire
 		}
 	}
 
+	uint SkyBoxMesh::GetSkyBoxUID()
+	{
+		return m_cubeMapObj;
+	}
+
 	void SkyBoxMesh::Release()
 	{
 		BaseMesh::Release();

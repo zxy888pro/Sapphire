@@ -24,7 +24,7 @@ namespace Sapphire
 
 		virtual void Update(std::vector<SharedPtr<BaseLight>>& lightVec) override;
 
-		virtual void SetCubeMap(ITexture* pTexture);
+		virtual void SetCubeMap(uint uid);
 
 	protected:
 

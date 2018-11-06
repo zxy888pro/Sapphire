@@ -21,6 +21,7 @@ namespace Sapphire
 		virtual void Render();
 		virtual void Update(std::vector<SharedPtr<BaseLight>>& lightVec);
 		virtual void LoadCubeMap(std::string filePath);
+		virtual uint GetSkyBoxUID();
 
 	protected:
 

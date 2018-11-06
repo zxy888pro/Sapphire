@@ -3,6 +3,7 @@
 #include "BaseScene.h"
 #include "BaseRenderTarget.h"
 #include "BaseRenderSurface.h"
+#include "SkyBoxMesh.h"
 
 
 namespace Sapphire
@@ -140,6 +141,28 @@ namespace Sapphire
 			return true;
 		}
 		return false;
+	}
+
+	uint Scene::GetSkyBoxMap()
+	{
+		std::map<std::string, SharedPtr<BaseMesh>>::iterator it = m_meshMap.find("skybox");
+		if (it != m_meshMap.end())
+		{
+			SharedPtr<SkyBoxMesh> pSMesh;
+			pSMesh.DynamicCast(it->second);
+			pSMesh->GetSkyBoxUID();
+		}
+		return 0;
+	}
+
+	void Scene::SetSkyBox(std::string cubemapPath)
+	{
+		RemoveMesh("skybox");
+		SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new SkyBoxMesh());
+		SharedPtr<SkyBoxMesh> pSMesh;
+		pSMesh.DynamicCast(pMesh);
+		AddMesh("skybox", pMesh);
+		pSMesh->LoadCubeMap(cubemapPath);
 	}
 
 }

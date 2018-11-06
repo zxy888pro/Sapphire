@@ -9,7 +9,7 @@ namespace Sapphire
 
 	BaseEmissionMesh::BaseEmissionMesh()
 	{
-		m_type = MT_EmissionMesh;
+		m_type = MT_EnviromentMapMesh;
 	}
 
 	BaseEmissionMesh::~BaseEmissionMesh()

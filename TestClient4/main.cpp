@@ -11,6 +11,7 @@
 #include "BaseLightMesh.h"
 #include "BaseLightMapMesh.h"
 #include "SkyBoxMesh.h"
+#include "BaseEnviromentMapMesh.h"
 #include "BaseScene.h"
 #include <json/json.h>
 
@@ -179,11 +180,20 @@ void Prepare()
 	}
 
 	{
-		SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new SkyBoxMesh());
+		/*SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new SkyBoxMesh());
 		SharedPtr<SkyBoxMesh> pSMesh;
 		pSMesh.DynamicCast(pMesh);
 		pScene->AddMesh("SkyBox", pMesh);
-		pSMesh->LoadCubeMap("images\\peaks.cub.json");
+		pSMesh->LoadCubeMap("images\\peaks.cub.json");*/
+		pScene->SetSkyBox("images\\peaks.cub.json");
+
+		SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new BaseEnviromentMapMesh());
+		pMesh->setPos(glm::vec3(8.0, 2.0, 4.0));
+		SharedPtr<BaseEnviromentMapMesh> pSMesh;
+		pSMesh.DynamicCast(pMesh);
+		pScene->AddMesh("enviromapBox", pMesh);
+		pSMesh->SetCubeMap(pScene->GetSkyBoxMap());
+		
 	}
 	
 }

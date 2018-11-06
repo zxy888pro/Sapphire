@@ -16,6 +16,7 @@ namespace Sapphire
 		MT_EmissionMesh,
 		MT_StandardMaterialMesh,
 		MT_SkyBoxMesh,
+		MT_EnviromentMapMesh,
 		MT_MaxCount
 	};
 
