@@ -99,7 +99,7 @@ namespace Sapphire
 		m_pShader->Use();
 		BackupRenderState();
 		glEnable(GL_DEPTH_TEST);
-
+		glDepthFunc(GL_LEQUAL);
 		// bind cubemap
 		glActiveTexture(GL_TEXTURE0 + GL_TEXTURE_CUBE_MAP);
 		glBindTexture(GL_TEXTURE_2D, m_cubeMapObj);
@@ -118,6 +118,7 @@ namespace Sapphire
 		{
 			return;
 		}
+		m_pShader->Use();
 		glm::mat4 projection = glm::perspective(glm::radians(pCam->getZoom()), (float)800 / (float)600, 0.1f, 100.0f);
 		glm::mat4 view = pCam->GetViewMatrix();
 		m_pShader->setVec3("viewPos", pCam->getPosition());
@@ -126,6 +127,7 @@ namespace Sapphire
 		glm::mat4 model;
 		model = glm::translate(model, m_pos);
 		m_pShader->setMat4("model", model);
+		m_pShader->setVec3("cameraPos", pCam->getPosition());
 		m_pShader->UnUse();
 	}
 

@@ -150,7 +150,7 @@ namespace Sapphire
 		{
 			SharedPtr<SkyBoxMesh> pSMesh;
 			pSMesh.DynamicCast(it->second);
-			pSMesh->GetSkyBoxUID();
+			return pSMesh->GetSkyBoxUID();
 		}
 		return 0;
 	}
