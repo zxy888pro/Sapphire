@@ -12,6 +12,7 @@
 #include "BaseLightMapMesh.h"
 #include "SkyBoxMesh.h"
 #include "BaseEnviromentMapMesh.h"
+#include "BaseUBOSimpleMesh.h"
 #include "BaseScene.h"
 #include <json/json.h>
 
@@ -177,6 +178,16 @@ void Prepare()
 		pSMesh->SetDiffuseMap("container2.png");
 		pSMesh->SetSepcularMap("container2_specular.png");
 		
+	}
+
+	{
+		SharedPtr<BaseMesh> pMesh = SharedPtr<BaseMesh>(new BaseUBOSimpleMesh());
+		pMesh->setPos(glm::vec3(7.0, 1.0, 6.0));
+		SharedPtr<BaseUBOSimpleMesh> pSMesh;
+		pSMesh.DynamicCast(pMesh);
+		pSMesh->setColor(glm::vec3(0.4, 0.1, 0.42));
+		pScene->AddMesh("uboBox", pMesh);
+
 	}
 
 	{

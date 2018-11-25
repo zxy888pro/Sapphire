@@ -79,6 +79,7 @@
     <ClInclude Include="BaseMesh.h" />
     <ClInclude Include="BaseRenderSurface.h" />
     <ClInclude Include="BaseScene.h" />
+    <ClInclude Include="BaseUBOSimpleMesh.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="RenderState.h" />
     <ClInclude Include="BaseRenderTarget.h" />
@@ -96,6 +97,7 @@
     <ClCompile Include="BaseRenderSurface.cpp" />
     <ClCompile Include="BaseRenderTarget.cpp" />
     <ClCompile Include="BaseScene.cpp" />
+    <ClCompile Include="BaseUBOSimpleMesh.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RenderState.cpp" />
@@ -107,6 +109,8 @@
     <None Include="..\bin\shaders\BaseLight2Vs.glsl" />
     <None Include="..\bin\shaders\BaseLightMapMesh2Vs.glsl" />
     <None Include="..\bin\shaders\BaseLightMapMesh2Fs.glsl" />
+    <None Include="..\bin\shaders\BaseUBOSimpleMeshFs.glsl" />
+    <None Include="..\bin\shaders\BaseUBOSimpleMeshVs.glsl" />
     <None Include="..\bin\shaders\EnviromentMapFs.glsl" />
     <None Include="..\bin\shaders\EnviromentMapVs.glsl" />
     <None Include="..\bin\shaders\PostEffectFs.glsl" />
