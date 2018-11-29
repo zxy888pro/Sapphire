@@ -115,6 +115,7 @@
     <None Include="..\bin\shaders\EnviromentMapVs.glsl" />
     <None Include="..\bin\shaders\PostEffectFs.glsl" />
     <None Include="..\bin\shaders\PostEffectVs.glsl" />
+    <None Include="..\bin\shaders\SimpleGS.glsl" />
     <None Include="..\bin\shaders\SkyboxFs.glsl" />
     <None Include="..\bin\shaders\SkyboxVs.glsl" />
   </ItemGroup>
