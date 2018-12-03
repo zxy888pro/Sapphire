@@ -15,7 +15,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ArrayPtr.h" />
+    <ClInclude Include="Include\ArrayPtr.h" />
     <ClInclude Include="Include\BaseException.h" />
     <ClInclude Include="Include\BaseObject.h" />
     <ClInclude Include="Include\BaseResource.h" />

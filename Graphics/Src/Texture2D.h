@@ -7,7 +7,7 @@
 
 namespace Sapphire
 {
-
+	//OpenGL Texture2D
 	class Texture2D : public GPUObject, public BaseResource, public ITexture
 	{
 	public:

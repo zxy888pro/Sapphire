@@ -111,13 +111,16 @@
     <ClInclude Include="Include\Material.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Src\CubeTexture.h" />
+    <ClInclude Include="Src\GLRenderSystem.h" />
     <ClInclude Include="Src\GPUObject.h" />
     <ClInclude Include="Src\ImageMgr.h" />
+    <ClInclude Include="Src\IVertexBuffer.h" />
     <ClInclude Include="Src\stb_image.h" />
     <ClInclude Include="Src\stb_image_resize.h" />
     <ClInclude Include="Src\stb_image_write.h" />
     <ClInclude Include="Src\Texture2D.h" />
     <ClInclude Include="Src\TextureMgr.h" />
+    <ClInclude Include="Src\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\CubeTexture.cpp" />
@@ -129,6 +132,7 @@
     <ClCompile Include="Src\ImageMgr.cpp" />
     <ClCompile Include="Src\Texture2D.cpp" />
     <ClCompile Include="Src\TextureMgr.cpp" />
+    <ClCompile Include="Src\VertexBuffer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

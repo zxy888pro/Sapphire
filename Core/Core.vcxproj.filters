@@ -81,9 +81,6 @@
     <ClInclude Include="Include\SapphireDef.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ArrayPtr.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Thread.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -164,6 +161,9 @@
     </ClInclude>
     <ClInclude Include="Include\IEventMgr.h">
       <Filter>头文件\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ArrayPtr.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,25 @@ namespace Sapphire
 	struct ITextureMgr;
 	struct IImageMgr;
 	struct ITexture;
+	struct IVertexBuffer;
 
+	///方便顶点更新的CPU端缓冲区
+	struct ScratchBuffer
+	{
+		ScratchBuffer() :
+			m_size(0),
+			m_bReserved(false)
+		{
+		}
+
+		SharedArrayPtr<unsigned char> data_;
+		unsigned m_size;
+		bool m_bReserved;
+	};
+
+
+	//OpenGL 与硬件层访问驱动类。  
+	//需抽出IGraphicDriver接口, 无关图形API
 	class GraphicDriver : public Singleton<GraphicDriver>
 	{
 	public:
@@ -29,6 +47,8 @@ namespace Sapphire
 		//然后绑定纹理对象
 		void BindTexture(ITexture* pTexture, TextureUnit unit);
 
+		void BindVBO(uint uHwUID);
+
 		bool  IsDeviceLost();
 
 		bool GetAnisotropySupport(){ return m_bAnisotropySupport; }
@@ -43,6 +63,10 @@ namespace Sapphire
 		int getTextureQuality() const { return m_nTextureQuality; }
 
 		void setTextureQuality(int val) { m_nTextureQuality = val; }
+
+		virtual IVertexBuffer* GetVertexBuffer(uint index) const;
+
+		virtual void  SetVertexBuffer(IVertexBuffer* vertexBuffer);
 
 	public:
 
@@ -76,6 +100,14 @@ namespace Sapphire
 		bool		   m_bAnisotropySupport;
 		uint           m_nMaxTextureUnits;
 		ImageTypeNameMap   m_imagetypeNames;
+		
+		uint m_curBindVBO;  //当前绑定VBO
+		uint m_curBindUBO;  //当前UBO
+		uint m_curBindFBO;  //当前绑定FBO
+		uint m_sysFBO;      //系统FBO
+
+		//可用的顶点缓冲区数
+		IVertexBuffer* m_vertexBuffers[MAX_VERTEX_STREAMS];
 
 	};
 

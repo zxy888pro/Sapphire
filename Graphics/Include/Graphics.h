@@ -7,8 +7,10 @@
 #include <stringHelper.h>
 #include <logUtil.h>
 #include <BaseException.h>
+#include "BaseObject.h"
 #include <BaseResource.h>
 #include <path.h>
+#include "ArrayPtr.h"
 
 #ifndef GLEW_STATIC
 #define  GLEW_STATIC

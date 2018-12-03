@@ -75,6 +75,15 @@
     <ClInclude Include="Renderer.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Src\GLRenderSystem.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\IVertexBuffer.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\VertexBuffer.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
@@ -102,6 +111,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\CubeTexture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\VertexBuffer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

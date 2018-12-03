@@ -2,6 +2,7 @@
 #include <logUtil.h>
 #include <Thread.h>
 #include <Variant.h>
+#include <utility>
 
 namespace Sapphire
 {
@@ -34,7 +35,7 @@ namespace Sapphire
 		ulong GetID(){ return m_id; }
 	private:
 		WorkQueue* m_owner;
-		ulong m_id;
+		uint m_id;
 	};
 
 	WorkQueue::WorkQueue()
@@ -119,6 +120,7 @@ namespace Sapphire
 		{
 			SharedPtr<Worker> worker = SharedPtr<Worker>(new Worker(this, CreateID()));
 			worker->Run();
+			m_workers.insert(std::make_pair(worker->GetID(), worker));
 			
 		}
 
@@ -126,7 +128,7 @@ namespace Sapphire
 
 	uint WorkQueue::GetWorkerNum()
 	{
-		return 0;
+		return m_workers.size();
 	}
 
 	bool WorkQueue::IsCompleted()

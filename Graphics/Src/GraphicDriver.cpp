@@ -57,6 +57,18 @@ namespace Sapphire
 		}
 	}
 
+	void GraphicDriver::BindVBO(uint uHwUID)
+	{
+		if (m_curBindVBO != uHwUID)
+		{
+			if (uHwUID)
+			{
+				glBindBuffer(GL_ARRAY_BUFFER, uHwUID);
+				m_curBindVBO = uHwUID;
+			}
+		}
+	}
+
 	bool GraphicDriver::IsDeviceLost()
 	{
 		return false;
@@ -104,6 +116,16 @@ namespace Sapphire
 			return GetPixelFormat(m_imagetypeNames[szImageType]);
 		}
 		return PF_UNDEFINED;
+	}
+
+	Sapphire::IVertexBuffer* GraphicDriver::GetVertexBuffer(uint index) const
+	{
+		return index < MAX_VERTEX_STREAMS ? m_vertexBuffers[index] : 0;
+	}
+
+	void GraphicDriver::SetVertexBuffer(IVertexBuffer* vertexBuffer)
+	{
+
 	}
 
 	int GraphicDriver::GetHWTextureWarpParam(TextureAddressMode mode)

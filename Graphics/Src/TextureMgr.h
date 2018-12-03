@@ -5,6 +5,7 @@
 
 namespace Sapphire
 {
+	//OpenGL TextureManager
 	class TextureMgr :public ITextureMgr, ResourceMgr
 	{
 	public:

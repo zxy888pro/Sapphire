@@ -5,6 +5,7 @@
 namespace Sapphire
 {
 
+	//设备无关的Texture接口
 	//注意纹理用Texture不能直接删除，用TextureManager
 	struct ITexture
 	{

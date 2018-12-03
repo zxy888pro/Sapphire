@@ -5,6 +5,7 @@
 
 namespace Sapphire
 {
+	//设备无关的纹理管理器接口
 	struct ITextureMgr
 	{
 		  
