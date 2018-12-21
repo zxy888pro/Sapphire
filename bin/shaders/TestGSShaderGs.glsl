@@ -1,6 +1,6 @@
 #version 330 core
-layout (points) in;
-layout (triangle_strip, max_vertices = 5) out;
+layout (points) in;  //输入图元 points   (可以是points、lines)
+layout (triangle_strip, max_vertices = 5) out;  //输出图元三角形带,最多5个顶点
 
 in VS_OUT {
     vec3 color;

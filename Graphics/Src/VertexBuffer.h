@@ -39,9 +39,9 @@ namespace Sapphire
 		//解锁缓冲区，应用改变到GPU
 		virtual void UnLock();
 
-		virtual bool SetData(const void* ptr);
+		virtual bool SetData(const void* ptr);  //设置GPU端数据
 
-		virtual bool SetDataRange(const void* data, unsigned start, unsigned count, bool discard = false);
+		virtual bool SetDataRange(const void* data, unsigned start, unsigned count, bool discard = false);  //更新GPU端一段数据
 
 		virtual bool SetSize(uint vertexCount, unsigned elementMask, bool dynamic = false);
 
@@ -50,6 +50,14 @@ namespace Sapphire
 		//返回CPU端的影子数据的智能指针
 		virtual SharedArrayPtr<unsigned char> GetShadowDataShared() const;
 
+		//定义每个元素大小
+		const static unsigned elementSize[]; 
+		//定义每个元素分量数
+		static const unsigned elementComponents[];
+		//每个元素对应OpenGL类型
+		static const unsigned elementType[];
+		//每个元素的标准化定义
+		static const unsigned elementNormalize[];
 
 	private:
 
@@ -72,6 +80,12 @@ namespace Sapphire
 		bool  m_bShadowed;
 
 		bool  m_bDynmic;
+		//缓冲区锁定状态
+		LockState  m_eLockState;
+		ulong   m_uLockStart;
+		ulong   m_uLockCount;
+		void*   m_lockScratchData;
+
 
 		GraphicDriver* m_pGraphicDriver;
 		

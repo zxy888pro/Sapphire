@@ -16,6 +16,13 @@ namespace Sapphire
 		ImageType_Unknown
 	};
 
+	enum LockState
+	{
+		LOCK_NONE = 0,
+		LOCK_HARDWARE,
+		LOCK_SHADOW,
+		LOCK_SCRATCH
+	};
 
 	enum TextureUsage
 	{
@@ -118,6 +125,7 @@ namespace Sapphire
 #define	QUALITY_MAX  15
 #define MAX_TEXTURE_QUALITY_LEVELS  3
 
+	//¶¥µãÔªËØÑÚÂë
 	static const unsigned MASK_NONE = 0x0;
 	static const unsigned MASK_POSITION = 0x1;
 	static const unsigned MASK_NORMAL = 0x2;

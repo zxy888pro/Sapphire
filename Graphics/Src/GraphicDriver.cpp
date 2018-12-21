@@ -128,6 +128,69 @@ namespace Sapphire
 
 	}
 
+	void* GraphicDriver::ReserveScratchBuffer(ulong size)
+	{
+		if (!size)
+			return NULL;
+		if (size > m_maxScratchBufferRequest)
+		{
+			m_maxScratchBufferRequest = size;
+		}
+		for (std::vector<ScratchBuffer>::iterator it = m_scratchBuffers.begin(); it != m_scratchBuffers.end(); ++it)
+		{
+			if (!it->m_bReserved && it->m_size >= size)
+			{
+				it->m_bReserved = true;
+				return it->data_.Get();
+			}
+		}
+		for (std::vector<ScratchBuffer>::iterator it = m_scratchBuffers.begin(); it != m_scratchBuffers.end(); ++it)
+		{
+			if (!it->m_bReserved)
+			{
+				//没有找到已分配足够空间的，找到一个未使用的重新分配
+				it->data_ = new byte[size];
+				it->m_bReserved = true;
+				it->m_size = size;
+				return it->data_.Get();
+			}
+		}
+		//还是空余的，创建新的
+		ScratchBuffer newBuffer;
+		newBuffer.data_ = new unsigned char[size];
+		newBuffer.m_size = size;
+		newBuffer.m_bReserved = true;
+		m_scratchBuffers.push_back(newBuffer);
+		return newBuffer.data_.Get();
+	}
+
+	void GraphicDriver::FreeScratchBuffer(void* buffer)
+	{
+		if (!buffer)
+			return;
+		for (std::vector<ScratchBuffer>::iterator it = m_scratchBuffers.begin(); it != m_scratchBuffers.end(); ++it)
+		{
+			if (it->m_bReserved && it->data_.Get() == buffer)
+			{
+				it->m_bReserved = false;
+				return;
+			}
+		}
+		SAPPHIRE_LOGWARNING("FreeScratchBuffer Failed! Scratch Buffer not found!");
+	}
+
+	void GraphicDriver::CleanScratchBuffers()
+	{
+		for (std::vector<ScratchBuffer>::iterator it = m_scratchBuffers.begin(); it != m_scratchBuffers.end(); ++it)
+		{
+			if (!it->m_bReserved && it->m_size > m_maxScratchBufferRequest * 2)
+			{
+				it->data_ = m_maxScratchBufferRequest > 0 ? new unsigned char[m_maxScratchBufferRequest] : 0;
+				it->m_size = m_maxScratchBufferRequest;
+			}
+		}
+	}
+
 	int GraphicDriver::GetHWTextureWarpParam(TextureAddressMode mode)
 	{
 		switch (mode)

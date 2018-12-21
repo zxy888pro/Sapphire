@@ -67,6 +67,12 @@ namespace Sapphire
 		virtual IVertexBuffer* GetVertexBuffer(uint index) const;
 
 		virtual void  SetVertexBuffer(IVertexBuffer* vertexBuffer);
+		//申请一块ScratchBuffer
+		virtual void* ReserveScratchBuffer(ulong size);
+		//释放一块ScratchBuffer
+		virtual void FreeScratchBuffer(void* buffer);
+		//清理太大ScratchBuffer
+		virtual void CleanScratchBuffers();
 
 	public:
 
@@ -108,6 +114,9 @@ namespace Sapphire
 
 		//可用的顶点缓冲区数
 		IVertexBuffer* m_vertexBuffers[MAX_VERTEX_STREAMS];
+		//ScratchBuffers
+		std::vector<ScratchBuffer> m_scratchBuffers;
+		ulong m_maxScratchBufferRequest; //当前帧请求的ScratchBuffer最大值
 
 	};
 
