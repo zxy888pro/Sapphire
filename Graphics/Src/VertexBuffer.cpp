@@ -76,7 +76,12 @@ namespace Sapphire
 		GL_FALSE // Instancematrix3
 	};
 
-	VertexBuffer::VertexBuffer():
+	uint VertexBuffer::GetUID() const
+	{
+		return m_uHwUID;
+	}
+
+	VertexBuffer::VertexBuffer() :
 		m_vertexCount(0),
 		m_vertexSize(0),
 		m_bShadowed(false),
@@ -172,7 +177,20 @@ namespace Sapphire
 
 	void VertexBuffer::SetShadowed(bool enable)
 	{
-		m_bShadowed = enable;
+		if (m_pGraphicDriver == NULL)
+			enable = true;   //如果没有GraphicDriver 不能关闭影子缓冲区
+		if (enable != m_bShadowed)
+		{
+			if (enable && m_vertexCount && m_vertexSize)
+			{
+				m_shadowData = new byte[m_vertexCount && m_vertexSize];
+			}
+			else
+			{
+				m_shadowData.Reset();
+			}
+			m_bShadowed = true;
+		}
 	}
 
 	void* VertexBuffer::Lock(unsigned start, unsigned count, bool discard /*= false*/)
@@ -232,6 +250,11 @@ namespace Sapphire
 			break;
 		}
 
+	}
+
+	bool VertexBuffer::IsLocked() const
+	{
+		return m_eLockState == LOCK_NONE;
 	}
 
 	bool VertexBuffer::SetData(const void* ptr)
@@ -335,7 +358,7 @@ namespace Sapphire
 
 	byte* VertexBuffer::GetShadowData() const
 	{
-		return m_shadowData;
+		return m_shadowData.Get();
 	}
 
 	Sapphire::SharedArrayPtr<unsigned char> VertexBuffer::GetShadowDataShared() const

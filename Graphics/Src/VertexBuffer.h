@@ -39,6 +39,8 @@ namespace Sapphire
 		//解锁缓冲区，应用改变到GPU
 		virtual void UnLock();
 
+		virtual bool  IsLocked() const;
+
 		virtual bool SetData(const void* ptr);  //设置GPU端数据
 
 		virtual bool SetDataRange(const void* data, unsigned start, unsigned count, bool discard = false);  //更新GPU端一段数据
@@ -58,6 +60,9 @@ namespace Sapphire
 		static const unsigned elementType[];
 		//每个元素的标准化定义
 		static const unsigned elementNormalize[];
+
+
+		virtual uint GetUID() const override;
 
 	private:
 

@@ -3,6 +3,7 @@
 #include "Texture2D.h"
 #include "TextureMgr.h"
 #include "ImageMgr.h"
+#include "IIndexBuffer.h"
 
 namespace Sapphire
 {
@@ -69,6 +70,14 @@ namespace Sapphire
 		}
 	}
 
+	void GraphicDriver::SetIndexBuffer(IIndexBuffer* pIndexBuffer)
+	{
+		if (m_indexBuffer == pIndexBuffer)
+			return;
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pIndexBuffer ? pIndexBuffer->GetUID() : 0);  //°ó¶¨Ë÷Òý»º³åÇø
+		m_indexBuffer = pIndexBuffer;
+	}
+
 	bool GraphicDriver::IsDeviceLost()
 	{
 		return false;
@@ -127,6 +136,12 @@ namespace Sapphire
 	{
 
 	}
+
+	Sapphire::IIndexBuffer* GraphicDriver::GetIndexBuffer() const
+	{
+		return m_indexBuffer;
+	}
+
 
 	void* GraphicDriver::ReserveScratchBuffer(ulong size)
 	{

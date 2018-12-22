@@ -7,6 +7,7 @@ namespace Sapphire
 	struct IImageMgr;
 	struct ITexture;
 	struct IVertexBuffer;
+	struct IIndexBuffer;
 
 	///方便顶点更新的CPU端缓冲区
 	struct ScratchBuffer
@@ -47,7 +48,7 @@ namespace Sapphire
 		//然后绑定纹理对象
 		void BindTexture(ITexture* pTexture, TextureUnit unit);
 
-		void BindVBO(uint uHwUID);
+		void BindVBO(uint uHwUID);  //绑定VBO对象
 
 		bool  IsDeviceLost();
 
@@ -67,6 +68,11 @@ namespace Sapphire
 		virtual IVertexBuffer* GetVertexBuffer(uint index) const;
 
 		virtual void  SetVertexBuffer(IVertexBuffer* vertexBuffer);
+
+		virtual IIndexBuffer* GetIndexBuffer() const;
+
+		virtual void SetIndexBuffer(IIndexBuffer* pIndexBuffer); //设置索引缓冲区，同时绑定它
+
 		//申请一块ScratchBuffer
 		virtual void* ReserveScratchBuffer(ulong size);
 		//释放一块ScratchBuffer
@@ -114,6 +120,10 @@ namespace Sapphire
 
 		//可用的顶点缓冲区数
 		IVertexBuffer* m_vertexBuffers[MAX_VERTEX_STREAMS];
+
+		///当前使用indexBuffer
+		IIndexBuffer* m_indexBuffer;
+
 		//ScratchBuffers
 		std::vector<ScratchBuffer> m_scratchBuffers;
 		ulong m_maxScratchBufferRequest; //当前帧请求的ScratchBuffer最大值
