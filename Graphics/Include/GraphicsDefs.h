@@ -119,6 +119,14 @@ namespace Sapphire
 		MAX_VERTEX_ELEMENTS
 	};
 
+	/// 视口渲染表面的更新模式
+	enum RenderSurfaceUpdateMode
+	{
+		SURFACE_MANUALUPDATE = 0,
+		SURFACE_UPDATEVISIBLE,
+		SURFACE_UPDATEALWAYS
+	};
+
 #define	QUALITY_LOW  0
 #define	QUALITY_MEDIUM  1
 #define	QUALITY_HIGH  2
