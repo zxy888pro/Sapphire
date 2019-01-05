@@ -67,11 +67,16 @@ namespace Sapphire
 
 		virtual IVertexBuffer* GetVertexBuffer(uint index) const;
 
+		//设置多个顶点缓冲区
+		virtual bool SetVertexBuffers(const std::vector<IVertexBuffer*>&  buffers, const std::vector<uint>& elememtMasks, uint instOffset = 0);
+
 		virtual void  SetVertexBuffer(IVertexBuffer* vertexBuffer);
 
 		virtual IIndexBuffer* GetIndexBuffer() const;
 
 		virtual void SetIndexBuffer(IIndexBuffer* pIndexBuffer); //设置索引缓冲区，同时绑定它
+
+		
 
 		//申请一块ScratchBuffer
 		virtual void* ReserveScratchBuffer(ulong size);
@@ -120,6 +125,14 @@ namespace Sapphire
 
 		//可用的顶点缓冲区数
 		IVertexBuffer* m_vertexBuffers[MAX_VERTEX_STREAMS];
+		//使用的元素掩码
+		uint m_elementMasks[MAX_VERTEX_STREAMS];
+		//上一次使用的实例数据偏移
+		uint m_lastInstOffset;
+		
+
+		//当前使用的顶点属性掩码
+		unsigned m_enabledAttributes;
 
 		///当前使用indexBuffer
 		IIndexBuffer* m_indexBuffer;

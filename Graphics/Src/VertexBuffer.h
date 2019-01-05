@@ -66,7 +66,7 @@ namespace Sapphire
 
 	private:
 
-		bool UpdateElementOffset();
+		bool UpdateElementOffset();  //更新元素的偏移值
 
 		bool Create();
 

@@ -4,11 +4,17 @@
 #include "TextureMgr.h"
 #include "ImageMgr.h"
 #include "IIndexBuffer.h"
+#include "IVertexBuffer.h"
+#include "VertexBuffer.h"
 
 namespace Sapphire
 {
 
-	
+	// 重新OpenGL映射顶点属性,经常蒙皮修正要用到,要避免GLES2 蒙皮bug，gles设备只支持到8
+	static const unsigned glVertexAttrIndex[] =
+	{
+		0, 1, 2, 3, 4, 8, 9, 5, 6, 7, 10, 11, 12
+	};
 
 	GraphicDriver::GraphicDriver()
 	{
@@ -132,9 +138,118 @@ namespace Sapphire
 		return index < MAX_VERTEX_STREAMS ? m_vertexBuffers[index] : 0;
 	}
 
+	bool GraphicDriver::SetVertexBuffers(const std::vector<IVertexBuffer*>& buffers, const std::vector<uint>& elememtMasks, uint instOffset)
+	{
+		//同时处理的顶点流不能超过MAX_VERTEX_STREAMS
+		if (buffers.size() > MAX_VERTEX_STREAMS)
+		{
+			SAPPHIRE_LOGERROR("Too many vertex buffers");
+			return false;
+		}
+		//元素掩码数要和顶点流数匹配
+		if (buffers.size() != elememtMasks.size())
+		{
+			SAPPHIRE_LOGERROR("Amount of element masks and vertex buffers does not match");
+			return false;
+		}
+
+		bool changed = false;//是否有改变
+		unsigned newAttributes = 0;
+
+		for (unsigned i = 0; i < MAX_VERTEX_STREAMS; ++i)
+		{
+			IVertexBuffer* buffer = 0;
+			unsigned elementMask = 0;
+
+			if (i < buffers.size() && buffers[i])
+			{
+				buffer = buffers[i];
+				if (elememtMasks[i] == MASK_DEFAULT)
+					elementMask = buffer->GetElementMask(); //獲取当前缓冲区的元素掩码
+				else
+					elementMask = buffer->GetElementMask() & elememtMasks[i]; //对当前缓冲区的掩码和设置的掩码进行位与
+			}
+
+			//如果当前缓冲区和元素掩码和设置的相同，跳过
+			if (buffer == m_vertexBuffers[i] && elementMask == m_elementMasks[i] && instOffset == m_lastInstOffset && !changed)
+			{
+				newAttributes |= elementMask;
+				continue;
+			}
+
+			//设置缓冲区
+			m_vertexBuffers[i] = buffer;
+			//设置缓冲区对应掩码
+			m_elementMasks[i] = elementMask;
+			changed = true;
+
+			
+			// 小心opengl缓冲区对象的丢失，一个已绑定的非0的缓冲区对象才可以访问顶点数据的CPU内存,无效指针可能导致崩溃
+			if (!buffer || (!buffer->GetUID() && glIsBuffer(buffer->GetUID())))
+				continue;
+
+			//绑定这个缓冲区
+			BindVBO(buffer->GetUID());
+			//设置缓冲区对象
+			unsigned vertexSize = buffer->GetVertexSize(); 
+
+			for (unsigned j = 0; j < MAX_VERTEX_ELEMENTS; ++j)
+			{
+				unsigned attrIndex = glVertexAttrIndex[j];  //取得顶点属性索引
+				unsigned elementBit = (unsigned)(1 << j); //依次取得元素位
+
+				if (elementMask & elementBit)  //判断有没有该元素
+				{
+					newAttributes |= elementBit;   //新增加属性
+
+					// 开启属性
+					if ((m_enabledAttributes & elementBit) == 0)
+					{
+						glEnableVertexAttribArray(attrIndex);  //打开顶点属性数组索引,然后设置顶点属性
+						m_enabledAttributes |= elementBit;    //更新当前已打开的属性
+					}
+
+					// 设置属性指针， 如果是矩阵的,要添加这个矩阵指针的实例偏移
+					unsigned offset = j >= ELEMENT_INSTANCEMATRIX1 ? instOffset * vertexSize : 0;
+					glVertexAttribPointer(attrIndex, VertexBuffer::elementComponents[j], VertexBuffer::elementType[j],
+						(GLboolean)VertexBuffer::elementNormalize[j], vertexSize,
+						reinterpret_cast<const GLvoid*>(buffer->GetElementOffset((VertexElement)j) + offset));
+				}
+			}
+		}
+
+		if (!changed) //有变更
+			return true;
+
+		m_lastInstOffset = instOffset;
+
+		// 检查要关掉哪些顶点属性
+		unsigned disableAttributes = m_enabledAttributes & (~newAttributes);
+		unsigned disableIndex = 0;
+
+		while (disableAttributes)
+		{
+			if (disableAttributes & 1)
+			{
+				glDisableVertexAttribArray(glVertexAttrIndex[disableIndex]);
+				m_enabledAttributes &= ~(1 << disableIndex);
+			}
+			disableAttributes >>= 1;
+			++disableIndex;
+		}
+
+		return true;
+	}
+
 	void GraphicDriver::SetVertexBuffer(IVertexBuffer* vertexBuffer)
 	{
+		//注意这里不是多线程安全的
+		static std::vector<IVertexBuffer*> vertexBuffers(1);
+		static std::vector<unsigned> elementMasks(1);
+		vertexBuffers[0] = vertexBuffer;
+		elementMasks[0] = MASK_DEFAULT;
 
+		SetVertexBuffers(vertexBuffers, elementMasks);
 	}
 
 	Sapphire::IIndexBuffer* GraphicDriver::GetIndexBuffer() const

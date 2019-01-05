@@ -5,6 +5,7 @@
 namespace Sapphire
 {
 
+	//每个元素的大小定义
 	const unsigned VertexBuffer::elementSize[] =
 	{
 		3 * sizeof(float), // Position
@@ -372,11 +373,11 @@ namespace Sapphire
 		for (unsigned i = 0; i < MAX_VERTEX_ELEMENTS; ++i)
 		{
 			//依次更新每一个元素的偏移地址
-			if (m_elementMask & (1 << i))
+			if (m_elementMask & (1 << i))   //從元素掩碼中提取定義的每個元素
 			{
-				m_elementOffset[i] = elementOffset;
-				//下一个元素的偏移地址
-				elementOffset += elementSize[i];
+				m_elementOffset[i] = elementOffset; //從0開始
+				//下一个元素的偏移地址=當前偏移地址+當前元素大小
+				elementOffset += elementSize[i]; 
 			}
 			else
 				m_elementOffset[i] = NO_ELEMENT;
