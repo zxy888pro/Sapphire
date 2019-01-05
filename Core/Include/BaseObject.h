@@ -5,7 +5,7 @@
 
 namespace Sapphire
 {
-	class BaseObject
+	class BaseObject : public RefCounter
 	{
 	public:
 
