@@ -180,5 +180,17 @@ namespace Sapphire
 			return 0;
 		}
 
+
+		virtual ITexture* getBackupTexture() const override
+		{
+			return 0;
+		}
+
+
+		virtual void setBackupTexture(ITexture* tex) override
+		{
+			return;
+		}
+
 	};
 }

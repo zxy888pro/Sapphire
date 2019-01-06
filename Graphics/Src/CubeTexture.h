@@ -9,7 +9,7 @@
 namespace Sapphire
 {
 	//包含上下左右前后6个面的Texture， 每个面大小长宽纹理格式都一样
-	class CubeTexture : public GPUObject, public BaseResource, public ICubeTexture
+	class CubeTexture : public GPUObject, public BaseResource, public ICubeTexture, public RefCounter
 	{
 	public:
 		CubeTexture();
@@ -44,6 +44,12 @@ namespace Sapphire
 		virtual uint getLevelWidth(uint level) const override;
 
 		virtual uint getLevelHeight(uint level) const override;
+
+		virtual ITexture* getBackupTexture() const override;
+
+
+		virtual void setBackupTexture(ITexture* tex) override;
+
 	public:
 		 
 		virtual uint getWidth() const { return m_uWidth; }
@@ -92,6 +98,8 @@ namespace Sapphire
 		size_t  m_uSize;
 		int m_channelNum;
 		unsigned m_skipMips[MAX_TEXTURE_QUALITY_LEVELS];
+
+		SharedPtr<CubeTexture>  m_backupTex;
 		//OpenGL 纹理目标类型  采样器
 		//GL_TEXTURE_1D  :  Sampler1D
 		//GL_TEXTURE_1D_ARRAY  : Sampler1DArray

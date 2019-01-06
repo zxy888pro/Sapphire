@@ -6,6 +6,7 @@
 #include "IIndexBuffer.h"
 #include "IVertexBuffer.h"
 #include "VertexBuffer.h"
+#include "RenderSurface.h"
 
 namespace Sapphire
 {
@@ -82,6 +83,31 @@ namespace Sapphire
 			return;
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pIndexBuffer ? pIndexBuffer->GetUID() : 0);  //绑定索引缓冲区
 		m_indexBuffer = pIndexBuffer;
+	}
+
+	void GraphicDriver::ResetRenderTarget(uint index)
+	{
+		SetRenderTarget(index, (RenderSurface*)NULL);
+	}
+
+	Sapphire::RenderSurface* GraphicDriver::GetRenderTarget(uint index) const
+	{
+		return index < MAX_RENDERTARGETS ? m_renderTargets[index] : 0;
+	}
+
+	Sapphire::RenderSurface* GraphicDriver::GetDepthStencil() const
+	{
+		return m_depthStencil;
+	}
+
+	void GraphicDriver::ResetDepthStencil()
+	{
+		SetDepthStencil((RenderSurface*)0);
+	}
+
+	void GraphicDriver::CleanupRenderSurface(RenderSurface* surface)
+	{
+
 	}
 
 	bool GraphicDriver::IsDeviceLost()
@@ -250,6 +276,51 @@ namespace Sapphire
 		elementMasks[0] = MASK_DEFAULT;
 
 		SetVertexBuffers(vertexBuffers, elementMasks);
+	}
+
+	void GraphicDriver::SetRenderTarget(unsigned index, RenderSurface* renderTarget)
+	{
+		if (index >= MAX_RENDERTARGETS)
+			return;
+
+		if (renderTarget != m_renderTargets[index])
+		{
+			m_renderTargets[index] = renderTarget;
+
+			// 如果渲染目标是一个已经绑定的纹理，用备份纹理暂时替换或者置空
+			if (renderTarget)
+			{
+				ITexture* parentTexture = renderTarget->GetParentTexture();
+
+				for (unsigned i = 0; i < MAX_TEXTURE_UNITS; ++i)
+				{
+
+					if (m_pTextureMgr->GetTexture((TextureUnit)i) == parentTexture)
+						m_pTextureMgr->SetTexture(m_pTextureMgr->GetTexture((TextureUnit)i)->getBackupTexture(), (TextureUnit)i);
+				}
+			}
+			//fbo需要更新
+			 m_fboDirty = true;
+		}
+	}
+
+	void GraphicDriver::SetRenderTarget(unsigned index, Texture2D* texture)
+	{
+		/*RenderSurface* renderTarget = 0;
+		if (texture)
+		renderTarget = texture->GetRenderSurface();
+
+		SetRenderTarget(index, renderTarget);*/
+	}
+
+	void GraphicDriver::SetDepthStencil(RenderSurface* depthStencil)
+	{
+
+	}
+
+	void GraphicDriver::SetDepthStencil(Texture2D* texture)
+	{
+
 	}
 
 	Sapphire::IIndexBuffer* GraphicDriver::GetIndexBuffer() const

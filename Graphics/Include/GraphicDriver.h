@@ -8,6 +8,8 @@ namespace Sapphire
 	struct ITexture;
 	struct IVertexBuffer;
 	struct IIndexBuffer;
+	class RenderSurface;
+	class Texture2D;
 
 	///方便顶点更新的CPU端缓冲区
 	struct ScratchBuffer
@@ -71,12 +73,28 @@ namespace Sapphire
 		virtual bool SetVertexBuffers(const std::vector<IVertexBuffer*>&  buffers, const std::vector<uint>& elememtMasks, uint instOffset = 0);
 
 		virtual void  SetVertexBuffer(IVertexBuffer* vertexBuffer);
+		//设置渲染目标
+		virtual void SetRenderTarget(unsigned index, RenderSurface* renderTarget);
+
+		virtual void SetRenderTarget(unsigned index, Texture2D* texture);
+
+		virtual void SetDepthStencil(RenderSurface* depthStencil);
+
+		virtual void SetDepthStencil(Texture2D* texture);
 
 		virtual IIndexBuffer* GetIndexBuffer() const;
 
 		virtual void SetIndexBuffer(IIndexBuffer* pIndexBuffer); //设置索引缓冲区，同时绑定它
 
-		
+		virtual void ResetRenderTarget(uint index);
+
+		virtual RenderSurface* GetRenderTarget(uint index) const;  //取得指定的渲染目标
+		 
+		virtual RenderSurface* GetDepthStencil() const;     //取得深度模板表面
+
+		virtual void ResetDepthStencil();
+
+		virtual void CleanupRenderSurface(RenderSurface* surface); //从所有FBO种清理一个渲染面
 
 		//申请一块ScratchBuffer
 		virtual void* ReserveScratchBuffer(ulong size);
@@ -123,6 +141,11 @@ namespace Sapphire
 		uint m_curBindFBO;  //当前绑定FBO
 		uint m_sysFBO;      //系统FBO
 
+		/// 所有在用的渲染目标
+		RenderSurface* m_renderTargets[MAX_RENDERTARGETS];
+		/// 当前的目标缓冲区
+		RenderSurface* m_depthStencil;
+
 		//可用的顶点缓冲区数
 		IVertexBuffer* m_vertexBuffers[MAX_VERTEX_STREAMS];
 		//使用的元素掩码
@@ -130,6 +153,7 @@ namespace Sapphire
 		//上一次使用的实例数据偏移
 		uint m_lastInstOffset;
 		
+		bool m_fboDirty;
 
 		//当前使用的顶点属性掩码
 		unsigned m_enabledAttributes;

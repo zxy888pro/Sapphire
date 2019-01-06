@@ -8,7 +8,7 @@
 namespace Sapphire
 {
 	//OpenGL Texture2D
-	class Texture2D : public GPUObject, public BaseResource, public ITexture
+	class Texture2D : public GPUObject, public BaseResource, public ITexture, public RefCounter
 	{
 	public:
 
@@ -38,6 +38,10 @@ namespace Sapphire
 		virtual bool SetData(HIMAGE himg, bool useAlpha);  //设置纹理数据,-包括mipmap ,  在只有一個通道的時候useAlpha表示是alpha還是明度
 		virtual uint getLevelWidth(uint level) const override;
 		virtual uint getLevelHeight(uint level) const override;
+		virtual ITexture* getBackupTexture() const override;
+
+
+		virtual void setBackupTexture(ITexture* tex) override;
 
 	public:
 
@@ -87,6 +91,8 @@ namespace Sapphire
 		size_t  m_uSize;
 		uint m_maxMipLevel;
 		unsigned m_skipMips[MAX_TEXTURE_QUALITY_LEVELS];
+
+		SharedPtr<Texture2D>  m_backupTex;
 
 		//OpenGL 纹理目标类型  采样器
 		//GL_TEXTURE_1D  :  Sampler1D

@@ -569,6 +569,16 @@ namespace Sapphire
 		return MAX(m_uWidth >> level, 1);
 	}
 
+	Sapphire::ITexture* CubeTexture::getBackupTexture() const
+	{
+		return m_backupTex;
+	}
+
+	void CubeTexture::setBackupTexture(ITexture* tex)
+	{
+		m_backupTex = dynamic_cast<CubeTexture*>(tex);
+	}
+
 	uint CubeTexture::getUID() const
 	{
 		return m_uHwUID;

@@ -63,9 +63,16 @@ namespace Sapphire
 
 		virtual RenderSurface* GetLinkedDepthStencil() const;
 
+		void SetTarget(unsigned target);
+
+		unsigned GetTarget() const { return m_gpuTarget; }
+
 	private:
 
 		ITexture* m_parentTex;   //父纹理
+
+		uint   m_gpuTarget;       //GPU渲染目标对象
+		uint   m_gpuRenderBuffer;    //GPU渲染缓冲对象
 
 		std::vector<SharedPtr<Viewport>> m_viewports;  //視口
 		RenderSurfaceUpdateMode m_eUpdateMode;  //對於視口的更新模式

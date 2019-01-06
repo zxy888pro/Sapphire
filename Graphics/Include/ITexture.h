@@ -37,6 +37,8 @@ namespace Sapphire
 		virtual void setUsage(Sapphire::TextureUsage val) = 0;
 		virtual int getTextureType() const = 0;
 		virtual uint getUID() const = 0;
+		virtual ITexture* getBackupTexture() const = 0;   //获取备份纹理  （使用的默认空纹理）
+		virtual void setBackupTexture(ITexture* tex);    //设置备份纹理
 	
 	};
 }

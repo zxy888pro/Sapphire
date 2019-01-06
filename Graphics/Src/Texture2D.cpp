@@ -530,6 +530,16 @@ namespace Sapphire
 		return MAX(m_uHeight >> level, 1);
 	}
 
+	Sapphire::ITexture* Texture2D::getBackupTexture() const
+	{
+		return m_backupTex;
+	}
+
+	void Texture2D::setBackupTexture(ITexture* tex)
+	{
+		m_backupTex = dynamic_cast<Texture2D*>(tex);
+	}
+
 	uint Texture2D::getUID() const
 	{
 		return m_uHwUID;
