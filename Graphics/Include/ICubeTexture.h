@@ -192,5 +192,10 @@ namespace Sapphire
 			return;
 		}
 
+		virtual void RenderSurfaceUpdate() override
+		{
+			return;
+		}
+
 	};
 }

@@ -7,6 +7,7 @@
 #include <FileStream.h>
 #include "GraphicException.h"
 #include <stringHelper.h>
+#include "RenderSurface.h"
 #include <json/json.h>
 
 
@@ -89,6 +90,11 @@ namespace Sapphire
 			}
 			//初始化硬件资源ID
 			m_uHwUID = 0;
+		}
+		for (unsigned i = 0; i < MAX_CUBEMAP_FACES; ++i)
+		{
+			if (m_renderSurfaces[i])
+				m_renderSurfaces[i]->Release();
 		}
 	}
 
@@ -362,14 +368,21 @@ namespace Sapphire
 	void CubeTexture::OnDeviceLost()
 	{
 		GPUObject::OnDeviceLost();
+		for (unsigned i = 0; i < MAX_CUBEMAP_FACES; ++i)
+		{
+			if (m_renderSurfaces[i])
+				m_renderSurfaces[i]->OnDeviceLost();
+		}
 	}
 
 	void CubeTexture::OnDeviceReset()
 	{
-		if (m_uHwUID)
+		if (glIsTexture(m_uHwUID) == false)
 		{
-			Recreate();
+			m_bDataLost = true; //数据已丢失
 		}
+		Recreate();  //重新创建
+		m_bDataPending = false;
 	}
 
 	bool CubeTexture::Create()
@@ -463,9 +476,20 @@ namespace Sapphire
 
 	bool CubeTexture::SetSize(int width, int height, PixelFormat eformat, TextureUsage usage /*= TEXTURE_STATIC*/)
 	{
+		//先删除所有的旧renderSurface
+		for (unsigned i = 0; i < MAX_CUBEMAP_FACES; ++i)
+		{
+			m_renderSurfaces[i].Reset();
+			m_faceMemoryUse[i] = 0;
+		}
+
 		if (usage == TEXTURE_RENDERTARGET)
 		{
-
+			for (unsigned i = 0; i < MAX_CUBEMAP_FACES; ++i)
+			{
+				m_renderSurfaces[i] = new RenderSurface(this);
+				m_renderSurfaces[i]->SetTarget(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
+			}
 		}
 
 		m_uWidth = width;
@@ -582,6 +606,15 @@ namespace Sapphire
 	uint CubeTexture::getUID() const
 	{
 		return m_uHwUID;
+	}
+
+	void CubeTexture::RenderSurfaceUpdate()
+	{
+		for (unsigned i = 0; i < MAX_CUBEMAP_FACES; ++i)
+		{
+			if (m_renderSurfaces[i] && m_renderSurfaces[i]->GetUpdateMode() == SURFACE_UPDATEALWAYS)
+				m_renderSurfaces[i]->QueueUpdate();
+		}
 	}
 
 }

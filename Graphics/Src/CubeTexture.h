@@ -49,6 +49,7 @@ namespace Sapphire
 
 
 		virtual void setBackupTexture(ITexture* tex) override;
+		virtual void RenderSurfaceUpdate() override;
 
 	public:
 		 
@@ -76,6 +77,7 @@ namespace Sapphire
 		virtual void setUsage(Sapphire::TextureUsage val) { m_eUsage = val; }
 		virtual int getTextureType() const { return m_glType; }
 		virtual uint getUID() const override;
+		virtual void RenderSurfaceUpdate() override;
 
 	protected:
 
@@ -100,6 +102,10 @@ namespace Sapphire
 		unsigned m_skipMips[MAX_TEXTURE_QUALITY_LEVELS];
 
 		SharedPtr<CubeTexture>  m_backupTex;
+		/// Render surfaces.
+		SharedPtr<RenderSurface> m_renderSurfaces[MAX_CUBEMAP_FACES];
+		///每个面内存使用量
+		unsigned m_faceMemoryUse[MAX_CUBEMAP_FACES];
 		//OpenGL 纹理目标类型  采样器
 		//GL_TEXTURE_1D  :  Sampler1D
 		//GL_TEXTURE_1D_ARRAY  : Sampler1DArray

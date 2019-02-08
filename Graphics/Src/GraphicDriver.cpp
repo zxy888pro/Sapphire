@@ -17,6 +17,8 @@ namespace Sapphire
 		0, 1, 2, 3, 4, 8, 9, 5, 6, 7, 10, 11, 12
 	};
 
+ 
+
 	GraphicDriver::GraphicDriver()
 	{
 		m_pTextureMgr = new TextureMgr();
@@ -392,6 +394,18 @@ namespace Sapphire
 		}
 	}
 
+	void GraphicDriver::CheckFeatureSupport()
+	{
+
+	}
+
+	bool GraphicDriver::CheckExtension(const char* name)
+	{
+		std::string extensions = (const char*)glGetString(GL_EXTENSIONS);
+		 
+		return extensions.find(name) != std::string::npos;
+	}
+
 	int GraphicDriver::GetHWTextureWarpParam(TextureAddressMode mode)
 	{
 		switch (mode)
@@ -550,6 +564,42 @@ namespace Sapphire
 	{
 		m_bAnisotropySupport = GLEW_EXT_texture_filter_anisotropic != 0;
 		m_nMaxTextureUnits = GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS;
+
+#ifndef GL_ES_VERSION_2_0
+		m_glesHWDepthStencilFormat = GL_DEPTH24_STENCIL8_EXT; //默认24位深度/8位模板
+		m_glesHWDepthStencilFormat = 0;
+#else
+		if (CheckExtension("GL_OES_depth24"))        //OpenGLES 2.0 特殊格式
+			m_glesHWDepthStencilFormat = GL_DEPTH_COMPONENT24_OES;
+		if (CheckExtension("GL_OES_packed_depth_stencil"))
+			m_glesHWDepthStencilFormat = GL_DEPTH24_STENCIL8_OES;
+//#ifdef __EMSCRIPTEN__
+#ifdef __WEBGL__
+		if (!CheckExtension("WEBGL_depth_texture"))
+#else
+		if (!CheckExtension("GL_OES_depth_texture"))
+#endif
+		{
+			m_shadowMapFormat = 0;
+			m_hireShadowMapFormat = 0;
+			m_glesHWReadableDepthFormat = 0;
+		}
+		else
+		{
+#ifdef IOS
+			// iOS hack: 不支持深度渲染缓冲区，用深度纹理替代
+			m_glesHWDepthStencilFormat = GL_DEPTH_COMPONENT;
+#endif
+			m_shadowMapFormat = GL_DEPTH_COMPONENT;
+			m_hireShadowMapFormat = 0;
+			// WebGL 的shadow map没有一个附件的dummy color texture渲染的非常慢
+//#ifdef __EMSCRIPTEN__
+#ifdef __WEBGL__
+			m_dummyColorFormat = GetHWRGBAFormat();
+#endif
+		}
+#endif
+
 	}
 
 }

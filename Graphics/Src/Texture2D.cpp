@@ -4,6 +4,7 @@
 #include "ImageMgr.h"
 #include <mathHelper.h>
 #include "GraphicException.h"
+#include "RenderSurface.h"
 
 namespace Sapphire
 {
@@ -78,7 +79,10 @@ namespace Sapphire
 			//初始化硬件资源ID
 			m_uHwUID = 0;
 		}
-			
+		//释放renderSurface
+		if (m_renderSurface)
+			m_renderSurface->Release();
+
 	}
 
 	bool Texture2D::Recreate()
@@ -229,14 +233,18 @@ namespace Sapphire
 	void Texture2D::OnDeviceLost()
 	{
 		GPUObject::OnDeviceLost();
+		if (m_renderSurface)
+			m_renderSurface->OnDeviceLost();
 	}
 
 	void Texture2D::OnDeviceReset()
 	{
-		if (m_uHwUID)
+		if (glIsTexture(m_uHwUID) == false)
 		{
-			Recreate();
+			m_bDataLost = true; //数据已丢失
 		}
+		Recreate();  //重新创建
+		m_bDataPending = false;
 	}
 
 	bool Texture2D::Create()
@@ -255,6 +263,23 @@ namespace Sapphire
 			SAPPHIRE_LOGERROR("Texture Creation While Device is Lost!");
 			return true;
 		}
+#ifndef GL_ES_VERSION_2_0
+		// 如果不支持深度纹理或者这是一个一个打包的深度模板纹理的话，创建一个renderBuffer替代原本texture
+		if (GraphicDriver::GetHWTextureFormat(m_ePixelFormat) == m_pGraphicDriver->GetHWDepthStencilFormat())
+#else
+		if (GraphicDriver::GetHWTextureFormat(m_ePixelFormat) == GL_DEPTH_COMPONENT16 || GraphicDriver::GetHWTextureFormat(m_ePixelFormat) == GL_DEPTH_COMPONENT24_OES || GraphicDriver::GetHWTextureFormat(m_ePixelFormat) == GL_DEPTH24_STENCIL8_OES ||
+			(GraphicDriver::GetHWTextureFormat(m_ePixelFormat) == GL_DEPTH_COMPONENT && !m_pGraphicDriver->GetHWShadowMapFormat()))
+#endif
+		{	
+			if (m_renderSurface)
+			{
+				m_renderSurface->CreateRenderBuffer(m_uWidth, m_uHeight, m_ePixelFormat);
+				return true;
+			}
+			else
+				return false;
+		}
+
 
 		glGenTextures(1, &m_uHwUID);
 		//glBindTexture(GL_TEXTURE_2D, m_uHwUID);
@@ -543,6 +568,12 @@ namespace Sapphire
 	uint Texture2D::getUID() const
 	{
 		return m_uHwUID;
+	}
+
+	void Texture2D::RenderSurfaceUpdate()
+	{
+		if (m_renderSurface && m_renderSurface->GetUpdateMode() == SURFACE_UPDATEALWAYS)
+			m_renderSurface->QueueUpdate();
 	}
 
 }

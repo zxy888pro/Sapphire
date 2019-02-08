@@ -69,6 +69,8 @@ namespace Sapphire
 		virtual void setUsage(Sapphire::TextureUsage val) { m_eUsage = val; }
 		virtual int getTextureType() const { return m_glType; }
 		virtual uint getUID() const override;
+		virtual RenderSurface* getRenderSurface() const { return m_renderSurface; }
+		virtual void RenderSurfaceUpdate();
 
 
 	private:
@@ -92,7 +94,8 @@ namespace Sapphire
 		uint m_maxMipLevel;
 		unsigned m_skipMips[MAX_TEXTURE_QUALITY_LEVELS];
 
-		SharedPtr<Texture2D>  m_backupTex;
+		SharedPtr<Texture2D>  m_backupTex;   //备份纹理，当主纹理无效时，使用的默认替代物
+		SharedPtr<RenderSurface>  m_renderSurface;     //内置的渲染目标
 
 		//OpenGL 纹理目标类型  采样器
 		//GL_TEXTURE_1D  :  Sampler1D

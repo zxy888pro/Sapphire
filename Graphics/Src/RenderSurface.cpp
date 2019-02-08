@@ -10,6 +10,11 @@ namespace Sapphire
 
 	}
 
+	RenderSurface::RenderSurface(ITexture* parentTexture)
+	{
+
+	}
+
 	RenderSurface::~RenderSurface()
 	{
 

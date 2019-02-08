@@ -11,6 +11,7 @@ namespace Sapphire
 	{
 	public:
 		RenderSurface();
+		RenderSurface(ITexture* pTexture);
 
 		virtual ~RenderSurface();
 

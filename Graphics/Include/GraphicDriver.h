@@ -102,6 +102,17 @@ namespace Sapphire
 		virtual void FreeScratchBuffer(void* buffer);
 		//清理太大ScratchBuffer
 		virtual void CleanScratchBuffers();
+		//获取GLES的深度模板格式
+		virtual uint GetHWDepthStencilFormat() const { return m_glesHWDepthStencilFormat; }
+		//检查特性支持
+		virtual void CheckFeatureSupport();
+
+		//检查OpenGL扩展
+		virtual bool CheckExtension(const char* name);
+		//返回shadowMap 深度纹理格式， 如果位0则不支持
+		virtual uint GetHWShadowMapFormat() const { return m_shadowMapFormat; }
+		
+
 
 	public:
 
@@ -122,6 +133,8 @@ namespace Sapphire
 		static int GetHWRGBFormat();
 		//硬件RGBA格式
 		static int GetHWRGBAFormat();
+
+
 		
 		
 	private:
@@ -164,6 +177,17 @@ namespace Sapphire
 		//ScratchBuffers
 		std::vector<ScratchBuffer> m_scratchBuffers;
 		ulong m_maxScratchBufferRequest; //当前帧请求的ScratchBuffer最大值
+
+		//gles硬件深度模板格式
+		uint m_glesHWDepthStencilFormat;
+		//gles硬件读取深度格式
+		uint m_glesHWReadableDepthFormat;
+		//ShadowMap 深度格式
+		uint m_shadowMapFormat;
+		//ShadowMap 24位深度格式
+		uint m_hireShadowMapFormat;
+		uint m_dummyColorFormat;
+
 
 	};
 
