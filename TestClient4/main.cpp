@@ -57,7 +57,9 @@ void init()
 {
 	using namespace Sapphire;
 
-
+	int x = 1022;
+	uint mask = ~3;
+	x &= ~3;
 	Sapphire::LogUtil::getInstancePtr()->Init("log.txt");
 	Sapphire::LogUtil::LogMsgLn("≥ı ºªØ≥Ã–Ú");
 	new Sapphire::Core();

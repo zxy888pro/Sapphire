@@ -197,5 +197,19 @@ namespace Sapphire
 			return;
 		}
 
+		virtual uint getRequestMipLevel() const override
+		{
+			return 0;
+		}
+		virtual void setRequestMipLevel(uint level) override
+		{
+			return;
+		}
+
+		virtual bool IsCompressed() const
+		{
+			return false;
+		}
+
 	};
 }

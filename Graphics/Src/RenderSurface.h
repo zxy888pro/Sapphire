@@ -64,7 +64,7 @@ namespace Sapphire
 
 		virtual RenderSurface* GetLinkedDepthStencil() const;
 
-		void SetTarget(unsigned target);
+		void SetTarget(unsigned target) { m_gpuTarget = target; }
 
 		unsigned GetTarget() const { return m_gpuTarget; }
 

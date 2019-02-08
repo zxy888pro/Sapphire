@@ -24,6 +24,7 @@ namespace Sapphire
 		m_mipLevel(0),
 		m_maxMipLevel(0),
 		m_uNumMipmaps(1),
+		m_requestLevel(0),
 		m_bIsDisposed(true),
 		m_uAnisotropyLevel(8),
 		m_ePixelFormat(PixelFormat::PF_R8G8B8A8),
@@ -58,6 +59,7 @@ namespace Sapphire
 		m_bIsDisposed = true;
 		m_eUsage = eUsage;
 		m_mipLevel = 0;
+		m_requestLevel = 0;
 		m_maxMipLevel = 0;
 		m_uAnisotropyLevel = 8;
 		m_glType = GL_TEXTURE_CUBE_MAP;
@@ -490,7 +492,11 @@ namespace Sapphire
 				m_renderSurfaces[i] = new RenderSurface(this);
 				m_renderSurfaces[i]->SetTarget(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
 			}
+			m_eFilterMode = FILTER_NEAREST;
+			m_requestLevel = 1;
 		}
+
+ 
 
 		m_uWidth = width;
 		m_uHeight = height;
@@ -512,6 +518,12 @@ namespace Sapphire
 		{
 			SAPPHIRE_LOGERROR("Error GraphicDriver is Null!");
 			return false;
+		}
+		if (m_pGraphicDriver->IsDeviceLost())
+		{
+			SAPPHIRE_LOGWARNING("Texture data assignment while device is lost");
+			m_bDataPending = true;
+			return true;
 		}
 		ITextureMgr* pTexMgr = m_pGraphicDriver->getTextureMgr();
 		if (!pTexMgr)
@@ -537,13 +549,20 @@ namespace Sapphire
 			SAPPHIRE_LOGERROR("Illegal dimensions for setting data");
 			return false;
 		}
+
+		if (IsCompressed())  //紋理是否壓縮
+		{
+			x &= ~3;
+			y &= ~3;
+		}
+
 		//绑定纹理对象，默认Diffuse
 		m_pGraphicDriver->BindTexture(this, TU_DIFFUSE);
 		//是否全范围
 		bool wholeLevel = x == 0 && y == 0 && width == levelWidth && height == levelHeight;
 
 		uint dataType = GraphicDriver::GetHWTextureDataType(m_ePixelFormat);
-		if (!m_bIsCompress)
+		if (!IsCompressed())
 		{
 			if (wholeLevel)
 				glTexImage2D((GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face), level, internalFormat, width, height, 0, format, dataType, pData);

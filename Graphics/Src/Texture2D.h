@@ -39,9 +39,10 @@ namespace Sapphire
 		virtual uint getLevelWidth(uint level) const override;
 		virtual uint getLevelHeight(uint level) const override;
 		virtual ITexture* getBackupTexture() const override;
-
-
+		virtual uint getRequestMipLevel() const override;
+		virtual void setRequestMipLevel(uint level) override;
 		virtual void setBackupTexture(ITexture* tex) override;
+		virtual bool IsCompressed() const override;
 
 	public:
 
@@ -71,7 +72,7 @@ namespace Sapphire
 		virtual uint getUID() const override;
 		virtual RenderSurface* getRenderSurface() const { return m_renderSurface; }
 		virtual void RenderSurfaceUpdate();
-
+	
 
 	private:
 
@@ -80,6 +81,7 @@ namespace Sapphire
 		uint m_uDepth;
 		uint m_uNumMipmaps;
 		uint m_mipLevel;
+		uint m_requestLevel;   //ÒªÕˆÇóµÄmipmap level
 		uint m_uAnisotropyLevel;
 		bool m_bIsCompress;
 		bool m_bIsDisposed;

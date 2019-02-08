@@ -26,6 +26,7 @@ namespace Sapphire
 		m_szName(""),
 		m_glType(GL_TEXTURE_2D)
 	{
+		m_requestLevel = 0;
 		m_eType = ResoureType_Texture;
 		for (int i = 0; i < MAX_COORDS; ++i)
 			m_eAddressMode_[i] = ADDRESS_REPEAT; m_eAddressMode_;
@@ -49,6 +50,7 @@ namespace Sapphire
 		m_bIsDisposed = true;
 		m_eUsage = eUsage;
 		m_mipLevel = 0;
+		m_requestLevel = 0;
 		m_maxMipLevel = 0;
 		m_uAnisotropyLevel = 8;
 		m_glType = glTargerType;
@@ -390,6 +392,20 @@ namespace Sapphire
 			LogUtil::LogMsgLn("Error TextureMgr is Null!");
 			return false;
 		}
+
+		if (m_pGraphicDriver->IsDeviceLost())
+		{
+			SAPPHIRE_LOGWARNING("Texture data assignment while device is lost");
+			m_bDataPending = true;
+			return true;
+		}
+
+		if (IsCompressed())
+		{
+			x &= ~3;
+			y &= ~3;
+		}
+
 		//绑定纹理对象，默认Diffuse
 		m_pGraphicDriver->BindTexture(this, TU_DIFFUSE);
 		if (!pTexMgr->VerifyHWUID(m_uHwUID))
@@ -397,6 +413,7 @@ namespace Sapphire
 			SAPPHIRE_LOGERROR("Error HwUID is invalid!");
 			return false;
 		}
+
 		
 		int format = GraphicDriver::GetSWTextureFormat(m_ePixelFormat);
 		int internalFormat = GraphicDriver::GetHWTextureFormat(m_ePixelFormat);
@@ -417,7 +434,7 @@ namespace Sapphire
 		bool wholeLevel = x == 0 && y == 0 && width == levelWidth && height == levelHeight;
 
 		uint dataType = GraphicDriver::GetHWTextureDataType(m_ePixelFormat);
-		if (!m_bIsCompress)
+		if (!IsCompressed())
 		{
 			//是更新整个纹理数据区
 			if (wholeLevel)
@@ -560,9 +577,28 @@ namespace Sapphire
 		return m_backupTex;
 	}
 
+	uint Texture2D::getRequestMipLevel() const
+	{
+		return m_requestLevel;
+	}
+
+	void Texture2D::setRequestMipLevel(uint level)
+	{
+		m_requestLevel = level;
+	}
+
 	void Texture2D::setBackupTexture(ITexture* tex)
 	{
 		m_backupTex = dynamic_cast<Texture2D*>(tex);
+	}
+
+	bool Texture2D::IsCompressed() const
+	{
+		/*return format_ == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT || format_ == GL_COMPRESSED_RGBA_S3TC_DXT3_EXT ||
+			format_ == GL_COMPRESSED_RGBA_S3TC_DXT5_EXT || format_ == GL_ETC1_RGB8_OES ||
+			format_ == COMPRESSED_RGB_PVRTC_4BPPV1_IMG || format_ == COMPRESSED_RGBA_PVRTC_4BPPV1_IMG ||
+			format_ == COMPRESSED_RGB_PVRTC_2BPPV1_IMG || format_ == COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;*/
+		return m_bIsCompress;
 	}
 
 	uint Texture2D::getUID() const

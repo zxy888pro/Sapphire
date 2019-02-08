@@ -19,6 +19,8 @@ namespace Sapphire
 		virtual void setNumMipmaps(uint val) = 0;
 		virtual uint getMipLevel() const = 0;
 		virtual void setMipLevel(uint val) = 0;
+		virtual uint getRequestMipLevel() const = 0;
+		virtual void setRequestMipLevel(uint val) = 0;
 		virtual bool getIsCompress() const = 0;
 		virtual void setIsCompress(bool val) = 0;
 		virtual PixelFormat getPixelFormat() const = 0;
@@ -38,8 +40,9 @@ namespace Sapphire
 		virtual int getTextureType() const = 0;
 		virtual uint getUID() const = 0;
 		virtual ITexture* getBackupTexture() const = 0;   //获取备份纹理  （使用的默认空纹理）
-		virtual void setBackupTexture(ITexture* tex);    //设置备份纹理
+		virtual void setBackupTexture(ITexture* tex) = 0;    //设置备份纹理
 		virtual void RenderSurfaceUpdate() = 0;
+		virtual bool IsCompressed() const = 0;    //紋理是否壓縮
 	
 	};
 }

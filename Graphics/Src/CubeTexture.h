@@ -61,6 +61,8 @@ namespace Sapphire
 		virtual void setNumMipmaps(uint val) { m_uNumMipmaps = val; }
 		virtual uint getMipLevel() const { return m_mipLevel; }
 		virtual void setMipLevel(uint val) { m_mipLevel = val; }
+		virtual uint getRequestMipLevel() const override { return m_requestLevel; }
+		virtual void setRequestMipLevel(uint level) override { m_requestLevel = level; }
 		virtual bool getIsCompress() const { return m_bIsCompress; }
 		virtual void setIsCompress(bool val) { m_bIsCompress = val; }
 		virtual PixelFormat getPixelFormat() const { return m_ePixelFormat; }
@@ -77,7 +79,7 @@ namespace Sapphire
 		virtual void setUsage(Sapphire::TextureUsage val) { m_eUsage = val; }
 		virtual int getTextureType() const { return m_glType; }
 		virtual uint getUID() const override;
-		virtual void RenderSurfaceUpdate() override;
+		virtual bool IsCompressed() const { return m_bIsCompress; }
 
 	protected:
 
@@ -86,6 +88,7 @@ namespace Sapphire
 		uint m_uDepth;
 		uint m_uNumMipmaps;
 		uint m_mipLevel;
+		uint m_requestLevel;   //ÒªÕˆÇóµÄmipmap level
 		uint m_maxMipLevel;
 		uint m_uAnisotropyLevel;
 		bool m_bIsCompress;
