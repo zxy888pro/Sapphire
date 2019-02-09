@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Graphics.h"
-#include "GraphicDriver.h"
 #include "GPUObject.h"
 #include "IIndexBuffer.h"
 
 namespace Sapphire
 {
+	class GLGraphicDriver;
+
 	class IndexBuffer : public BaseObject, public GPUObject, public IIndexBuffer
 	{
 	public:
@@ -72,7 +73,7 @@ namespace Sapphire
 
 		bool  m_bDynamic;
 
-		GraphicDriver*  m_pGraphicDriver;
+		GLGraphicDriver*  m_pGraphicDriver;
 
 
 	};

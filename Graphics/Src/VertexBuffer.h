@@ -1,7 +1,6 @@
 #pragma once
 #include "GraphicsDefs.h"
 #include "Graphics.h"
-#include "GraphicDriver.h"
 #include "GPUObject.h"
 #include "ArrayPtr.h"
 #include "IVertexBuffer.h"
@@ -9,6 +8,8 @@
 
 namespace Sapphire
 {
+	class GLGraphicDriver;
+
 	class VertexBuffer : public BaseObject, public GPUObject , public IVertexBuffer
 	{
 	public:
@@ -92,7 +93,7 @@ namespace Sapphire
 		void*   m_lockScratchData;
 
 
-		GraphicDriver* m_pGraphicDriver;
+		GLGraphicDriver* m_pGraphicDriver;
 		
 	};
 }

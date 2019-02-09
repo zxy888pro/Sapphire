@@ -109,7 +109,32 @@ namespace Sapphire
 
 	Sapphire::SubSystem* Core::GetSubSystemWithType(ESubSystemType type)
 	{
-		std::string name = ENUM2STR(type);
+		std::string name;
+		switch (type)
+		{
+		case Sapphire::ESST_MEMORYMGR:
+			name = ENUM2STR(ESST_MEMORYMGR);
+			break;
+		case Sapphire::ESST_RESOURCEMGR:
+			name = ENUM2STR(ESST_RESOURCEMGR);
+			break;
+		case Sapphire::ESST_WORKERQUEUE:
+			name = ENUM2STR(ESST_WORKERQUEUE);
+			break;
+		case Sapphire::ESST_RENDERSYSTEM:
+			name = ENUM2STR(ESST_RENDERSYSTEM);
+			break;
+		case Sapphire::ESST_GRAPHICDRIVER:
+			name = ENUM2STR(ESST_GRAPHICDRIVER);
+			break;
+		case Sapphire::ESST_UNKNOWSYSTEM:
+			name = ENUM2STR(ESST_UNKNOWSYSTEM);
+			break;
+		case Sapphire::ESST_MAXCOUNT:
+			return NULL;
+		default:
+			return NULL;
+		}
 		return GetSubSystemWithName(name);
 	}
 

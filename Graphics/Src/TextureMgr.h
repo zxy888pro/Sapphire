@@ -5,6 +5,8 @@
 
 namespace Sapphire
 {
+	class GLGraphicDriver;
+
 	//OpenGL TextureManager
 	class TextureMgr :public ITextureMgr, ResourceMgr
 	{
@@ -57,7 +59,7 @@ namespace Sapphire
 		uint           m_textureTypes[MAX_TEXTURE_UNITS];
 		int            m_nCurActiveTexUnit;
 
-		GraphicDriver* m_pGraphicDriver;
+		GLGraphicDriver* m_pGraphicDriver;
 
 	};
 }

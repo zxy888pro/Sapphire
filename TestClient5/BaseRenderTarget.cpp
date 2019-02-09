@@ -1,7 +1,7 @@
 ﻿#include "BaseRenderTarget.h"
 #include <Sapphire.h>
 #include <logUtil.h>
-#include <GraphicDriver.h>
+#include <IGraphicDriver.h>
 #include <ITextureMgr.h>
 
 namespace Sapphire
@@ -9,7 +9,7 @@ namespace Sapphire
 
 	BaseRenderTarget::BaseRenderTarget()
 	{
-
+		m_pDriver = dynamic_cast<IGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(Sapphire::ESST_GRAPHICDRIVER));
 	}
 
 	BaseRenderTarget::~BaseRenderTarget()
@@ -56,9 +56,8 @@ namespace Sapphire
 		{
 			glDeleteFramebuffers(1, &m_fbo);
 		}
-		GraphicDriver* pGd = GraphicDriver::GetSingletonPtr();
-		m_assert(pGd);
-		ITextureMgr* pTexMgr = pGd->getTextureMgr();
+		m_assert(m_pDriver);
+		ITextureMgr* pTexMgr = m_pDriver->getTextureMgr();
 		m_assert(pTexMgr);
 		for (std::map<uint, ITexture*>::iterator it = m_texMap.begin(); it != m_texMap.end(); ++it)
 		{
@@ -112,9 +111,8 @@ namespace Sapphire
 
 	bool BaseRenderTarget::CreateTexAttachment(uint index)
 	{
-		GraphicDriver* pGd = GraphicDriver::GetSingletonPtr();
-		m_assert(pGd);
-		ITextureMgr* pTexMgr = pGd->getTextureMgr();
+		m_assert(m_pDriver);
+		ITextureMgr* pTexMgr = m_pDriver->getTextureMgr();
 		m_assert(pTexMgr);
 
 		if (m_texMap.find(index) != m_texMap.end() && glIsTexture(m_texMap[index]->getUID()))

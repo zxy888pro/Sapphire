@@ -1,6 +1,6 @@
 #include "RenderSurface.h"
 #include "ITexture.h"
-#include "GraphicDriver.h"
+#include "GLGraphicDriver.h"
 #include "IRenderSystem.h"
 
 namespace Sapphire
@@ -14,7 +14,7 @@ namespace Sapphire
 		m_gpuRenderBuffer(0)
 
 	{
-
+		m_pGLDriver = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
 	}
 
 	RenderSurface::RenderSurface(ITexture* parentTexture)
@@ -136,23 +136,22 @@ namespace Sapphire
 
 	void RenderSurface::Release()
 	{
-		GraphicDriver* pGd = GraphicDriver::GetSingletonPtr();
-		if (pGd == NULL)
+		if (m_pGLDriver == NULL)
 			return;
 
-		if (!pGd->IsDeviceLost())
+		if (!m_pGLDriver->IsDeviceLost())
 		{
 			for (unsigned i = 0; i < MAX_RENDERTARGETS; ++i)
 			{
-				if (pGd->GetRenderTarget(i) == this)
-					pGd->ResetRenderTarget(i);
+				if (m_pGLDriver->GetRenderTarget(i) == this)
+					m_pGLDriver->ResetRenderTarget(i);
 			}
 
-			if (pGd->GetDepthStencil() == this)
-				pGd->ResetDepthStencil();
+			if (m_pGLDriver->GetDepthStencil() == this)
+				m_pGLDriver->ResetDepthStencil();
 
 			// 清理非活动的FBO
-			pGd->CleanupRenderSurface(this);
+			m_pGLDriver->CleanupRenderSurface(this);
 
 			if (m_gpuRenderBuffer)
 				glDeleteRenderbuffersEXT(1, &m_gpuRenderBuffer);   //释放硬件资源
@@ -163,8 +162,7 @@ namespace Sapphire
 
 	bool RenderSurface::CreateRenderBuffer(uint width, uint height, uint format)
 	{
-		GraphicDriver* pGd = GraphicDriver::GetSingletonPtr();
-		if (pGd == NULL)
+		if (m_pGLDriver == NULL)
 			return false;
 		Release();
 		 
@@ -179,23 +177,22 @@ namespace Sapphire
 	void RenderSurface::OnDeviceLost()
 	{
 		//設備已經丟失掉了，釋放還在用的系統資源
-		GraphicDriver* pGd = GraphicDriver::GetSingletonPtr();
-		if (pGd == NULL)
+		if (m_pGLDriver == NULL)
 			return;
 
-		if (!pGd->IsDeviceLost())
+		if (!m_pGLDriver->IsDeviceLost())
 		{
 			for (unsigned i = 0; i < MAX_RENDERTARGETS; ++i)
 			{
-				if (pGd->GetRenderTarget(i) == this)
-					pGd->ResetRenderTarget(i);
+				if (m_pGLDriver->GetRenderTarget(i) == this)
+					m_pGLDriver->ResetRenderTarget(i);
 			}
 
-			if (pGd->GetDepthStencil() == this)
-				pGd->ResetDepthStencil();
+			if (m_pGLDriver->GetDepthStencil() == this)
+				m_pGLDriver->ResetDepthStencil();
 
 			// 清理非活动的FBO
-			pGd->CleanupRenderSurface(this);
+			m_pGLDriver->CleanupRenderSurface(this);
 
 		}
 

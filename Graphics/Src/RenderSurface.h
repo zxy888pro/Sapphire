@@ -7,6 +7,7 @@
 namespace Sapphire
 {
 	struct ITexture;
+	class  GLGraphicDriver;
 
 	class RenderSurface :public IRenderSurface
 	{
@@ -81,7 +82,7 @@ namespace Sapphire
 
 		WeakPtr<IRenderSurface> m_linkedColorRenderTarget;  //链接到的颜色渲染目标
 		WeakPtr<IRenderSurface> m_linkedDepthRenderTarget;  //链接到的深度渲染目标
-
+		GLGraphicDriver*  m_pGLDriver;
 		bool m_bUpdateQueue;  //等候更新标志
 
 		bool m_resolveDirty;   

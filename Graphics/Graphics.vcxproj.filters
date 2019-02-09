@@ -105,6 +105,12 @@
     <ClInclude Include="Include\IVewport.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Src\GLGraphicDriver.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\IGraphicDriver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
@@ -144,6 +150,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\GLRenderSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GLGraphicDriver.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

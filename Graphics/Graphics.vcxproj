@@ -103,6 +103,7 @@
     <ClInclude Include="Include\GraphicException.h" />
     <ClInclude Include="Include\GraphicsDefs.h" />
     <ClInclude Include="Include\ICubeTexture.h" />
+    <ClInclude Include="Include\IGraphicDriver.h" />
     <ClInclude Include="Include\IImageMgr.h" />
     <ClInclude Include="Include\IIndexBuffer.h" />
     <ClInclude Include="Include\Image.h" />
@@ -116,6 +117,7 @@
     <ClInclude Include="Include\Material.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Src\CubeTexture.h" />
+    <ClInclude Include="Src\GLGraphicDriver.h" />
     <ClInclude Include="Src\GLRenderSystem.h" />
     <ClInclude Include="Src\GPUObject.h" />
     <ClInclude Include="Src\ImageMgr.h" />
@@ -132,6 +134,7 @@
   <ItemGroup>
     <ClCompile Include="Src\CubeTexture.cpp" />
     <ClCompile Include="Src\Font.cpp" />
+    <ClCompile Include="Src\GLGraphicDriver.cpp" />
     <ClCompile Include="Src\GLRenderSystem.cpp" />
     <ClCompile Include="Src\GpuObject.cpp" />
     <ClCompile Include="Src\GraphicDriver.cpp" />

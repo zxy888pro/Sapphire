@@ -4,9 +4,11 @@
 #include "GPUObject.h"
 #include <Image.h>
 #include <ITexture.h>
+#include "RenderSurface.h"
 
 namespace Sapphire
 {
+	class GLGraphicDriver;
 	//OpenGL Texture2D
 	class Texture2D : public GPUObject, public BaseResource, public ITexture, public RefCounter
 	{
@@ -112,7 +114,7 @@ namespace Sapphire
 		//GL_TEXTURE_BUFFER :  samplerBuffer   //任意纹素的1维数组，不支持mipmap
 		int  m_glType;
 
-		GraphicDriver*  m_pGraphicDriver;
+		GLGraphicDriver*  m_pGraphicDriver;
 	};
 
 }

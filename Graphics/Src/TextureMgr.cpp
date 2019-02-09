@@ -1,5 +1,5 @@
 #include <Graphics.h>
-#include <GraphicDriver.h>
+#include "GLGraphicDriver.h"
 #include "TextureMgr.h"
 #include "Texture2D.h"
 #include <Core.h>
@@ -30,7 +30,7 @@ namespace Sapphire
 			m_textures[i] = NULL;
 			m_textureTypes[i] = NULL;
 		}
-		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
+		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
 
 
 	}

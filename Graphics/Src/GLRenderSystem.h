@@ -5,14 +5,14 @@
 
 namespace Sapphire
 {
-
+	class GLGraphicDriver;
 	//OpenGL的绘制渲染系统
 	//管理和繪製3D物件
 	class GLRenderSystem : public IRenderSystem
 	{
 	public:
 		GLRenderSystem();
-		GLRenderSystem(GraphicDriver* pDriver);
+		GLRenderSystem(GLGraphicDriver* pDriver);
 		virtual ~GLRenderSystem();
 
 		virtual void Update(float dTime);
@@ -26,7 +26,7 @@ namespace Sapphire
 
 	private:
 
-		GraphicDriver*  m_pGraphicDriver;
+		GLGraphicDriver*  m_pGraphicDriver;
 		bool  m_bDrawShadow;
 
 

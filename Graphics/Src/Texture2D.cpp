@@ -4,7 +4,9 @@
 #include "ImageMgr.h"
 #include <mathHelper.h>
 #include "GraphicException.h"
+#include "GLGraphicDriver.h"
 #include "RenderSurface.h"
+
 
 namespace Sapphire
 {
@@ -30,7 +32,7 @@ namespace Sapphire
 		m_eType = ResoureType_Texture;
 		for (int i = 0; i < MAX_COORDS; ++i)
 			m_eAddressMode_[i] = ADDRESS_REPEAT; m_eAddressMode_;
-		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
+		m_pGraphicDriver  = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
 		for (int i = 0; i < MAX_TEXTURE_QUALITY_LEVELS; ++i)
 			m_skipMips[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);
 	}
@@ -54,7 +56,7 @@ namespace Sapphire
 		m_maxMipLevel = 0;
 		m_uAnisotropyLevel = 8;
 		m_glType = glTargerType;
-		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
+		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
 		for (int i = 0; i < MAX_TEXTURE_QUALITY_LEVELS; ++i)
 			m_skipMips[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);  //质量越高,跳过的mip越小
 	}
@@ -267,7 +269,7 @@ namespace Sapphire
 		}
 #ifndef GL_ES_VERSION_2_0
 		// 如果不支持深度纹理或者这是一个一个打包的深度模板纹理的话，创建一个renderBuffer替代原本texture
-		if (GraphicDriver::GetHWTextureFormat(m_ePixelFormat) == m_pGraphicDriver->GetHWDepthStencilFormat())
+		if (GLGraphicDriver::GetHWTextureFormat(m_ePixelFormat) == m_pGraphicDriver->GetHWDepthStencilFormat())
 #else
 		if (GraphicDriver::GetHWTextureFormat(m_ePixelFormat) == GL_DEPTH_COMPONENT16 || GraphicDriver::GetHWTextureFormat(m_ePixelFormat) == GL_DEPTH_COMPONENT24_OES || GraphicDriver::GetHWTextureFormat(m_ePixelFormat) == GL_DEPTH24_STENCIL8_OES ||
 			(GraphicDriver::GetHWTextureFormat(m_ePixelFormat) == GL_DEPTH_COMPONENT && !m_pGraphicDriver->GetHWShadowMapFormat()))
@@ -290,8 +292,8 @@ namespace Sapphire
 		/*ITextureMgr* pTexMgr = m_pGraphicDriver->getTextureMgr();
 		int b = pTexMgr->VerifyHWUID(m_uHwUID);*/
 
-		glTexParameteri(m_glType, GL_TEXTURE_WRAP_S, GraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_U]));
-		glTexParameteri(m_glType, GL_TEXTURE_WRAP_T, GraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_V]));
+		glTexParameteri(m_glType, GL_TEXTURE_WRAP_S, GLGraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_U]));
+		glTexParameteri(m_glType, GL_TEXTURE_WRAP_T, GLGraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_V]));
 
 		switch (m_eFilterMode)
 		{
@@ -415,8 +417,8 @@ namespace Sapphire
 		}
 
 		
-		int format = GraphicDriver::GetSWTextureFormat(m_ePixelFormat);
-		int internalFormat = GraphicDriver::GetHWTextureFormat(m_ePixelFormat);
+		int format = GLGraphicDriver::GetSWTextureFormat(m_ePixelFormat);
+		int internalFormat = GLGraphicDriver::GetHWTextureFormat(m_ePixelFormat);
 
 		//获取level级下mipmap宽高
 		int levelWidth = getLevelWidth(level);
@@ -433,7 +435,7 @@ namespace Sapphire
 		//是否全范围
 		bool wholeLevel = x == 0 && y == 0 && width == levelWidth && height == levelHeight;
 
-		uint dataType = GraphicDriver::GetHWTextureDataType(m_ePixelFormat);
+		uint dataType = GLGraphicDriver::GetHWTextureDataType(m_ePixelFormat);
 		if (!IsCompressed())
 		{
 			//是更新整个纹理数据区

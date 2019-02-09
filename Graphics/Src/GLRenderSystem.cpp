@@ -11,7 +11,7 @@ namespace Sapphire
 		m_bDrawShadow = false;
 	}
 
-	GLRenderSystem::GLRenderSystem(GraphicDriver* pDriver)
+	GLRenderSystem::GLRenderSystem(GLGraphicDriver* pDriver)
 	{
 		m_pGraphicDriver = pDriver;
 		m_bDrawShadow = false;

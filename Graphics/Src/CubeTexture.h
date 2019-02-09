@@ -1,13 +1,14 @@
 #pragma once
 #include <GraphicsDefs.h>
 #include <Graphics.h>
-#include <GraphicDriver.h>
 #include <ICubeTexture.h>
 #include "GPUObject.h"
 #include <Image.h>
 
 namespace Sapphire
 {
+	class GLGraphicDriver;
+
 	//包含上下左右前后6个面的Texture， 每个面大小长宽纹理格式都一样
 	class CubeTexture : public GPUObject, public BaseResource, public ICubeTexture, public RefCounter
 	{
@@ -122,7 +123,7 @@ namespace Sapphire
 		//GL_TEXTURE_BUFFER :  samplerBuffer   //任意纹素的1维数组，不支持mipmap
 		int  m_glType;
 
-		GraphicDriver*  m_pGraphicDriver;
+		GLGraphicDriver*  m_pGraphicDriver;
 
 		virtual void Load(HIMAGE himg, CubeMapFace face);  //加载6个纹理中的一个面
 	private:

@@ -1,4 +1,5 @@
 #include <GraphicsDefs.h>
+#include "GLGraphicDriver.h"
 #include "CubeTexture.h"
 #include "GPUObject.h"
 #include <ITextureMgr.h>
@@ -39,7 +40,7 @@ namespace Sapphire
 			m_eAddressMode_[i] = ADDRESS_REPEAT; m_eAddressMode_;
 		for (int i = 0; i < MAX_TEXTURE_QUALITY_LEVELS; ++i)
 			m_skipMips[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);
-		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
+		m_pGraphicDriver  = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
 
 	}
 
@@ -64,7 +65,7 @@ namespace Sapphire
 		m_uAnisotropyLevel = 8;
 		m_glType = GL_TEXTURE_CUBE_MAP;
 		m_channelNum = 0;
-		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
+		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
 		for (int i = 0; i < MAX_TEXTURE_QUALITY_LEVELS; ++i)
 			m_skipMips[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);
 
@@ -407,9 +408,9 @@ namespace Sapphire
 		//绑定纹理,设置属性
 		m_pGraphicDriver->BindTexture(this, TextureUnit::TU_CUBEMAP);
 
-		glTexParameteri(m_glType, GL_TEXTURE_WRAP_S, GraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_U]));
-		glTexParameteri(m_glType, GL_TEXTURE_WRAP_T, GraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_V]));
-		glTexParameteri(m_glType, GL_TEXTURE_WRAP_R, GraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_W]));
+		glTexParameteri(m_glType, GL_TEXTURE_WRAP_S, GLGraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_U]));
+		glTexParameteri(m_glType, GL_TEXTURE_WRAP_T, GLGraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_V]));
+		glTexParameteri(m_glType, GL_TEXTURE_WRAP_R, GLGraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_W]));
 
 		switch (m_eFilterMode)
 		{
@@ -536,8 +537,8 @@ namespace Sapphire
 			SAPPHIRE_LOGERROR("Error HwUID is invalid!");
 			return false;
 		}
-		int format = GraphicDriver::GetSWTextureFormat(m_ePixelFormat);
-		int internalFormat = GraphicDriver::GetHWTextureFormat(m_ePixelFormat);
+		int format = GLGraphicDriver::GetSWTextureFormat(m_ePixelFormat);
+		int internalFormat = GLGraphicDriver::GetHWTextureFormat(m_ePixelFormat);
 
 		//获取level级下mipmap宽高
 		int levelWidth = getLevelWidth(level);
@@ -561,7 +562,7 @@ namespace Sapphire
 		//是否全范围
 		bool wholeLevel = x == 0 && y == 0 && width == levelWidth && height == levelHeight;
 
-		uint dataType = GraphicDriver::GetHWTextureDataType(m_ePixelFormat);
+		uint dataType = GLGraphicDriver::GetHWTextureDataType(m_ePixelFormat);
 		if (!IsCompressed())
 		{
 			if (wholeLevel)
@@ -590,7 +591,7 @@ namespace Sapphire
 		}
 		//注意这个函数不执行边界检查，可能会溢出
 		if (!m_bIsCompress)
-			glGetTexImage((GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face), level, GraphicDriver::GetHWTextureFormat(m_ePixelFormat), GraphicDriver::GetHWTextureDataType(m_ePixelFormat), dest);
+			glGetTexImage((GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face), level, GLGraphicDriver::GetHWTextureFormat(m_ePixelFormat), GLGraphicDriver::GetHWTextureDataType(m_ePixelFormat), dest);
 		else
 			glGetCompressedTexImage((GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face), level, dest);
 

@@ -1,5 +1,5 @@
 #include "VertexBuffer.h"
-
+#include "GLGraphicDriver.h"
 
 
 namespace Sapphire
@@ -95,7 +95,7 @@ namespace Sapphire
 		m_uLockCount(0)
 	{
 		UpdateElementOffset();
-		m_pGraphicDriver = GraphicDriver::GetSingletonPtr();
+		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
 		if (m_pGraphicDriver)
 		{
 			m_bShadowed = true;
