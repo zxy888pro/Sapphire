@@ -34,6 +34,7 @@ namespace Sapphire
 		 SubSystem*  GetSubSystemWithName(std::string name);
 		 SubSystem*  GetSubSystemWithType(ESubSystemType type);
 		 template<class T>  T* GetSubSystem();
+		 template<class T> void RegisterSubSystem(T* ptr, ESubSystemType type);
 		 
 		 //更新所有子系统
 		 void Update();
@@ -60,6 +61,15 @@ namespace Sapphire
 
 	 template <class T> T* Core::GetSubSystem(){ return GetSubSystemWithName(T::GetTypeNameStatic());}
 	 
+	 template<class T>
+	 void Core::RegisterSubSystem(T* ptr, ESubSystemType type)
+	 {
+		 std::string name = ENUM2STR(type);
+		 if (m_subSystems.find(name) != m_subSystems.end())
+			 return;
+		 m_subSystems[name] = dynamic_cast<SubSystem*>(ptr);
+	 }
+
 }
 
 #endif // !__SAPPHIRE_CORE_H__

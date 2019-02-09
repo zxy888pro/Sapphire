@@ -4,6 +4,7 @@
 #include <Str.h>
 #include <Graphics.h>
 #include <GraphicDriver.h>
+#include "IRenderSystem.h"
 #include "Camera.h"
 #include <MemoryMgr.h>
 #include "BaseLight.h"
@@ -64,12 +65,16 @@ void init()
 	Sapphire::LogUtil::LogMsgLn("³õÊ¼»¯³ÌÐò");
 	new Sapphire::Core();
 	new Sapphire::GraphicDriver();
+	
 
 	MathHelper::SetRandomSeed(GetTickCount());
 	Sapphire::GraphicDriver::GetSingletonPtr()->Init();
 
 	Sapphire::IImageMgr* pImgMgr = Sapphire::GraphicDriver::GetSingletonPtr()->getImageMgr();
 	new Sapphire::Camera();
+
+	IRenderSystem* pRenderSys = (IRenderSystem*)Sapphire::Core::GetSingletonPtr()->GetSubSystemWithType(Sapphire::ESST_RENDERSYSTEM);
+	pRenderSys->setDrawShadow(true);
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

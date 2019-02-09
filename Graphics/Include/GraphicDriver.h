@@ -10,6 +10,7 @@ namespace Sapphire
 	struct IIndexBuffer;
 	class RenderSurface;
 	class Texture2D;
+	class GLRenderSystem;
 
 	///方便顶点更新的CPU端缓冲区
 	struct ScratchBuffer
@@ -143,6 +144,7 @@ namespace Sapphire
 
 		ITextureMgr*   m_pTextureMgr;
 		IImageMgr*     m_pImageMgr;
+		GLRenderSystem*  m_renderSys;
 
 		int            m_nTextureQuality;
 		bool		   m_bAnisotropySupport;

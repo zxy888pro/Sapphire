@@ -2,12 +2,13 @@
 
 #include "Graphics.h"
 #include "Viewport.h"
+#include "IRenderSurface.h"
 
 namespace Sapphire
 {
 	struct ITexture;
 
-	class RenderSurface : public RefCounter
+	class RenderSurface :public IRenderSurface
 	{
 	public:
 		RenderSurface();
@@ -17,13 +18,13 @@ namespace Sapphire
 
 		virtual void SetViewportNum(uint num);
 
-		virtual void SetViewport(uint index, Viewport* viewport);
+		virtual void SetViewport(uint index, IViewport* viewport);
 
 		virtual void SetUpdateMode(RenderSurfaceUpdateMode mode);
 		//设置要链接的颜色渲染目标
-		virtual void SetLinkedRenderTarget(RenderSurface* rt);
+		virtual void SetLinkedRenderTarget(IRenderSurface* rt);
 		//设置要链接的深度和模板渲染目标
-		virtual void SetLinkedDepthStencil(RenderSurface* depthStencil); 
+		virtual void SetLinkedDepthStencil(IRenderSurface* depthStencil); 
 
 		/// 等候视口的手动更新 
 		virtual void QueueUpdate();
@@ -42,7 +43,7 @@ namespace Sapphire
 
 		virtual int GetViewportNum() const;
 
-		virtual Viewport* GetViewport(int index) const;
+		virtual IViewport* GetViewport(int index) const;
 		
 		virtual bool  WasUpdated() const;  //清理更新標志，渲染后調用
 
@@ -60,9 +61,9 @@ namespace Sapphire
 
 		virtual bool GetAutoResolve() const;   //返回是否多重采样
 
-		virtual RenderSurface* GetLinkedRenderTarget() const;
+		virtual IRenderSurface* GetLinkedRenderTarget() const;
 
-		virtual RenderSurface* GetLinkedDepthStencil() const;
+		virtual IRenderSurface* GetLinkedDepthStencil() const;
 
 		void SetTarget(unsigned target) { m_gpuTarget = target; }
 
@@ -75,11 +76,11 @@ namespace Sapphire
 		uint   m_gpuTarget;       //GPU渲染目标对象
 		uint   m_gpuRenderBuffer;    //GPU渲染缓冲对象
 
-		std::vector<SharedPtr<Viewport>> m_viewports;  //視口
+		std::vector<SharedPtr<IViewport>> m_viewports;  //視口
 		RenderSurfaceUpdateMode m_eUpdateMode;  //對於視口的更新模式
 
-		WeakPtr<RenderSurface> m_linkedColorRenderTarget;  //链接到的颜色渲染目标
-		WeakPtr<RenderSurface> m_linkedDepthRenderTarget;  //链接到的深度渲染目标
+		WeakPtr<IRenderSurface> m_linkedColorRenderTarget;  //链接到的颜色渲染目标
+		WeakPtr<IRenderSurface> m_linkedDepthRenderTarget;  //链接到的深度渲染目标
 
 		bool m_bUpdateQueue;  //等候更新标志
 

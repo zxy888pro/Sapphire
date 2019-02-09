@@ -96,6 +96,15 @@
     <ClInclude Include="Src\Viewport.h">
       <Filter>源文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\IRenderSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\IRenderSurface.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\IVewport.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
@@ -132,6 +141,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\RenderSurface.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GLRenderSystem.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,5 +1,6 @@
 #include <GraphicDriver.h>
 #include <GraphicException.h>
+#include "IRenderSystem.h"
 #include "Texture2D.h"
 #include "TextureMgr.h"
 #include "ImageMgr.h"
@@ -7,6 +8,7 @@
 #include "IVertexBuffer.h"
 #include "VertexBuffer.h"
 #include "RenderSurface.h"
+#include "GLRenderSystem.h"
 
 namespace Sapphire
 {
@@ -44,6 +46,17 @@ namespace Sapphire
 		m_imagetypeNames[ENUM2STR(ImageType_Tga32)] = ImageType_Tga32;
 		m_imagetypeNames[ENUM2STR(ImageType_Tga24)] = ImageType_Tga24;
 		CheckFeature();
+		Core* pCore = Core::GetSingletonPtr();
+		if (pCore)
+		{
+			//初始化渲染系統接口
+			IRenderSystem* pRenderSys = new GLRenderSystem(this);
+			Sapphire::Core::GetSingletonPtr()->RegisterSubSystem<IRenderSystem>(pRenderSys, ESST_RENDERSYSTEM);
+		}
+		else
+		{
+			SAPPHIRE_LOGERROR("Sapphire Core is not Initialized!");
+		}
 	}
 
 	void GraphicDriver::Release()

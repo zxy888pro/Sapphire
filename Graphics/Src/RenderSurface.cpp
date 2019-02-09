@@ -1,23 +1,35 @@
 #include "RenderSurface.h"
 #include "ITexture.h"
 #include "GraphicDriver.h"
+#include "IRenderSystem.h"
 
 namespace Sapphire
 {
 
 	RenderSurface::RenderSurface()
+		:m_parentTex(NULL),
+		m_gpuTarget(0),
+		m_bUpdateQueue(false),
+		m_eUpdateMode(RenderSurfaceUpdateMode::SURFACE_UPDATEVISIBLE),
+		m_gpuRenderBuffer(0)
+
 	{
 
 	}
 
 	RenderSurface::RenderSurface(ITexture* parentTexture)
+		:m_parentTex(parentTexture),
+		m_gpuTarget(0),
+		m_bUpdateQueue(false),
+		m_eUpdateMode(RenderSurfaceUpdateMode::SURFACE_UPDATEVISIBLE),
+		m_gpuRenderBuffer(0)
 	{
 
 	}
 
 	RenderSurface::~RenderSurface()
 	{
-
+		Release();
 	}
 
 	void RenderSurface::SetViewportNum(uint num)
@@ -25,7 +37,7 @@ namespace Sapphire
 		m_viewports.resize(num);
 	}
 
-	void RenderSurface::SetViewport(uint index, Viewport* viewport)
+	void RenderSurface::SetViewport(uint index, IViewport* viewport)
 	{
 		if (index >= m_viewports.size())
 			m_viewports.resize(index + 1);
@@ -38,7 +50,7 @@ namespace Sapphire
 		m_eUpdateMode = mode;
 	}
 
-	void RenderSurface::SetLinkedRenderTarget(RenderSurface* rt)
+	void RenderSurface::SetLinkedRenderTarget(IRenderSurface* rt)
 	{
 		if (rt != this)
 		{
@@ -46,7 +58,7 @@ namespace Sapphire
 		}
 	}
 
-	void RenderSurface::SetLinkedDepthStencil(RenderSurface* depthStencil)
+	void RenderSurface::SetLinkedDepthStencil(IRenderSurface* depthStencil)
 	{
 		if (depthStencil != this)
 		{
@@ -57,7 +69,29 @@ namespace Sapphire
 
 	void RenderSurface::QueueUpdate()
 	{
-		m_bUpdateQueue = true;
+		if (!m_bUpdateQueue)
+		{
+			bool hasValidView = false;
+			//驗證有可用的Viewport
+			for (unsigned i = 0; i < m_viewports.size(); ++i)
+			{
+				if (m_viewports[i])
+				{
+					hasValidView = true;
+					break;
+				}
+			}
+
+			if (hasValidView)
+			{
+			//將這個RenderSurface加入渲染隊列
+				IRenderSystem*  pRenderSys = dynamic_cast<IRenderSystem*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_RENDERSYSTEM));
+				if (pRenderSys)
+					pRenderSys->QueueRenderSurface(this);
+
+				m_bUpdateQueue = true;
+			}
+		}
 	}
 
 	void RenderSurface::ResetUpdateQueued()
@@ -90,9 +124,9 @@ namespace Sapphire
 		return m_viewports.size();
 	}
 
-	Sapphire::Viewport* RenderSurface::GetViewport(int index) const
+	Sapphire::IViewport* RenderSurface::GetViewport(int index) const
 	{
-		return index < m_viewports.size() ? m_viewports[index] : (Viewport*)NULL;
+		return index < m_viewports.size() ? m_viewports[index] : (IViewport*)NULL;
 	}
 
 	bool RenderSurface::WasUpdated() const
@@ -144,7 +178,28 @@ namespace Sapphire
 
 	void RenderSurface::OnDeviceLost()
 	{
+		//設備已經丟失掉了，釋放還在用的系統資源
+		GraphicDriver* pGd = GraphicDriver::GetSingletonPtr();
+		if (pGd == NULL)
+			return;
 
+		if (!pGd->IsDeviceLost())
+		{
+			for (unsigned i = 0; i < MAX_RENDERTARGETS; ++i)
+			{
+				if (pGd->GetRenderTarget(i) == this)
+					pGd->ResetRenderTarget(i);
+			}
+
+			if (pGd->GetDepthStencil() == this)
+				pGd->ResetDepthStencil();
+
+			// 清理非活动的FBO
+			pGd->CleanupRenderSurface(this);
+
+		}
+
+		m_gpuRenderBuffer = 0;
 	}
 
 	Sapphire::ITexture* RenderSurface::GetParentTexture() const
@@ -167,12 +222,12 @@ namespace Sapphire
 		return false;
 	}
 
-	Sapphire::RenderSurface* RenderSurface::GetLinkedRenderTarget() const
+	Sapphire::IRenderSurface* RenderSurface::GetLinkedRenderTarget() const
 	{
 		return m_linkedColorRenderTarget;
 	}
 
-	Sapphire::RenderSurface* RenderSurface::GetLinkedDepthStencil() const
+	Sapphire::IRenderSurface* RenderSurface::GetLinkedDepthStencil() const
 	{
 		return m_linkedDepthRenderTarget;
 	}
