@@ -4,6 +4,8 @@
 
 namespace Sapphire
 {
+	class IGraphicDriver;
+
 	class BaseLightMapMesh : public BaseLightMesh
 	{
 	public:
@@ -44,6 +46,7 @@ namespace Sapphire
 		float*  m_vertices;
 		GLuint   m_diffMapObj;
 		GLuint   m_sepcMapObj;
+		IGraphicDriver*  m_pDriver;
 
 		virtual void Release() override;
 

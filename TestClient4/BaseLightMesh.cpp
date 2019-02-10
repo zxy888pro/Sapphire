@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "BaseLight.h"
 #include "BaseLightMesh.h"
+#include "IGraphicDriver.h"
 #include <MemoryMgr.h>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
@@ -12,6 +13,7 @@ namespace Sapphire
 	BaseLightMesh::BaseLightMesh()
 	{
 		m_type = MT_BaseLighMesh;
+		
 	}
 
 	BaseLightMesh::~BaseLightMesh()

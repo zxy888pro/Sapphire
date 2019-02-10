@@ -27,6 +27,9 @@ namespace Sapphire
 	//最大浮点
 	#define M_INFINITY  (float)HUGE_VAL
 
+	#define M_MIN_UNSIGNED  0x00000000
+	#define M_MAX_UNSIGNED  0xffffffff
+
 	//PI相关
 	/**
 	@brief

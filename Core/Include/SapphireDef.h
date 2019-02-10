@@ -153,6 +153,7 @@ enum MemAllocType
 
 #define MAX_JSON_LENGTH   4096
 
+
 //数据类型
 typedef unsigned char byte;
 typedef unsigned int bit32;

@@ -4,6 +4,7 @@
 #include <Str.h>
 #include <Graphics.h>
 #include <GraphicDriver.h>
+#include "IGraphicDriver.h"
 #include "IRenderSystem.h"
 #include "Camera.h"
 #include <MemoryMgr.h>
@@ -64,13 +65,13 @@ void init()
 	Sapphire::LogUtil::getInstancePtr()->Init("log.txt");
 	Sapphire::LogUtil::LogMsgLn("³õÊ¼»¯³ÌÐò");
 	new Sapphire::Core();
-	new Sapphire::GraphicDriver();
 	
 
 	MathHelper::SetRandomSeed(GetTickCount());
-	Sapphire::GraphicDriver::GetSingletonPtr()->Init();
+	createGraphicDriver();
 
-	Sapphire::IImageMgr* pImgMgr = Sapphire::GraphicDriver::GetSingletonPtr()->getImageMgr();
+	IGraphicDriver* pDriver = dynamic_cast<IGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(Sapphire::ESST_GRAPHICDRIVER));
+	Sapphire::IImageMgr* pImgMgr = pDriver->getImageMgr();
 	new Sapphire::Camera();
 
 	IRenderSystem* pRenderSys = (IRenderSystem*)Sapphire::Core::GetSingletonPtr()->GetSubSystemWithType(Sapphire::ESST_RENDERSYSTEM);

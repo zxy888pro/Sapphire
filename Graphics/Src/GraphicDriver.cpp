@@ -14,8 +14,8 @@ namespace Sapphire
 			if (!pCore->GetSubSystemWithType(ESST_GRAPHICDRIVER))
 			{
 				IGraphicDriver* pDriver = new GLGraphicDriver();
-				pDriver->Init();
 				pCore->RegisterSubSystem(pDriver, ESST_GRAPHICDRIVER);
+				pDriver->Init();
 			}
 		}
 		else

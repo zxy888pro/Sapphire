@@ -2,7 +2,7 @@
 #include <Sapphire.h>
 #include <MemoryMgr.h>
 #include <Graphics.h>
-#include <GraphicDriver.h>
+#include <IGraphicDriver.h>
 #include <ITexture.h>
 #include <ITextureMgr.h>
 #include "Camera.h"
@@ -15,6 +15,7 @@ namespace Sapphire
 	BaseLightMapMesh::BaseLightMapMesh()
 	{
 		m_type = MT_BaseLightMapMesh;
+		m_pDriver = dynamic_cast<IGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(Sapphire::ESST_GRAPHICDRIVER));
 	}
 
 	BaseLightMapMesh::~BaseLightMapMesh()
@@ -125,9 +126,9 @@ namespace Sapphire
 
 	void BaseLightMapMesh::SetDiffuseMap(const char* fileName)
 	{
-		GraphicDriver* pGd = GraphicDriver::GetSingletonPtr();
-		m_assert(pGd);
-		ITextureMgr* pTexMgr = pGd->getTextureMgr();
+		 
+		m_assert(m_pDriver);
+		ITextureMgr* pTexMgr = m_pDriver->getTextureMgr();
 		m_assert(pTexMgr);
 		ITexture* pTexture = pTexMgr->CreateTexture2DFromFile(fileName);
 
@@ -147,9 +148,9 @@ namespace Sapphire
 
 	void BaseLightMapMesh::SetSepcularMap(const char* fileName)
 	{
-		GraphicDriver* pGd = GraphicDriver::GetSingletonPtr();
-		m_assert(pGd);
-		ITextureMgr* pTexMgr = pGd->getTextureMgr();
+	 
+		m_assert(m_pDriver);
+		ITextureMgr* pTexMgr = m_pDriver->getTextureMgr();
 		m_assert(pTexMgr);
 		ITexture* pTexture = pTexMgr->CreateTexture2DFromFile(fileName);
 		if (pTexture == NULL)

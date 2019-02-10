@@ -9,6 +9,7 @@
 namespace Sapphire
 {
 	class BaseLight;
+	class IGraphicDriver;
 
 	class SkyBoxMesh :public BaseMesh
 	{
@@ -29,6 +30,7 @@ namespace Sapphire
 
 	private:
 		GLuint m_cubeMapObj;
+		IGraphicDriver* m_pDriver;
 	};
 }
 

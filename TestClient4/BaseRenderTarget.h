@@ -13,7 +13,7 @@ namespace Sapphire
 	};
 
 	class ITexture;
-
+	class IGraphicDriver;
 	//äÖÈ¾Ä¿±ê
 	class BaseRenderTarget
 	{
@@ -46,7 +46,7 @@ namespace Sapphire
 		bool CreateRBOAttachment();
 		ERenderTargetType m_eRttType;
 		std::map<uint, ITexture*> m_texMap;
-		
+		IGraphicDriver* m_pDriver;
 
 	};
 }

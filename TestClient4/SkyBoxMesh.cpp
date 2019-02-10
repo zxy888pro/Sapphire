@@ -1,5 +1,5 @@
 #include "SkyBoxMesh.h"
-#include "GraphicDriver.h"
+#include "IGraphicDriver.h"
 #include "ITextureMgr.h"
 #include "Camera.h"
 namespace Sapphire
@@ -8,6 +8,8 @@ namespace Sapphire
 	SkyBoxMesh::SkyBoxMesh()
 	{
 		m_type = MT_BaseLighMesh;
+		m_pDriver = dynamic_cast<IGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(Sapphire::ESST_GRAPHICDRIVER));
+
 	}
 
 	SkyBoxMesh::~SkyBoxMesh()
@@ -126,9 +128,9 @@ namespace Sapphire
 
 	void SkyBoxMesh::LoadCubeMap(std::string filePath)
 	{
-		GraphicDriver* pGd = GraphicDriver::GetSingletonPtr();
-		m_assert(pGd);
-		ITextureMgr* pTexMgr = pGd->getTextureMgr();
+		 
+		m_assert(m_pDriver);
+		ITextureMgr* pTexMgr = m_pDriver->getTextureMgr();
 		m_assert(pTexMgr);
 		ITexture* pTexture = pTexMgr->CreateCubeTextureFromFile(filePath.c_str());
 		if (pTexture == NULL)

@@ -22,10 +22,11 @@ namespace Sapphire
 
 	GLGraphicDriver::GLGraphicDriver()
 	{
-		m_pTextureMgr = new TextureMgr();
-		m_pImageMgr = new ImageMgr();
+		m_pTextureMgr = NULL;
+		m_pImageMgr = NULL;
 		m_nTextureQuality = QUALITY_HIGH;
 		m_driverType = GRAPHICDRIVER_OPENGL;
+		m_bGL3Support = false;
 
 	}
 
@@ -36,6 +37,8 @@ namespace Sapphire
 
 	void GLGraphicDriver::Init()
 	{
+		m_pTextureMgr = new TextureMgr();
+		m_pImageMgr = new ImageMgr();
 		m_imagetypeNames.clear();
 		m_imagetypeNames[ENUM2STR(ImageType_Bmp_A8R8G8B8)] = ImageType_Bmp_A8R8G8B8;
 		m_imagetypeNames[ENUM2STR(ImageType_Bmp_R8G8B8)] = ImageType_Bmp_R8G8B8;
@@ -82,12 +85,12 @@ namespace Sapphire
 
 	void GLGraphicDriver::BindVBO(uint uHwUID)
 	{
-		if (m_curBindVBO != uHwUID)
+		if (m_curBoundVBO != uHwUID)
 		{
 			if (uHwUID)
 			{
 				glBindBuffer(GL_ARRAY_BUFFER, uHwUID);
-				m_curBindVBO = uHwUID;
+				m_curBoundVBO = uHwUID;
 			}
 		}
 	}
@@ -122,6 +125,44 @@ namespace Sapphire
 
 	void GLGraphicDriver::CleanupRenderSurface(RenderSurface* surface)
 	{
+		if (!surface)
+			return;
+		uint curFbo = GetCurrentBoundFBO();
+		std::map<ulonglong, FrameBufferObject>::iterator it;
+		//遍历所有fbo用到的这个表面
+		for (it = m_frameBuffers.begin(); it != m_frameBuffers.end(); ++it)
+		{
+			for (int i = 0; i < MAX_RENDERTARGETS; ++i)
+			{
+				if (it->second.colorAttachments[i] == surface)
+				{
+					//不是当前在绑定的FBO
+					if (curFbo != it->second.fbo)
+					{
+						//先绑定
+						BindFrameBuffer(it->second.fbo);
+						curFbo = it->second.fbo;
+					}
+					BindColorAttachment(i, GL_TEXTURE_2D, 0); //取消绑定
+					it->second.colorAttachments[i] = 0;
+					it->second.drawBuffers = M_MAX_UNSIGNED;
+				}
+			}
+			if (it->second.depthAttachment == surface)
+			{
+				if (curFbo != it->second.fbo)
+				{
+					BindFrameBuffer(it->second.fbo);
+					curFbo = it->second.fbo;
+				}
+				BindDepthAttachment(0, false);  //取消绑定
+				BindStencilAttachment(0, false);   //取消绑定
+				it->second.depthAttachment = 0;
+			}
+		}
+		// 恢复之前绑定的FBO
+		if (curFbo != GetCurrentBoundFBO())
+			BindFrameBuffer(GetCurrentBoundFBO());
 
 	}
 
@@ -172,6 +213,21 @@ namespace Sapphire
 			return GetPixelFormat(m_imagetypeNames[szImageType]);
 		}
 		return PF_UNDEFINED;
+	}
+
+	uint GLGraphicDriver::GetCurrentBoundFBO() const
+	{
+		return m_curBoundBO;
+	}
+
+	void GLGraphicDriver::BindFrameBuffer(uint fbo)
+	{
+#ifndef GL_ES_VERSION_2_0
+		if (!m_bGL3Support)
+			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo);
+		else
+#endif
+			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	}
 
 	Sapphire::IVertexBuffer* GLGraphicDriver::GetVertexBuffer(uint index) const
@@ -619,4 +675,61 @@ namespace Sapphire
 #endif
 
 	}
+
+	void GLGraphicDriver::BindColorAttachment(uint index, uint target, uint obj)
+	{
+#ifndef GL_ES_VERSION_2_0
+		if (!m_bGL3Support)
+			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT + index, target, obj, 0);
+		else
+#endif
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + index, target, obj, 0);
+	}
+
+	void GLGraphicDriver::BindDepthAttachment(uint object, bool isRenderBuffer)
+	{
+		if (!object)
+			isRenderBuffer = false;
+
+#ifndef GL_ES_VERSION_2_0
+		if (!m_bGL3Support)
+		{
+			if (!isRenderBuffer)  //是纹理还是渲染缓冲区
+				glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, object, 0);
+			else
+				glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, object);
+		}
+		else
+#endif
+		{
+			if (!isRenderBuffer)  //是纹理还是渲染缓冲区
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, object, 0);
+			else
+				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, object);
+		}
+	}
+
+	void GLGraphicDriver::BindStencilAttachment(uint object, bool isRenderBuffer)
+	{
+		if (!object)
+			isRenderBuffer = false;
+
+#ifndef GL_ES_VERSION_2_0
+		if (!m_bGL3Support)
+		{
+			if (!isRenderBuffer)
+				glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, GL_TEXTURE_2D, object, 0);
+			else
+				glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, object);
+		}
+		else
+#endif
+		{
+			if (!isRenderBuffer)
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, object, 0);
+			else
+				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, object);
+		}
+	}
+
 }

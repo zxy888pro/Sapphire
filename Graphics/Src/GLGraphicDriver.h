@@ -27,6 +27,31 @@ namespace Sapphire
 		bool m_bReserved;
 	};
 
+	/// FBO对象
+	struct FrameBufferObject
+	{
+		FrameBufferObject() :
+			fbo(0),
+			depthAttachment(0),
+			readBuffers(M_MAX_UNSIGNED),
+			drawBuffers(M_MAX_UNSIGNED)
+		{
+			for (unsigned i = 0; i < MAX_RENDERTARGETS; ++i)
+				colorAttachments[i] = 0;
+		}
+
+		/// FBO对象句柄
+		uint  fbo;
+		/// 绑定的颜色附件纹理
+		RenderSurface* colorAttachments[MAX_RENDERTARGETS];
+		/// 绑定的深度模板附件
+		RenderSurface* depthAttachment;
+		/// 读取缓冲区位数
+		uint readBuffers;
+		/// 绘制缓冲区位数
+		uint drawBuffers;
+	};
+
 
 	//OpenGL 与硬件层访问驱动类。  
 	//需抽出IGraphicDriver接口, 无关图形API
@@ -63,6 +88,18 @@ namespace Sapphire
 		PixelFormat GetPixelFormat(ImageType eImgType);
 
 		PixelFormat GetPixelFormat(std::string szImageType);
+
+		//取得当前绑定的FBO
+		virtual uint GetCurrentBoundFBO() const;
+		//绑定FBO对象
+		virtual void BindFrameBuffer(uint fbo);
+		//绑定颜色附件
+		virtual void BindColorAttachment(uint index, uint target, uint obj);
+		//绑定深度附件
+		virtual void BindDepthAttachment(uint object, bool isRenderBuffer);
+		//绑定模板附件
+		virtual void BindStencilAttachment(uint object, bool isRenderBuffer);
+		
 
 
 		int getTextureQuality() const { return m_nTextureQuality; }
@@ -153,9 +190,11 @@ namespace Sapphire
 		uint           m_nMaxTextureUnits;
 		ImageTypeNameMap   m_imagetypeNames;
 
-		uint m_curBindVBO;  //当前绑定VBO
-		uint m_curBindUBO;  //当前UBO
-		uint m_curBindFBO;  //当前绑定FBO
+		bool m_bGL3Support;
+
+		uint m_curBoundVBO;  //当前绑定VBO
+		uint m_curBoundUBO;  //当前UBO
+		uint m_curBoundBO;  //当前绑定FBO
 		uint m_sysFBO;      //系统FBO
 
 		/// 所有在用的渲染目标
@@ -170,7 +209,10 @@ namespace Sapphire
 		//上一次使用的实例数据偏移
 		uint m_lastInstOffset;
 
-		bool m_fboDirty;
+		bool m_fboDirty;  //FBO需要更新标志
+
+		//每一个分辨率和格式的FBO表
+		std::map<ulonglong, FrameBufferObject>  m_frameBuffers;  
 
 		//当前使用的顶点属性掩码
 		unsigned m_enabledAttributes;
