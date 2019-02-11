@@ -72,12 +72,18 @@ namespace Sapphire
 
 		Sapphire::IImageMgr* getImageMgr() const { return m_pImageMgr; }
 
+		//绘制前的准备工作
+		virtual void PrepareDraw();
+
 		//绑定一个纹理到指定的纹理单元
 		//先激活对应的纹理单元
 		//然后绑定纹理对象
 		void BindTexture(ITexture* pTexture, TextureUnit unit);
 
 		void BindVBO(uint uHwUID);  //绑定VBO对象
+
+		//绑定UBO对象
+		void BindUBO(uint uHwUID);  //绑定UBO
 
 		bool  IsDeviceLost();
 
@@ -99,7 +105,10 @@ namespace Sapphire
 		virtual void BindDepthAttachment(uint object, bool isRenderBuffer);
 		//绑定模板附件
 		virtual void BindStencilAttachment(uint object, bool isRenderBuffer);
-		
+
+		virtual void DeleteFrameBuffer(uint fbo);
+		//创建帧缓冲区
+		virtual uint CreateFramebuffer();
 
 
 		int getTextureQuality() const { return m_nTextureQuality; }

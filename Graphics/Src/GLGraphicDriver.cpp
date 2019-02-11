@@ -71,6 +71,11 @@ namespace Sapphire
 
 
 
+	void GLGraphicDriver::PrepareDraw()
+	{
+
+	}
+
 	void GLGraphicDriver::BindTexture(ITexture* pTexture, TextureUnit unit)
 	{
 		if (m_pTextureMgr)
@@ -93,6 +98,11 @@ namespace Sapphire
 				m_curBoundVBO = uHwUID;
 			}
 		}
+	}
+
+	void GLGraphicDriver::BindUBO(uint uHwUID)
+	{
+
 	}
 
 	void GLGraphicDriver::SetIndexBuffer(IIndexBuffer* pIndexBuffer)
@@ -127,6 +137,10 @@ namespace Sapphire
 	{
 		if (!surface)
 			return;
+
+		//刷新有等待更新的FBO
+		PrepareDraw();
+
 		uint curFbo = GetCurrentBoundFBO();
 		std::map<ulonglong, FrameBufferObject>::iterator it;
 		//遍历所有fbo用到的这个表面
@@ -730,6 +744,28 @@ namespace Sapphire
 			else
 				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, object);
 		}
+	}
+
+	void GLGraphicDriver::DeleteFrameBuffer(uint fbo)
+	{
+#ifndef GL_ES_VERSION_2_0
+		if (!m_bGL3Support)
+			glDeleteFramebuffersEXT(1, &fbo);
+		else
+#endif
+			glDeleteFramebuffers(1, &fbo);
+	}
+
+	uint GLGraphicDriver::CreateFramebuffer()
+	{
+		unsigned newFbo = 0;
+#ifndef GL_ES_VERSION_2_0
+		if (!m_bGL3Support)
+			glGenFramebuffersEXT(1, &newFbo);
+		else
+#endif
+			glGenFramebuffers(1, &newFbo);
+		return newFbo;
 	}
 
 }

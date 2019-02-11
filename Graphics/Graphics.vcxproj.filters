@@ -111,6 +111,12 @@
     <ClInclude Include="Include\IGraphicDriver.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Src\ConstantBuffer.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\GLShaderVariation.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
@@ -153,6 +159,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\GLGraphicDriver.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ConstantBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GLShaderVariation.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

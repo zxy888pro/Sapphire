@@ -135,6 +135,14 @@ namespace Sapphire
 		MAX_GRAPHICDRIVERS
 	};
 
+	/// Shader ¿‡–Õ.
+	enum ShaderType
+	{
+		VS = 0,
+		PS,
+		GS
+	};
+
 #define	QUALITY_LOW  0
 #define	QUALITY_MEDIUM  1
 #define	QUALITY_HIGH  2

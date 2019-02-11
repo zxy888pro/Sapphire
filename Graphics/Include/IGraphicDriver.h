@@ -19,6 +19,8 @@ namespace Sapphire
 
 		virtual void Init() = 0;
 		virtual void Release() = 0;
+
+		virtual void PrepareDraw() = 0;
 		
 		virtual ITextureMgr* getTextureMgr() const = 0;
 		
