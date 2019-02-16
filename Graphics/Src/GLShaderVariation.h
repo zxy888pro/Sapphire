@@ -5,7 +5,7 @@
 
 namespace Sapphire
 {
-	class Shader;
+	class GLShader;
 	class ShaderProgram;
 
 	class GLShaderVariation : public RefCounter, public GPUObject
@@ -41,7 +41,7 @@ namespace Sapphire
 
 	private:
 
-		WeakPtr<Shader> m_owner;
+		WeakPtr<GLShader> m_owner;
 
 		ShaderType   m_eType;
 
