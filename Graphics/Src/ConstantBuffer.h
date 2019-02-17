@@ -6,7 +6,7 @@
 namespace Sapphire
 {
 	class GLGraphicDriver;
-	//硬件常量缓冲区
+	//变量数据缓冲区
 	class ConstantBuffer :  public BaseObject, public GPUObject
 	{
 	public:

@@ -110,6 +110,7 @@
     <ClInclude Include="Include\Graphics.h" />
     <ClInclude Include="Include\IRenderSurface.h" />
     <ClInclude Include="Include\IRenderSystem.h" />
+    <ClInclude Include="Include\IShaderProgram.h" />
     <ClInclude Include="Include\IShaderVariation.h" />
     <ClInclude Include="Include\ITexture.h" />
     <ClInclude Include="Include\ITextureMgr.h" />
@@ -123,6 +124,7 @@
     <ClInclude Include="Src\GLGraphicDriver.h" />
     <ClInclude Include="Src\GLRenderSystem.h" />
     <ClInclude Include="Src\GLShader.h" />
+    <ClInclude Include="Src\GLShaderProgram.h" />
     <ClInclude Include="Src\GLShaderVariation.h" />
     <ClInclude Include="Src\GPUObject.h" />
     <ClInclude Include="Src\ImageMgr.h" />
@@ -142,6 +144,8 @@
     <ClCompile Include="Src\Font.cpp" />
     <ClCompile Include="Src\GLGraphicDriver.cpp" />
     <ClCompile Include="Src\GLRenderSystem.cpp" />
+    <ClCompile Include="Src\GLShader.cpp" />
+    <ClCompile Include="Src\GLShaderProgram.cpp" />
     <ClCompile Include="Src\GLShaderVariation.cpp" />
     <ClCompile Include="Src\GpuObject.cpp" />
     <ClCompile Include="Src\GraphicDriver.cpp" />

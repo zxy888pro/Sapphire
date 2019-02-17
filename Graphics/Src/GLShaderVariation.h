@@ -2,13 +2,16 @@
 
 #include "Graphics.h"
 #include "GPUObject.h"
+#include "IShaderVariation.h"
 
 namespace Sapphire
 {
 	class GLShader;
+	class IShader;
 	class ShaderProgram;
 
-	class GLShaderVariation : public RefCounter, public GPUObject
+	//GPUÉÏµÄvs/ps/gs shaderŒ¦Ïó
+	class GLShaderVariation :public IShaderVariation, public RefCounter, public GPUObject
 	{
 	public:
 
@@ -22,7 +25,9 @@ namespace Sapphire
 
 		void SetDefines(const std::string& defines);
 
-		Shader* GetOwner() const;
+		IShader* GetOwner() const;
+
+		ShaderType GetShaderType() const;
 
 		const std::string& GetName() const;
 
@@ -31,6 +36,8 @@ namespace Sapphire
 		const std::string& GetCompilerOutput() const;
 
 		std::string GetFullName() const;
+
+
 
 		virtual void Release() override;
 

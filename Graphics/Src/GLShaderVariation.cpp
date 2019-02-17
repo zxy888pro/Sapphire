@@ -1,3 +1,4 @@
+#include "GLShader.h"
 #include "GLShaderVariation.h"
 
 
@@ -30,7 +31,7 @@ namespace Sapphire
 		m_defines = defines;
 	}
 
-	Sapphire::Shader* GLShaderVariation::GetOwner() const
+	Sapphire::IShader* GLShaderVariation::GetOwner() const
 	{
 		return m_owner;
 	}

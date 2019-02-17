@@ -143,6 +143,19 @@ namespace Sapphire
 		GS
 	};
 
+	/// shader 参数组 用于决定是否更新. 
+	enum ShaderParameterGroup
+	{
+		SP_FRAME = 0,
+		SP_CAMERA,
+		SP_ZONE,
+		SP_LIGHT,
+		SP_MATERIAL,
+		SP_OBJECT,
+		SP_CUSTOM,
+		MAX_SHADER_PARAMETER_GROUPS
+	};
+
 #define	QUALITY_LOW  0
 #define	QUALITY_MEDIUM  1
 #define	QUALITY_HIGH  2
