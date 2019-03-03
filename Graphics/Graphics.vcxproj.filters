@@ -132,6 +132,12 @@
     <ClInclude Include="Src\GLShaderProgram.h">
       <Filter>源文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ShaderScript.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ShaderMgr.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
@@ -186,6 +192,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\GLShaderProgram.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ShaderScript.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ShaderMgr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

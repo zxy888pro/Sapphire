@@ -6,7 +6,8 @@
 namespace Sapphire
 {
 
-	GLShaderVariation::GLShaderVariation()
+	GLShaderVariation::GLShaderVariation(ShaderType type):
+		m_eType(type)
 	{
 
 	}
@@ -15,7 +16,7 @@ namespace Sapphire
 	{
 
 	}
-
+	
 	bool GLShaderVariation::Create()
 	{
 		return true;

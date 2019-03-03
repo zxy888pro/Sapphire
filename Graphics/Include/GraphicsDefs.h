@@ -138,9 +138,10 @@ namespace Sapphire
 	/// Shader 类型.
 	enum ShaderType
 	{
-		VS = 0,
-		PS,
-		GS
+		VS = 0,  //顶点着色器
+		PS,		//像素着色器
+		GS,     //几何着色器
+		CS      //计算着色器
 	};
 
 	/// shader 参数组 用于决定是否更新. 
@@ -161,6 +162,7 @@ namespace Sapphire
 #define	QUALITY_HIGH  2
 #define	QUALITY_MAX  15
 #define MAX_TEXTURE_QUALITY_LEVELS  3
+#define MAX_SCRIPT_LENGTH  8192
 
 	//顶点元素掩码
 	static const unsigned MASK_NONE = 0x0;

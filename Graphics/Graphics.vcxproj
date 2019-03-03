@@ -118,6 +118,7 @@
     <ClInclude Include="Include\IVewport.h" />
     <ClInclude Include="Include\Material.h" />
     <ClInclude Include="Include\IShader.h" />
+    <ClInclude Include="Include\ShaderScript.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Src\CubeTexture.h" />
     <ClInclude Include="Src\ConstantBuffer.h" />
@@ -130,6 +131,7 @@
     <ClInclude Include="Src\ImageMgr.h" />
     <ClInclude Include="Src\IndexBuffer.h" />
     <ClInclude Include="Src\RenderSurface.h" />
+    <ClInclude Include="Src\ShaderMgr.h" />
     <ClInclude Include="Src\stb_image.h" />
     <ClInclude Include="Src\stb_image_resize.h" />
     <ClInclude Include="Src\stb_image_write.h" />
@@ -154,6 +156,8 @@
     <ClCompile Include="Src\ImageMgr.cpp" />
     <ClCompile Include="Src\IndexBuffer.cpp" />
     <ClCompile Include="Src\RenderSurface.cpp" />
+    <ClCompile Include="Src\ShaderMgr.cpp" />
+    <ClCompile Include="Src\ShaderScript.cpp" />
     <ClCompile Include="Src\Texture2D.cpp" />
     <ClCompile Include="Src\TextureMgr.cpp" />
     <ClCompile Include="Src\VertexBuffer.cpp" />

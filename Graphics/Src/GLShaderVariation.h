@@ -15,10 +15,10 @@ namespace Sapphire
 	{
 	public:
 
-		GLShaderVariation();
+		GLShaderVariation(ShaderType type);
 
 		virtual ~GLShaderVariation();
-
+		//±‡“ÎΩ≈±æ
 		bool Create();
 
 		void SetName(const std::string&  name);

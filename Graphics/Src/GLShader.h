@@ -2,6 +2,7 @@
 #include "Graphics.h"
 #include "IShader.h"
 #include "GLShaderVariation.h"
+#include "ShaderScript.h"
 
 namespace Sapphire
 {
@@ -27,6 +28,11 @@ namespace Sapphire
 		virtual void Dispose() override;
 		virtual size_t GetSize() override;
 		virtual bool IsDisposed() override;
+		virtual bool Load(HSHADERSCRIPT shaderPath);
+		virtual const std::string& GetName() const
+		{
+			return m_name;
+		}
 
 	private:
 
@@ -35,19 +41,29 @@ namespace Sapphire
 
 		//排序各定义并避免的重复定义
 		std::string  NormalizeDefines(const std::string& defines);
+
+		//重新计算内存占用
+		void RefreshMemoryUse();
 		
 
 		//保存各种shader的原码
 		std::string m_vsSource;
 		std::string m_psSource;
 		std::string m_gsSource;
+		std::string m_csSource;
+		//shader名字
+		std::string m_name;
 
 		uint  m_timeStamp;
 		uint  m_numVariation;
+		
 
-		std::unordered_map<std::string, SharedPtr<GLShaderVariation>> vsVariation;
-		std::unordered_map<std::string, SharedPtr<GLShaderVariation>> psVariation;
-		std::unordered_map<std::string, SharedPtr<GLShaderVariation>> gsVariation;
+		std::unordered_map<std::string, SharedPtr<GLShaderVariation>> m_vsVariation;
+		std::unordered_map<std::string, SharedPtr<GLShaderVariation>> m_psVariation;
+		std::unordered_map<std::string, SharedPtr<GLShaderVariation>> m_gsVariation;
+		std::unordered_map<std::string, SharedPtr<GLShaderVariation>> m_csVariation;
+
+		bool  m_bIsDisposed;
 
 	};
 }
