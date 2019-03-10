@@ -53,7 +53,7 @@ namespace Sapphire
 
 	bool ShaderScript::UnLoad()
 	{
-
+		return false;
 	}
 
 }

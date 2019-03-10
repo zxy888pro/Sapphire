@@ -46,10 +46,10 @@ namespace Sapphire
 			Json::Value rootNode;
 			if (reader->parse(jsonStr.c_str(), jsonStr.c_str() + strlen(jsonStr.c_str()), &rootNode, &errs))
 			{
-				Path vsFile = rootNode["vertexShader"].asCString;
-				Path psFile = rootNode["pixelShader"].asCString;
-				Path gsFile = rootNode["geometryShader"].asCString;
-				Path csFile = rootNode["computeShader"].asCString;
+				Path vsFile = rootNode["vertexShader"].asCString();
+				Path psFile = rootNode["pixelShader"].asCString();
+				Path gsFile = rootNode["geometryShader"].asCString();
+				Path csFile = rootNode["computeShader"].asCString();
 				GLShader* pShader = new GLShader();
 				//这里判断一下shader类型是否对应
 				HSHADERSCRIPT hvs = pScriptMgr->GetScript(vsFile.c_str());
