@@ -1,0 +1,6 @@
+{
+	"vertexShader":"",
+	"pixelShader":"",
+	"geometryShader":"",
+	"computeShader":"",
+}
