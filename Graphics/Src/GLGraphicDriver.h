@@ -13,6 +13,7 @@ namespace Sapphire
 	class Texture2D;
 	class GLRenderSystem;
 	class ShaderMgr;
+	class ShaderScriptMgr;
 
 	///方便顶点更新的CPU端缓冲区
 	struct ScratchBuffer
@@ -74,6 +75,8 @@ namespace Sapphire
 		Sapphire::IImageMgr* getImageMgr() const { return m_pImageMgr; }
 
 		Sapphire::ShaderMgr* getShaderMgr() const { return m_pShaderMgr; }
+
+		Sapphire::ShaderScriptMgr*  getShaderScriptMgr() const { return m_pShaderScriptMgr; }
 		//绘制前的准备工作
 		virtual void PrepareDraw();
 
@@ -195,6 +198,7 @@ namespace Sapphire
 		ITextureMgr*   m_pTextureMgr;
 		IImageMgr*     m_pImageMgr;
 		ShaderMgr*     m_pShaderMgr;
+		ShaderScriptMgr*   m_pShaderScriptMgr;
 		GLRenderSystem*  m_renderSys;
 
 		int            m_nTextureQuality;

@@ -119,6 +119,7 @@
     <ClInclude Include="Include\Material.h" />
     <ClInclude Include="Include\IShader.h" />
     <ClInclude Include="Include\ShaderScript.h" />
+    <ClInclude Include="Include\ShaderScriptMgr.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Src\CubeTexture.h" />
     <ClInclude Include="Src\ConstantBuffer.h" />
@@ -141,6 +142,7 @@
     <ClInclude Include="Src\Viewport.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Include\ShaderScriptMgr.cpp" />
     <ClCompile Include="Src\ConstantBuffer.cpp" />
     <ClCompile Include="Src\CubeTexture.cpp" />
     <ClCompile Include="Src\Font.cpp" />

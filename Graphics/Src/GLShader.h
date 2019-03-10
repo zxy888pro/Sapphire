@@ -7,6 +7,7 @@
 namespace Sapphire
 {
 
+	class GLGraphicDriver;
 
 	//Shader資源，由源碼和多個shader
 	class GLShader :public IShader, public BaseResource, public RefCounter
@@ -62,7 +63,7 @@ namespace Sapphire
 		std::unordered_map<std::string, SharedPtr<GLShaderVariation>> m_psVariation;
 		std::unordered_map<std::string, SharedPtr<GLShaderVariation>> m_gsVariation;
 		std::unordered_map<std::string, SharedPtr<GLShaderVariation>> m_csVariation;
-
+		GLGraphicDriver* m_pGraphicDriver;
 		bool  m_bIsDisposed;
 
 	};

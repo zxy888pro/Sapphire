@@ -4,6 +4,7 @@
 #include "Texture2D.h"
 #include "TextureMgr.h"
 #include "ImageMgr.h"
+#include "ShaderScriptMgr.h"
 #include "IIndexBuffer.h"
 #include "IVertexBuffer.h"
 #include "VertexBuffer.h"
@@ -39,6 +40,7 @@ namespace Sapphire
 	{
 		m_pTextureMgr = new TextureMgr();
 		m_pImageMgr = new ImageMgr();
+		m_pShaderScriptMgr = new ShaderScriptMgr();
 		m_imagetypeNames.clear();
 		m_imagetypeNames[ENUM2STR(ImageType_Bmp_A8R8G8B8)] = ImageType_Bmp_A8R8G8B8;
 		m_imagetypeNames[ENUM2STR(ImageType_Bmp_R8G8B8)] = ImageType_Bmp_R8G8B8;
@@ -66,6 +68,7 @@ namespace Sapphire
 	{
 		safeDelete(m_pImageMgr);
 		safeDelete(m_pTextureMgr);
+		safeDelete(m_pShaderScriptMgr);
 
 	}
 

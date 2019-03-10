@@ -1,6 +1,9 @@
 #include "Graphics.h"
 #include "GLShader.h"
 #include "ShaderMgr.h"
+#include "GLGraphicDriver.h"
+#include <GraphicException.h>
+#include "ShaderScriptMgr.h"
 
 namespace Sapphire
 {
@@ -10,6 +13,7 @@ namespace Sapphire
 		m_numVariation(0),
 		m_bIsDisposed(false)
 	{
+		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
 		RefreshMemoryUse();
 	}
 
@@ -153,8 +157,50 @@ namespace Sapphire
 	}
 
 
-	bool GLShader::Load(HSHADERSCRIPT shaderPath)
+	bool GLShader::Load(HSHADERSCRIPT hscript)
 	{
+		ShaderScriptMgr*   pScriptMgr = m_pGraphicDriver->getShaderScriptMgr();
+		Core* pCore = Core::GetSingletonPtr();
+		if (pScriptMgr == NULL || pCore == NULL)
+		{
+			throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
+		}
+		if (hscript.IsNull())
+		{
+			LogUtil::LogMsgLn("load Shader script failed! handle is null");
+			return false;
+		}
+		std::string name = pScriptMgr->GetName(hscript);
+		std::string content = pScriptMgr->GetContent(hscript);
+		ShaderType type = pScriptMgr->GetType(hscript);
+		SharedPtr<GLShaderVariation>  pShaderVariation;
+		if (pScriptMgr->GetType(hscript) != UNKNOWN)
+		{
+			pShaderVariation = SharedPtr<GLShaderVariation>(new GLShaderVariation(type));
+			pShaderVariation->SetName(name);
+			pShaderVariation->SetDefines(content);
+			switch (type)
+			{
+			case Sapphire::VS:
+				m_vsVariation[name] = pShaderVariation;
+				break;
+			case Sapphire::PS:
+				m_psVariation[name] = pShaderVariation;
+				break;
+			case Sapphire::GS:
+				m_gsVariation[name] = pShaderVariation;
+				break;
+			case Sapphire::CS:
+				m_csVariation[name] = pShaderVariation;
+				break;
+			case Sapphire::UNKNOWN:
+				break;
+			default:
+				break;
+			}
+		}
+		++m_numVariation;
+		RefreshMemoryUse();
 
 	}
 

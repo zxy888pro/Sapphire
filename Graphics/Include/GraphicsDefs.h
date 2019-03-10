@@ -141,7 +141,8 @@ namespace Sapphire
 		VS = 0,  //顶点着色器
 		PS,		//像素着色器
 		GS,     //几何着色器
-		CS      //计算着色器
+		CS,      //计算着色器
+		UNKNOWN
 	};
 
 	/// shader 参数组 用于决定是否更新. 
