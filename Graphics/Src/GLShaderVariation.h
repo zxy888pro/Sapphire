@@ -9,6 +9,7 @@ namespace Sapphire
 	class GLShader;
 	class IShader;
 	class ShaderProgram;
+	class GLGraphicDriver;
 
 	//GPU上的vs/ps/gs shader對象
 	class GLShaderVariation :public IShaderVariation, public RefCounter, public GPUObject
@@ -53,8 +54,9 @@ namespace Sapphire
 		ShaderType   m_eType;
 
 		std::string  m_name;
-		std::string  m_defines;
+		std::string  m_defines;  //宏定义的字符串
 		std::string  m_compilerOutput;
+		GLGraphicDriver* m_pGraphicDriver;
 
 	};
 

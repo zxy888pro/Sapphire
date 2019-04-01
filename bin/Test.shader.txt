@@ -1,6 +1,22 @@
 {
-	"vertexShader":"",
-	"pixelShader":"",
-	"geometryShader":"",
-	"computeShader":"",
+	"vertexShader":
+	{
+		"name":"",
+		"define":""
+	}，
+	"pixelShader":
+	{
+		"name":"",
+		"define":""
+	}，
+	"geometryShader":
+	{
+		"name":"",
+		"define":""
+	}，
+	"computeShader":
+	{
+		"name":"",
+		"define":""
+	}
 }

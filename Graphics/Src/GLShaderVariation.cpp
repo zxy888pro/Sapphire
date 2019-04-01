@@ -1,4 +1,5 @@
 #include "GLShader.h"
+#include "GLGraphicDriver.h"
 #include "GLShaderVariation.h"
 
 
@@ -9,7 +10,7 @@ namespace Sapphire
 	GLShaderVariation::GLShaderVariation(ShaderType type):
 		m_eType(type)
 	{
-
+		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
 	}
 
 	GLShaderVariation::~GLShaderVariation()
@@ -54,17 +55,42 @@ namespace Sapphire
 
 	std::string GLShaderVariation::GetFullName() const
 	{
-		return "";
+		return m_name + "(" + m_defines + ")";
 	}
 
 	void GLShaderVariation::Release()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		if (m_uHwUID)
+		{
+			if (!m_pGraphicDriver)
+				return;
+
+			if (!m_pGraphicDriver->IsDeviceLost())
+			{
+				if (m_eType == VS)
+				{
+					if (m_pGraphicDriver->GetVertexShader() == this)
+						m_pGraphicDriver->SetShaders(0, 0);
+				}
+				else
+				{
+					if (m_pGraphicDriver->GetPixelShader() == this)
+						m_pGraphicDriver->SetShaders(0, 0);
+				}
+
+				glDeleteShader(m_uHwUID);
+			}
+
+			m_uHwUID = 0;
+			m_pGraphicDriver->CleanupShaderPrograms(this);
+		}
+
+		 
 	}
 
 	void GLShaderVariation::OnDeviceLost()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		GPUObject::OnDeviceLost();
 	}
 
 }

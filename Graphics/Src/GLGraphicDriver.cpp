@@ -5,8 +5,10 @@
 #include "TextureMgr.h"
 #include "ImageMgr.h"
 #include "ShaderScriptMgr.h"
+#include "ShaderMgr.h"
 #include "IIndexBuffer.h"
 #include "IVertexBuffer.h"
+#include "IShaderVariation.h"
 #include "VertexBuffer.h"
 #include "RenderSurface.h"
 #include "GLRenderSystem.h"
@@ -250,6 +252,29 @@ namespace Sapphire
 	Sapphire::IVertexBuffer* GLGraphicDriver::GetVertexBuffer(uint index) const
 	{
 		return index < MAX_VERTEX_STREAMS ? m_vertexBuffers[index] : 0;
+	}
+
+	Sapphire::IShaderVariation* GLGraphicDriver::GetShader(ShaderType type, const std::string& name, const std::string define /*= ""*/) const
+	{
+		std::string fullName = ShaderMgr::GetFileName(name, type);
+		return NULL;
+	}
+
+ 
+
+	void GLGraphicDriver::SetShaders(IShaderVariation* vs, IShaderVariation* ps)
+	{
+
+	}
+
+	Sapphire::IShaderVariation* GLGraphicDriver::GetVertexShader() const
+	{
+		return NULL;
+	}
+
+	Sapphire::IShaderVariation* GLGraphicDriver::GetPixelShader() const
+	{
+		return NULL;
 	}
 
 	bool GLGraphicDriver::SetVertexBuffers(const std::vector<IVertexBuffer*>& buffers, const std::vector<uint>& elememtMasks, uint instOffset)

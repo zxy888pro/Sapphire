@@ -30,20 +30,20 @@ namespace Sapphire
 	Sapphire::IShaderVariation* GLShader::GetVariation(ShaderType type, const char* defines)
 	{
 		IShaderVariation* pShaderVariation = NULL;
-		std::string str = defines;
-		std::unordered_map<std::string, SharedPtr<GLShaderVariation>>::iterator it;
+		StringHash strHash(defines);
+		std::unordered_map<uint, SharedPtr<GLShaderVariation>>::iterator it;
 		switch (type)
 		{
 		case Sapphire::VS:
 			{
-				 it = m_vsVariation.find(str);
+				it = m_vsVariation.find(strHash.Value());
 				 if (it != m_vsVariation.end())
 				 {
 					 pShaderVariation = it->second;
 				 }
 				 else
 				 {
-					std::pair<std::string, SharedPtr<GLShaderVariation>> _pair = std::make_pair(str, SharedPtr<GLShaderVariation>(new GLShaderVariation(type)));
+					std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type)));
 					_pair.second->SetDefines(defines);
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(),ShaderType::VS));
 					m_vsVariation.insert(_pair);
@@ -55,14 +55,14 @@ namespace Sapphire
 			break;
 		case Sapphire::PS:
 			{
-				it = m_psVariation.find(str);
+				it = m_psVariation.find(strHash.Value());
 				if (it != m_psVariation.end())
 				{
 					pShaderVariation = it->second;
 				}
 				else
 				{
-					std::pair<std::string, SharedPtr<GLShaderVariation>> _pair = std::make_pair(str, SharedPtr<GLShaderVariation>(new GLShaderVariation(type)));
+					std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type)));
 					_pair.second->SetDefines(defines);
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(), ShaderType::PS));
 					m_psVariation.insert(_pair);
@@ -73,14 +73,14 @@ namespace Sapphire
 			break;
 		case Sapphire::GS:
 			{
-				it = m_gsVariation.find(str);
+				it = m_gsVariation.find(strHash.Value());
 				if (it != m_gsVariation.end())
 				{
 					pShaderVariation = it->second;
 				}
 				else
 				{
-					std::pair<std::string, SharedPtr<GLShaderVariation>> _pair = std::make_pair(str, SharedPtr<GLShaderVariation>(new GLShaderVariation(type)));
+					std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type)));
 					_pair.second->SetDefines(defines);
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(), ShaderType::GS));
 					m_gsVariation.insert(_pair);
@@ -91,14 +91,14 @@ namespace Sapphire
 			break;
 		case Sapphire::CS:
 			{
-				it = m_gsVariation.find(str);
+				it = m_gsVariation.find(strHash.Value());
 				if (it != m_gsVariation.end())
 				{
 					pShaderVariation = it->second;
 				}
 				else
 				{
-					std::pair<std::string, SharedPtr<GLShaderVariation>> _pair = std::make_pair(str, SharedPtr<GLShaderVariation>(new GLShaderVariation(type)));
+					std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type)));
 					_pair.second->SetDefines(defines);
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(), ShaderType::CS));
 					m_csVariation.insert(_pair);
@@ -170,36 +170,32 @@ namespace Sapphire
 			LogUtil::LogMsgLn("load Shader script failed! handle is null");
 			return false;
 		}
-		std::string name = pScriptMgr->GetName(hscript);
-		std::string content = pScriptMgr->GetContent(hscript);
-		ShaderType type = pScriptMgr->GetType(hscript);
-		SharedPtr<GLShaderVariation>  pShaderVariation;
+		std::string name = pScriptMgr->GetName(hscript);	//脚本路径
+		std::string content = pScriptMgr->GetContent(hscript);    //脚本内容
+		ShaderType type = pScriptMgr->GetType(hscript);			//脚本类型
 		if (pScriptMgr->GetType(hscript) != UNKNOWN)
 		{
-			pShaderVariation = SharedPtr<GLShaderVariation>(new GLShaderVariation(type));
-			pShaderVariation->SetName(name);
-			pShaderVariation->SetDefines(content);
-			switch (type)
-			{
-			case Sapphire::VS:
-				m_vsVariation[name] = pShaderVariation;
-				break;
-			case Sapphire::PS:
-				m_psVariation[name] = pShaderVariation;
-				break;
-			case Sapphire::GS:
-				m_gsVariation[name] = pShaderVariation;
-				break;
-			case Sapphire::CS:
-				m_csVariation[name] = pShaderVariation;
-				break;
-			case Sapphire::UNKNOWN:
-				break;
-			default:
-				break;
-			}
+		switch (type)
+		{
+		case Sapphire::VS:
+			m_vsSource = content;
+		break;
+		case Sapphire::PS:
+			m_psSource = content;
+		break;
+		case Sapphire::GS:
+			m_gsSource = content;
+		break;
+		case Sapphire::CS:
+			m_csSource = content;
+		break;
+		case Sapphire::UNKNOWN:
+		break;
+		default:
+		break;
 		}
-		++m_numVariation;
+		}
+		//++m_numVariation;
 		RefreshMemoryUse();
 
 	}

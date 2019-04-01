@@ -9,6 +9,7 @@ namespace Sapphire
 	struct ITexture;
 	struct IVertexBuffer;
 	struct IIndexBuffer;
+	struct IShaderVariation;
 	class RenderSurface;
 	class Texture2D;
 	class GLRenderSystem;
@@ -121,6 +122,15 @@ namespace Sapphire
 		void setTextureQuality(int val) { m_nTextureQuality = val; }
 
 		virtual IVertexBuffer* GetVertexBuffer(uint index) const;
+
+		virtual IShaderVariation*  GetShader(ShaderType type, const std::string& name, const std::string define = "") const;
+
+		virtual void SetShaders(IShaderVariation* vs, IShaderVariation* ps);
+
+		virtual IShaderVariation* GetVertexShader() const;
+		virtual IShaderVariation* GetPixelShader() const;
+
+		virtual void CleanupShaderPrograms(IShaderVariation* pShaderVariation);
 
 		//设置多个顶点缓冲区
 		virtual bool SetVertexBuffers(const std::vector<IVertexBuffer*>&  buffers, const std::vector<uint>& elememtMasks, uint instOffset = 0);
@@ -249,6 +259,10 @@ namespace Sapphire
 		//ShadowMap 24位深度格式
 		uint m_hireShadowMapFormat;
 		uint m_dummyColorFormat;
+
+		//当前再用的shader
+		IShaderVariation* m_vertexShader;
+		IShaderVariation* m_pixelShader;
 
 
 	};

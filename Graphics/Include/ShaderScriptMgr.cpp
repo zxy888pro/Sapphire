@@ -23,7 +23,7 @@ namespace Sapphire
 		if (rc.second)
 		{
 			ShaderScript* pScript = m_scripts.Acquire(rc.first->second);
-			if (!pScript->Load(rc.first->first))
+			if (!pScript->Load(rc.first->first))  //加载脚本文件
 			{
 				DeleteScript(rc.first->second);
 				rc.first->second = HSHADERSCRIPT();
@@ -39,7 +39,7 @@ namespace Sapphire
 		{
 			return it->second;
 		}
-		return LoadScript(name);
+		return LoadScript(name);  //如果没有加载，重新加载
 	}
 
 	void ShaderScriptMgr::DeleteScript(HSHADERSCRIPT hscript)

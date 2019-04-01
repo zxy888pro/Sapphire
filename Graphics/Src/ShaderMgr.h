@@ -17,7 +17,7 @@ namespace Sapphire
 		virtual ~ShaderMgr();
 
 		//´´½¨shader
-		virtual GLShader* CreateShader(std::string filePath);
+		virtual GLShader* CreateShader(std::string cfgPath);
 
 		virtual void StoreScriptDependency(std::string name,  ShaderScript* pScripts);
 

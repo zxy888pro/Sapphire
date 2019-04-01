@@ -28,7 +28,8 @@ namespace Sapphire
 		Destroy();
 	}
 
-	Sapphire::GLShader* ShaderMgr::CreateShader(std::string filePath)
+	//加载shader配置文件
+	Sapphire::GLShader* ShaderMgr::CreateShader(std::string cfgPath)
 	{
 		ShaderScriptMgr*   pScriptMgr = m_pGraphicDriver->getShaderScriptMgr();
 		Core* pCore = Core::GetSingletonPtr();
@@ -36,7 +37,7 @@ namespace Sapphire
 		{
 			throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
 		}
-		FileStream fs(filePath.c_str(), FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
+		FileStream fs(cfgPath.c_str(), FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
 		if (fs.IsOpen())
 		{
 			std::string jsonStr = fs.ReadString(MAX_JSON_LENGTH);
@@ -46,10 +47,12 @@ namespace Sapphire
 			Json::Value rootNode;
 			if (reader->parse(jsonStr.c_str(), jsonStr.c_str() + strlen(jsonStr.c_str()), &rootNode, &errs))
 			{
-				Path vsFile = rootNode["vertexShader"].asCString();
-				Path psFile = rootNode["pixelShader"].asCString();
-				Path gsFile = rootNode["geometryShader"].asCString();
-				Path csFile = rootNode["computeShader"].asCString();
+				//从配置文件中读取每个shader的路径
+				
+				Path vsFile = rootNode["vertexShader"]["name"].asCString();
+				Path psFile = rootNode["pixelShader"]["name"].asCString();
+				Path gsFile = rootNode["geometryShader"]["name"].asCString();
+				Path csFile = rootNode["computeShader"]["name"].asCString();
 				GLShader* pShader = new GLShader();
 				//这里判断一下shader类型是否对应
 				HSHADERSCRIPT hvs = pScriptMgr->GetScript(vsFile.c_str());
@@ -74,6 +77,7 @@ namespace Sapphire
 				}
 				RHANDLE handle = 0;
 				InsertResource(&handle, pShader);
+				fs.Release();
 				return pShader;
 			}
 			fs.Release();

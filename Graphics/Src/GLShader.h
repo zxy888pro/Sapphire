@@ -59,10 +59,11 @@ namespace Sapphire
 		uint  m_numVariation;
 		
 
-		std::unordered_map<std::string, SharedPtr<GLShaderVariation>> m_vsVariation;
-		std::unordered_map<std::string, SharedPtr<GLShaderVariation>> m_psVariation;
-		std::unordered_map<std::string, SharedPtr<GLShaderVariation>> m_gsVariation;
-		std::unordered_map<std::string, SharedPtr<GLShaderVariation>> m_csVariation;
+		std::unordered_map<uint, SharedPtr<GLShaderVariation>> m_vsVariation;
+		std::unordered_map<uint, SharedPtr<GLShaderVariation>> m_psVariation;
+		std::unordered_map<uint, SharedPtr<GLShaderVariation>> m_gsVariation;
+		std::unordered_map<uint, SharedPtr<GLShaderVariation>> m_csVariation;
+
 		GLGraphicDriver* m_pGraphicDriver;
 		bool  m_bIsDisposed;
 
