@@ -16,6 +16,7 @@ namespace Sapphire
 		GLShader();
 		virtual ~GLShader();
 
+		//加载不同预定义的shader对象
 		IShaderVariation* GetVariation(ShaderType type, const std::string& defines);
 		IShaderVariation* GetVariation(ShaderType type, const char* defines);
 
@@ -58,8 +59,8 @@ namespace Sapphire
 		uint  m_timeStamp;
 		uint  m_numVariation;
 		
-
-		std::unordered_map<uint, SharedPtr<GLShaderVariation>> m_vsVariation;
+		//保存所有的Shader对象实例
+		std::unordered_map<uint, SharedPtr<GLShaderVariation>> m_vsVariation;   
 		std::unordered_map<uint, SharedPtr<GLShaderVariation>> m_psVariation;
 		std::unordered_map<uint, SharedPtr<GLShaderVariation>> m_gsVariation;
 		std::unordered_map<uint, SharedPtr<GLShaderVariation>> m_csVariation;

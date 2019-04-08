@@ -10,7 +10,7 @@ int main()
 {
 	using namespace Sapphire;
 	const char* str = "{\"uploadid\": \"UP000000\",\"code\": 100,\"msg\": \"\",\"files\": \"\"}";
-	FileStream fs("images\\peaks.cub.json", FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
+		FileStream fs("images\\1.json", FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
 	if (fs.IsOpen())
 	{
 		std::string jsonStr = fs.ReadString(MAX_JSON_LENGTH);
@@ -23,9 +23,16 @@ int main()
 		{
 			/*string uploadId = root["uploadid"].asString();
 			cout << uploadId << endl;*/
-			string right = root["+x"].asString();
-			int nSize = root["size"].asInt();
-			cout << "nSize = "<<nSize << endl;
+			Json::Value ObjectArray; //¶ÁÈ¡Êý×é
+			ObjectArray = root["cubes"];
+			for (int i = 0; i < ObjectArray.size(); i++)
+			{
+
+				string right = ObjectArray[i]["+x"].asString();
+				int nSize = ObjectArray[i]["size"].asInt();
+				cout << "nSize = " << nSize << endl;
+			}
+			
 		}
 	}
 	

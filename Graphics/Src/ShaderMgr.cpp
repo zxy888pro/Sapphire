@@ -40,6 +40,7 @@ namespace Sapphire
 		FileStream fs(cfgPath.c_str(), FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
 		if (fs.IsOpen())
 		{
+			//解析shadercfg
 			std::string jsonStr = fs.ReadString(MAX_JSON_LENGTH);
 			Json::CharReaderBuilder builder;
 			Json::CharReader* reader = builder.newCharReader();
@@ -48,14 +49,14 @@ namespace Sapphire
 			if (reader->parse(jsonStr.c_str(), jsonStr.c_str() + strlen(jsonStr.c_str()), &rootNode, &errs))
 			{
 				//从配置文件中读取每个shader的路径
-				
-				Path vsFile = rootNode["vertexShader"]["name"].asCString();
+				//四种shader
+				Path vsFile = rootNode["vertexShader"]["name"].asCString(); 
 				Path psFile = rootNode["pixelShader"]["name"].asCString();
 				Path gsFile = rootNode["geometryShader"]["name"].asCString();
 				Path csFile = rootNode["computeShader"]["name"].asCString();
 				GLShader* pShader = new GLShader();
 				//这里判断一下shader类型是否对应
-				HSHADERSCRIPT hvs = pScriptMgr->GetScript(vsFile.c_str());
+				HSHADERSCRIPT hvs = pScriptMgr->GetScript(vsFile.c_str());  //取得资源句柄
 				if (!hvs.IsNull() && (pScriptMgr->GetType(hvs) == ShaderType::VS))
 				{
 					pShader->Load(hvs);

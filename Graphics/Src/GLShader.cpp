@@ -32,6 +32,7 @@ namespace Sapphire
 		IShaderVariation* pShaderVariation = NULL;
 		StringHash strHash(defines);
 		std::unordered_map<uint, SharedPtr<GLShaderVariation>>::iterator it;
+		//≈–∂œ¿‡–Õ
 		switch (type)
 		{
 		case Sapphire::VS:
