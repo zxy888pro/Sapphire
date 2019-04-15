@@ -40,7 +40,7 @@ namespace Sapphire
 		
 		virtual bool Create()	{ return false; }
 		virtual void Destroy()	{}
-
+		virtual void Load(const char* resourcePath) {};
 		virtual bool Recreate() = 0;
 		virtual void Dispose() = 0;
 
@@ -164,6 +164,7 @@ namespace Sapphire
 
 		// 获取指定的资源， 如果资源已经被销毁，那么会重建一个
 		BaseResource* GetResource(RHANDLE rhUniqueID);
+
 
 		// 锁定资源，保证不会被自动清理
 		BaseResource* Lock(RHANDLE rhUniqueID);

@@ -17,6 +17,15 @@ namespace Sapphire
 		RefreshMemoryUse();
 	}
 
+	GLShader::GLShader(const char* name):
+		m_timeStamp(0),
+		m_numVariation(0),
+		m_bIsDisposed(false),
+		m_name(name)
+	{
+
+	}
+
 	GLShader::~GLShader()
 	{
 		Dispose();

@@ -165,6 +165,9 @@
     <ClInclude Include="Include\ArrayPtr.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ResourceCache.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">

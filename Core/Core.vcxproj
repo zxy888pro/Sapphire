@@ -49,6 +49,7 @@
     <ClInclude Include="Include\path.h" />
     <ClInclude Include="Include\Ptr.h" />
     <ClInclude Include="Include\RefCounter.h" />
+    <ClInclude Include="Include\ResourceCache.h" />
     <ClInclude Include="Include\Sapphire.h" />
     <ClInclude Include="Include\SapphireDef.h" />
     <ClInclude Include="Include\sigslot\sigslot.h" />

@@ -14,6 +14,7 @@ namespace Sapphire
 	{
 	public:
 		GLShader();
+		GLShader(const char* name);
 		virtual ~GLShader();
 
 		//加载不同预定义的shader对象
