@@ -269,5 +269,8 @@
     <ClCompile Include="Src\EventContext.cpp">
       <Filter>源文件\Event</Filter>
     </ClCompile>
+    <ClCompile Include="Src\ResourceCache.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

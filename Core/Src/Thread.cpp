@@ -1,4 +1,4 @@
-#include <Thread.h>
+ï»¿#include <Thread.h>
 
 #ifdef SAPPHIRE_WIN
 #include <windows.h>
@@ -14,12 +14,12 @@
 namespace Sapphire
 {
 
-//Ïß³Ìº¯ÊıÈë¿Ú
+//çº¿ç¨‹å‡½æ•°å…¥å£
 #ifdef SAPPHIRE_WIN
 	DWORD	WINAPI  ThreadFuncEntry(void* pdata)
 	{
 		Thread* pThread = static_cast<Thread*>(pdata);
-		//Ö´ĞĞÏß³Ìº¯Êı
+		//æ‰§è¡Œçº¿ç¨‹å‡½æ•°
 		pThread->ThreadFunc();
 		return 0;
 	}
@@ -52,13 +52,13 @@ namespace Sapphire
 
 	bool Thread::Run()
 	{
-		//ÒÑ¾­·ÖÅä¾ä±ú£¬²»ÄÜÔËĞĞ
+		//å·²ç»åˆ†é…å¥æŸ„ï¼Œä¸èƒ½è¿è¡Œ
 		if (m_handle)
 			return false;
 
 		m_shouldRun = true;
 #ifdef SAPPHIRE_WIN
-		//ÓÃÒ»¸ö¾²Ì¬º¯Êı×öÍ³Ò»Èë¿Ú£¬ ÔÚ°Ñ×Ô¼º×ö²ÎÊı´«½øÈ¥
+		//ç”¨ä¸€ä¸ªé™æ€å‡½æ•°åšç»Ÿä¸€å…¥å£ï¼Œ åœ¨æŠŠè‡ªå·±åšå‚æ•°ä¼ è¿›å»
 		m_handle = CreateThread(0, 0, ThreadFuncEntry, this, 0, 0);
 
 #else
@@ -89,6 +89,8 @@ namespace Sapphire
 #endif
 		m_handle = NULL;
 	}
+
+
 
 	bool Thread::IsStarted()
 	{
@@ -127,6 +129,91 @@ namespace Sapphire
 		return GetCurrentThreadId() == mainThreadID;
 	}
 
+	void* Thread::GetHandle() const
+	{
+		return m_handle;
+	}
+
 	ThreadID Thread::mainThreadID;
 
+
+	Mutex::Mutex()
+	{
+#ifdef SAPPHIRE_WIN
+		InitializeCriticalSection(&m_cs);
+#else
+		pthread_mutexattr_init(&m_attr);
+		pthread_mutexattr_settype(&m_attr, PTHREAD_MUTEX_RECURSIVE);
+		pthread_mutex_init(&m_cs, &m_attr);
+#endif
+#ifdef SAPPHIRE_DEBUG
+		file = 0, line = 0;
+#endif
+	}
+
+
+	Mutex::~Mutex()
+	{
+#ifdef SAPPHIRE_WIN
+		DeleteCriticalSection(&m_cs);
+#else
+		pthread_mutexattr_destroy(&m_attr);
+		pthread_mutex_destroy(&m_cs);
+#endif
+	}
+
+#ifdef SAPPHIRE_DEBUG
+	void Mutex::Lock(const char* f, int l)
+	{
+		sapphire_mutex_lock(&m_cs);
+		file = f; line = l;
+	}
+	bool Mutex::TryLock()
+	{
+		return sapphire_mutex_trylock(&m_cs);
+	}
+
+	void Mutex::Unlock()
+	{
+		sapphire_mutex_unlock(&m_cs);
+		file = (const char*)0xaabbccdd; line = 0x12345678;
+	}
+#else
+	void Mutex::Lock()
+	{
+		sapphire_mutex_lock(&m_cs);
+	}
+
+	bool Mutex::TryLock()
+	{
+		return sapphire_mutex_trylock(&m_cs);
+	}
+
+	void Mutex::Unlock()
+	{
+		sapphire_mutex_unlock(&m_cs);
+	}
+#endif // !SAPPHIRE_DEBUG
+
+	ThreadEx::ThreadEx() :Thread()
+	{
+
+	}
+
+	void ThreadEx::ThreadFunc()
+	{
+		if (m_pTask)
+		{
+			m_pTask->run();
+		}
+	}
+
+	void ThreadEx::Run(IRunnable* task)
+	{
+		m_pTask = task;
+		Thread::Run();
+		
+	}
+
 }
+

@@ -22,7 +22,7 @@ namespace Sapphire
 	};
 
 	//资源基类
-	class  BaseResource
+	class SAPPHIRE_CLASS  BaseResource
 	{
 	public:
 
@@ -32,12 +32,20 @@ namespace Sapphire
 			RES_MED_PRIORITY,
 			RES_HIGH_PRIORITY
 		};
-
-		BaseResource()			{ Clear(); m_eType = ResourceType_Unkown; }
+		BaseResource()
+		{
+			m_resName = "";
+			m_eType = ResourceType_Unkown;
+		}
+		BaseResource(const char* name = "")			
+		{ 
+			Clear(); 
+			m_resName = name;
+			m_eType = ResourceType_Unkown; }
 		virtual ~BaseResource()	{ Destroy(); }
 
 		virtual void Clear();
-		
+		virtual const std::string& GetName() const { return m_resName; }
 		virtual bool Create()	{ return false; }
 		virtual void Destroy()	{}
 		virtual void Load(const char* resourcePath) {};
@@ -70,6 +78,7 @@ namespace Sapphire
 		uint			m_nRefCount;
 		time_t			m_LastAccess;
 		ResoureType     m_eType;
+		std::string     m_resName;  //用于ResourceCache
 
 	};
 

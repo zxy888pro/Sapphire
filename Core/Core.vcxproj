@@ -90,6 +90,7 @@
     <ClCompile Include="Src\Mutex.cpp" />
     <ClCompile Include="Src\path.cpp" />
     <ClCompile Include="Src\RefCounter.cpp" />
+    <ClCompile Include="Src\ResourceCache.cpp" />
     <ClCompile Include="Src\Str.cpp" />
     <ClCompile Include="Src\stringHelper.cpp" />
     <ClCompile Include="Src\SubSystem.cpp" />

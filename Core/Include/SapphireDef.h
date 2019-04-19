@@ -136,7 +136,7 @@ enum MemAllocType
 
 #ifdef SAPPHIRE_WIN
 #define m_assert(x) if ((x) == false) __asm { int 3 }
-
+#define SAPPHIRE_STDCALL     __stdcall
 //template<class _Kty,class _Ty,class _Hasher = hash<_Kty>,class _Keyeq = equal_to<_Kty>,class _Alloc = allocator<pair<const _Kty, _Ty> >
 //using HashMap = std::unordered_map < _Kty, _Ty, _Hasher, _Keyeq > ;
 #ifndef FORCEINLINE
@@ -148,7 +148,10 @@ enum MemAllocType
 #define m_assert(x) assert(x)
 #endif // ! m_assert
 
-#endif // !SAPPHIRE_WIN
+#elif defined(SAPPHIRE_ANDROID)
+#define SAPPHIRE_STDCALL           __attribute__((__stdcall__))
+
+#endif
 
 
 #define MAX_JSON_LENGTH   4096
