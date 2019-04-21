@@ -8,6 +8,8 @@
 typedef pthread_t ThreadID;
 #else
 typedef uint ThreadID;
+
+#include <windows.h>
 #endif
 
 
@@ -36,9 +38,10 @@ namespace Sapphire
 #endif
 
 
-	class SAPPHIRE_CLASS Mutex
+	class SAPPHIRE_CLASS MutexEx
 	{
 #ifdef SAPPHIRE_WIN
+	private:
 		CRITICAL_SECTION m_cs;
 #else
 		pthread_mutex_t m_cs;
@@ -51,8 +54,8 @@ namespace Sapphire
 #endif
 
 	public:
-		Mutex();
-		~Mutex();
+		MutexEx();
+		~MutexEx();
 
 #ifdef SAPPHIRE_DEBUG
 		void Lock(const char* f = 0, int l = 0);
@@ -67,7 +70,7 @@ namespace Sapphire
 	};
 
 	//资源自动守护
-	template<class _Mutex = Mutex>
+	template<class _Mutex = MutexEx>
 	class ResGuard
 	{
 		_Mutex& mMutex;

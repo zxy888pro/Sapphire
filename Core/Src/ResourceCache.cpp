@@ -152,7 +152,7 @@ namespace Sapphire
 
 	bool ResourceCache::DestroyResource(const std::string& name)
 	{
-		DestroyResource(name.c_str());
+		return DestroyResource(name.c_str());
 	}
 
 	Sapphire::BaseResource* ResourceCache::GetResource(const std::string& name)

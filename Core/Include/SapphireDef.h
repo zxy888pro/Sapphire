@@ -111,7 +111,7 @@
 //#define ACTIVATE_MEMORY_MANAGER
 //#endif
 
-#define ACTIVATE_MEMORY_MANAGER
+//#define ACTIVATE_MEMORY_MANAGER
 
 
 enum MemAllocType

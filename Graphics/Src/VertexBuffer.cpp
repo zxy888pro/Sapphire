@@ -83,6 +83,7 @@ namespace Sapphire
 	}
 
 	VertexBuffer::VertexBuffer() :
+		BaseObject(),
 		m_vertexCount(0),
 		m_vertexSize(0),
 		m_bShadowed(false),

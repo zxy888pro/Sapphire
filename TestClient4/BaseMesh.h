@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include <glm.hpp>
 #include "RenderState.h"
+#include "BaseObject.h"
 
 
 namespace Sapphire
@@ -23,8 +24,9 @@ namespace Sapphire
 
 	class BaseLight;
 
-	class BaseMesh :public RefCounter
+	class BaseMesh :public BaseObject
 	{
+		SAPPHIRE_OBJECT(BaseMesh, BaseObject)
 	public:
 
 		BaseMesh();

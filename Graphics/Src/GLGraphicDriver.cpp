@@ -277,6 +277,11 @@ namespace Sapphire
 		return NULL;
 	}
 
+	void GLGraphicDriver::CleanupShaderPrograms(IShaderVariation* pShaderVariation)
+	{
+
+	}
+
 	bool GLGraphicDriver::SetVertexBuffers(const std::vector<IVertexBuffer*>& buffers, const std::vector<uint>& elememtMasks, uint instOffset)
 	{
 		//同时处理的顶点流不能超过MAX_VERTEX_STREAMS

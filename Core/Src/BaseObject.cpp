@@ -1,20 +1,17 @@
-#include <Sapphire.h>
-#include <BaseObject.h>
+#include "Sapphire.h"
+#include "BaseObject.h"
 
 namespace Sapphire
 {
 
-	BaseObject::BaseObject(Core* pCore)
+	
+	 
+	/*BaseObject::BaseObject(Core* pCore)
 	{
 
-	}
+	}*/
 
-	BaseObject::~BaseObject()
-	{
-
-	}
-
-	void BaseObject::Awake()
+	/*void BaseObject::Awake()
 	{
 
 	}
@@ -38,8 +35,69 @@ namespace Sapphire
 	void BaseObject::NotifyEvent()
 	{
 
+	}*/
+
+
+
+	ClassTypeInfo::ClassTypeInfo(const char* className, const ClassTypeInfo* pBaseClassInfo) :
+		m_classHash(className),
+		m_className(className),
+		m_pBaseClassInfo(pBaseClassInfo)
+	{
+
 	}
 
+	ClassTypeInfo::~ClassTypeInfo()
+	{
 
+	}
+
+	bool ClassTypeInfo::IsTypeOf(StringHash hashVal) const
+	{
+		const ClassTypeInfo* current = this;
+		while (current)
+		{
+			if (current->GetClassType() == hashVal)
+				return true;
+
+			current = current->GetBaseClassTypeInfo();
+		}
+
+		return false;
+	}
+
+	bool ClassTypeInfo::IsTypeOf(const ClassTypeInfo* typeInfo) const
+	{
+		const ClassTypeInfo* current = this;
+		while (current)
+		{
+			if (current == typeInfo)
+				return true;
+
+			current = current->GetBaseClassTypeInfo();
+		}
+
+		return false;
+	}
+
+	 
+
+ 
+
+	BaseObject::BaseObject():
+		m_pcore(NULL)
+	{
+		 
+	}
+
+	BaseObject::BaseObject(Core* pCore)
+	{
+		m_pcore = pCore;
+	}
+
+	BaseObject::~BaseObject()
+	{
+
+	}
 
 }

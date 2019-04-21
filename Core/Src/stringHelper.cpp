@@ -18,6 +18,7 @@ namespace Sapphire
 	std::string StringFormatA(const char *fmt, ...)
 	{
 		char szBuffer[FORMAT_MSG_BUFFER_SIZE + 1] = { 0 };
+		memset(szBuffer, 0, FORMAT_MSG_BUFFER_SIZE + 1);
 		va_list args;
 		va_start(args, fmt);
 		vsnprintf(szBuffer, FORMAT_MSG_BUFFER_SIZE, fmt, args);
@@ -81,6 +82,7 @@ namespace Sapphire
 	std::wstring StringFormatW(wchar_t *fmt, ...)
 	{
 		wchar_t szBuffer[FORMAT_MSG_BUFFER_SIZE + 1] = { 0 };
+		memset(szBuffer, 0, FORMAT_MSG_BUFFER_SIZE + 1);
 		va_list args;
 		va_start(args, fmt);
 		vswprintf(szBuffer, FORMAT_MSG_BUFFER_SIZE, fmt, args);

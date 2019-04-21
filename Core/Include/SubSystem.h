@@ -12,9 +12,11 @@ namespace Sapphire
 		ESST_WORKERQUEUE,
 		ESST_RENDERSYSTEM,
 		ESST_GRAPHICDRIVER,
+		ESST_ASYNTASKPOOL,
 		ESST_UNKNOWSYSTEM,
 		ESST_MAXCOUNT
 	};
+
 
 #define SAPPHIRE_SUBSYSTEM(Type) \
 	public: static std::string GetTypeNameStatic() { static std::string typeName(#Type); return typeName; };

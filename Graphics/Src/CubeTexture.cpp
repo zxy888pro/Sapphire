@@ -17,6 +17,7 @@ namespace Sapphire
 
 	 
 	CubeTexture::CubeTexture():
+		BaseResource(""),
 		GPUObject(),
 		m_uWidth(0),
 		m_uHeight(0),
@@ -45,6 +46,7 @@ namespace Sapphire
 	}
 
 	CubeTexture::CubeTexture(uint size, uint depth, PixelFormat pf /*= PF_R8G8B8A8*/, uint NumMipmaps /*= 1*/, int glTargerType /*= GL_TEXTURE_2D*/, TextureUsage eUsage /*= TextureUsage::TEXTURE_STATIC*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode r /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/)
+		:BaseResource("")
 	{
 		m_uWidth = size;
 		m_uHeight = size;

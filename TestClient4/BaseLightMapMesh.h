@@ -8,6 +8,7 @@ namespace Sapphire
 
 	class BaseLightMapMesh : public BaseLightMesh
 	{
+		SAPPHIRE_OBJECT(BaseLightMapMesh, BaseLightMesh)
 	public:
 		BaseLightMapMesh();
 
@@ -32,6 +33,9 @@ namespace Sapphire
 
 
 		virtual void Update(std::vector<SharedPtr<BaseLight>>& lightVec) override;
+
+
+		virtual void Invoke(ushort eEventType, ushort eEvent, void* eventData = NULL) override;
 
 	protected:
 

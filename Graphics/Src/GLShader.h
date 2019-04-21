@@ -37,6 +37,12 @@ namespace Sapphire
 			return m_name;
 		}
 
+
+		virtual void Load() override;
+
+
+		virtual void Load(const char* resourcePath) override;
+
 	private:
 
 		//处理源码并包含文件

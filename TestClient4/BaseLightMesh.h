@@ -9,7 +9,7 @@ namespace Sapphire
 
 	class BaseLightMesh :public BaseMesh
 	{
-
+		SAPPHIRE_OBJECT(BaseLightMesh, BaseMesh)
 	public:
 
 		BaseLightMesh();

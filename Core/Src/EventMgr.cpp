@@ -1,3 +1,4 @@
+#include "Sapphire.h"
 #include "EventMgr.h"
 #include <IEventMgr.h>
 
@@ -51,10 +52,14 @@ namespace Sapphire
 			m_listenerMap[eEventType].insert(std::make_pair(eEvent, EventSubcribers()));
 		}
 		EventSubcribers& subcribs = m_listenerMap[eEventType][eEvent];
-		if (std::find(subcribs.begin(), subcribs.end(), pSubcriber) != subcribs.end())
+		if (std::find(subcribs.begin(), subcribs.end(), pSubcriber) == subcribs.end())
 		{
 			subcribs.push_back(pSubcriber);
 			return true;
+		}
+		else
+		{
+			SAPPHIRE_LOG("SubscribeEvent Failed, Subscriber has existed!");
 		}
 		return false;
 	}

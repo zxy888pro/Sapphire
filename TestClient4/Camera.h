@@ -3,6 +3,7 @@
 #include <singleton.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
+#include "BaseObject.h"
 
 namespace Sapphire
 {
@@ -20,8 +21,9 @@ namespace Sapphire
 		RIGHT
 	};
 
-	class Camera : public Singleton < Camera >
+	class Camera :public BaseObject, public Singleton < Camera >
 	{
+		SAPPHIRE_OBJECT(Camera, BaseObject)
 	public:
 
 

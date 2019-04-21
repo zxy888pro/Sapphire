@@ -7,7 +7,7 @@ namespace Sapphire
 
 	EventContext::EventContext()
 	{
-		if (!Core::GetSingletonPtr())
+		if (Core::GetSingletonPtr())
 		{
 			m_eventMgr = Core::GetSingletonPtr()->GetEventManager();
 		}
@@ -18,6 +18,7 @@ namespace Sapphire
 
 		
 	}
+
 
 	EventContext::~EventContext()
 	{

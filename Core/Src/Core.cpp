@@ -65,10 +65,6 @@ namespace Sapphire
 
 	Core::Core()
 	{
-		m_eventMgr = new EventMgr();
-		m_memMgr = new MemoryManager();
-		m_resMgr = new ResourceMgr();
-		m_memMgr->initialize();
 		
 	}
 
@@ -83,7 +79,10 @@ namespace Sapphire
 	void Core::Init()
 	{
 		
-
+		m_eventMgr = new EventMgr();
+		m_memMgr = new MemoryManager();
+		m_resMgr = new ResourceMgr();
+		m_memMgr->initialize();
 	}
 
 	void Core::Release()

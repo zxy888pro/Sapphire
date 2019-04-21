@@ -168,6 +168,9 @@
     <ClInclude Include="Include\ResourceCache.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\AsynTaskPool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -270,6 +273,12 @@
       <Filter>源文件\Event</Filter>
     </ClCompile>
     <ClCompile Include="Src\ResourceCache.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AsynTaskPool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\BaseObject.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

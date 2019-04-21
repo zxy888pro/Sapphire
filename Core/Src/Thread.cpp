@@ -137,7 +137,7 @@ namespace Sapphire
 	ThreadID Thread::mainThreadID;
 
 
-	Mutex::Mutex()
+	MutexEx::MutexEx()
 	{
 #ifdef SAPPHIRE_WIN
 		InitializeCriticalSection(&m_cs);
@@ -152,7 +152,7 @@ namespace Sapphire
 	}
 
 
-	Mutex::~Mutex()
+	MutexEx::~MutexEx()
 	{
 #ifdef SAPPHIRE_WIN
 		DeleteCriticalSection(&m_cs);
@@ -163,33 +163,33 @@ namespace Sapphire
 	}
 
 #ifdef SAPPHIRE_DEBUG
-	void Mutex::Lock(const char* f, int l)
+	void MutexEx::Lock(const char* f, int l)
 	{
 		sapphire_mutex_lock(&m_cs);
 		file = f; line = l;
 	}
-	bool Mutex::TryLock()
+	bool MutexEx::TryLock()
 	{
 		return sapphire_mutex_trylock(&m_cs);
 	}
 
-	void Mutex::Unlock()
+	void MutexEx::Unlock()
 	{
 		sapphire_mutex_unlock(&m_cs);
 		file = (const char*)0xaabbccdd; line = 0x12345678;
 	}
 #else
-	void Mutex::Lock()
+	void MutexEx::Lock()
 	{
 		sapphire_mutex_lock(&m_cs);
 	}
 
-	bool Mutex::TryLock()
+	bool MutexEx::TryLock()
 	{
 		return sapphire_mutex_trylock(&m_cs);
 	}
 
-	void Mutex::Unlock()
+	void MutexEx::Unlock()
 	{
 		sapphire_mutex_unlock(&m_cs);
 	}

@@ -8,7 +8,8 @@
 namespace Sapphire
 {
 
-	GLShader::GLShader():
+	GLShader::GLShader() :
+		BaseResource(""),
 		m_timeStamp(0),
 		m_numVariation(0),
 		m_bIsDisposed(false)
@@ -18,12 +19,13 @@ namespace Sapphire
 	}
 
 	GLShader::GLShader(const char* name):
+		BaseResource(name),
 		m_timeStamp(0),
 		m_numVariation(0),
 		m_bIsDisposed(false),
 		m_name(name)
 	{
-
+		
 	}
 
 	GLShader::~GLShader()
@@ -210,6 +212,16 @@ namespace Sapphire
 
 	}
 
+	void GLShader::Load()
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
+	void GLShader::Load(const char* resourcePath)
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
 	bool GLShader::ProcessSource(std::string source)
 	{
 		return false;
@@ -218,6 +230,11 @@ namespace Sapphire
 	std::string GLShader::NormalizeDefines(const std::string& defines)
 	{
 		return "";
+	}
+
+	void GLShader::RefreshMemoryUse()
+	{
+
 	}
 
 }

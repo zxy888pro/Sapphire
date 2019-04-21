@@ -96,11 +96,11 @@ namespace Sapphire
 
 	void BaseLightMapMesh::Render()
 	{
-		if (!m_pShader)
+		/*if (!m_pShader)
 		{
-			LogUtil::LogMsgLn("ShaderProgram 未能初始化！ 可能加载错误!");
-			return;
-		}
+		LogUtil::LogMsgLn("ShaderProgram 未能初始化！ 可能加载错误!");
+		return;
+		}*/
 		Camera* pCam = Camera::GetSingletonPtr();
 		if (pCam == NULL)
 		{
@@ -223,6 +223,22 @@ namespace Sapphire
 		m_pShader->setFloat("material.shininess", m_shinniess);
 		m_pShader->UnUse();
 
+	}
+
+	void BaseLightMapMesh::Invoke(ushort eEventType, ushort eEvent, void* eventData /*= NULL*/)
+	{
+		if (eEventType == EventType::ET_OBJECT_EVENT)
+		{
+			switch (eEvent)
+			{
+			case EObjectEvent::EOE_CUSTOM_EVENT:
+				SAPPHIRE_LOG(StringFormatA("BaseLighMapMesh %s  %d recive event", this->GetClassTypeName(), (int)this));
+				break;
+			default:
+				break;
+			}
+		}
+		
 	}
 
 	void BaseLightMapMesh::Release()

@@ -350,6 +350,7 @@ SAPPHIRE_API void setOwner(const char *file, int line)
 	}
 }
 
+#ifdef ACTIVATE_MEMORY_MANAGER
 void* operator new(size_t size){ return malloc(size); }
 
 void* operator new[](size_t size)  { return malloc(size); }
@@ -376,6 +377,10 @@ void operator delete[](void *address)
 }
 void operator delete(void *address, const char *file, int line)   { free(address); }
 void operator delete[](void *address, const char *file, int line) { free(address); }
+#endif //  ACTIVATE_MEMORY_MANAGER
+
+
+
 
 
 

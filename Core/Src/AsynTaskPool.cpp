@@ -5,7 +5,7 @@
 namespace Sapphire
 {
 
-	class AsynTaskThread : public  Thread
+	class AsynTaskThread : public  Thread, SubSystem
 	{
 	public:
 		 
@@ -96,7 +96,7 @@ namespace Sapphire
 		bool m_bAutoExit;
 		ulong m_sleepTime;
 		AsynTask*  m_curTask;
-		Mutex m_mutex;
+		MutexEx m_mutex;
 
 	};
 
@@ -109,7 +109,7 @@ namespace Sapphire
 		m_curTaskCount(0),
 		m_bIsRunning(true)
 	{
-
+		m_type = ESST_ASYNTASKPOOL;
 	}
 
 	AsynTaskPool::AsynTaskPool(uint maxWorkerCount, uint minWorkerCount, ulong sleepTime)
@@ -120,6 +120,7 @@ namespace Sapphire
 		m_ulIdOrder = 0;
 		m_curTaskCount = 0;
 		m_bIsRunning = true;
+		m_type = ESST_ASYNTASKPOOL;
 	}
 
 	AsynTaskPool::~AsynTaskPool()

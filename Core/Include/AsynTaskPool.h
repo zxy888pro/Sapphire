@@ -6,6 +6,8 @@ namespace Sapphire
 {
 	class SAPPHIRE_CLASS AsynTask : public IRunnable
 	{
+		
+
 	public:
 		AsynTask();
 		~AsynTask();
@@ -26,8 +28,11 @@ namespace Sapphire
 
 	class AsynTaskThread;
 
-	class SAPPHIRE_CLASS AsynTaskPool : public Thread
+	class SAPPHIRE_CLASS AsynTaskPool : public Thread, public SubSystem
 	{
+
+		SAPPHIRE_SUBSYSTEM(ESST_ASYNTASKPOOL)
+
 	public:
 
 		typedef   std::vector<AsynTask*>  TASKITEM_QUEUE;    //นคื๗ฯ๎
@@ -68,8 +73,8 @@ namespace Sapphire
 
 	private:
 
-		Mutex  m_taskMutex;
-		Mutex  m_threadMutex;
+		MutexEx  m_taskMutex;
+		MutexEx  m_threadMutex;
 
 		WORKER_QUEUE m_workers;
 

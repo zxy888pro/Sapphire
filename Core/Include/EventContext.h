@@ -11,6 +11,7 @@ namespace Sapphire
 	class EventContext : public sigslot::has_slots<>
 	{
 	public:
+		friend class Core;
 		EventContext();
 		virtual ~EventContext();
 	
@@ -24,7 +25,7 @@ namespace Sapphire
 
 		SUBSCRIBE_INFO m_subsInfo;
 		IEventMgr*  m_eventMgr;
-
+		Core*    m_pCore;
 	};
 
 

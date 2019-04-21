@@ -51,6 +51,7 @@ void ProcessInput(GLFWwindow* pWnd)
 		Sapphire::Camera::GetSingletonPtr()->ProcessKeyboard(Sapphire::LEFT, deltaTime);
 	if (glfwGetKey(pWnd, GLFW_KEY_D) == GLFW_PRESS)
 		Sapphire::Camera::GetSingletonPtr()->ProcessKeyboard(Sapphire::RIGHT, deltaTime);
+
 }
 
 
@@ -65,6 +66,7 @@ void init()
 	Sapphire::LogUtil::getInstancePtr()->Init("log.txt");
 	Sapphire::LogUtil::LogMsgLn("³õÊ¼»¯³ÌÐò");
 	new Sapphire::Core();
+	Core::GetSingletonPtr()->Init();
 	
 
 	MathHelper::SetRandomSeed(GetTickCount());
@@ -185,6 +187,7 @@ void Prepare()
 		pScene->AddMesh("LightBox2", pMesh);
 		pSMesh->SetDiffuseMap("container2.png");
 		pSMesh->SetSepcularMap("container2_specular.png");
+		pSMesh->SubscribeEvent(EventType::ET_OBJECT_EVENT, EOE_CUSTOM_EVENT);
 		
 	}
 

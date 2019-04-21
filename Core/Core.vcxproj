@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\ArrayPtr.h" />
+    <ClInclude Include="Include\AsynTaskPool.h" />
     <ClInclude Include="Include\BaseException.h" />
     <ClInclude Include="Include\BaseObject.h" />
     <ClInclude Include="Include\BaseResource.h" />
@@ -64,7 +65,9 @@
     <ClInclude Include="Src\EventMgr.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\AsynTaskPool.cpp" />
     <ClCompile Include="Src\BaseException.cpp" />
+    <ClCompile Include="Src\BaseObject.cpp" />
     <ClCompile Include="Src\BaseResource.cpp" />
     <ClCompile Include="Src\charset.cpp" />
     <ClCompile Include="Src\Color.cpp" />
