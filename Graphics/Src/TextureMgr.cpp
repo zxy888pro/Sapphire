@@ -17,7 +17,7 @@
 namespace Sapphire
 {
 
-	TextureMgr::TextureMgr()
+	TextureMgr::TextureMgr(Core* pCore) :ResourceContainer(pCore)
 	{
 		//设置最大内存上限
 		SetMaximumMemory(1024 * 1024 * 512);
@@ -30,7 +30,7 @@ namespace Sapphire
 			m_textures[i] = NULL;
 			m_textureTypes[i] = NULL;
 		}
-		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
+		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(pCore->GetSubSystemWithType(ESST_GRAPHICDRIVER));
 
 
 	}
@@ -43,11 +43,6 @@ namespace Sapphire
 	Sapphire::ITexture* TextureMgr::CreateTexture2DFromFile(std::string filePath, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_WRAP*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_WRAP*/, bool bDynamic /*= false*/)
 	{
 		IImageMgr* pImageMgr = m_pGraphicDriver->getImageMgr();
-		Core* pCore = Core::GetSingletonPtr();
-		if (pImageMgr == NULL || pCore == NULL)
-		{
-			throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
-		}
 		HIMAGE himg = pImageMgr->GetImage(filePath.c_str());
 		if (himg.IsNull())
 		{
@@ -178,11 +173,6 @@ namespace Sapphire
 		{
 			//暂时写在这里加载
 			IImageMgr* pImageMgr = m_pGraphicDriver->getImageMgr();
-			Core* pCore = Core::GetSingletonPtr();
-			if (pImageMgr == NULL || pCore == NULL)
-			{
-				throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
-			}
 			std::string jsonStr = fs.ReadString(MAX_JSON_LENGTH);
 			fs.Release();
 			Json::CharReaderBuilder builder;

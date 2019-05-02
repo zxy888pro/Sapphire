@@ -43,7 +43,7 @@ namespace Sapphire
 	//任务队列
 	class SAPPHIRE_CLASS WorkQueue : SubSystem
 	{
-		SAPPHIRE_SUBSYSTEM(ESST_WORKERQUEUE)
+		SAPPHIRE_OBJECT(WorkQueue, SubSystem)
 				
 	public:
 

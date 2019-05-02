@@ -14,7 +14,7 @@ namespace Sapphire
 		EventMgr();
 		virtual ~EventMgr();
 
-		virtual void BroadcastEvent(ushort eEventType, ushort eEvent, void* eventData = NULL);
+		virtual void BroadcastEvent(ushort eEventType, ushort eEvent, EventContext* eEventSrc = NULL, void* eventData = NULL);
 		virtual bool SubscribeEvent(ushort eEventType, ushort eEvent, EventContext* subsriber);
 		virtual bool UnSubscribeEvent(ushort eEventType, ushort eEvent, EventContext* subsriber);
 

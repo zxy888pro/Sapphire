@@ -10,10 +10,11 @@ namespace Sapphire
 	
 
 	//读取和管理shader脚本
-	class ShaderMgr :public ResourceMgr
+	class ShaderMgr :public ResourceContainer
 	{
+		SAPPHIRE_OBJECT(ShaderMgr, ResourceContainer)
 	public:
-		ShaderMgr();
+		ShaderMgr(Core* pCore);
 		virtual ~ShaderMgr();
 
 		//通过shader配置，创建shader

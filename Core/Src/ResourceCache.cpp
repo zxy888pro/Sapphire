@@ -6,9 +6,13 @@
 namespace Sapphire
 {
 
-	ResourceCache::ResourceCache()
+	 
+
+	ResourceCache::ResourceCache(Core* pCore)
 	{
 		Clear();
+		m_assert(pCore);
+		m_pCore = pCore;
 	}
 
 	ResourceCache::~ResourceCache()

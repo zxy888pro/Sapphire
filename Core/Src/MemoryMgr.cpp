@@ -105,12 +105,8 @@ SAPPHIRE_API	void* AllocateMemory(const char *file, int line, size_t size, MemAl
 	using namespace Sapphire;
 	MemoryNode *memory = NULL;
 	setOwner(file, line);
-	assert(Core::GetSingletonPtr());
-	if (Core::GetSingletonPtr() == NULL)
-	{
-		return NULL;
-	}
-	MemoryManager* pMemMgr = Core::GetSingletonPtr()->GetMemoryMgr();
+	 
+	MemoryManager* pMemMgr = MemoryManager::GetSingletonPtr();
 	assert(pMemMgr);
 	if (pMemMgr == NULL)
 	{
@@ -209,11 +205,7 @@ SAPPHIRE_API void DeallocateMemory(const char *file, int line, void *address, Me
 	using namespace Sapphire;
 	setOwner(file, line);
 	//assert(Core::GetSingletonPtr());
-	if (Core::GetSingletonPtr() == NULL)
-	{
-		return;
-	}
-	MemoryManager* pMemMgr = Core::GetSingletonPtr()->GetMemoryMgr();
+	MemoryManager* pMemMgr = MemoryManager::GetSingletonPtr();
 	//assert(pMemMgr);
 	if (pMemMgr == NULL)
 	{
@@ -275,12 +267,7 @@ SAPPHIRE_API void DeallocateMemory(const char *file, int line, void *address, Me
 SAPPHIRE_API void BreakOnAllocation(int allocationCount)
 {
 	using namespace Sapphire;
-	assert(Core::GetSingletonPtr());
-	if (Core::GetSingletonPtr() == NULL)
-	{
-		return;
-	}
-	MemoryManager* pMemMgr = Core::GetSingletonPtr()->GetMemoryMgr();
+	MemoryManager* pMemMgr = MemoryManager::GetSingletonPtr();
 	if (pMemMgr && allocationCount > 0)
 		pMemMgr->m_breakOnAllocationCount = allocationCount;
 }
@@ -288,12 +275,7 @@ SAPPHIRE_API void BreakOnAllocation(int allocationCount)
 SAPPHIRE_API void BreakOnDeallocation(void *address)
 {
 	using namespace Sapphire;
-	assert(Core::GetSingletonPtr());
-	if (Core::GetSingletonPtr() == NULL)
-	{
-		return;
-	}
-	MemoryManager* pMemMgr = Core::GetSingletonPtr()->GetMemoryMgr();
+	MemoryManager* pMemMgr = MemoryManager::GetSingletonPtr();
 	if (pMemMgr == NULL || address == NULL)
 		return;
 	MemoryNode *node = pMemMgr->getMemoryNode(address);
@@ -303,12 +285,7 @@ SAPPHIRE_API void BreakOnDeallocation(void *address)
 SAPPHIRE_API void BreakOnReallocation(void *address)
 {
 	using namespace Sapphire;
-	assert(Core::GetSingletonPtr());
-	if (Core::GetSingletonPtr() == NULL)
-	{
-		return;
-	}
-	MemoryManager* pMemMgr = Core::GetSingletonPtr()->GetMemoryMgr();
+	MemoryManager* pMemMgr = MemoryManager::GetSingletonPtr();
 	if (pMemMgr == NULL || address == NULL)
 		return;
 	MemoryNode *node = pMemMgr->getMemoryNode(address);
@@ -318,12 +295,7 @@ SAPPHIRE_API void BreakOnReallocation(void *address)
 SAPPHIRE_API void setPaddingSize(int size /*= 4*/)
 {
 	using namespace Sapphire;
-	assert(Core::GetSingletonPtr());
-	if (Core::GetSingletonPtr() == NULL)
-	{
-		return;
-	}
-	MemoryManager* pMemMgr = Core::GetSingletonPtr()->GetMemoryMgr();
+	MemoryManager* pMemMgr = MemoryManager::GetSingletonPtr();
 	if (pMemMgr && size > 0)
 		pMemMgr->m_paddingSize = size;
 }
@@ -331,12 +303,7 @@ SAPPHIRE_API void setPaddingSize(int size /*= 4*/)
 SAPPHIRE_API void setOwner(const char *file, int line)
 {
 	using namespace Sapphire;
-	//assert(Core::GetSingletonPtr());
-	if (Core::GetSingletonPtr() == NULL)
-	{
-		return;
-	}
-	MemoryManager* pMemMgr = Core::GetSingletonPtr()->GetMemoryMgr();
+	Sapphire::MemoryManager* pMemMgr = Sapphire::MemoryManager::GetSingletonPtr();
 	//assert(pMemMgr);
 	if (pMemMgr == NULL)
 	{
@@ -422,9 +389,12 @@ namespace Sapphire
 		StackNode *n = m_head; if (n) m_head = m_head->next; m_count--; return n;
 	}
 
-	MemoryManager::MemoryManager(void)
+	 
+
+	MemoryManager::MemoryManager()
 	{
 		m_bIsInitialized = false;
+		 
 	}
 
 	MemoryManager::~MemoryManager(void)

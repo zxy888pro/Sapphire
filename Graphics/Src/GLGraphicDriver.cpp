@@ -23,7 +23,7 @@ namespace Sapphire
 
 
 
-	GLGraphicDriver::GLGraphicDriver()
+	GLGraphicDriver::GLGraphicDriver(Core* pCore) :IGraphicDriver(pCore)
 	{
 		m_pTextureMgr = NULL;
 		m_pImageMgr = NULL;
@@ -40,7 +40,7 @@ namespace Sapphire
 
 	void GLGraphicDriver::Init()
 	{
-		m_pTextureMgr = new TextureMgr();
+		m_pTextureMgr = new TextureMgr(m_pCore);
 		m_pImageMgr = new ImageMgr();
 		m_pShaderScriptMgr = new ShaderScriptMgr();
 		m_imagetypeNames.clear();
@@ -53,17 +53,9 @@ namespace Sapphire
 		m_imagetypeNames[ENUM2STR(ImageType_Tga32)] = ImageType_Tga32;
 		m_imagetypeNames[ENUM2STR(ImageType_Tga24)] = ImageType_Tga24;
 		CheckFeature();
-		Core* pCore = Core::GetSingletonPtr();
-		if (pCore)
-		{
-			//初始化渲染系統接口
-			IRenderSystem* pRenderSys = new GLRenderSystem(this);
-			Sapphire::Core::GetSingletonPtr()->RegisterSubSystem<IRenderSystem>(pRenderSys, ESST_RENDERSYSTEM);
-		}
-		else
-		{
-			SAPPHIRE_LOGERROR("Sapphire Core is not Initialized!");
-		}
+		//初始化渲染系統接口
+		IRenderSystem* pRenderSys = new GLRenderSystem(this);
+		m_pCore->RegisterSubSystem<IRenderSystem>(pRenderSys, ESST_RENDERSYSTEM);
 	}
 
 	void GLGraphicDriver::Release()

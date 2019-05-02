@@ -40,7 +40,7 @@ namespace Sapphire
 
 	void EventContext::FireEvent(ushort eEventType, ushort eEvent, void* eventData)
 	{
-		m_eventMgr->BroadcastEvent(eEventType, eEvent, eventData);
+		m_eventMgr->BroadcastEvent(eEventType, eEvent, this, eventData);
 	}
 
 	void EventContext::SubscribeEvent(ushort eEventType, ushort eEvent)
@@ -53,7 +53,7 @@ namespace Sapphire
 		m_eventMgr->UnSubscribeEvent(eEventType, eEvent, this);
 	}
 
-	void EventContext::Invoke(ushort eEventType, ushort eEvent, void* eventData /*= NULL*/)
+	void EventContext::Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData /*= NULL*/)
 	{
 		//事件处理
 	}

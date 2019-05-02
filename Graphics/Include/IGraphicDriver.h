@@ -13,9 +13,16 @@ namespace Sapphire
 	//ÎÞ¹ØÍ¼ÐÎAPI
 	class SAPPHIRE_CLASS IGraphicDriver : public SubSystem
 	{
-		SAPPHIRE_SUBSYSTEM(ESST_GRAPHICDRIVER)
+		SAPPHIRE_OBJECT(IGraphicDriver, SubSystem)
 
 	public:
+
+		IGraphicDriver(Core* pCore)
+		{
+			m_assert(pCore);
+			m_pCore = pCore;
+		}
+		virtual ~IGraphicDriver(){}
 
 		virtual void Init() = 0;
 		virtual void Release() = 0;
@@ -27,7 +34,9 @@ namespace Sapphire
 		virtual IImageMgr* getImageMgr() const = 0;
 		virtual GraphicDriverType getDriverType() const = 0;
 
+	protected:
 
+		Core* m_pCore;
 
 	};
 }

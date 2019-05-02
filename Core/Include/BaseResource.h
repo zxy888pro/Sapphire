@@ -109,15 +109,15 @@ namespace Sapphire
 
 
 	//////////////////////////////////////////////////////////////////////////
-	//基础资源管理类
-	class ResourceMgr : public SubSystem
+	//资源管理基类
+	class ResourceContainer : public BaseObject
 	{
-		SAPPHIRE_SUBSYSTEM(ESST_RESOURCEMGR)
+		SAPPHIRE_OBJECT(ResourceContainer, BaseObject)
 
 	public:
 
-		ResourceMgr()			{ Clear(); }
-		virtual ~ResourceMgr()	{ Destroy(); }
+		ResourceContainer(Core* pCore);
+		virtual ~ResourceContainer()	{ Destroy(); }
 
 		void Clear();
 

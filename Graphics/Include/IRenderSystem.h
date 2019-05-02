@@ -10,7 +10,7 @@ namespace Sapphire
 	//渲染系统的對外高层接口，负责3D物件绘制
 	class SAPPHIRE_CLASS IRenderSystem : public SubSystem
 	{
-		SAPPHIRE_SUBSYSTEM(ESST_RENDERSYSTEM)
+		SAPPHIRE_OBJECT(IRenderSystem, SubSystem)
 	public:
 
 		virtual void Update(float dTime) = 0;

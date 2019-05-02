@@ -225,7 +225,7 @@ namespace Sapphire
 
 	}
 
-	void BaseLightMapMesh::Invoke(ushort eEventType, ushort eEvent, void* eventData /*= NULL*/)
+	void BaseLightMapMesh::Invoke(ushort eEventType, ushort eEvent,EventContext* src, void* eventData /*= NULL*/)
 	{
 		if (eEventType == EventType::ET_OBJECT_EVENT)
 		{

@@ -64,7 +64,7 @@ namespace Sapphire
 
 		typedef std::unordered_map<std::string, ImageType>   ImageTypeNameMap;
 
-		GLGraphicDriver();
+		GLGraphicDriver(Core* pCore);
 		virtual ~GLGraphicDriver();
 
 		virtual void Init();

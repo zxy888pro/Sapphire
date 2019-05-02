@@ -31,7 +31,7 @@ namespace Sapphire
 	class SAPPHIRE_CLASS AsynTaskPool : public Thread, public SubSystem
 	{
 
-		SAPPHIRE_SUBSYSTEM(ESST_ASYNTASKPOOL)
+		SAPPHIRE_OBJECT(AsynTaskPool,SubSystem)
 
 	public:
 

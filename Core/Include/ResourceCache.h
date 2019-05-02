@@ -28,11 +28,12 @@ namespace Sapphire
 	//资源缓存管理
 	class SAPPHIRE_CLASS ResourceCache : public SubSystem
 	{
-		SAPPHIRE_SUBSYSTEM(ESST_RESOURCECACHE)
+		SAPPHIRE_OBJECT(ResourceCache, SubSystem)
 
 	public:
 
-		ResourceCache();
+		 
+		ResourceCache(Core* pCore);
 		virtual ~ResourceCache();
 
 		void Clear();
@@ -108,6 +109,7 @@ namespace Sapphire
 		bool			m_bResourceReserved;   //是否预分配内存
 		ResCMapItor		m_CurrentResource;     //当前资源迭代器
 		ResCMap        m_ResourceMap;
+		Core*          m_pCore;
 		 
 
 	};

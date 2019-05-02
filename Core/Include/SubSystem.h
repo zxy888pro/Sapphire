@@ -1,6 +1,7 @@
 #pragma once
 #include <SapphireDef.h>
 #include <EventContext.h>
+#include <BaseObject.h>
 
 namespace Sapphire
 {
@@ -18,11 +19,10 @@ namespace Sapphire
 	};
 
 
-#define SAPPHIRE_SUBSYSTEM(Type) \
-	public: static std::string GetTypeNameStatic() { static std::string typeName(#Type); return typeName; };
-
-	class SAPPHIRE_CLASS SubSystem :public EventContext
+	class SAPPHIRE_CLASS SubSystem :public BaseObject
 	{
+		SAPPHIRE_OBJECT(SubSystem, BaseObject)
+
 	public:
 
 		SubSystem()

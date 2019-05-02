@@ -15,7 +15,7 @@ namespace Sapphire
 
 	}
 
-	void EventMgr::BroadcastEvent(ushort eEventType, ushort eEvent, void* eventData /*= NULL*/)
+	void EventMgr::BroadcastEvent(ushort eEventType, ushort eEvent, EventContext* eEventSrc, void* eventData)
 	{
 		EventDataMap::iterator evtTypeMap = m_listenerMap.find(eEventType);
 		if (evtTypeMap == m_listenerMap.end())
@@ -32,7 +32,7 @@ namespace Sapphire
 		{
 			if (*it != NULL)
 			{
-				(*it)->Invoke(eEventType, eEvent, eventData);
+				(*it)->Invoke(eEventType, eEvent, eEventSrc, eventData);
 			}
 		}
 	}

@@ -15,7 +15,7 @@ namespace Sapphire
 		EventContext();
 		virtual ~EventContext();
 	
-		virtual void Invoke(ushort eEventType, ushort eEvent, void* eventData = NULL);
+		virtual void Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData = NULL);
 		void FireEvent(ushort eEventType, ushort eEvent, void* eventData = NULL);
 		void SubscribeEvent(ushort eEventType, ushort eEvent);
 		void UnSubscribeEvent(ushort eEventType, ushort eEvent);

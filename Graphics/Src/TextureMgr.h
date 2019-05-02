@@ -8,11 +8,12 @@ namespace Sapphire
 	class GLGraphicDriver;
 
 	//OpenGL TextureManager
-	class TextureMgr :public ITextureMgr, ResourceMgr
+	class TextureMgr :public ITextureMgr, ResourceContainer
 	{
+		SAPPHIRE_OBJECT(TextureMgr, ResourceContainer)
 	public:
 
-		TextureMgr();
+		TextureMgr(Core* pCore);
 
 		virtual ~TextureMgr();
 

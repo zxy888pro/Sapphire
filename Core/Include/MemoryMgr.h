@@ -2,6 +2,7 @@
 #include <SapphireDef.h>
 #include <SubSystem.h>
 #include <stdlib.h>
+#include <singleton.h>
 
 
 SAPPHIRE_API	void* AllocateMemory(const char *file, int line, size_t size, MemAllocType type, void *address = NULL);
@@ -156,11 +157,10 @@ namespace Sapphire
 	   int m_count;
    };
 
-   class MemoryManager : public SubSystem
+   class SAPPHIRE_CLASS MemoryManager : public Singleton<MemoryManager>
    {
-	   SAPPHIRE_SUBSYSTEM(ESST_MEMORYMGR)
    public:
-	   MemoryManager(void);
+	   MemoryManager();
 	   ~MemoryManager(void);
 
 	   void initialize(void);      

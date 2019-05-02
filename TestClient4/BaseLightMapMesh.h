@@ -35,7 +35,7 @@ namespace Sapphire
 		virtual void Update(std::vector<SharedPtr<BaseLight>>& lightVec) override;
 
 
-		virtual void Invoke(ushort eEventType, ushort eEvent, void* eventData = NULL) override;
+		virtual void Invoke(ushort eEventType, ushort eEvent,EventContext* src, void* eventData = NULL) override;
 
 	protected:
 

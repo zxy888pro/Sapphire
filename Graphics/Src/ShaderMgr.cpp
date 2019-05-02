@@ -13,7 +13,7 @@ namespace Sapphire
 
 	 
 
-	ShaderMgr::ShaderMgr()
+	ShaderMgr::ShaderMgr(Core* pCore) :ResourceContainer(pCore)
 	{
 		//设置最大内存上限
 		SetMaximumMemory(1024 * 1024 * 512);

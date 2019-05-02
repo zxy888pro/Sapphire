@@ -80,18 +80,20 @@ namespace Sapphire
 	{
 		
 		m_eventMgr = new EventMgr();
-		m_memMgr = new MemoryManager();
+		/*m_memMgr = new MemoryManager();
 		m_resMgr = new ResourceMgr();
-		m_memMgr->initialize();
+		m_memMgr->initialize();*/
 	}
 
 	void Core::Release()
 	{
-		m_resMgr->Clear();
+		
+		
+		m_subSystems.clear();
+		/*m_resMgr->Clear();
 		safeDelete(m_resMgr);
 		m_memMgr->release();
-		safeDelete(m_memMgr);
-		m_subSystems.clear();
+		safeDelete(m_memMgr);*/
 	}
 
 	Sapphire::SubSystem* Core::GetSubSystemWithName(std::string name)
@@ -148,16 +150,16 @@ namespace Sapphire
 		}
 	}
 
-	Sapphire::ResourceMgr* Core::GetResourceManager()
+	/*Sapphire::ResourceMgr* Core::GetResourceManager()
 	{
-		return m_resMgr;
+	return m_resMgr;
 	}
 
 	Sapphire::MemoryManager* Core::GetMemoryMgr()
 	{
-		return m_memMgr;
+	return m_memMgr;
 	}
-
+	*/
 }
 
  

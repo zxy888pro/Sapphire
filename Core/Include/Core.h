@@ -11,7 +11,7 @@ namespace Sapphire
 
 	bool Is64bitSystem();
 
-	class ResourceMgr;
+	class ResourceContainer;
 	class MemoryManager;
 
 	 SAPPHIRE_API void Mem_Set_WORD(void *dest, ushort data, int count);
@@ -39,15 +39,15 @@ namespace Sapphire
 		 //更新所有子系统
 		 void Update();
 
-		 ResourceMgr*  GetResourceManager();
-		 Sapphire::MemoryManager* GetMemoryMgr();
+		 //ResourceMgr*  GetResourceManager();
+		 //Sapphire::MemoryManager* GetMemoryMgr();
 
 	 private:
 
 		 //以后子系统通通放到SUBSYTEM_MAP中, 用一个通用模板函数取到
 		 //资源管理器
-		 ResourceMgr*  m_resMgr;
-		 MemoryManager*  m_memMgr;
+		 /* ResourceMgr*  m_resMgr;
+		  MemoryManager*  m_memMgr;*/
 
 		 SUBSYTEM_MAP m_subSystems;
 		 
