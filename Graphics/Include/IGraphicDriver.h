@@ -17,10 +17,10 @@ namespace Sapphire
 
 	public:
 
-		IGraphicDriver(Core* pCore)
+		IGraphicDriver(Core* pCore):
+			SubSystem(pCore)
 		{
-			m_assert(pCore);
-			m_pCore = pCore;
+			 
 		}
 		virtual ~IGraphicDriver(){}
 
@@ -36,7 +36,7 @@ namespace Sapphire
 
 	protected:
 
-		Core* m_pCore;
+		 
 
 	};
 }

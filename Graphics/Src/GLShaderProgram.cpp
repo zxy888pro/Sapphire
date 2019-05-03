@@ -6,7 +6,8 @@
 namespace Sapphire
 {
 
-	GLShaderProgram::GLShaderProgram()
+	GLShaderProgram::GLShaderProgram(Core* pCore):
+		BaseObject(pCore)
 	{
 
 	}

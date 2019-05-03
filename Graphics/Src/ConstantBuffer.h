@@ -9,9 +9,10 @@ namespace Sapphire
 	//变量数据缓冲区
 	class ConstantBuffer :  public BaseObject, public GPUObject
 	{
+		SAPPHIRE_OBJECT(ConstantBuffer, BaseObject)
 	public:
 
-		ConstantBuffer();
+		ConstantBuffer(Core* pCore);
 
 		virtual ~ConstantBuffer();
 

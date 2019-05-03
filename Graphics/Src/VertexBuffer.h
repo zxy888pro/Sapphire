@@ -13,7 +13,7 @@ namespace Sapphire
 	class VertexBuffer : public BaseObject, public GPUObject , public IVertexBuffer
 	{
 	public:
-		VertexBuffer();
+		VertexBuffer( Core* pCore);
 		virtual ~VertexBuffer();
 
 

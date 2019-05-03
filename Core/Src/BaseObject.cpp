@@ -85,14 +85,15 @@ namespace Sapphire
  
 
 	BaseObject::BaseObject():
-		m_pcore(NULL)
+		m_pCore(NULL)
 	{
 		 
 	}
 
 	BaseObject::BaseObject(Core* pCore)
 	{
-		m_pcore = pCore;
+		m_assert(pCore);
+		m_pCore = pCore;
 	}
 
 	BaseObject::~BaseObject()

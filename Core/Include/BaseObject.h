@@ -58,7 +58,7 @@ namespace Sapphire
 
 	protected:
 
-		Core* m_pcore;
+		Core* m_pCore;
 
 	private:
 

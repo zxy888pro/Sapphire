@@ -12,11 +12,13 @@ namespace Sapphire
 	class GLGraphicDriver;
 
 	//GPU上的vs/ps/gs shader對象
-	class GLShaderVariation :public IShaderVariation, public RefCounter, public GPUObject
+	class GLShaderVariation :public BaseObject,public IShaderVariation, public GPUObject
 	{
+		SAPPHIRE_OBJECT(GLShaderVariation, BaseObject)
+
 	public:
 
-		GLShaderVariation(ShaderType type);
+		GLShaderVariation(ShaderType type, Core* pCore);
 
 		virtual ~GLShaderVariation();
 		//编译脚本

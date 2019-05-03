@@ -5,13 +5,15 @@
 namespace Sapphire
 {
 
-	GLRenderSystem::GLRenderSystem()
+	GLRenderSystem::GLRenderSystem(Core* pCore):
+		IRenderSystem(pCore)
 	{
 		m_pGraphicDriver = NULL;
 		m_bDrawShadow = false;
 	}
 
-	GLRenderSystem::GLRenderSystem(GLGraphicDriver* pDriver)
+	GLRenderSystem::GLRenderSystem(Core* pCore,GLGraphicDriver* pDriver):
+		IRenderSystem(pCore)
 	{
 		m_pGraphicDriver = pDriver;
 		m_bDrawShadow = false;

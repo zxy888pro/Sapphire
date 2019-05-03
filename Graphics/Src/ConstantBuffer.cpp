@@ -4,7 +4,8 @@
 namespace Sapphire
 {
 
-	ConstantBuffer::ConstantBuffer():
+	ConstantBuffer::ConstantBuffer(Core* pCore):
+		BaseObject(pCore),
 		m_uSize(0),
 		m_bDirty(false),
 		m_pDriver(NULL)

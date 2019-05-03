@@ -12,7 +12,11 @@ namespace Sapphire
 	{
 		SAPPHIRE_OBJECT(IRenderSystem, SubSystem)
 	public:
-
+		IRenderSystem(Core* pCore) :SubSystem(pCore)
+		{
+			m_type = ESST_RENDERSYSTEM;
+		}
+		virtual ~IRenderSystem(){};
 		virtual void Update(float dTime) = 0;
 		virtual void Render() = 0;
 		virtual void QueueRenderSurface(IRenderSurface* renderTarget) = 0;

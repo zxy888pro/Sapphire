@@ -6,19 +6,21 @@
 namespace Sapphire
 {
 
-	RenderSurface::RenderSurface()
-		:m_parentTex(NULL),
+	RenderSurface::RenderSurface(Core* pCore):
+		IRenderSurface(pCore),
+		m_parentTex(NULL),
 		m_gpuTarget(0),
 		m_bUpdateQueue(false),
 		m_eUpdateMode(RenderSurfaceUpdateMode::SURFACE_UPDATEVISIBLE),
 		m_gpuRenderBuffer(0)
 
 	{
-		m_pGLDriver = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
+		m_pGLDriver = dynamic_cast<GLGraphicDriver*>(m_pCore->GetSubSystemWithType(ESST_GRAPHICDRIVER));
 	}
 
-	RenderSurface::RenderSurface(ITexture* parentTexture)
-		:m_parentTex(parentTexture),
+	RenderSurface::RenderSurface(Core* pCore,ITexture* parentTexture):
+		IRenderSurface(pCore),
+		m_parentTex(parentTexture),
 		m_gpuTarget(0),
 		m_bUpdateQueue(false),
 		m_eUpdateMode(RenderSurfaceUpdateMode::SURFACE_UPDATEVISIBLE),
@@ -85,7 +87,7 @@ namespace Sapphire
 			if (hasValidView)
 			{
 			//å¢ﬂ@ÇÄRenderSurfaceº”»Î‰÷»æÍ†¡–
-				IRenderSystem*  pRenderSys = dynamic_cast<IRenderSystem*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_RENDERSYSTEM));
+				IRenderSystem*  pRenderSys = dynamic_cast<IRenderSystem*>(m_pCore->GetSubSystemWithType(ESST_RENDERSYSTEM));
 				if (pRenderSys)
 					pRenderSys->QueueRenderSurface(this);
 

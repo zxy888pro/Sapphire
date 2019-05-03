@@ -20,12 +20,16 @@ namespace Sapphire
 		void SubscribeEvent(ushort eEventType, ushort eEvent);
 		void UnSubscribeEvent(ushort eEventType, ushort eEvent);
 
+	protected:
+
+	 
+
 	private:
 		typedef std::map<ushort, std::map<ushort, bool>> SUBSCRIBE_INFO;
 
 		SUBSCRIBE_INFO m_subsInfo;
 		IEventMgr*  m_eventMgr;
-		Core*    m_pCore;
+		
 	};
 
 

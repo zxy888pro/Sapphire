@@ -96,10 +96,10 @@ namespace Sapphire
 		safeDelete(m_memMgr);*/
 	}
 
-	Sapphire::SubSystem* Core::GetSubSystemWithName(std::string name)
+	Sapphire::SubSystem* Core::GetSubSystemWithName(std::string name) const
 	{
 		SubSystem* pss = NULL;
-		SUBSYTEM_ITEM it = m_subSystems.find(name);
+		SUBSYTEM_CONST_ITEM it = m_subSystems.find(name);
 		if (it == m_subSystems.end())
 		{
 			return pss;
@@ -108,7 +108,7 @@ namespace Sapphire
 		return pss;
 	}
 
-	Sapphire::SubSystem* Core::GetSubSystemWithType(ESubSystemType type)
+	Sapphire::SubSystem* Core::GetSubSystemWithType(ESubSystemType type) const
 	{
 		std::string name;
 		switch (type)

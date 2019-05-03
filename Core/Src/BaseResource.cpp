@@ -33,10 +33,10 @@ bool Sapphire::BaseResource::operator < (BaseResource& container)
 	return false;
 }
 
-Sapphire::ResourceContainer::ResourceContainer(Core* pCore)
+Sapphire::ResourceContainer::ResourceContainer(Core* pCore):
+BaseObject(pCore)
 {
-	m_assert(pCore);
-	m_pcore = pCore;
+	 
 }
 
 void Sapphire::ResourceContainer::Clear()

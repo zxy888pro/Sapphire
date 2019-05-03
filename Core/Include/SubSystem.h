@@ -25,9 +25,11 @@ namespace Sapphire
 
 	public:
 
-		SubSystem()
+		SubSystem(Core* pCore):
+			BaseObject(pCore)
 		{
 			m_type = ESST_UNKNOWSYSTEM;
+
 			 
 		}
 		 

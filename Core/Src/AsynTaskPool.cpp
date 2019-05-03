@@ -5,7 +5,7 @@
 namespace Sapphire
 {
 
-	class AsynTaskThread : public  Thread, SubSystem
+	class AsynTaskThread : public  Thread
 	{
 	public:
 		 
@@ -101,7 +101,8 @@ namespace Sapphire
 	};
 
 	
-	AsynTaskPool::AsynTaskPool():
+	AsynTaskPool::AsynTaskPool(Core* pCore) :
+		SubSystem(pCore),
 		m_maxWorkerCount(8),
 		m_minWorkerCount(0),
 		m_ulIdOrder(0),
@@ -112,7 +113,8 @@ namespace Sapphire
 		m_type = ESST_ASYNTASKPOOL;
 	}
 
-	AsynTaskPool::AsynTaskPool(uint maxWorkerCount, uint minWorkerCount, ulong sleepTime)
+	AsynTaskPool::AsynTaskPool(Core* pCore,uint maxWorkerCount, uint minWorkerCount, ulong sleepTime):
+		SubSystem(pCore)
 	{
 		m_maxWorkerCount = maxWorkerCount;
 		m_minWorkerCount = minWorkerCount;

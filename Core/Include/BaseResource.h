@@ -22,8 +22,9 @@ namespace Sapphire
 	};
 
 	//资源基类
-	class SAPPHIRE_CLASS  BaseResource
+	class SAPPHIRE_CLASS  BaseResource : public BaseObject
 	{
+		SAPPHIRE_OBJECT(BaseResource, BaseObject)
 	public:
 
 		enum PriorityType
@@ -32,12 +33,14 @@ namespace Sapphire
 			RES_MED_PRIORITY,
 			RES_HIGH_PRIORITY
 		};
-		BaseResource()
-		{
+		/*BaseResource(const Core* pCore) :
+			BaseObject(pCore)
+			{
 			m_resName = "";
 			m_eType = ResourceType_Unkown;
-		}
-		BaseResource(const char* name = "")			
+			}*/
+		BaseResource(Core* pCore,const char* name = ""):
+			BaseObject(pCore)
 		{ 
 			Clear(); 
 			m_resName = name;

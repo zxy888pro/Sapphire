@@ -54,7 +54,7 @@ namespace Sapphire
 		m_imagetypeNames[ENUM2STR(ImageType_Tga24)] = ImageType_Tga24;
 		CheckFeature();
 		//初始化渲染系統接口
-		IRenderSystem* pRenderSys = new GLRenderSystem(this);
+		IRenderSystem* pRenderSys = new GLRenderSystem(m_pCore,this);
 		m_pCore->RegisterSubSystem<IRenderSystem>(pRenderSys, ESST_RENDERSYSTEM);
 	}
 

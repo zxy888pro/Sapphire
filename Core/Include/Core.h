@@ -31,9 +31,9 @@ namespace Sapphire
 		 void Release();
 		 IEventMgr*  GetEventManager(){ return m_eventMgr; }
 
-		 SubSystem*  GetSubSystemWithName(std::string name);
-		 SubSystem*  GetSubSystemWithType(ESubSystemType type);
-		 template<class T>  T* GetSubSystem();
+		 SubSystem*  GetSubSystemWithName(std::string name) const;
+		 SubSystem*  GetSubSystemWithType(ESubSystemType type) const;
+		 template<class T>  T* GetSubSystem() const;
 		 template<class T> void RegisterSubSystem(T* ptr, ESubSystemType type);
 		 
 		 //更新所有子系统
@@ -59,7 +59,7 @@ namespace Sapphire
 	 };
 
 
-	 template <class T> T* Core::GetSubSystem(){ return GetSubSystemWithName(T::GetTypeNameStatic());}
+	 template <class T> T* Core::GetSubSystem() const { return GetSubSystemWithName(T::GetTypeNameStatic());}
 	 
 	 template<class T>
 	 void Core::RegisterSubSystem(T* ptr, ESubSystemType type)

@@ -39,8 +39,8 @@ namespace Sapphire
 		typedef std::list<AsynTask*> COMPLETEDITEM_QUEUE;    //完成列表
 		typedef std::vector<AsynTaskThread*> WORKER_QUEUE;
 
-		AsynTaskPool();
-		AsynTaskPool(uint maxWorkerCount, uint minWorkerCount, ulong sleepTime);
+		AsynTaskPool(Core* pCore);
+		AsynTaskPool(Core* pCore,uint maxWorkerCount, uint minWorkerCount, ulong sleepTime);
 
 		virtual ~AsynTaskPool();
 

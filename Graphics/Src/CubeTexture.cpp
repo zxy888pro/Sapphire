@@ -16,8 +16,8 @@ namespace Sapphire
 {
 
 	 
-	CubeTexture::CubeTexture():
-		BaseResource(""),
+	CubeTexture::CubeTexture(Core* pCore, const char* name) :
+		BaseResource(pCore, name),
 		GPUObject(),
 		m_uWidth(0),
 		m_uHeight(0),
@@ -36,6 +36,7 @@ namespace Sapphire
 		m_channelNum(0),
 		m_glType(GL_TEXTURE_CUBE_MAP)
 	{
+		 
 		m_eType = ResoureType_Texture;
 		for (int i = 0; i < MAX_COORDS; ++i)
 			m_eAddressMode_[i] = ADDRESS_REPEAT; m_eAddressMode_;
@@ -45,9 +46,10 @@ namespace Sapphire
 
 	}
 
-	CubeTexture::CubeTexture(uint size, uint depth, PixelFormat pf /*= PF_R8G8B8A8*/, uint NumMipmaps /*= 1*/, int glTargerType /*= GL_TEXTURE_2D*/, TextureUsage eUsage /*= TextureUsage::TEXTURE_STATIC*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode r /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/)
-		:BaseResource("")
+	CubeTexture::CubeTexture(Core* pCore,const char* name,uint size, uint depth, PixelFormat pf /*= PF_R8G8B8A8*/, uint NumMipmaps /*= 1*/, int glTargerType /*= GL_TEXTURE_2D*/, TextureUsage eUsage /*= TextureUsage::TEXTURE_STATIC*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode r /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/) :
+		BaseResource(pCore, name)
 	{
+		 
 		m_uWidth = size;
 		m_uHeight = size;
 		m_uDepth = depth;
@@ -492,7 +494,7 @@ namespace Sapphire
 		{
 			for (unsigned i = 0; i < MAX_CUBEMAP_FACES; ++i)
 			{
-				m_renderSurfaces[i] = new RenderSurface(this);
+				m_renderSurfaces[i] = new RenderSurface(m_pCore,this);
 				m_renderSurfaces[i]->SetTarget(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
 			}
 			m_eFilterMode = FILTER_NEAREST;

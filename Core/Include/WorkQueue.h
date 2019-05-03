@@ -51,7 +51,7 @@ namespace Sapphire
 		typedef std::vector<SharedPtr<WorkItem>> WORKITEM_QUEUE;
 		typedef std::list<SharedPtr<WorkItem>> COMPLETEDITEM_QUEUE;
 
-		WorkQueue();
+		WorkQueue(Core* pCore);
 		virtual ~WorkQueue();
 
 		void Initialize();

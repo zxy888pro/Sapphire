@@ -11,8 +11,8 @@ namespace Sapphire
 	class GLRenderSystem : public IRenderSystem
 	{
 	public:
-		GLRenderSystem();
-		GLRenderSystem(GLGraphicDriver* pDriver);
+		GLRenderSystem(Core* pCore);
+		GLRenderSystem(Core* pCore,GLGraphicDriver* pDriver);
 		virtual ~GLRenderSystem();
 
 		virtual void Update(float dTime);

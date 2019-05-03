@@ -27,12 +27,12 @@ namespace Sapphire
 		ConstantBuffer* m_bufferPtr;
 	};
 
-	class GLShaderProgram : public IShaderProgram, public GPUObject, public RefCounter
+	class GLShaderProgram : public IShaderProgram, public GPUObject, public BaseObject
 	{
 
 	public:
 
-		GLShaderProgram();
+		GLShaderProgram(Core* pCore);
 		virtual ~GLShaderProgram();
 
 		virtual void Release() override;

@@ -38,7 +38,8 @@ namespace Sapphire
 		uint m_id;
 	};
 
-	WorkQueue::WorkQueue()
+	WorkQueue::WorkQueue(Core* pCore):
+		SubSystem(pCore)
 	{
 
 	}

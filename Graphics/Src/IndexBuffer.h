@@ -11,7 +11,7 @@ namespace Sapphire
 	class IndexBuffer : public BaseObject, public GPUObject, public IIndexBuffer
 	{
 	public:
-		IndexBuffer();
+		IndexBuffer(Core* pCore);
 
 		virtual ~IndexBuffer();
 

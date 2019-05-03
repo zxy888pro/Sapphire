@@ -7,10 +7,12 @@
 namespace Sapphire
 {
 
-	GLShaderVariation::GLShaderVariation(ShaderType type):
+	GLShaderVariation::GLShaderVariation(ShaderType type, Core* pCore):
+		BaseObject(pCore),
 		m_eType(type)
 	{
-		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
+		m_assert(pCore);
+		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(m_pCore->GetSubSystemWithType(ESST_GRAPHICDRIVER));
 	}
 
 	GLShaderVariation::~GLShaderVariation()

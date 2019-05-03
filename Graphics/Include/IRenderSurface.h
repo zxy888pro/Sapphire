@@ -9,9 +9,17 @@ namespace Sapphire
 	class IViewport;
 
 	//可以被在進行渲染的顔色或者深度/模板 表面
-	class SAPPHIRE_CLASS  IRenderSurface : public RefCounter
+	class SAPPHIRE_CLASS  IRenderSurface: public BaseObject
 	{
+		SAPPHIRE_OBJECT(IRenderSurface, BaseObject)
 	public:
+
+		IRenderSurface(Core* pCore):
+			BaseObject(pCore)
+		{
+
+		}
+
 		virtual void SetViewportNum(uint num) = 0;
 
 		virtual void SetViewport(uint index, IViewport* viewport) = 0;

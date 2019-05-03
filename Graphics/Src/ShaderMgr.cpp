@@ -15,12 +15,13 @@ namespace Sapphire
 
 	ShaderMgr::ShaderMgr(Core* pCore) :ResourceContainer(pCore)
 	{
+		m_assert(pCore);
 		//设置最大内存上限
 		SetMaximumMemory(1024 * 1024 * 512);
 		//先预分配内存
 		ReserveMemory(1024 * 1024 * 64);
 
-		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
+		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(m_pCore->GetSubSystemWithType(ESST_GRAPHICDRIVER));
 	}
 
 	ShaderMgr::~ShaderMgr()
@@ -32,8 +33,7 @@ namespace Sapphire
 	Sapphire::GLShader* ShaderMgr::CreateShader(std::string cfgPath)
 	{
 		ShaderScriptMgr*   pScriptMgr = m_pGraphicDriver->getShaderScriptMgr();
-		Core* pCore = Core::GetSingletonPtr();
-		if (pScriptMgr == NULL || pCore == NULL)
+		if (pScriptMgr == NULL)
 		{
 			throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
 		}
@@ -54,7 +54,7 @@ namespace Sapphire
 				Path psFile = rootNode["pixelShader"]["name"].asCString();
 				Path gsFile = rootNode["geometryShader"]["name"].asCString();
 				Path csFile = rootNode["computeShader"]["name"].asCString();
-				GLShader* pShader = new GLShader();
+				GLShader* pShader = new GLShader(m_pCore,cfgPath.c_str());
 				//这里判断一下shader类型是否对应
 				HSHADERSCRIPT hvs = pScriptMgr->GetScript(vsFile.c_str());  //取得资源句柄
 				if (!hvs.IsNull() && (pScriptMgr->GetType(hvs) == ShaderType::VS))

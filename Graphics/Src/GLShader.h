@@ -10,11 +10,11 @@ namespace Sapphire
 	class GLGraphicDriver;
 
 	//Shader資源，由源碼和多個shader
-	class GLShader :public IShader, public BaseResource, public RefCounter
+	class GLShader :public IShader, public BaseResource
 	{
+		SAPPHIRE_OBJECT(GLShader, BaseResource)
 	public:
-		GLShader();
-		GLShader(const char* name);
+		GLShader(Core* pCore,const char* name);
 		virtual ~GLShader();
 
 		//加载不同预定义的shader对象

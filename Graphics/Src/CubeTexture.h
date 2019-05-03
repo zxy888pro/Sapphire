@@ -4,17 +4,19 @@
 #include <ICubeTexture.h>
 #include "GPUObject.h"
 #include <Image.h>
+#include "RenderSurface.h"
 
 namespace Sapphire
 {
 	class GLGraphicDriver;
 
 	//包含上下左右前后6个面的Texture， 每个面大小长宽纹理格式都一样
-	class CubeTexture : public GPUObject, public BaseResource, public ICubeTexture, public RefCounter
+	class CubeTexture : public GPUObject, public BaseResource, public ICubeTexture
 	{
+		SAPPHIRE_OBJECT(CubeTexture, BaseResource)
 	public:
-		CubeTexture();
-		CubeTexture(uint size, uint depth, PixelFormat pf = PF_R8G8B8A8, uint NumMipmaps = 1, int glTargerType = GL_TEXTURE_2D,
+		CubeTexture(Core* pCore, const char* name = "");
+		CubeTexture(Core* pCore, const char* name, uint size, uint depth, PixelFormat pf = PF_R8G8B8A8, uint NumMipmaps = 1, int glTargerType = GL_TEXTURE_2D,
 			TextureUsage eUsage = TextureUsage::TEXTURE_STATIC, TextureAddressMode s = TextureAddressMode::ADDRESS_REPEAT,
 			TextureAddressMode t = TextureAddressMode::ADDRESS_REPEAT, TextureAddressMode r = TextureAddressMode::ADDRESS_REPEAT, 
 			TextureFilterMode filterMode = TextureFilterMode::FILTER_BILINEAR);

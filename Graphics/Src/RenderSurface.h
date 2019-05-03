@@ -9,11 +9,13 @@ namespace Sapphire
 	struct ITexture;
 	class  GLGraphicDriver;
 
-	class RenderSurface :public IRenderSurface
+	class RenderSurface : public IRenderSurface
 	{
+		SAPPHIRE_OBJECT(RenderSurface, BaseObject)
+
 	public:
-		RenderSurface();
-		RenderSurface(ITexture* pTexture);
+		RenderSurface(Core* pCore);
+		RenderSurface(Core* pCore,ITexture* pTexture);
 
 		virtual ~RenderSurface();
 
