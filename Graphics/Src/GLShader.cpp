@@ -205,12 +205,12 @@ namespace Sapphire
 
 	void GLShader::Load()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		 
 	}
 
 	void GLShader::Load(const char* resourcePath)
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		 
 	}
 
 	bool GLShader::ProcessSource(std::string source)

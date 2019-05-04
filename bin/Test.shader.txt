@@ -2,6 +2,7 @@
 	"shaders":
 	[
 		{
+			"alias":"",
 			"vertexShader":
 			{
 				"name":"",
@@ -24,6 +25,7 @@
 			}
 		}
 		{
+			"alias":"",
 			"vertexShader":
 			{
 				"name":"",
