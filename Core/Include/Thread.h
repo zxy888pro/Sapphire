@@ -18,6 +18,8 @@ typedef uint ThreadID;
 namespace Sapphire
 {
 
+#define MUTEX_MAX_SPIN_COUNT  16    //最大自旋次数
+
 #ifdef SAPPHIRE_WIN
 #  define sapphire_mutex_t           CRITICAL_SECTION
 #  define sapphire_thread_t          HANDLE
@@ -68,6 +70,42 @@ namespace Sapphire
 #endif
 
 	};
+
+
+	//实现自旋锁
+	class SAPPHIRE_CLASS SpinMutex
+	{
+	public:
+		SpinMutex()
+		{
+			
+		}
+		~SpinMutex()
+		{
+		}
+		void Init()
+		{
+			locked = 0;
+			spin_counter = MUTEX_MAX_SPIN_COUNT;
+			recurse_counter = 0;
+			thread_id = 0;
+			reserve = 0;
+		}
+		void UnLock()
+		{
+			locked = 0;
+		}
+		volatile char padding1[SAPPHIRE_CACHE_LINE_SIZE];
+		volatile uint32_t locked;
+		volatile char padding2[SAPPHIRE_CACHE_LINE_SIZE - 1 * sizeof(uint32_t)];
+		volatile uint32_t spin_counter;
+		volatile uint32_t recurse_counter;
+		volatile uint32_t thread_id;
+		volatile uint32_t reserve;
+		volatile char padding3[SAPPHIRE_CACHE_LINE_SIZE - 4 * sizeof(uint32_t)];
+	};
+
+
 
 	//资源自动守护
 	template<class _Mutex = MutexEx>

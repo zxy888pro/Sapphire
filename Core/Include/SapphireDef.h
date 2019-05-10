@@ -37,7 +37,6 @@
 #include <stdlib.h>
 #include <unordered_map>
 #include <assert.h>
-
 #if defined(SAPPHIRE_STATIC_LIB) && defined(SAPPHIRE_LIB)
 #  define SAPPHIRE_CLASS
 #  define SAPPHIRE_API   extern "C"
@@ -152,8 +151,8 @@ enum MemAllocType
 #define SAPPHIRE_STDCALL           __attribute__((__stdcall__))
 
 #endif
-
-
+/// 缓存的CacheLineSize(x86上是64字节)   64
+#define SAPPHIRE_CACHE_LINE_SIZE   64
 #define MAX_JSON_LENGTH   4096
 
 

@@ -17,6 +17,7 @@
   <ItemGroup>
     <ClInclude Include="Include\ArrayPtr.h" />
     <ClInclude Include="Include\AsynTaskPool.h" />
+    <ClInclude Include="Include\Atom.h" />
     <ClInclude Include="Include\BaseException.h" />
     <ClInclude Include="Include\BaseObject.h" />
     <ClInclude Include="Include\BaseResource.h" />
@@ -51,6 +52,7 @@
     <ClInclude Include="Include\Ptr.h" />
     <ClInclude Include="Include\RefCounter.h" />
     <ClInclude Include="Include\ResourceCache.h" />
+    <ClInclude Include="Include\RingQueue.h" />
     <ClInclude Include="Include\Sapphire.h" />
     <ClInclude Include="Include\SapphireDef.h" />
     <ClInclude Include="Include\sigslot\sigslot.h" />
@@ -66,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\AsynTaskPool.cpp" />
+    <ClCompile Include="Src\Atom.cpp" />
     <ClCompile Include="Src\BaseException.cpp" />
     <ClCompile Include="Src\BaseObject.cpp" />
     <ClCompile Include="Src\BaseResource.cpp" />

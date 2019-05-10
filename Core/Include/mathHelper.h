@@ -136,7 +136,16 @@ namespace Sapphire
 #define FCMP(a,b) ((fabs(a-b) <M_EPSILON)?1:0)
 
 
+//求最近的2次幂
+#define NPOT_B2(x)              (        (x) | (        (x) >>  1))
+#define NPOT_B4(x)              ( NPOT_B2(x) | ( NPOT_B2(x) >>  2))
+#define NPOT_B8(x)              ( NPOT_B4(x) | ( NPOT_B4(x) >>  4))
+#define NPOT_B16(x)             ( NPOT_B8(x) | ( NPOT_B8(x) >>  8))
+#define NPOT_B32(x)             (NPOT_B16(x) | (NPOT_B16(x) >> 16))
+#define NPOT_B64(x)             (NPOT_B32(x) | (NPOT_B32(x) >> 32))
 
+#define NextPowerOfTwo(x)     (NPOT_B32((x) - 1) + 1)
+#define NextPowerOfTwo64(x)  (NPOT_B64((uint64_t)(x) - 1) + 1)
 
 enum Intersection
 {
@@ -648,6 +657,20 @@ enum Intersection
 		{
 			return false; 
 		}
+	}
+
+	//求最近二次方的幂
+	unsigned int roundUpToNextPowerOfTwo(unsigned int x)
+	{
+		x--;
+		x |= x >> 1;  // handle  2 bit numbers
+		x |= x >> 2;  // handle  4 bit numbers
+		x |= x >> 4;  // handle  8 bit numbers
+		x |= x >> 8;  // handle 16 bit numbers
+		x |= x >> 16; // handle 32 bit numbers
+		x++;
+
+		return x;
 	}
 
 }
