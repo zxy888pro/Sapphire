@@ -217,5 +217,49 @@ namespace Sapphire
 
 	 
 
+	void SpinLock::Lock()
+	{
+		UINT32 loopCount = 0;
+		UINT32 yieldCount = 0;
+		UINT32 spinCount = 1; //自旋从1开始
+
+		COMPILER_BARRIER;
+
+		if (test_and_set32(&locked, 1) != 0)
+		{
+			do
+			{
+				if (loopCount < yield_threshold)
+				{
+					for (int pauseCount = spinCount; pauseCount > 0; --pauseCount) {
+						sapphire_pause();        // 需要intel cpu支持
+					}
+					spinCount *= 2;
+				}
+				else
+				{
+					yieldCount = loopCount - yield_threshold;
+					if ((yieldCount & 30) == 63) { //yield63次sleep1次
+						sapphire_sleep(1);          //真正进入休眠
+					}
+					else {
+						if (!sapphire_yield()) {    // 让步给该线程所在的CPU核心上的别的竞争线程,
+							sapphire_sleep(0);      // 再尝试让步给优先级更低的线程
+						}
+					}
+				}
+			} while (val_compare_and_swap32(&locked, 0, 1) != 0);
+		}
+
+
+
+	}
+
+	void SpinLock::UnLock()
+	{
+		COMPILER_BARRIER;
+		locked = 0;
+	}
+
 }
 

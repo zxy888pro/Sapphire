@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SapphireDef.h>
-
+#include "Atom.h"
 
 #ifndef SAPPHIRE_WIN
 #include <pthread.h>
@@ -28,6 +28,9 @@ namespace Sapphire
 #  define sapphire_mutex_trylock(m)  TryEnterCriticalSection(m)
 #  define sapphire_mutex_unlock(m)   LeaveCriticalSection(m)
 #  define sapphire_mutex_destroy(m)  DeleteCriticalSection(m)
+#define sapphire_sleep(t)	Sleep(t)       //睡眠
+#define sapphire_yield()	(int)SwitchToThread()	//出让一下线程
+#define sapphire_pause()    _mm_pause()   //PAUSE指令提升了自旋等待循环（spin-wait loop）的性能
 #else
 #  define sapphire_mutex_t           pthread_mutex_t
 #  define sapphire_thread_t          pthread_t
@@ -36,7 +39,9 @@ namespace Sapphire
 #  define sapphire_mutex_trylock(m)  (pthread_mutex_trylock(m)==0)
 #  define sapphire_mutex_unlock(m)   pthread_mutex_unlock(m)
 #  define sapphire_mutex_destroy(m)  pthread_mutex_destroy(m)
-
+#define sapphire_sleep(t)	usleep(t);
+#define sapphire_yield()	(int)pthread_yield();	
+##define sapphire_pause()    sapphire_yield()
 #endif
 
 
@@ -73,36 +78,34 @@ namespace Sapphire
 
 
 	//实现自旋锁
-	class SAPPHIRE_CLASS SpinMutex
+	class SAPPHIRE_CLASS SpinLock
 	{
 	public:
-		SpinMutex()
+		 
+
+		SpinLock() :locked(0), yield_threshold(3)
 		{
 			
 		}
-		~SpinMutex()
+		SpinLock(UINT32 _yieldThreshold):
+			locked(0), 
+			yield_threshold(_yieldThreshold)
+		{
+
+		}
+		~SpinLock()
 		{
 		}
-		void Init()
-		{
-			locked = 0;
-			spin_counter = MUTEX_MAX_SPIN_COUNT;
-			recurse_counter = 0;
-			thread_id = 0;
-			reserve = 0;
-		}
-		void UnLock()
-		{
-			locked = 0;
-		}
-		volatile char padding1[SAPPHIRE_CACHE_LINE_SIZE];
-		volatile uint32_t locked;
-		volatile char padding2[SAPPHIRE_CACHE_LINE_SIZE - 1 * sizeof(uint32_t)];
-		volatile uint32_t spin_counter;
-		volatile uint32_t recurse_counter;
-		volatile uint32_t thread_id;
-		volatile uint32_t reserve;
-		volatile char padding3[SAPPHIRE_CACHE_LINE_SIZE - 4 * sizeof(uint32_t)];
+		
+		void Lock();
+		
+		void UnLock();
+		
+	private:
+
+		volatile UINT32 locked;   //0未锁 1锁
+		volatile UINT32 yield_threshold;
+
 	};
 
 

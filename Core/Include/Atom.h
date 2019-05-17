@@ -5,12 +5,12 @@
 
 namespace Sapphire
 {
-//ƒ⁄¥Ê∆¡’œ
+//ƒ⁄¥Ê’§¿∏
 #ifdef SAPPHIRE_WIN
 #define MEMORY_BARRIER  MemoryBarrier()
 #define MEMORY_READ_BARRIER MemoryBarrier()
 #define MEMORY_WRITE_BARRIER  MemoryBarrier()
-//±‡“Î∆˜∆¡’œ
+//±‡“Î∆˜’§¿∏
 #define MEMORY_READWRITE_BARRIER  _ReadWriteBarrier()
 #define COMPILER_READ_BARRIER        _ReadBarrier()
 #define COMPILER_WRITE_BARRIER        _WriteBarrier()

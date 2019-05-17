@@ -472,13 +472,13 @@ enum Intersection
 			return value == 1;
 		}
 
-		static inline unsigned NextPowerOfTwo(unsigned value)
+		/*static inline unsigned NextPowerOfTwo(unsigned value)
 		{
-			unsigned ret = 1;
-			while (ret < value && ret < 0x80000000)
-				ret <<= 1;
-			return ret;
-		}
+		unsigned ret = 1;
+		while (ret < value && ret < 0x80000000)
+		ret <<= 1;
+		return ret;
+		}*/
 
 	private:
 
@@ -660,7 +660,7 @@ enum Intersection
 	}
 
 	//求最近二次方的幂
-	unsigned int roundUpToNextPowerOfTwo(unsigned int x)
+	inline unsigned int roundUpToNextPowerOfTwo(unsigned int x)
 	{
 		x--;
 		x |= x >> 1;  // handle  2 bit numbers
