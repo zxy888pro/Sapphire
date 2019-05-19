@@ -95,12 +95,14 @@ namespace Sapphire
 		typename CoreType /*= RingQueueCore<T, Capacity> */>
 		T * Sapphire::RingQueueBase<T, Capacity, CoreType>::pop()
 	{
+		index_type head, tail, next;
+		value_type item;
 		spinlock.Lock(); //зда§Ыј
 		head = core.info.head;
 		tail = core.info.tail;
 		if ((tail == head) || (tail > head && (head - tail) > uMask)) {
 			COMPILER_BARRIER;
-			spin_mutex.locked = 0;
+			spinlock.UnLock();
 			return (value_type)NULL;
 		}
 		next = tail + 1;
@@ -117,6 +119,7 @@ namespace Sapphire
 		typename CoreType /*= RingQueueCore<T, Capacity> */>
 		int Sapphire::RingQueueBase<T, Capacity, CoreType>::push(T * item)
 	{
+		index_type head, tail, next;
 		spinlock.Lock(); //зда§Ыј
 		head = core.info.head;
 		tail = core.info.tail;
@@ -141,7 +144,7 @@ namespace Sapphire
 	{
 		COMPILER_WRITE_BARRIER;
 
-		SpinLock.UnLock();
+		spinlock.UnLock();
 
 	}
 
@@ -220,7 +223,7 @@ namespace Sapphire
 		value_type *newData = new T *[uCapacity];
 		if (newData != NULL) {
 			if (bFillQueue) {
-				memset((void *)newData, 0, sizeof(value_type) * kCapacity);
+				memset((void *)newData, 0, sizeof(value_type) * uCapacity);
 			}
 			this->core.queue = newData;
 		}

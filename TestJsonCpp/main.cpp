@@ -1,6 +1,7 @@
 #include <json/json.h>
 #include <iostream>
 #include "Sapphire.h"
+#include "Thread.h"
 #include "FileStream.h"
 #include "RingQueue.h"
 
@@ -24,14 +25,33 @@ using namespace std;
 	//
 	// return x;
 	// }
+
+class ThreadA : public Sapphire::Thread
+{
+
+public:
+
+	virtual void ThreadFunc() override
+	{
+		int count = 100;
+		while (count>0)
+		{
+			std::cout << "ThreadA Count:" << count << std::endl;
+			--count;
+			sapphire_sleep(100);
+		}
+		std::cout << "ThreadA over" << std::endl;
+	}
+
+};
+Sapphire::RingQueue<float> queue;
 int main()
 {
 	/*int t = jimi_b2(64);
 	t = jimi_b32(64);
 	t = roundUpToNextPowerOfTwo(128);*/
 	
-	  
-
+	
 	using namespace Sapphire;
 	const char* str = "{\"uploadid\": \"UP000000\",\"code\": 100,\"msg\": \"\",\"files\": \"\"}";
 		FileStream fs("images\\1.json", FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
@@ -59,7 +79,12 @@ int main()
 			
 		}
 	}
-	
+
+	ThreadA* pTask1 = new ThreadA();
+	pTask1->Run();
+	WaitForSingleObject(pTask1->GetHandle(), INFINITE);
+	safeDelete(pTask1);
+	std::cout << "end" << std::endl;
 	getchar();
 	return 0;
 }

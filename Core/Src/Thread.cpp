@@ -200,6 +200,11 @@ namespace Sapphire
 
 	}
 
+	ThreadEx::~ThreadEx()
+	{
+
+	}
+
 	void ThreadEx::ThreadFunc()
 	{
 		if (m_pTask)
@@ -239,7 +244,7 @@ namespace Sapphire
 				else
 				{
 					yieldCount = loopCount - yield_threshold;
-					if ((yieldCount & 30) == 63) { //yield63次sleep1次
+					if ((yieldCount & 30) != 0) { //yield 30次sleep1次
 						sapphire_sleep(1);          //真正进入休眠
 					}
 					else {
