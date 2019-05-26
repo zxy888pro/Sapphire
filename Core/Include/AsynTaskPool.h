@@ -10,6 +10,10 @@ namespace Sapphire
 
 	public:
 		AsynTask();
+		AsynTask(const char* name)
+		{
+			taskName = name;
+		}
 		~AsynTask();
 
 		virtual void run() {};
@@ -105,7 +109,6 @@ namespace Sapphire
 
 		void setSleepTime(ulong sleepTime);
 
-		virtual void run();
 
 
 	};

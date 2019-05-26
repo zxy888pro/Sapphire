@@ -1,6 +1,7 @@
 #include <json/json.h>
 #include <iostream>
 #include "Sapphire.h"
+#include "AsynTaskPool.h"
 #include "Thread.h"
 #include "FileStream.h"
 #include "RingQueue.h"
@@ -44,6 +45,39 @@ public:
 	}
 
 };
+
+
+class TaskA : public Sapphire::AsynTask
+{
+
+public:
+
+	TaskA()
+	{
+		 
+	}
+	TaskA(const char* name) :AsynTask(name)
+	{
+		 
+	}
+
+	virtual void run() override
+	{
+		int count = 100;
+		while (count > 0)
+		{
+			printf("%s count %d \n", taskName.c_str(), count);
+			--count;
+			sapphire_sleep(100);
+		}
+		printf("%s is over \n", taskName.c_str());
+		
+	}
+private:
+	 
+
+};
+
 Sapphire::RingQueue<float> queue;
 int main()
 {
@@ -53,6 +87,8 @@ int main()
 	
 	
 	using namespace Sapphire;
+	
+	
 	const char* str = "{\"uploadid\": \"UP000000\",\"code\": 100,\"msg\": \"\",\"files\": \"\"}";
 		FileStream fs("images\\1.json", FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
 	if (fs.IsOpen())
@@ -80,11 +116,20 @@ int main()
 		}
 	}
 
-	ThreadA* pTask1 = new ThreadA();
+	/*ThreadA* pTask1 = new ThreadA();
 	pTask1->Run();
 	WaitForSingleObject(pTask1->GetHandle(), INFINITE);
 	safeDelete(pTask1);
-	std::cout << "end" << std::endl;
+	std::cout << "end" << std::endl;*/
+	Core core;
+	AsynTaskPool pool(&core,4,2,100);
+	pool.Initialize();
+	TaskA* ta1 = new TaskA("task1");
+	TaskA* ta2 = new TaskA("task2");
+	TaskA* ta3 = new TaskA("task3");
+	pool.AddTask(ta1);
+	pool.AddTask(ta2);
+	pool.AddTask(ta3);
 	getchar();
 	return 0;
 }

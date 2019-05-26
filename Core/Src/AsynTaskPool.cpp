@@ -382,4 +382,15 @@ namespace Sapphire
 
 
 
+
+	AsynTask::AsynTask()
+	{
+		taskName = "";
+	}
+
+	AsynTask::~AsynTask()
+	{
+
+	}
+
 }

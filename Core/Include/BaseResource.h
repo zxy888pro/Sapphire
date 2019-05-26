@@ -51,9 +51,13 @@ namespace Sapphire
 		virtual const std::string& GetName() const { return m_resName; }
 		virtual bool Create()	{ return false; }
 		virtual void Destroy()	{}
+		
 		virtual void Load(const char* resourcePath) {};
 		virtual bool Recreate() = 0;
 		virtual void Dispose() = 0;
+
+		virtual void BeginLoad() {};
+		virtual void EndLoad() {};
 
 		virtual size_t GetSize() = 0;
 		virtual bool IsDisposed() = 0;
