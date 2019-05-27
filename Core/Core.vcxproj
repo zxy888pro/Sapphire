@@ -24,6 +24,7 @@
     <ClInclude Include="Include\charset.h" />
     <ClInclude Include="Include\Color.h" />
     <ClInclude Include="Include\Core.h" />
+    <ClInclude Include="Include\Deserializer.h" />
     <ClInclude Include="Include\EventContext.h" />
     <ClInclude Include="Include\EventDef.h" />
     <ClInclude Include="Include\FileStream.h" />
@@ -55,6 +56,7 @@
     <ClInclude Include="Include\RingQueue.h" />
     <ClInclude Include="Include\Sapphire.h" />
     <ClInclude Include="Include\SapphireDef.h" />
+    <ClInclude Include="Include\Serializer.h" />
     <ClInclude Include="Include\sigslot\sigslot.h" />
     <ClInclude Include="Include\singleton.h" />
     <ClInclude Include="Include\Str.h" />
@@ -75,6 +77,7 @@
     <ClCompile Include="Src\charset.cpp" />
     <ClCompile Include="Src\Color.cpp" />
     <ClCompile Include="Src\Core.cpp" />
+    <ClCompile Include="Src\Deserializer.cpp" />
     <ClCompile Include="Src\EventContext.cpp" />
     <ClCompile Include="Src\EventMgr.cpp" />
     <ClCompile Include="Src\FileStream.cpp" />
@@ -97,6 +100,7 @@
     <ClCompile Include="Src\path.cpp" />
     <ClCompile Include="Src\RefCounter.cpp" />
     <ClCompile Include="Src\ResourceCache.cpp" />
+    <ClCompile Include="Src\Serializer.cpp" />
     <ClCompile Include="Src\Str.cpp" />
     <ClCompile Include="Src\stringHelper.cpp" />
     <ClCompile Include="Src\SubSystem.cpp" />

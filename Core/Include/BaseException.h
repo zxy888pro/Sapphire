@@ -40,6 +40,21 @@ namespace Sapphire
 		FSErrorCode m_errorCode;
 	};
 
+	class SAPPHIRE_CLASS IOException : public BaseException
+	{
+	public:
+		enum IOErrorCode
+		{
+			IOError_UnknownError
+		};
+		IOException();
+		IOException(IOErrorCode ecode);
+		IOException(std::string msg);
+		IOException(std::string msg, IOErrorCode ecode);
+	private:
+		IOErrorCode m_errorCode;
+	};
+
 	class SAPPHIRE_CLASS StringException :public BaseException
 	{
 	public:

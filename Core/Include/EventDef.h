@@ -12,6 +12,7 @@ enum EventType
 enum ESubSystemEvent
 {
 	ESSE_WORKCOMPLETED,
+	ESSE_LOAD_RESOURCE,
 	ESSE_MAXCOUNT
 };
 

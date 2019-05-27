@@ -11,6 +11,8 @@ namespace Sapphire
 
 		virtual bool Open(Path filePath, uint mode) = 0;
 
+		virtual bool IsOpen() = 0;
+
 		virtual ulonglong Read(void* buffer, ulong toRead) = 0;
 
 		virtual bool  Write(const void* buffer, ulong toWrite) = 0;

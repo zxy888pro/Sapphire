@@ -43,6 +43,7 @@ namespace Sapphire
 
 		virtual bool ReadLine(std::string& str) override;
 
+		virtual bool IsOpen() override;
 
 	private:
 

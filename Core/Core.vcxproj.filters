@@ -177,6 +177,12 @@
     <ClInclude Include="Include\RingQueue.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Serializer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Deserializer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -288,6 +294,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\Atom.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Serializer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Deserializer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

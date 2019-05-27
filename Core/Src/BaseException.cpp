@@ -77,3 +77,27 @@ Sapphire::StringException::StringException(SErrorCode ecode)
 	m_message = "";
 	m_errorCode = ecode;
 }
+
+Sapphire::IOException::IOException()
+{
+	m_message = "";
+	m_errorCode = IOError_UnknownError;
+}
+
+Sapphire::IOException::IOException(std::string msg, IOErrorCode ecode)
+{
+	m_message = "";
+	m_errorCode = ecode;
+}
+
+Sapphire::IOException::IOException(std::string msg)
+{
+	m_message = msg;
+	m_errorCode = IOError_UnknownError;
+}
+
+Sapphire::IOException::IOException(IOErrorCode ecode)
+{
+	m_message = "";
+	m_errorCode = ecode;
+}

@@ -52,12 +52,13 @@ namespace Sapphire
 		virtual bool Create()	{ return false; }
 		virtual void Destroy()	{}
 		
-		virtual void Load(const char* resourcePath) {};
+		virtual void Load(const char* resPath) {};
 		virtual bool Recreate() = 0;
 		virtual void Dispose() = 0;
 
-		virtual void BeginLoad() {};
-		virtual void EndLoad() {};
+		virtual void OnBeginLoad() {}; //异步开始加载时回调
+		virtual void OnEndLoad() {};  //异步加载完成时回调
+		
 
 		virtual size_t GetSize() = 0;
 		virtual bool IsDisposed() = 0;
