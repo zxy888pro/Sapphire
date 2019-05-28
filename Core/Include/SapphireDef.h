@@ -158,6 +158,7 @@ enum MemAllocType
 
 //数据类型
 typedef unsigned char byte;
+typedef unsigned char ubyte;
 typedef unsigned int bit32;
 typedef unsigned int  uint;
 typedef unsigned long ulong;

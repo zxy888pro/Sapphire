@@ -8,7 +8,7 @@ namespace Sapphire
 	class Serializer
 	{
 	public: 
-		Serializer(IStream* pstream);
+		 
 		virtual ~Serializer();
 
 		virtual unsigned Write(const void* pData, unsigned size) = 0;
@@ -27,7 +27,7 @@ namespace Sapphire
 
 	protected:
 
-		IStream*  m_pStream;
+		 
 	};
 
 }

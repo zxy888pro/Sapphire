@@ -6,23 +6,39 @@ namespace Sapphire
 	class Deserializer
 	{
 	public:
-		Deserializer(IStream* pstream);
+		
+		Deserializer();
+		Deserializer(unsigned size);
+
 		virtual ~Deserializer();
 
-		bool ReadInt(int value);
-		bool ReadShort(short value);
-		bool ReadByte(signed char value);
-		bool ReadUint(unsigned value);
-		bool ReadUShort(unsigned short value);
-		bool ReadUByte(unsigned char value);
-		bool ReadBool(bool value);
-		bool ReadFloat(float value);
-		bool ReadDouble(double value);
-		bool ReadString(const char* str);
+		virtual unsigned Read(void* dest, unsigned size) = 0;
+
+		virtual unsigned Seek(unsigned position) = 0;
+
+		UINT32 GetPosition() const { return m_uPosition; }
+
+		UINT32 GetSize() const { return m_uSize; }
+
+		virtual unsigned GetChecksum(){};
+
+		bool IsEnd() const { return m_uPosition >= m_uSize; }
+
+		int ReadInt();
+		short ReadShort();
+		byte ReadByte();
+		UINT32 ReadUint();
+		ushort ReadUShort();
+		ubyte ReadUByte();
+		bool ReadBool();
+		float ReadFloat();
+		double ReadDouble();
+		std::string ReadString();
 
 	protected:
-
-		IStream*  m_pStream;
+		 
+		UINT32 m_uPosition;
+		UINT32 m_uSize;
 
 	};
 }

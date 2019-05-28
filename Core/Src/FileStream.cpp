@@ -117,13 +117,13 @@ namespace Sapphire
 		std::ios::seekdir skdir = std::ios::beg;
 		switch (from)
 		{
-		case FileBegin:
+		case ESTREAM_SEEK_BEGIN:
 			skdir = std::ios::beg;
 			break;
-		case FileEnd:
+		case ESTREAM_SEEK_END:
 			skdir = std::ios::end;
 			break;
-		case FileCurPos:
+		case ESTREAM_SEEK_CUR:
 			skdir = std::ios::cur;
 			break;
 		default:
@@ -135,13 +135,13 @@ namespace Sapphire
 
 	bool FileStream::SeekToBegin()
 	{
-		Seek(0, FileBegin);
+		Seek(0, ESTREAM_SEEK_BEGIN);
 		return true;
 	}
 
 	bool FileStream::SeekToEnd()
 	{
-		Seek(0, FileEnd);
+		Seek(0, ESTREAM_SEEK_END);
 		return true;
 	}
 

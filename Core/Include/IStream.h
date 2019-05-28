@@ -5,6 +5,14 @@
 
 namespace Sapphire
 {
+	enum ESTREAM_SEEK
+	{
+		ESTREAM_SEEK_BEGIN,
+		ESTREAM_SEEK_END,
+		ESTREAM_SEEK_CUR,
+		ESTREAM_SEEK_SET
+	};
+
 	struct IStream
 	{
 		virtual bool Open(void* pData, ulong size) = 0;

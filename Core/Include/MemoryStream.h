@@ -11,9 +11,9 @@ namespace Sapphire
 
 		MemoryStream();
 		
-		MemoryStream(ulong bufferSize = 1024);
+		MemoryStream(ulong growBytes = 1024);
 		
-		MemoryStream(void* pData, ulong size, ulong bufferSize = 1024);
+		MemoryStream(void* pData, ulong size, ulong growBytes = 1024);
 		
 		virtual ~MemoryStream();
 
@@ -45,7 +45,21 @@ namespace Sapphire
 
 		virtual bool IsOpen() override;
 
+		virtual void Save(const char* fileName);
+
+	protected:
+
+		UINT   m_uGrowBytes;
+		UINT   m_uPos;
+		UINT   m_uBufSize;
+		UINT   m_uFileSize;
+		byte*  m_pBuffer;
+		bool   m_bAutoDeleteBuffer; 
+
+		virtual bool GrowFile(UINT newLen);
+
 	private:
+
 
 
 	};
