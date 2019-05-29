@@ -17,6 +17,8 @@ namespace Sapphire
 
 	void EventMgr::BroadcastEvent(ushort eEventType, ushort eEvent, EventContext* eEventSrc, void* eventData)
 	{
+		
+		//找到对应类型的SubscriberMap
 		EventDataMap::iterator evtTypeMap = m_listenerMap.find(eEventType);
 		if (evtTypeMap == m_listenerMap.end())
 		{
@@ -35,6 +37,7 @@ namespace Sapphire
 				(*it)->Invoke(eEventType, eEvent, eEventSrc, eventData);
 			}
 		}
+		
 	}
 
 	bool EventMgr::SubscribeEvent(ushort eEventType, ushort eEvent, EventContext* pSubcriber)

@@ -53,6 +53,7 @@
     <ClInclude Include="Include\Ptr.h" />
     <ClInclude Include="Include\RefCounter.h" />
     <ClInclude Include="Include\ResourceCache.h" />
+    <ClInclude Include="Include\ResourceLoader.h" />
     <ClInclude Include="Include\RingQueue.h" />
     <ClInclude Include="Include\Sapphire.h" />
     <ClInclude Include="Include\SapphireDef.h" />
@@ -100,6 +101,7 @@
     <ClCompile Include="Src\path.cpp" />
     <ClCompile Include="Src\RefCounter.cpp" />
     <ClCompile Include="Src\ResourceCache.cpp" />
+    <ClCompile Include="Src\ResourceLoader.cpp" />
     <ClCompile Include="Src\Serializer.cpp" />
     <ClCompile Include="Src\Str.cpp" />
     <ClCompile Include="Src\stringHelper.cpp" />

@@ -187,7 +187,7 @@ void Prepare()
 		pScene->AddMesh("LightBox2", pMesh);
 		pSMesh->SetDiffuseMap("container2.png");
 		pSMesh->SetSepcularMap("container2_specular.png");
-		pSMesh->SubscribeEvent(EventType::ET_OBJECT_EVENT, EOE_CUSTOM_EVENT);
+		pSMesh->SubscribeEvent(EventType::ET_OBJECT_EVENT, EVENT_OBJECT_CUSTOM_EVENT);
 		
 	}
 

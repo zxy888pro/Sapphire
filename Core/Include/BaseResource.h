@@ -13,12 +13,27 @@ namespace Sapphire
 #define IS_INVALID_RHANDLE(_rh)	((_rh == INVALID_RHANDLE) ? true : false)
 #define IS_VALID_RHANDLE(_rh)	((_rh == INVALID_RHANDLE) ? false : true)
 
+	//资源加载回调接口
+	struct ResourceEventHandler
+	{
+		virtual void OnLoaded() = 0; 
+		virtual void OnLoadFailed() = 0;
+
+	};
+
 	enum ResoureType
 	{
 		ResoureType_Texture,
 		ResourceType_Model,
 		ResourceType_Unkown,
 		ResourceType_Max
+	};
+
+	enum ResourceState
+	{
+		ResourceState_Unload,
+		ResourceState_Loading,
+		ResourceState_Loaded
 	};
 
 	//资源基类
@@ -44,7 +59,9 @@ namespace Sapphire
 		{ 
 			Clear(); 
 			m_resName = name;
-			m_eType = ResourceType_Unkown; }
+			m_eType = ResourceType_Unkown;
+			m_eState = ResourceState_Unload;
+		}
 		virtual ~BaseResource()	{ Destroy(); }
 
 		virtual void Clear();
@@ -56,8 +73,12 @@ namespace Sapphire
 		virtual bool Recreate() = 0;
 		virtual void Dispose() = 0;
 
-		virtual void OnBeginLoad() {}; //异步开始加载时回调
-		virtual void OnEndLoad() {};  //异步加载完成时回调
+		ResourceState GetState() const { return m_eState; }
+		void SetState(ResourceState state) { m_eState = state; }
+
+		virtual void OnLoadStart() {}; //异步开始加载时回调
+		virtual void OnLoadEnd() {};  //异步加载完成时回调
+		virtual void OnLoadError() {}; //异步加载失败时调用
 		
 
 		virtual size_t GetSize() = 0;
@@ -87,6 +108,7 @@ namespace Sapphire
 		time_t			m_LastAccess;
 		ResoureType     m_eType;
 		std::string     m_resName;  //用于ResourceCache
+		ResourceState   m_eState;  //资源加载状态
 
 	};
 

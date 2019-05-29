@@ -168,7 +168,7 @@ namespace Sapphire
 		{
 			if ((*it)->bSendEvent == true)
 			{
-				FireEvent(ET_SUBSYTEM_EVENT, ESSE_WORKCOMPLETED, (*it)->GetData());
+				FireEvent(ET_SUBSYTEM_EVENT, EVENT_SUBSYS_WORKCOMLPETED, (*it)->GetData());
 			}
 		}
 
