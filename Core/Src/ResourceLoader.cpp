@@ -1,48 +1,64 @@
 #include "ResourceLoader.h"
-
+#include "AsynTaskPool.h"
 
 
 namespace Sapphire
 {
 
-	ResourceLoader::ResourceLoader(Core* pCore) :BaseObject(pCore)
+	 
+
+	ResourceLoader::ResourceLoader(Core* pCore) :SubSystem(pCore)
 	{
 
 	}
 
-	ResourceLoader::~ResourceLoader()
+	void ResourceLoader::LoadResource(SharedPtr<BaseResource> resource)
 	{
+		if (resource.NotNull())
+		{
+			m_assert(m_pCore);
+			AsynTaskPool* pTaskPool = dynamic_cast<AsynTaskPool*>(m_pCore->GetSubSystem<AsynTaskPool>());
+			ResourceTask* pResTask = new ResourceTask(resource, true);
+			pTaskPool->AddTask(pResTask);
 
+		}
 	}
 
-	void ResourceLoader::Initialized()
+	void ResourceLoader::Initialize()
 	{
-		SubscribeEvent(ET_OTHER_EVENT, EVENT_SUBSYS_RESOURCEREQUEST_EVENT);
+		SubscribeEvent(ET_SUBSYTEM_EVENT, EVENT_SUBSYS_RESOURCEREQUEST_EVENT);	//资源加载请求
+		SubscribeEvent(ET_SUBSYTEM_EVENT, EVENT_SUBSYS_RESOURCELOADEND_EVENT);  //资源加载完成
 	}
 
-	void ResourceLoader::LoadResource(const char* resourcePath, ResoureType type, ResourceEventHandler* phandler)
-	{
 
-	}
 
 	void ResourceLoader::Release()
 	{
-		UnSubscribeEvent(ET_OTHER_EVENT, EVENT_SUBSYS_RESOURCEREQUEST_EVENT);
+		UnSubscribeEvent(ET_SUBSYTEM_EVENT, EVENT_SUBSYS_RESOURCEREQUEST_EVENT);
+		UnSubscribeEvent(ET_SUBSYTEM_EVENT, EVENT_SUBSYS_RESOURCELOADEND_EVENT);
 	}
 
-	void ResourceLoader::Dispatch()
+	ResourceTask::ResourceTask(SharedPtr<BaseResource> res, bool bAutoDelete /*= false*/)
 	{
-
+		m_resource = res;
+		m_bAutoDelete = bAutoDelete;
 	}
 
-	void ResourceLoader::ThreadFunc()
+	void ResourceTask::run()
 	{
-		Dispatch();
-	}
-
-	void ResourceLoader::Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData /*= NULL*/)
-	{
-		
+		if (m_resource.NotNull())
+		{
+			m_resource->OnLoadStart();
+			if(m_resource->Load(m_resource->GetName().c_str())) //加载资源
+			{
+				m_resource->OnLoadEnd(); //进行资源加载完成后处理
+				m_resource->FireEvent(ET_SUBSYTEM_EVENT, EVENT_SUBSYS_RESOURCELOADEND_EVENT, m_resource); //发送资源加载完成事件
+			}else
+			{
+				m_resource->OnLoadError();
+			}
+			
+		}
 	}
 
 }

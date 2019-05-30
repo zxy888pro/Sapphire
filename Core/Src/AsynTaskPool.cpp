@@ -36,7 +36,11 @@ namespace Sapphire
 				{
 					m_curTask = pTask;
 					pTask->run();
-					pTask->bCompleted = true;
+					pTask->bCompleted = true; 
+					if (pTask->isAutoDelete()) //是否是需要自动删除的任务
+					{
+						safeDelete(pTask);
+					}
 					if (m_bAutoExit)
 					{
 						m_bExitFlag = true;

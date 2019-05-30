@@ -1,32 +1,49 @@
 #pragma once
 #include "Sapphire.h"
-#include "Thread.h"
+#include "AsynTaskPool.h"
 #include "BaseResource.h"
 
 
 namespace Sapphire
 {
-	class SAPPHIRE_CLASS ResourceLoader :public BaseObject, public Thread
+	//资源加载任务
+	class SAPPHIRE_CLASS ResourceTask : public AsynTask
 	{
-		SAPPHIRE_OBJECT(ResourceLoader, BaseObject)
+	public:
+		ResourceTask(SharedPtr<BaseResource> res,bool bAutoDelete = false);
+		virtual ~ResourceTask();
 
-	public: 
-		ResourceLoader(Core* pCore);
-		virtual ~ResourceLoader();
-
-		void Initialized();
-		void LoadResource(const char* resourcePath, ResoureType type, ResourceEventHandler* phandler);  //加载资源
-		void Release();
+		virtual void run() override;
 
 	private:
 
-		void Dispatch();   
-
-	public:
-		virtual void ThreadFunc() override;
-
-		virtual void Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData = NULL) override;
+		WeakPtr<BaseResource>  m_resource; //用弱引用
 
 	};
+
+	//资源加载任务
+	class SAPPHIRE_CLASS ResourceLoader : public SubSystem
+	{
+		SAPPHIRE_OBJECT(ResourceLoader, SubSystem)
+
+	public:
+
+		ResourceLoader(Core* pCore);
+		virtual ~ResourceLoader();
+
+		void LoadResource(SharedPtr<BaseResource> resource);
+
+		void Initialize();
+
+		void Release();
+
+	protected:
+
+
+	 
+
+	};
+
+	
 
 }

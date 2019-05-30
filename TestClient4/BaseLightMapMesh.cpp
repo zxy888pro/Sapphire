@@ -231,7 +231,7 @@ namespace Sapphire
 		{
 			switch (eEvent)
 			{
-			case EObjectEvent::EOE_CUSTOM_EVENT:
+			case EVENT_OBJECT_CUSTOM_EVENT:
 				SAPPHIRE_LOG(StringFormatA("BaseLighMapMesh %s  %d recive event", this->GetClassTypeName(), (int)this));
 				break;
 			default:

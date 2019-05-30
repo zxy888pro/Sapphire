@@ -13,13 +13,6 @@ namespace Sapphire
 #define IS_INVALID_RHANDLE(_rh)	((_rh == INVALID_RHANDLE) ? true : false)
 #define IS_VALID_RHANDLE(_rh)	((_rh == INVALID_RHANDLE) ? false : true)
 
-	//资源加载回调接口
-	struct ResourceEventHandler
-	{
-		virtual void OnLoaded() = 0; 
-		virtual void OnLoadFailed() = 0;
-
-	};
 
 	enum ResoureType
 	{
@@ -69,7 +62,7 @@ namespace Sapphire
 		virtual bool Create()	{ return false; }
 		virtual void Destroy()	{}
 		
-		virtual void Load(const char* resPath) {};
+		virtual bool Load(const char* resPath) { return false; };
 		virtual bool Recreate() = 0;
 		virtual void Dispose() = 0;
 
@@ -107,8 +100,8 @@ namespace Sapphire
 		uint			m_nRefCount;
 		time_t			m_LastAccess;
 		ResoureType     m_eType;
-		std::string     m_resName;  //用于ResourceCache
-		ResourceState   m_eState;  //资源加载状态
+		std::string     m_resName;  //用于ResourceCache, 资源路径作为资源名
+		volatile ResourceState   m_eState;  //资源加载状态
 
 	};
 

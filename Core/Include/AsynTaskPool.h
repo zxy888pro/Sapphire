@@ -1,5 +1,6 @@
 #pragma once
 #include "Sapphire.h"
+#include <SubSystem.h>
 #include "Thread.h"
 
 namespace Sapphire
@@ -10,12 +11,14 @@ namespace Sapphire
 
 	public:
 		AsynTask();
-		AsynTask(const char* name)
+		AsynTask(const char* name, bool bAutoDelete = false)
 		{
 			taskName = name;
+			m_bAutoDelete = bAutoDelete;
 		}
 		~AsynTask();
 
+		bool isAutoDelete() const { return m_bAutoDelete; }
 		virtual void run() {};
 		const std::string& getName() const { return taskName; }
 		uint uPriority;
@@ -26,13 +29,14 @@ namespace Sapphire
 		}
 	protected:
 		std::string taskName;
+		bool m_bAutoDelete;
 
 
 	};
 
 	class AsynTaskThread;
 
-	class SAPPHIRE_CLASS AsynTaskPool : public Thread, public SubSystem
+	class SAPPHIRE_CLASS AsynTaskPool : public SubSystem, public Thread
 	{
 
 		SAPPHIRE_OBJECT(AsynTaskPool,SubSystem)

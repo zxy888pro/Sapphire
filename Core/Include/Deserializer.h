@@ -20,7 +20,7 @@ namespace Sapphire
 
 		UINT32 GetSize() const { return m_uSize; }
 
-		virtual unsigned GetChecksum(){};
+		virtual unsigned GetChecksum(){ return 0; };
 
 		bool IsEnd() const { return m_uPosition >= m_uSize; }
 
