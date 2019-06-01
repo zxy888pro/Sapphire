@@ -16,6 +16,7 @@ namespace Sapphire
 
 	enum ResoureType
 	{
+		ResourceType_Image,
 		ResoureType_Texture,
 		ResourceType_Model,
 		ResourceType_Unkown,
@@ -62,8 +63,9 @@ namespace Sapphire
 		virtual bool Create()	{ return false; }
 		virtual void Destroy()	{}
 		
-		virtual bool Load(const char* resPath) { return false; };
-		virtual bool Recreate() = 0;
+		virtual bool Load(){ return false; } //直接用资源名加载
+		virtual bool Load(const char* resPath) { m_resName = resPath; return Load(); }; //重新指定资源路径
+		virtual bool Recreate() = 0;  //重新创建，相当于重新加载 (给ResourceLoader发个加载事件即可)
 		virtual void Dispose() = 0;
 
 		ResourceState GetState() const { return m_eState; }

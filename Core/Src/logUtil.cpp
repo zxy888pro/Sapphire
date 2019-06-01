@@ -78,6 +78,7 @@ namespace Sapphire
 	{
 		assert(s_pLogUtil);
 		s_pLogUtil->Log(pszLog);
+		std::cout << pszLog << std::endl;
 	}
 
 
@@ -85,6 +86,7 @@ namespace Sapphire
 	{
 		assert(s_pLogUtil);
 		s_pLogUtil->Log(logStr);
+		std::cout << logStr.c_str() << std::endl;
 	}
 
 	void LogUtil::LogMsgLn(TString& logStr)
@@ -92,6 +94,7 @@ namespace Sapphire
 		logStr += _T("\n");
 		assert(s_pLogUtil);
 		s_pLogUtil->Log(logStr);
+		std::cout << logStr.c_str() << std::endl;
 	}
 
 	void LogUtil::LogMsgLn(TCHAR* pszLog)
@@ -100,6 +103,7 @@ namespace Sapphire
 		logStr += '\n';
 		assert(s_pLogUtil);
 		s_pLogUtil->Log(logStr);
+		std::cout << logStr.c_str() << std::endl;
 	}
 
 

@@ -203,9 +203,9 @@ namespace Sapphire
 
 	}
 
-	void GLShader::Load()
+	bool GLShader::Load()
 	{
-		 
+		return false;
 	}
 
 	bool GLShader::Load(const char* resourcePath)

@@ -8,7 +8,7 @@ namespace Sapphire
 	 
 	struct IShader
 	{
-		virtual void Load() = 0;
+		//virtual void Load() = 0;
 
 
 	};

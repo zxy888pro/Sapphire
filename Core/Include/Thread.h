@@ -139,7 +139,7 @@ namespace Sapphire
 
 		virtual void ThreadFunc() = 0;
 
-		virtual bool Run();
+		bool Run();
 
 		void Stop();
 

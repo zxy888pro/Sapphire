@@ -21,15 +21,6 @@
     <ClInclude Include="Include\Graphics.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Src\stb_image.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\stb_image_resize.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\stb_image_write.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Include\FontFace.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -141,6 +132,21 @@
     <ClInclude Include="Include\ShaderScriptMgr.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ImageRes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ImageHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\stb_image.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\stb_image_resize.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\stb_image_write.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
@@ -204,6 +210,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Include\ShaderScriptMgr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ImageRes.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ImageHelper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

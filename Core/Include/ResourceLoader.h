@@ -10,7 +10,7 @@ namespace Sapphire
 	class SAPPHIRE_CLASS ResourceTask : public AsynTask
 	{
 	public:
-		ResourceTask(SharedPtr<BaseResource> res,bool bAutoDelete = false);
+		ResourceTask(BaseResource* res, bool bAutoDelete = false);
 		virtual ~ResourceTask();
 
 		virtual void run() override;
@@ -31,15 +31,20 @@ namespace Sapphire
 		ResourceLoader(Core* pCore);
 		virtual ~ResourceLoader();
 
-		void LoadResource(SharedPtr<BaseResource> resource);
+		void LoadResource(BaseResource* resource);
 
 		void Initialize();
 
 		void Release();
 
+
+		virtual void Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData = NULL) override;
+
 	protected:
 
+	protected:
 
+		
 	 
 
 	};

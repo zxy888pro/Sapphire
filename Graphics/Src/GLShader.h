@@ -38,7 +38,7 @@ namespace Sapphire
 		}
 
 
-		virtual void Load() override;
+		virtual bool Load() override;
 
 
 		virtual bool Load(const char* resourcePath) override;

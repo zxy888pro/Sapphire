@@ -1,6 +1,5 @@
 #include "Image.h"
-#include "stb_image.h"
-#include "stb_image_resize.h"
+#include "ImageHelper.h"
 #include "mathHelper.h"
 
 
@@ -17,7 +16,7 @@ bool Sapphire::Image::Load(const std::string& imagePath, bool bCreateMipmap)
 		LogUtil::LogMsgLn(StringFormatA("加载失败！ %s 不存在！", fpath.c_str()));
 		return false;
 	}
-	m_pbData = stbi_load(fpath.c_str(), &m_nWidth, &m_nHeight, &m_nChannels, 0);
+	m_pbData = LoadImageFile(fpath.c_str(), &m_nWidth, &m_nHeight, &m_nChannels);
 	if (m_pbData == NULL)
 	{
 		LogUtil::LogMsgLn(StringFormatA("加载失败！ %s 不存在！", fpath.c_str()));
@@ -61,7 +60,7 @@ void Sapphire::Image::Unload(void)
 	m_imgType == ImageType::ImageType_Unknown;
 	if (m_pbData)
 	{
-		stbi_image_free(m_pbData);
+		FreeImage(m_pbData);
 	}
 	//卸载子图像资源
 	for (int i = 0; i < m_subImgs.size(); ++i)
@@ -132,7 +131,7 @@ void Sapphire::Image::GenerateMipmaps()
 		Image* imgPtr = new Image();
 		int totalSize = subHeight*subWidth*m_nChannels;
 		byte* pbDate = new byte[totalSize];
-		int ret = stbir_resize_uint8(m_pbData, parentWidth, parentHeight, 0, pbDate, subWidth, subHeight, 0, m_nChannels); //重新改变大小
+		int ret = ResizeImage(m_pbData, parentWidth, parentHeight, 0, pbDate, subWidth, subHeight, 0, m_nChannels); //重新改变大小
 		imgPtr->SetRAWData(pbDate, subWidth, subHeight, m_nChannels);
 		m_mipmaps.push_back(pbDate);
 		m_subImgs.push_back(imgPtr);

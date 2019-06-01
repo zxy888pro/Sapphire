@@ -108,6 +108,8 @@
     <ClInclude Include="Include\IIndexBuffer.h" />
     <ClInclude Include="Include\Image.h" />
     <ClInclude Include="Include\Graphics.h" />
+    <ClInclude Include="Include\ImageHelper.h" />
+    <ClInclude Include="Include\ImageRes.h" />
     <ClInclude Include="Include\IRenderSurface.h" />
     <ClInclude Include="Include\IRenderSystem.h" />
     <ClInclude Include="Include\IShaderProgram.h" />
@@ -155,7 +157,9 @@
     <ClCompile Include="Src\GraphicDriver.cpp" />
     <ClCompile Include="Src\GraphicException.cpp" />
     <ClCompile Include="Src\Image.cpp" />
+    <ClCompile Include="Src\ImageHelper.cpp" />
     <ClCompile Include="Src\ImageMgr.cpp" />
+    <ClCompile Include="Src\ImageRes.cpp" />
     <ClCompile Include="Src\IndexBuffer.cpp" />
     <ClCompile Include="Src\RenderSurface.cpp" />
     <ClCompile Include="Src\ShaderMgr.cpp" />

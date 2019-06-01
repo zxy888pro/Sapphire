@@ -312,9 +312,11 @@ namespace Sapphire
 	{
 		m_bIsRunning = false;
 #ifdef SAPPHIRE_WIN
-		int ret = WaitForSingleObject(GetHandle(), NULL);
+		Stop();
+		//int ret = WaitForSingleObject(GetHandle(), INFINITE);
 #else
-		int ret = pthread_join(mThreadHandle, NULL);
+		Stop();
+		//int ret = pthread_join(mThreadHandle, NULL);
 #endif
 		Clear();
 	}
@@ -335,11 +337,13 @@ namespace Sapphire
 		for (WORKER_QUEUE::iterator it = m_workers.begin(); it != m_workers.end();)
 		{
 			AsynTaskThread* pThread = *it;
-			pThread->Stop();
+			pThread->setExitFlag(true);
 #ifdef SAPPHIRE_WIN
-			ret = WaitForSingleObject(pThread->GetHandle(), NULL);
+			//ret = WaitForSingleObject(pThread->GetHandle(), INFINITE);
+			pThread->Stop();
 #else
-			ret = pthread_join(pThread->mThreadHandle, NULL);
+			//ret = pthread_join(pThread->mThreadHandle, NULL);
+			pThread->Stop();
 #endif
 			
 			safeDelete(*it);
