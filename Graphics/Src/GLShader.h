@@ -43,6 +43,25 @@ namespace Sapphire
 
 		virtual bool Load(const char* resourcePath) override;
 
+
+		virtual void Clear() override;
+
+
+		virtual void Destroy() override;
+
+
+		virtual void OnLoadStart() override;
+
+
+		virtual void OnLoadEnd() override;
+
+
+		virtual void OnLoadError() override;
+
+	protected:
+
+		virtual bool LoadShaderScript(const char* scriptPath, ShaderType type);  //加载glsl shader脚本
+
 	private:
 
 		//处理源码并包含文件

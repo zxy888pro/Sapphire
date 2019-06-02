@@ -154,6 +154,7 @@ enum MemAllocType
 /// 缓存的CacheLineSize(x86上是64字节)   64
 #define SAPPHIRE_CACHE_LINE_SIZE   64
 #define MAX_JSON_LENGTH   4096
+#define MAX_SHADER_SCRIPT_LENGTH  8192
 
 
 //数据类型

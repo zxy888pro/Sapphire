@@ -125,7 +125,7 @@ namespace Sapphire
 
 	ImageRes::~ImageRes()
 	{
-		if (IsDisposed())
+		if (!IsDisposed())
 		{
 			Dispose();
 		}
@@ -144,7 +144,7 @@ namespace Sapphire
 
 	bool ImageRes::Recreate()
 	{
-		if (IsDisposed())
+		if (!IsDisposed())
 		{
 			Dispose();
 		}

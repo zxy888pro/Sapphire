@@ -19,6 +19,7 @@ namespace Sapphire
 		ResourceType_Image,
 		ResoureType_Texture,
 		ResourceType_Model,
+		ResourceType_Shader,
 		ResourceType_Unkown,
 		ResourceType_Max
 	};

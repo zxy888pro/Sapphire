@@ -1,9 +1,12 @@
+#include "Sapphire.h"
+#include "FileStream.h"
 #include "Graphics.h"
 #include "GLShader.h"
 #include "ShaderMgr.h"
 #include "GLGraphicDriver.h"
 #include <GraphicException.h>
-#include "ShaderScriptMgr.h"
+#include "json/json.h"
+
 
 namespace Sapphire
 {
@@ -13,10 +16,11 @@ namespace Sapphire
 		BaseResource(pCore,name),
 		m_timeStamp(0),
 		m_numVariation(0),
-		m_bIsDisposed(false),
+		m_bIsDisposed(true),
 		m_name(name)
 	{
-		
+		m_eType = ResourceType_Shader;
+		m_eState = ResourceState_Unload;
 	}
 
 	GLShader::~GLShader()
@@ -136,12 +140,20 @@ namespace Sapphire
 
 	bool GLShader::Create()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		if (IsDisposed())
+		{
+			return Load();
+		}
+		return false;
 	}
 
 	bool GLShader::Recreate()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		if (!IsDisposed())
+		{
+			Dispose();
+		}
+		return Load();
 	}
 
 	void GLShader::Dispose()
@@ -151,7 +163,7 @@ namespace Sapphire
 
 	size_t GLShader::GetSize()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		return 0;
 	}
 
 	bool GLShader::IsDisposed()
@@ -162,55 +174,142 @@ namespace Sapphire
 
 	bool GLShader::Load(HSHADERSCRIPT hscript)
 	{
-		ShaderScriptMgr*   pScriptMgr = m_pGraphicDriver->getShaderScriptMgr();
-		Core* pCore = Core::GetSingletonPtr();
-		if (pScriptMgr == NULL || pCore == NULL)
-		{
-			throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
-		}
-		if (hscript.IsNull())
-		{
-			LogUtil::LogMsgLn("load Shader script failed! handle is null");
-			return false;
-		}
-		std::string name = pScriptMgr->GetName(hscript);	//脚本路径
-		std::string content = pScriptMgr->GetContent(hscript);    //脚本内容
-		ShaderType type = pScriptMgr->GetType(hscript);			//脚本类型
-		if (pScriptMgr->GetType(hscript) != UNKNOWN)
-		{
-		switch (type)
-		{
-		case Sapphire::VS:
-			m_vsSource = content;
-		break;
-		case Sapphire::PS:
-			m_psSource = content;
-		break;
-		case Sapphire::GS:
-			m_gsSource = content;
-		break;
-		case Sapphire::CS:
-			m_csSource = content;
-		break;
-		case Sapphire::UNKNOWN:
-		break;
-		default:
-		break;
-		}
-		}
-		//++m_numVariation;
-		RefreshMemoryUse();
+		//ShaderScriptMgr*   pScriptMgr = m_pGraphicDriver->getShaderScriptMgr();
+		//Core* pCore = Core::GetSingletonPtr();
+		//if (pScriptMgr == NULL || pCore == NULL)
+		//{
+		//	throw GraphicDriverException("Sapphire Component is not Created!", GraphicDriverException::GDError_ComponentNotCreate);
+		//}
+		//if (hscript.IsNull())
+		//{
+		//	LogUtil::LogMsgLn("load Shader script failed! handle is null");
+		//	return false;
+		//}
+		//std::string name = pScriptMgr->GetName(hscript);	//脚本路径
+		//std::string content = pScriptMgr->GetContent(hscript);    //脚本内容
+		//ShaderType type = pScriptMgr->GetType(hscript);			//脚本类型
+		//if (pScriptMgr->GetType(hscript) != UNKNOWN)
+		//{
+		//switch (type)
+		//{
+		//case Sapphire::VS:
+		//	m_vsSource = content;
+		//break;
+		//case Sapphire::PS:
+		//	m_psSource = content;
+		//break;
+		//case Sapphire::GS:
+		//	m_gsSource = content;
+		//break;
+		//case Sapphire::CS:
+		//	m_csSource = content;
+		//break;
+		//case Sapphire::UNKNOWN:
+		//break;
+		//default:
+		//break;
+		//}
+		//}
+		////++m_numVariation;
+		//RefreshMemoryUse();
+		return true;
 
 	}
 
 	bool GLShader::Load()
 	{
+		//加载资源名	 
+		FileStream fs(m_resName.c_str(), FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
+		if (fs.IsOpen())
+		{
+			//解析json
+			std::string jsonStr = fs.ReadString(MAX_JSON_LENGTH);
+			fs.Release();
+			Json::CharReaderBuilder builder;
+			Json::CharReader* reader = builder.newCharReader();
+			JSONCPP_STRING errs;
+			Json::Value rootNode;
+			if (reader->parse(jsonStr.c_str(), jsonStr.c_str() + strlen(jsonStr.c_str()), &rootNode, &errs))
+			{
+				//从配置文件中读取每个shader的路径
+				//四种shader
+				Path vsFile = rootNode["vertexShader"]["name"].asCString();
+				LoadShaderScript(vsFile.c_str(), ShaderType::VS);
+				Path psFile = rootNode["pixelShader"]["name"].asCString();
+				LoadShaderScript(psFile.c_str(), ShaderType::PS);
+				Path gsFile = rootNode["geometryShader"]["name"].asCString();
+				LoadShaderScript(gsFile.c_str(), ShaderType::GS);
+				Path csFile = rootNode["computeShader"]["name"].asCString();
+				LoadShaderScript(csFile.c_str(), ShaderType::CS);
+				m_bIsDisposed = false;
+				return true;
+			}
+		}
 		return false;
 	}
 
 	bool GLShader::Load(const char* resourcePath)
 	{
-		return false;
+		m_resName = resourcePath;
+		return Load();
+	}
+
+	void GLShader::Clear()
+	{
+		 
+	}
+
+	void GLShader::Destroy()
+	{
+		 
+	}
+
+	void GLShader::OnLoadStart()
+	{
+		m_eState = ResourceState_Loading;	
+	}
+
+	void GLShader::OnLoadEnd()
+	{
+		m_eState = ResourceState_Unload;
+	}
+
+	void GLShader::OnLoadError()
+	{
+		m_eState = ResourceState_Loaded;
+	}
+
+	bool GLShader::LoadShaderScript(const char* scriptPath, ShaderType type)
+	{
+		std::string source = "";
+		FileStream fs(scriptPath, FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
+		if (!fs.IsOpen())
+		{
+			return false;
+		}
+		source = fs.ReadString(MAX_SHADER_SCRIPT_LENGTH);
+		fs.Release();
+		switch (type)
+		{
+		case Sapphire::VS:
+			m_vsSource = source;
+			break;
+		case Sapphire::PS:
+			m_psSource = source;
+			break;
+		case Sapphire::GS:
+			m_gsSource = source;
+			break;
+		case Sapphire::CS:
+			m_csSource = source;
+			break;
+		case Sapphire::UNKNOWN:
+			break;
+		default:
+			break;
+		}
+		RefreshMemoryUse();
+		return true;
 	}
 
 	bool GLShader::ProcessSource(std::string source)
