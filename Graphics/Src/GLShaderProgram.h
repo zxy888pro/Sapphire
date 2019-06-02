@@ -41,13 +41,16 @@ namespace Sapphire
 
 		virtual void OnDeviceLost() override;
 	 
-
+		//链接
 		virtual bool Link();
+
 		virtual IShaderVariation* GetVertexShader() const;
 		virtual IShaderVariation* GetPixelShader() const;
 		virtual IShaderVariation* GetGeometryShader() const;
 
+		//是否用到纹理单元unit
 		virtual bool HasTextureUnit(TextureUnit unit) const { return m_bUseTextureUnits[unit]; }
+
 		virtual bool HasParameter(std::string param) const;
 
 		virtual const ShaderParameter* GetParameter(std::string param) const;
@@ -65,6 +68,10 @@ namespace Sapphire
 		///当constant buffer改变，清理所有参数源
 		static void ClearGlobalParameterSource(ShaderParameterGroup group);
 
+	protected:
+
+		GLGraphicDriver*  m_pDriver;
+
 
 	private:
 
@@ -72,7 +79,7 @@ namespace Sapphire
 		WeakPtr<GLShaderVariation>   m_pixelShader;
 		WeakPtr<GLShaderVariation>   m_geometryShader;
 
-		std::unordered_map<std::string, GLShaderProgram>   m_shaderParamters;
+		std::unordered_map<std::string, ShaderParameter*>   m_shaderParamters;
 
 		//记录用到的纹理单元
 		bool                        m_bUseTextureUnits[MAX_TEXTURE_UNITS];
@@ -80,7 +87,8 @@ namespace Sapphire
 		SharedPtr<ConstantBuffer>    m_constantBuffers[MAX_SHADER_PARAMETER_GROUPS * 2];
 		/// 参数源
 		const void* m_parameterSources[MAX_SHADER_PARAMETER_GROUPS];
-
+		//全局参数源
+		static const void* g_parameterSources[MAX_SHADER_PARAMETER_GROUPS];
 		//shader帧号
 		ulong   m_uFrameNumber;
 		//全局帧号
@@ -89,7 +97,7 @@ namespace Sapphire
 		//链接错误
 		std::string m_linkOutMsg;
 
-
+		
 
 
 	};

@@ -121,6 +121,8 @@ namespace Sapphire
 
 		void setTextureQuality(int val) { m_nTextureQuality = val; }
 
+		virtual IShaderProgram* GetShaderProgram() const;
+
 		virtual IVertexBuffer* GetVertexBuffer(uint index) const;
 
 		virtual IShaderVariation*  GetShader(ShaderType type, const std::string& name, const std::string define = "") const;
@@ -261,8 +263,11 @@ namespace Sapphire
 		uint m_dummyColorFormat;
 
 		//当前再用的shader
-		IShaderVariation* m_vertexShader;
-		IShaderVariation* m_pixelShader;
+		GLShaderVariation* m_vertexShader;
+		GLShaderVariation* m_pixelShader;
+		GLShaderVariation* m_geometryShader;
+		GLShaderVariation* m_computeShader;
+		GLShaderProgram* m_shaderProgram;
 
 
 	};

@@ -9,6 +9,7 @@
 #include "IIndexBuffer.h"
 #include "IVertexBuffer.h"
 #include "IShaderVariation.h"
+#include "GLShaderProgram.h"
 #include "VertexBuffer.h"
 #include "RenderSurface.h"
 #include "GLRenderSystem.h"
@@ -239,6 +240,11 @@ namespace Sapphire
 		else
 #endif
 			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	}
+
+	Sapphire::IShaderProgram* GLGraphicDriver::GetShaderProgram() const
+	{
+		return m_shaderProgram;
 	}
 
 	Sapphire::IVertexBuffer* GLGraphicDriver::GetVertexBuffer(uint index) const
