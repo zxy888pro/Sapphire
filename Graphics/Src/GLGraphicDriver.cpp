@@ -111,6 +111,23 @@ namespace Sapphire
 		m_indexBuffer = pIndexBuffer;
 	}
 
+	Sapphire::ConstantBuffer* GLGraphicDriver::GetOrCreateConstantBuffer(unsigned bindingIndex, unsigned size)
+	{
+		unsigned key = (bindingIndex << 16) | size;
+		std::unordered_map<unsigned, SharedPtr<ConstantBuffer> >::iterator i = m_constantsBuffers.find(key);
+		if (i == m_constantsBuffers.end())
+		{
+			std::pair<unsigned, SharedPtr<ConstantBuffer>> pair = std::make_pair(key, SharedPtr<ConstantBuffer>(new ConstantBuffer(m_pCore)));
+			m_constantsBuffers.insert(pair);
+			pair.second->SetSize(size);
+			return pair.second.Get();
+		}
+		else
+		{
+			return i->second.Get();
+		}
+	}
+
 	void GLGraphicDriver::ResetRenderTarget(uint index)
 	{
 		SetRenderTarget(index, (RenderSurface*)NULL);

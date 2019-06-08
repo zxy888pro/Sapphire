@@ -1,4 +1,4 @@
-#include <Str.h>
+ï»¿#include <Str.h>
 #include "stringHelper.h"
 #include <time.h>
 #include <stdarg.h>
@@ -62,7 +62,7 @@ namespace Sapphire
 	std::string genTimeStr(std::string format)
 	{
 		char buf[512] = { 0 };
-		time_t tt = time(NULL);//Õâ¾ä·µ»ØµÄÖ»ÊÇÒ»¸öÊ±¼äcuo
+		time_t tt = time(NULL);//è¿™å¥è¿”å›çš„åªæ˜¯ä¸€ä¸ªæ—¶é—´cuo
 		tm* t = localtime(&tt);
 		if (format == "")
 		{
@@ -92,6 +92,32 @@ namespace Sapphire
 	}
 
 
+
+	size_t StringFindNoCase(std::string strSource, const char* szTarget)
+	{
+		if (strSource.empty())
+		{
+			return std::string::npos;
+		}
+
+		std::string strSub = szTarget;
+
+		if (strSub.empty())
+		{
+			return std::string::npos;
+		}
+
+		for (std::string::iterator it = strSource.begin(); it != strSource.end(); ++it)
+		{
+			*it = tolower(*it);
+		}
+
+		for (std::string::iterator ite = strSub.begin(); ite != strSub.end(); ++ite)
+		{
+			*ite = tolower(*ite); 
+		}
+		return strSource.find(strSub);
+	}
 
 	uint CStringLength(const char* str)
 	{

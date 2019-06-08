@@ -1,11 +1,22 @@
 #include "Graphics.h"
 #include "GLGraphicDriver.h"
 #include "GLShaderProgram.h"
+#include "stringHelper.h"
 
 
 
 namespace Sapphire
 {
+	const char* shaderParameterGroups[] = {
+		"frame",
+		"camera",
+		"zone",
+		"light",
+		"material",
+		"object",
+		"custom"
+	};
+
 
 	GLShaderProgram::GLShaderProgram(Core* pCore):
 		BaseObject(pCore),
@@ -90,7 +101,159 @@ namespace Sapphire
 		glAttachShader(m_uHwUID, m_pixelShader->GetGPUHandle());
 		glLinkProgram(m_uHwUID);
 
-		return true;
+		/////////////////////////////////////////////检查链接状态///////////////////////////////
+		int linked, length;
+		glGetProgramiv(m_uHwUID, GL_LINK_STATUS, &linked);
+		if (!linked)
+		{
+			//链接错误
+			glGetProgramiv(m_uHwUID, GL_INFO_LOG_LENGTH, &length);
+			int outLength;
+			char* szBuf = new char[length];
+			glGetProgramInfoLog(m_uHwUID, length, &outLength, szBuf);
+			m_linkOutMsg = szBuf;
+			glDeleteProgram(m_uHwUID);
+			safeDelete(szBuf);
+			m_uHwUID = 0;
+		}
+		else
+			m_linkOutMsg.clear();
+
+		if (!m_uHwUID)
+			return false;
+
+
+
+
+		const int MAX_PARAMETER_NAME_LENGTH = 256;
+		char uniformName[MAX_PARAMETER_NAME_LENGTH];  //保存uniform常量名的缓冲区
+		int uniformCount;
+
+		glUseProgram(m_uHwUID);
+		glGetProgramiv(m_uHwUID, GL_ACTIVE_UNIFORMS, &uniformCount);
+
+		/////////////////////////////// 检查 constant buffers//////////////////////////////////
+#ifndef GL_ES_VERSION_2_0
+		//OpenGL 3.0以上使用UBO
+		std::unordered_map<unsigned, unsigned> blockToBinding;
+		if (GLGraphicDriver::GetGL3Support())
+		{
+			int numUniformBlocks = 0;
+
+			glGetProgramiv(m_uHwUID, GL_ACTIVE_UNIFORM_BLOCKS, &numUniformBlocks); //活动的uniform常量数量
+			for (int i = 0; i < numUniformBlocks; ++i)
+			{
+				int nameLength;
+				glGetActiveUniformBlockName(m_uHwUID, (GLuint)i, MAX_PARAMETER_NAME_LENGTH, &nameLength, uniformName);  //获取活动的uniformBlack名字
+
+				std::string name = uniformName;
+
+				unsigned blockIndex = glGetUniformBlockIndex(m_uHwUID, name.c_str());
+				unsigned group = M_MAX_UNSIGNED;
+
+				//确认用到的buffer名
+				for (unsigned j = 0; j < MAX_SHADER_PARAMETER_GROUPS; ++j)
+				{
+					if (StringFindNoCase(name, shaderParameterGroups[j]) != std::string::npos)
+					{
+						group = j;
+						break;
+					}
+				}
+
+				// 如果没有这个名字,搜索这个名字中的数字，用它做group index
+				if (group == M_MAX_UNSIGNED)
+				{
+					for (unsigned j = 1; j < name.length(); ++j)
+					{
+						if (name[j] >= '0' && name[j] <= '5')
+						{
+							group = name[j] - '0';
+							break;
+						}
+					}
+				}
+
+				if (group >= MAX_SHADER_PARAMETER_GROUPS)
+				{
+					SAPPHIRE_LOGWARNING(StringFormat("Skipping unrecognized uniform block %s in shader program  %s  %s", name.c_str(), m_vertexShader->GetName().c_str(), m_pixelShader->GetName().c_str()));
+					continue;
+				}
+
+
+				// 查找constant buffer 数据块大小
+				int dataSize;
+				glGetActiveUniformBlockiv(m_uHwUID, blockIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &dataSize);
+				if (!dataSize)
+					continue;
+
+				unsigned bindingIndex = group; //用重新分配的组号做绑定索引
+				//Vertex Shader和Pixel Shader分别占用的不同的独自的绑点索引,Pixel Shader的索引从Vertex Shader的尾部也就是MAX_SHADER_PARAMETER_GROUPS开始
+				if (StringFindNoCase(name, "PS") != std::string::npos)
+					bindingIndex += MAX_SHADER_PARAMETER_GROUPS;
+
+				glUniformBlockBinding(m_uHwUID, blockIndex, bindingIndex); //绑定UBO对象到绑点bindingIndex
+				blockToBinding[blockIndex] = bindingIndex;
+
+				m_constantBuffers[bindingIndex] = m_pDriver->GetOrCreateConstantBuffer(bindingIndex, (unsigned)dataSize); //获取constant buffer， 没有则创建
+			}
+		}
+
+
+#else
+
+
+#endif
+
+		// 挨个检查shader 参数和纹理单元
+		for (int i = 0; i < uniformCount; ++i)
+		{
+			unsigned type;
+			int count;
+
+			//取得参数名
+			glGetActiveUniform(m_uHwUID, (GLuint)i, MAX_PARAMETER_NAME_LENGTH, 0, &count, &type, uniformName);
+			int location = glGetUniformLocation(m_uHwUID, uniformName);
+
+			//检查包含此名字的数组索引，并且剔除它
+			std::string name(uniformName);
+			unsigned index = name.find('[');
+			if (index != std::string::npos)
+			{
+				//如果不是第一个，跳过
+				if (name.find("[0]", index) == std::string::npos)
+					continue;
+
+				name = name.substr(0, index);
+			}
+
+			if (name[0] == 'c')
+			{
+				//保存uniform常量
+				std::string paramName = name.substr(1);
+				ShaderParameter* newParam = new ShaderParameter();
+				newParam->m_type = type;
+				newParam->m_location = location;
+
+#ifndef GL_ES_VERSION_2_0
+				// 如果支持Opengl3， uniform应该放到constant buffer中
+				if (newParam->m_location < 0 && GLGraphicDriver::GetGL3Support())
+				{
+					int blockIndex, blockOffset;
+					glGetActiveUniformsiv(m_uHwUID, 1, (const GLuint*)&i, GL_UNIFORM_BLOCK_INDEX, &blockIndex);  //取得uniform的块索引
+					glGetActiveUniformsiv(m_uHwUID, 1, (const GLuint*)&i, GL_UNIFORM_OFFSET, &blockOffset); //取得uniform的块偏移值
+					if (blockIndex >= 0)
+					{
+						newParam->m_location = blockOffset;
+						newParam->m_bufferPtr = m_constantBuffers[blockToBinding[blockIndex]];
+					}
+				}
+#endif
+				if (newParam->m_location >= 0)
+					m_shaderParamters[paramName] = newParam;  //加到参数表中
+			}
+			return true;
+		}
 	}
 
 	Sapphire::IShaderVariation* GLShaderProgram::GetVertexShader() const

@@ -9,12 +9,17 @@ namespace Sapphire
 	struct ITexture;
 	struct IVertexBuffer;
 	struct IIndexBuffer;
+	struct IShaderProgram;
 	struct IShaderVariation;
 	class RenderSurface;
 	class Texture2D;
 	class GLRenderSystem;
 	class ShaderMgr;
 	class ShaderScriptMgr;
+	class ConstantBuffer;
+	class GLShaderVariation;
+	class GLShaderProgram;
+
 
 	///方便顶点更新的CPU端缓冲区
 	struct ScratchBuffer
@@ -151,6 +156,9 @@ namespace Sapphire
 
 		virtual void SetIndexBuffer(IIndexBuffer* pIndexBuffer); //设置索引缓冲区，同时绑定它
 
+		ConstantBuffer* GetOrCreateConstantBuffer(unsigned bindingIndex, unsigned size);  //获取或者创建一个ConstantsBuffer对象
+		 
+
 		virtual void ResetRenderTarget(uint index);
 
 		virtual RenderSurface* GetRenderTarget(uint index) const;  //取得指定的渲染目标
@@ -198,6 +206,11 @@ namespace Sapphire
 		static int GetHWRGBFormat();
 		//硬件RGBA格式
 		static int GetHWRGBAFormat();
+		//是否支持OpenGL3以上
+		static bool GetGL3Support()
+		{
+			return m_gl3Support;
+		}
 
 
 
@@ -206,12 +219,18 @@ namespace Sapphire
 
 		void CheckFeature();
 
+
+
 		GraphicDriverType  m_driverType;
 		ITextureMgr*   m_pTextureMgr;
 		IImageMgr*     m_pImageMgr;
 		ShaderMgr*     m_pShaderMgr;
 		ShaderScriptMgr*   m_pShaderScriptMgr;
 		GLRenderSystem*  m_renderSys;
+
+
+		static  bool   m_gl3Support;
+
 
 		int            m_nTextureQuality;
 		bool		   m_bAnisotropySupport;
@@ -232,6 +251,8 @@ namespace Sapphire
 
 		//可用的顶点缓冲区数
 		IVertexBuffer* m_vertexBuffers[MAX_VERTEX_STREAMS];
+		//UBO缓冲区集合
+		std::unordered_map<unsigned, SharedPtr<ConstantBuffer> > m_constantsBuffers;
 		//使用的元素掩码
 		uint m_elementMasks[MAX_VERTEX_STREAMS];
 		//上一次使用的实例数据偏移

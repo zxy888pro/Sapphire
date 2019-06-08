@@ -29,6 +29,10 @@ namespace Sapphire
 
 	std::wstring StringFormatW(wchar_t *fmt, ...);
 
+	size_t StringFindNoCase(std::string strSource, const char* szTarget);
+	
+	 
+
 	SAPPHIRE_API uint CStringLength(const char* str);
 
 	SAPPHIRE_API unsigned CountElements(const char* buffer, char separator);

@@ -20,8 +20,8 @@ namespace Sapphire
 	{
 		LOCK_NONE = 0,
 		LOCK_HARDWARE,
-		LOCK_SHADOW,
-		LOCK_SCRATCH
+		LOCK_SHADOW,  //”∞◊”ª∫≥Â
+		LOCK_SCRATCH   //Scratch¡Ÿ ±ª∫≥Â
 	};
 
 	enum TextureUsage

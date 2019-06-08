@@ -6,7 +6,7 @@
 namespace Sapphire
 {
 	class GLGraphicDriver;
-	//变量数据缓冲区
+	//变量数据缓冲区 （一般用于映射UBO）
 	class ConstantBuffer :  public BaseObject, public GPUObject
 	{
 		SAPPHIRE_OBJECT(ConstantBuffer, BaseObject)

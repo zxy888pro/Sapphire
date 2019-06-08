@@ -58,7 +58,7 @@ namespace Sapphire
 		bool UpdateToGPU();
 
 		//影子缓冲区
-		SharedArrayPtr<byte> m_shadowBuffer;
+		SharedArrayPtr<byte> m_shadowBuffer;  //影子缓冲和Scratch缓冲区别只是固定和临时
 		//索引数
 		uint  m_indexCount;
 		//索引大小

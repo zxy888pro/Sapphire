@@ -83,7 +83,7 @@ namespace Sapphire
 
 		//记录用到的纹理单元
 		bool                        m_bUseTextureUnits[MAX_TEXTURE_UNITS];
-		//constant Buffer
+		//constant Buffer集合， VertexShader和PixelShader各占一段，所以是两倍
 		SharedPtr<ConstantBuffer>    m_constantBuffers[MAX_SHADER_PARAMETER_GROUPS * 2];
 		/// 参数源
 		const void* m_parameterSources[MAX_SHADER_PARAMETER_GROUPS];
