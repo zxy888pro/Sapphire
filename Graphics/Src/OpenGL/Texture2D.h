@@ -1,61 +1,54 @@
 #pragma once
-#include <GraphicsDefs.h>
 #include <Graphics.h>
-#include <ICubeTexture.h>
+#include <GraphicDriver.h>
 #include "GPUObject.h"
 #include <Image.h>
-#include "RenderSurface.h"
+#include <ITexture.h>
+#include "GLRenderSurface.h"
 
 namespace Sapphire
 {
 	class GLGraphicDriver;
-
-	//包含上下左右前后6个面的Texture， 每个面大小长宽纹理格式都一样
-	class CubeTexture : public GPUObject, public BaseResource, public ICubeTexture
+	//OpenGL Texture2D
+	class Texture2D : public GPUObject, public BaseResource, public ITexture
 	{
-		SAPPHIRE_OBJECT(CubeTexture, BaseResource)
+		SAPPHIRE_OBJECT(Texture2D, BaseResource)
 	public:
-		CubeTexture(Core* pCore, const char* name = "");
-		CubeTexture(Core* pCore, const char* name, uint size, uint depth, PixelFormat pf = PF_R8G8B8A8, uint NumMipmaps = 1, int glTargerType = GL_TEXTURE_2D,
-			TextureUsage eUsage = TextureUsage::TEXTURE_STATIC, TextureAddressMode s = TextureAddressMode::ADDRESS_REPEAT,
-			TextureAddressMode t = TextureAddressMode::ADDRESS_REPEAT, TextureAddressMode r = TextureAddressMode::ADDRESS_REPEAT, 
-			TextureFilterMode filterMode = TextureFilterMode::FILTER_BILINEAR);
-		virtual ~CubeTexture();
 
+		friend class TextureMgr;
+
+		Texture2D(Core* pCore, const char* name = "");
+		Texture2D(Core* pCore, const char* name, uint width, uint height, uint depth, PixelFormat pf = PF_R8G8B8A8, uint NumMipmaps = 1, int glTargerType = GL_TEXTURE_2D,
+			TextureUsage eUsage = TextureUsage::TEXTURE_STATIC,TextureAddressMode s = TextureAddressMode::ADDRESS_REPEAT,
+			TextureAddressMode t = TextureAddressMode::ADDRESS_REPEAT,TextureFilterMode filterMode = TextureFilterMode::FILTER_BILINEAR);
+
+		virtual ~Texture2D();
 		virtual void Release();//释放掉纹理对象
 		virtual bool Recreate();//重新创建纹理对象
-		virtual void ReRequest();  //通过名字重新去请求纹理
 		virtual void Dispose();
 		virtual bool  IsDisposed();
 		virtual size_t GetSize();
 		virtual uint GetDataSize() const override;
-		virtual uint  GetRowSize() const override;  //注意只返回6个面中一个面
-		virtual void Load(HIMAGE leftImg, HIMAGE topImg, HIMAGE rightImg, HIMAGE bottomImg, HIMAGE frontImg, HIMAGE backImg); //通过图像句柄加载完整纹理(6张贴图)
+		virtual uint  GetRowSize() const override;
+		virtual void Load(HIMAGE himg);  //通过图像句柄加载纹理
+		virtual void ReRequest();  //通过名字重新去请求纹理
 		virtual void OnDeviceLost() override;
 		virtual void OnDeviceReset() override;
-		virtual bool Create() override; //创建纹理对象
+		virtual bool Create() override; //创建纹理对象,完成紋理對象的初始設置
 
-		virtual bool SetSize(int width, int height, PixelFormat eformat, TextureUsage usage = TEXTURE_STATIC);
-		//设置更新某个面的数据
-		virtual bool SetData(CubeMapFace face, uint level, int x, int y, int width, int height, const void* data);
-		//获取某个面的数据
-		virtual bool GetData(CubeMapFace face, unsigned level, void* dest) const;
-
-		int getChannelNum() const { return m_channelNum; }
-		void setChannelNum(int val) { m_channelNum = val; }
-
+		virtual bool SetSize(int width, int height, PixelFormat eformat, TextureUsage usage = TEXTURE_STATIC);  //改變紋理對象的大小
+		virtual bool SetData(uint level, int x, int y, int width, int height, const void* data); //设置纹理数据 
+		virtual bool SetData(HIMAGE himg, bool useAlpha);  //设置纹理数据,-包括mipmap ,  在只有一個通道的時候useAlpha表示是alpha還是明度
 		virtual uint getLevelWidth(uint level) const override;
-
 		virtual uint getLevelHeight(uint level) const override;
-
 		virtual ITexture* getBackupTexture() const override;
-
-
+		virtual uint getRequestMipLevel() const override;
+		virtual void setRequestMipLevel(uint level) override;
 		virtual void setBackupTexture(ITexture* tex) override;
-		virtual void RenderSurfaceUpdate() override;
+		virtual bool IsCompressed() const override;
 
 	public:
-		 
+
 		virtual uint getWidth() const { return m_uWidth; }
 		virtual uint getHeight() const { return m_uHeight; }
 		virtual uint getDepth() const { return m_uDepth; }
@@ -64,8 +57,6 @@ namespace Sapphire
 		virtual void setNumMipmaps(uint val) { m_uNumMipmaps = val; }
 		virtual uint getMipLevel() const { return m_mipLevel; }
 		virtual void setMipLevel(uint val) { m_mipLevel = val; }
-		virtual uint getRequestMipLevel() const override { return m_requestLevel; }
-		virtual void setRequestMipLevel(uint level) override { m_requestLevel = level; }
 		virtual bool getIsCompress() const { return m_bIsCompress; }
 		virtual void setIsCompress(bool val) { m_bIsCompress = val; }
 		virtual PixelFormat getPixelFormat() const { return m_ePixelFormat; }
@@ -82,9 +73,11 @@ namespace Sapphire
 		virtual void setUsage(Sapphire::TextureUsage val) { m_eUsage = val; }
 		virtual int getTextureType() const { return m_glType; }
 		virtual uint getUID() const override;
-		virtual bool IsCompressed() const { return m_bIsCompress; }
+		virtual GLRenderSurface* getRenderSurface() const { return m_renderSurface; }
+		virtual void RenderSurfaceUpdate();
+	
 
-	protected:
+	private:
 
 		uint m_uWidth;
 		uint m_uHeight;
@@ -92,11 +85,10 @@ namespace Sapphire
 		uint m_uNumMipmaps;
 		uint m_mipLevel;
 		uint m_requestLevel;   //要請求的mipmap level
-		uint m_maxMipLevel;
 		uint m_uAnisotropyLevel;
 		bool m_bIsCompress;
 		bool m_bIsDisposed;
-		HIMAGE m_hImg[6];    //6张贴图
+		HIMAGE m_hImg;
 		PixelFormat m_ePixelFormat;
 		TextureFilterMode  m_eFilterMode;
 		TextureAddressMode m_eAddressMode_[MAX_COORDS];
@@ -104,14 +96,12 @@ namespace Sapphire
 		std::string m_szName;
 		ResoureType m_eType;
 		size_t  m_uSize;
-		int m_channelNum;
+		uint m_maxMipLevel;
 		unsigned m_skipMips[MAX_TEXTURE_QUALITY_LEVELS];
 
-		SharedPtr<CubeTexture>  m_backupTex;
-		/// Render surfaces.
-		SharedPtr<RenderSurface> m_renderSurfaces[MAX_CUBEMAP_FACES];
-		///每个面内存使用量
-		unsigned m_faceMemoryUse[MAX_CUBEMAP_FACES];
+		SharedPtr<Texture2D>  m_backupTex;   //备份纹理，当主纹理无效时，使用的默认替代物
+		SharedPtr<GLRenderSurface>  m_renderSurface;     //内置的渲染目标
+
 		//OpenGL 纹理目标类型  采样器
 		//GL_TEXTURE_1D  :  Sampler1D
 		//GL_TEXTURE_1D_ARRAY  : Sampler1DArray
@@ -126,9 +116,8 @@ namespace Sapphire
 		int  m_glType;
 
 		GLGraphicDriver*  m_pGraphicDriver;
-
-		virtual void Load(HIMAGE himg, CubeMapFace face);  //加载6个纹理中的一个面
-	private:
-
 	};
+
 }
+
+

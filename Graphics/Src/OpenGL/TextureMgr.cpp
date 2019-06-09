@@ -6,7 +6,7 @@
 #include <GraphicException.h>
 #include <stringHelper.h>
 #include <Image.h>
-#include "ImageMgr.h"
+#include "../ImageMgr.h"
 #include <BaseResource.h>
 #include <logUtil.h>
 #include <FileStream.h>

@@ -32,7 +32,7 @@ namespace Sapphire
 
 	public:
 
-		GLShaderProgram(Core* pCore);
+		GLShaderProgram(Core* pCore, GLShaderVariation* vertexShader, GLShaderVariation* pixelShader);
 		virtual ~GLShaderProgram();
 
 		virtual void Release() override;
@@ -85,9 +85,9 @@ namespace Sapphire
 		bool                        m_bUseTextureUnits[MAX_TEXTURE_UNITS];
 		//constant Buffer集合， VertexShader和PixelShader各占一段，所以是两倍
 		SharedPtr<ConstantBuffer>    m_constantBuffers[MAX_SHADER_PARAMETER_GROUPS * 2];
-		/// 参数源
+		/// 参数源    单独uniform使用
 		const void* m_parameterSources[MAX_SHADER_PARAMETER_GROUPS];
-		//全局参数源
+		//全局参数源  使用constant buffer
 		static const void* g_parameterSources[MAX_SHADER_PARAMETER_GROUPS];
 		//shader帧号
 		ulong   m_uFrameNumber;

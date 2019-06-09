@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="源文件\OpenGL">
+      <UniqueIdentifier>{6b5c5ab4-54d6-444d-8611-ba271ff1404d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Image.h">
@@ -24,14 +27,8 @@
     <ClInclude Include="Include\FontFace.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Src\GPUObject.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="Include\GraphicsDefs.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\TextureMgr.h">
-      <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="Include\GraphicDriver.h">
       <Filter>头文件</Filter>
@@ -45,9 +42,6 @@
     <ClInclude Include="Include\GraphicException.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Texture2D.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="Include\IImageMgr.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -60,32 +54,14 @@
     <ClInclude Include="Include\ICubeTexture.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Src\CubeTexture.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\GLRenderSystem.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\VertexBuffer.h">
-      <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="Include\IVertexBuffer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Src\IndexBuffer.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="Include\IIndexBuffer.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\RenderSurface.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Viewport.h">
-      <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="Include\IRenderSystem.h">
       <Filter>头文件</Filter>
@@ -96,17 +72,8 @@
     <ClInclude Include="Include\IVewport.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Src\GLGraphicDriver.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="Include\IGraphicDriver.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ConstantBuffer.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\GLShaderVariation.h">
-      <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="Include\IShaderVariation.h">
       <Filter>头文件</Filter>
@@ -114,20 +81,11 @@
     <ClInclude Include="Include\IShader.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Src\GLShader.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="Include\IShaderProgram.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Src\GLShaderProgram.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="Include\ShaderScript.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\ShaderMgr.h">
-      <Filter>源文件</Filter>
     </ClInclude>
     <ClInclude Include="Include\ShaderScriptMgr.h">
       <Filter>头文件</Filter>
@@ -147,6 +105,54 @@
     <ClInclude Include="Src\stb_image_write.h">
       <Filter>源文件</Filter>
     </ClInclude>
+    <ClInclude Include="Src\OpenGL\ConstantBuffer.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\OpenGL\CubeTexture.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\OpenGL\GLGraphicDriver.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\OpenGL\GLRenderSurface.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\OpenGL\GLRenderSystem.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\OpenGL\GLShader.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\OpenGL\GLShaderProgram.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\OpenGL\GLShaderVariation.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\OpenGL\GPUObject.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\OpenGL\IndexBuffer.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\OpenGL\ShaderMgr.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\OpenGL\Texture2D.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\OpenGL\TextureMgr.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\OpenGL\VertexBuffer.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Viewport.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\View.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
@@ -155,67 +161,70 @@
     <ClCompile Include="Src\Font.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Src\GpuObject.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\TextureMgr.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\GraphicDriver.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Src\GraphicException.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Texture2D.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Src\ImageMgr.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\CubeTexture.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\VertexBuffer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\IndexBuffer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\RenderSurface.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\GLRenderSystem.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\GLGraphicDriver.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\ConstantBuffer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\GLShaderVariation.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\GLShader.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\GLShaderProgram.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\ShaderScript.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\ShaderMgr.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Include\ShaderScriptMgr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\ImageRes.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\ImageHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\ConstantBuffer.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\CubeTexture.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\GLGraphicDriver.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\GLRenderSurface.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\GLRenderSystem.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\GLShader.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\GLShaderProgram.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\GLShaderVariation.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\GpuObject.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\GraphicDriver.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\IndexBuffer.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\ShaderMgr.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\Texture2D.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\TextureMgr.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\VertexBuffer.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ShaderScriptMgr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ShaderScript.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Viewport.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -81,6 +81,13 @@ namespace Sapphire
 
 int main()
 {
+
+	std::string tstStr;
+	tstStr.resize(10);
+	const char* src = "abcede是我";
+	strcpy(&tstStr[0], src);
+	int len = tstStr.length();
+	const char* str1 = tstStr.c_str();
 	//测试资源加载
 	using namespace Sapphire;
 	App* app = new App();

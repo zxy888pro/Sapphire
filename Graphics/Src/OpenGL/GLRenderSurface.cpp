@@ -1,4 +1,4 @@
-#include "RenderSurface.h"
+#include "GLRenderSurface.h"
 #include "ITexture.h"
 #include "GLGraphicDriver.h"
 #include "IRenderSystem.h"
@@ -6,10 +6,18 @@
 namespace Sapphire
 {
 
-	RenderSurface::RenderSurface(Core* pCore):
+#ifdef GL_ES_VERSION_2_0
+#define GL_RENDERBUFFER_EXT GL_RENDERBUFFER
+#define glGenRenderbuffersEXT glGenRenderbuffers
+#define glBindRenderbufferEXT glBindRenderbuffer
+#define glRenderbufferStorageEXT glRenderbufferStorage
+#define glDeleteRenderbuffersEXT glDeleteRenderbuffers
+#endif
+
+	GLRenderSurface::GLRenderSurface(Core* pCore):
 		IRenderSurface(pCore),
 		m_parentTex(NULL),
-		m_gpuTarget(0),
+		m_gpuTarget(GL_TEXTURE_2D),
 		m_bUpdateQueue(false),
 		m_eUpdateMode(RenderSurfaceUpdateMode::SURFACE_UPDATEVISIBLE),
 		m_gpuRenderBuffer(0)
@@ -18,10 +26,10 @@ namespace Sapphire
 		m_pGLDriver = dynamic_cast<GLGraphicDriver*>(m_pCore->GetSubSystemWithType(ESST_GRAPHICDRIVER));
 	}
 
-	RenderSurface::RenderSurface(Core* pCore,ITexture* parentTexture):
+	GLRenderSurface::GLRenderSurface(Core* pCore,ITexture* parentTexture):
 		IRenderSurface(pCore),
 		m_parentTex(parentTexture),
-		m_gpuTarget(0),
+		m_gpuTarget(GL_TEXTURE_2D),
 		m_bUpdateQueue(false),
 		m_eUpdateMode(RenderSurfaceUpdateMode::SURFACE_UPDATEVISIBLE),
 		m_gpuRenderBuffer(0)
@@ -29,17 +37,17 @@ namespace Sapphire
 
 	}
 
-	RenderSurface::~RenderSurface()
+	GLRenderSurface::~GLRenderSurface()
 	{
 		Release();
 	}
 
-	void RenderSurface::SetViewportNum(uint num)
+	void GLRenderSurface::SetViewportNum(uint num)
 	{
 		m_viewports.resize(num);
 	}
 
-	void RenderSurface::SetViewport(uint index, IViewport* viewport)
+	void GLRenderSurface::SetViewport(uint index, IViewport* viewport)
 	{
 		if (index >= m_viewports.size())
 			m_viewports.resize(index + 1);
@@ -47,20 +55,20 @@ namespace Sapphire
 		m_viewports[index] = viewport;
 	}
 
-	void RenderSurface::SetUpdateMode(RenderSurfaceUpdateMode mode)
+	void GLRenderSurface::SetUpdateMode(RenderSurfaceUpdateMode mode)
 	{
 		m_eUpdateMode = mode;
 	}
 
-	void RenderSurface::SetLinkedRenderTarget(IRenderSurface* rt)
+	void GLRenderSurface::SetLinkedRenderTarget(IRenderSurface* rt)
 	{
 		if (rt != this)
 		{
-			m_linkedColorRenderTarget = rt;
+			m_linkedColorRenderTarget = rt; //颜色渲染缓冲区
 		}
 	}
 
-	void RenderSurface::SetLinkedDepthStencil(IRenderSurface* depthStencil)
+	void GLRenderSurface::SetLinkedDepthStencil(IRenderSurface* depthStencil)
 	{
 		if (depthStencil != this)
 		{
@@ -69,7 +77,7 @@ namespace Sapphire
 
 	}
 
-	void RenderSurface::QueueUpdate()
+	void GLRenderSurface::QueueUpdate()
 	{
 		if (!m_bUpdateQueue)
 		{
@@ -96,47 +104,47 @@ namespace Sapphire
 		}
 	}
 
-	void RenderSurface::ResetUpdateQueued()
+	void GLRenderSurface::ResetUpdateQueued()
 	{
 		m_bUpdateQueue = false;
 	}
 
-	int RenderSurface::GetWidth() const
+	int GLRenderSurface::GetWidth() const
 	{
 		return m_parentTex->getWidth();
 	}
 
-	int RenderSurface::GetHeight() const
+	int GLRenderSurface::GetHeight() const
 	{
 		return m_parentTex->getHeight();
 	}
 
-	Sapphire::TextureUsage RenderSurface::GetUseage() const
+	Sapphire::TextureUsage GLRenderSurface::GetUseage() const
 	{
 		return m_parentTex->getUsage();
 	}
 
-	Sapphire::RenderSurfaceUpdateMode RenderSurface::GetUpdateMode() const
+	Sapphire::RenderSurfaceUpdateMode GLRenderSurface::GetUpdateMode() const
 	{
 		return m_eUpdateMode;
 	}
 
-	int RenderSurface::GetViewportNum() const
+	int GLRenderSurface::GetViewportNum() const
 	{
 		return m_viewports.size();
 	}
 
-	Sapphire::IViewport* RenderSurface::GetViewport(int index) const
+	Sapphire::IViewport* GLRenderSurface::GetViewport(int index) const
 	{
 		return index < m_viewports.size() ? m_viewports[index] : (IViewport*)NULL;
 	}
 
-	bool RenderSurface::WasUpdated() const
+	bool GLRenderSurface::WasUpdated() const
 	{
 		return false;
 	}
 
-	void RenderSurface::Release()
+	void GLRenderSurface::Release()
 	{
 		if (m_pGLDriver == NULL)
 			return;
@@ -162,21 +170,21 @@ namespace Sapphire
 		m_gpuRenderBuffer = 0;
 	}
 
-	bool RenderSurface::CreateRenderBuffer(uint width, uint height, uint format)
+	bool GLRenderSurface::CreateRenderBuffer(uint width, uint height, uint format)
 	{
 		if (m_pGLDriver == NULL)
 			return false;
 		Release();
 		 
-		glGenRenderbuffersEXT(1, &m_gpuRenderBuffer);  //创建渲染缓冲对象
-		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_gpuRenderBuffer);
+		glGenRenderbuffersEXT(1, &m_gpuRenderBuffer);  //创建RBO渲染缓冲对象 
+		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_gpuRenderBuffer); //绑定渲染缓冲对象
 		glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, format, width, height);  //设置存储格式
 		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
 
 		return true;
 	}
 
-	void RenderSurface::OnDeviceLost()
+	void GLRenderSurface::OnDeviceLost()
 	{
 		//設備已經丟失掉了，釋放還在用的系統資源
 		if (m_pGLDriver == NULL)
@@ -201,32 +209,32 @@ namespace Sapphire
 		m_gpuRenderBuffer = 0;
 	}
 
-	Sapphire::ITexture* RenderSurface::GetParentTexture() const
+	Sapphire::ITexture* GLRenderSurface::GetParentTexture() const
 	{
 		return m_parentTex;
 	}
 
-	uint RenderSurface::GetRenderBuffer() const
+	uint GLRenderSurface::GetRenderBuffer() const
 	{
 		return m_gpuRenderBuffer;
 	}
 
-	int RenderSurface::GetMultiSample() const
+	int GLRenderSurface::GetMultiSample() const
 	{
 		return false;
 	}
 
-	bool RenderSurface::GetAutoResolve() const
+	bool GLRenderSurface::GetAutoResolve() const
 	{
 		return false;
 	}
 
-	Sapphire::IRenderSurface* RenderSurface::GetLinkedRenderTarget() const
+	Sapphire::IRenderSurface* GLRenderSurface::GetLinkedRenderTarget() const
 	{
 		return m_linkedColorRenderTarget;
 	}
 
-	Sapphire::IRenderSurface* RenderSurface::GetLinkedDepthStencil() const
+	Sapphire::IRenderSurface* GLRenderSurface::GetLinkedDepthStencil() const
 	{
 		return m_linkedDepthRenderTarget;
 	}

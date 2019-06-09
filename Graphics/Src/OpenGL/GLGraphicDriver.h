@@ -11,7 +11,7 @@ namespace Sapphire
 	struct IIndexBuffer;
 	struct IShaderProgram;
 	struct IShaderVariation;
-	class RenderSurface;
+	class GLRenderSurface;
 	class Texture2D;
 	class GLRenderSystem;
 	class ShaderMgr;
@@ -51,9 +51,9 @@ namespace Sapphire
 		/// FBO对象句柄
 		uint  fbo;
 		/// 绑定的颜色附件纹理
-		RenderSurface* colorAttachments[MAX_RENDERTARGETS];
+		GLRenderSurface* colorAttachments[MAX_RENDERTARGETS];
 		/// 绑定的深度模板附件
-		RenderSurface* depthAttachment;
+		GLRenderSurface* depthAttachment;
 		/// 读取缓冲区位数
 		uint readBuffers;
 		/// 绘制缓冲区位数
@@ -144,11 +144,11 @@ namespace Sapphire
 
 		virtual void  SetVertexBuffer(IVertexBuffer* vertexBuffer);
 		//设置渲染目标
-		virtual void SetRenderTarget(unsigned index, RenderSurface* renderTarget);
+		virtual void SetRenderTarget(unsigned index, GLRenderSurface* renderTarget);
 
 		virtual void SetRenderTarget(unsigned index, Texture2D* texture);
 
-		virtual void SetDepthStencil(RenderSurface* depthStencil);
+		virtual void SetDepthStencil(GLRenderSurface* depthStencil);
 
 		virtual void SetDepthStencil(Texture2D* texture);
 
@@ -161,13 +161,13 @@ namespace Sapphire
 
 		virtual void ResetRenderTarget(uint index);
 
-		virtual RenderSurface* GetRenderTarget(uint index) const;  //取得指定的渲染目标
+		virtual GLRenderSurface* GetRenderTarget(uint index) const;  //取得指定的渲染目标
 
-		virtual RenderSurface* GetDepthStencil() const;     //取得深度模板表面
+		virtual GLRenderSurface* GetDepthStencil() const;     //取得深度模板表面
 
 		virtual void ResetDepthStencil();
 
-		virtual void CleanupRenderSurface(RenderSurface* surface); //从所有FBO种清理一个渲染面
+		virtual void CleanupRenderSurface(GLRenderSurface* surface); //从所有FBO种清理一个渲染面
 
 		//申请一块ScratchBuffer
 		virtual void* ReserveScratchBuffer(ulong size);
@@ -237,7 +237,7 @@ namespace Sapphire
 		uint           m_nMaxTextureUnits;
 		ImageTypeNameMap   m_imagetypeNames;
 
-		bool m_bGL3Support;
+		bool m_bGL3Support;  //是否支持OpenGL3
 
 		uint m_curBoundVBO;  //当前绑定VBO
 		uint m_curBoundUBO;  //当前UBO
@@ -245,9 +245,9 @@ namespace Sapphire
 		uint m_sysFBO;      //系统FBO
 
 		/// 所有在用的渲染目标
-		RenderSurface* m_renderTargets[MAX_RENDERTARGETS];
+		GLRenderSurface* m_renderTargets[MAX_RENDERTARGETS];
 		/// 当前的目标缓冲区
-		RenderSurface* m_depthStencil;
+		GLRenderSurface* m_depthStencil;
 
 		//可用的顶点缓冲区数
 		IVertexBuffer* m_vertexBuffers[MAX_VERTEX_STREAMS];

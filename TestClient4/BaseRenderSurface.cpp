@@ -62,8 +62,8 @@ namespace Sapphire
 		glDisable(GL_DEPTH_TEST);
 		glBindVertexArray(m_mVao);
 		glActiveTexture(GL_TEXTURE0 + TU_POSTEFFECT);
-		m_pShader->setInt("screenTexture", TU_POSTEFFECT);
-		glBindTexture(GL_TEXTURE_2D, m_texObj);
+		m_pShader->setInt("screenTexture", TU_POSTEFFECT); //设置screenTexture采样器的纹理单元为TU_POSTEFFECT
+		glBindTexture(GL_TEXTURE_2D, m_texObj); //绑定纹理
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 		m_pShader->UnUse();

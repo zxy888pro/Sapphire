@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\shaders">
+      <UniqueIdentifier>{865522a5-e383-45e2-aa6f-823161144a91}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderState.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseRenderSurface.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseRenderTarget.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseScene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLight.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseEmissionMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBoxMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseUIMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Camera.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderState.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseRenderSurface.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseRenderTarget.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseScene.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseLight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseEmissionMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyBoxMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseUIMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin\shaders\TestGSShaderVs.glsl">
+      <Filter>头文件\shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\TestGSShaderFs.glsl">
+      <Filter>头文件\shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\TestGSShaderGs.glsl">
+      <Filter>头文件\shaders</Filter>
+    </None>
+    <None Include="ExpodeGS.glsl" />
+  </ItemGroup>
+</Project>

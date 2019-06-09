@@ -22,7 +22,7 @@ namespace Sapphire
 		BaseRenderTarget();
 		virtual ~BaseRenderTarget();
 
-		void BindRT();
+		void BindRT(); //°ó¶¨äÖÈ¾Ä¿±ê
 		void UnBindRT();
 		
 		ITexture* GetTexture(int index);

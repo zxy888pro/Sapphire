@@ -18,11 +18,19 @@ namespace Sapphire
 	};
 
 
-	GLShaderProgram::GLShaderProgram(Core* pCore):
+	GLShaderProgram::GLShaderProgram(Core* pCore, GLShaderVariation* vertexShader, GLShaderVariation* pixelShader) :
 		BaseObject(pCore),
+		GPUObject(),
+		m_uFrameNumber(0),
+		m_vertexShader(vertexShader),
+		m_pixelShader(pixelShader),
 		m_pDriver(NULL)
 	{
 		m_pDriver = (GLGraphicDriver*)(Core::GetSingletonPtr()->GetSubSystemWithType(Sapphire::ESST_GRAPHICDRIVER));
+		for (unsigned i = 0; i < MAX_TEXTURE_UNITS; ++i)
+			m_bUseTextureUnits[i] = false;
+		for (unsigned i = 0; i < MAX_SHADER_PARAMETER_GROUPS; ++i)
+			m_parameterSources[i] = (const void*)M_MAX_UNSIGNED;
 	}
 
 	GLShaderProgram::~GLShaderProgram()
@@ -109,11 +117,9 @@ namespace Sapphire
 			//链接错误
 			glGetProgramiv(m_uHwUID, GL_INFO_LOG_LENGTH, &length);
 			int outLength;
-			char* szBuf = new char[length];
-			glGetProgramInfoLog(m_uHwUID, length, &outLength, szBuf);
-			m_linkOutMsg = szBuf;
+			m_linkOutMsg.resize(length);
+			glGetProgramInfoLog(m_uHwUID, length, &outLength, &m_linkOutMsg[0]);
 			glDeleteProgram(m_uHwUID);
-			safeDelete(szBuf);
 			m_uHwUID = 0;
 		}
 		else
@@ -292,12 +298,12 @@ namespace Sapphire
 		if (g_uFrameNumber != m_uFrameNumber)
 		{
 			for (unsigned i = 0; i < MAX_SHADER_PARAMETER_GROUPS; ++i)
-				m_parameterSources[i] = (const void*)M_MAX_UNSIGNED;
+				m_parameterSources[i] = (const void*)M_MAX_UNSIGNED;  //重置所有参数组
 			m_uFrameNumber = g_uFrameNumber;
 		}
 
 #ifndef GL_ES_VERSION_2_0
-		bool useBuffer = m_constantBuffers[group].Get() || m_constantBuffers[group + MAX_SHADER_PARAMETER_GROUPS].Get();
+		bool useBuffer = m_constantBuffers[group].Get() || m_constantBuffers[group + MAX_SHADER_PARAMETER_GROUPS].Get();  //使用UBO
 		bool useIndividual = !m_constantBuffers[group].Get() || !m_constantBuffers[group + MAX_SHADER_PARAMETER_GROUPS].Get();
 		bool needUpdate = false;  //参数已变，需要更新
 

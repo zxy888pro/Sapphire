@@ -9,21 +9,21 @@ namespace Sapphire
 	struct ITexture;
 	class  GLGraphicDriver;
 
-	class RenderSurface : public IRenderSurface
+	class GLRenderSurface : public IRenderSurface
 	{
-		SAPPHIRE_OBJECT(RenderSurface, BaseObject)
+		SAPPHIRE_OBJECT(GLRenderSurface, BaseObject)
 
 	public:
-		RenderSurface(Core* pCore);
-		RenderSurface(Core* pCore,ITexture* pTexture);
+		GLRenderSurface(Core* pCore);
+		GLRenderSurface(Core* pCore,ITexture* pTexture);
 
-		virtual ~RenderSurface();
+		virtual ~GLRenderSurface();
 
-		virtual void SetViewportNum(uint num);
+		virtual void SetViewportNum(uint num); //设置视口数
 
-		virtual void SetViewport(uint index, IViewport* viewport);
-
-		virtual void SetUpdateMode(RenderSurfaceUpdateMode mode);
+		virtual void SetViewport(uint index, IViewport* viewport); //设置视口
+		 
+		virtual void SetUpdateMode(RenderSurfaceUpdateMode mode);  //设置更新模式
 		//设置要链接的颜色渲染目标
 		virtual void SetLinkedRenderTarget(IRenderSurface* rt);
 		//设置要链接的深度和模板渲染目标
@@ -52,7 +52,7 @@ namespace Sapphire
 
 		virtual void Release();
 
-		virtual bool CreateRenderBuffer(uint width, uint height, uint format);
+		virtual bool CreateRenderBuffer(uint width, uint height, uint format);   //创建一个渲染缓冲对象
 
 		virtual void OnDeviceLost();
 

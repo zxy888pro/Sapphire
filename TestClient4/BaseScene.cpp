@@ -62,7 +62,7 @@ namespace Sapphire
 		//第一次渲染
 		if (m_bEnablePost)
 		{
-			m_PostRtt->BindRT();
+			m_PostRtt->BindRT(); //绑定渲染目标，渲染到m_PostRtt的FBO里
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // 暂时不使用模板缓冲
 		}
@@ -74,12 +74,12 @@ namespace Sapphire
 		}
 		if (m_bEnablePost)
 		{
-			m_PostRtt->UnBindRT();
-			m_PostRs->SetTexture(m_PostRtt->GetTexture(0)->getUID());
+			m_PostRtt->UnBindRT(); //恢复默认的FBO
+			m_PostRs->SetTexture(m_PostRtt->GetTexture(0)->getUID()); //将m_postRtt的Fbo的内容作为纹理
 			glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 			//后期渲染
-			m_PostRs->Render();
+			m_PostRs->Render(); //渲染到默认的FBO中
 		}
 		
 	}

@@ -3,7 +3,7 @@
 #include "IRenderSystem.h"
 #include "Texture2D.h"
 #include "TextureMgr.h"
-#include "ImageMgr.h"
+#include "../ImageMgr.h"
 #include "ShaderScriptMgr.h"
 #include "ShaderMgr.h"
 #include "IIndexBuffer.h"
@@ -11,7 +11,7 @@
 #include "IShaderVariation.h"
 #include "GLShaderProgram.h"
 #include "VertexBuffer.h"
-#include "RenderSurface.h"
+#include "GLRenderSurface.h"
 #include "GLRenderSystem.h"
 
 namespace Sapphire
@@ -130,25 +130,25 @@ namespace Sapphire
 
 	void GLGraphicDriver::ResetRenderTarget(uint index)
 	{
-		SetRenderTarget(index, (RenderSurface*)NULL);
+		SetRenderTarget(index, (GLRenderSurface*)NULL);
 	}
 
-	Sapphire::RenderSurface* GLGraphicDriver::GetRenderTarget(uint index) const
+	Sapphire::GLRenderSurface* GLGraphicDriver::GetRenderTarget(uint index) const
 	{
 		return index < MAX_RENDERTARGETS ? m_renderTargets[index] : 0;
 	}
 
-	Sapphire::RenderSurface* GLGraphicDriver::GetDepthStencil() const
+	Sapphire::GLRenderSurface* GLGraphicDriver::GetDepthStencil() const
 	{
 		return m_depthStencil;
 	}
 
 	void GLGraphicDriver::ResetDepthStencil()
 	{
-		SetDepthStencil((RenderSurface*)0);
+		SetDepthStencil((GLRenderSurface*)0);
 	}
 
-	void GLGraphicDriver::CleanupRenderSurface(RenderSurface* surface)
+	void GLGraphicDriver::CleanupRenderSurface(GLRenderSurface* surface)
 	{
 		if (!surface)
 			return;
@@ -411,7 +411,7 @@ namespace Sapphire
 		SetVertexBuffers(vertexBuffers, elementMasks);
 	}
 
-	void GLGraphicDriver::SetRenderTarget(unsigned index, RenderSurface* renderTarget)
+	void GLGraphicDriver::SetRenderTarget(unsigned index, GLRenderSurface* renderTarget)
 	{
 		if (index >= MAX_RENDERTARGETS)
 			return;
@@ -446,7 +446,7 @@ namespace Sapphire
 		SetRenderTarget(index, renderTarget);*/
 	}
 
-	void GLGraphicDriver::SetDepthStencil(RenderSurface* depthStencil)
+	void GLGraphicDriver::SetDepthStencil(GLRenderSurface* depthStencil)
 	{
 
 	}

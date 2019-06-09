@@ -4,11 +4,11 @@
 #include "GPUObject.h"
 #include <ITextureMgr.h>
 #include <Image.h>
-#include "ImageMgr.h"
+#include "../ImageMgr.h"
 #include <FileStream.h>
 #include "GraphicException.h"
 #include <stringHelper.h>
-#include "RenderSurface.h"
+#include "GLRenderSurface.h"
 #include <json/json.h>
 
 
@@ -494,7 +494,7 @@ namespace Sapphire
 		{
 			for (unsigned i = 0; i < MAX_CUBEMAP_FACES; ++i)
 			{
-				m_renderSurfaces[i] = new RenderSurface(m_pCore,this);
+				m_renderSurfaces[i] = new GLRenderSurface(m_pCore,this);
 				m_renderSurfaces[i]->SetTarget(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
 			}
 			m_eFilterMode = FILTER_NEAREST;

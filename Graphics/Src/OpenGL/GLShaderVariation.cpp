@@ -9,7 +9,8 @@ namespace Sapphire
 
 	GLShaderVariation::GLShaderVariation(ShaderType type, Core* pCore):
 		BaseObject(pCore),
-		m_eType(type)
+		m_eType(type),
+		GPUObject()
 	{
 		m_assert(pCore);
 		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(m_pCore->GetSubSystemWithType(ESST_GRAPHICDRIVER));
@@ -17,11 +18,51 @@ namespace Sapphire
 
 	GLShaderVariation::~GLShaderVariation()
 	{
-
+		Release();
 	}
 	
 	bool GLShaderVariation::Create()
 	{
+		Release();
+		if (!m_owner)
+		{
+			m_compilerOutput = "Owner shader has expired";
+			return false;
+		}
+		m_uHwUID = glCreateShader(m_eType == VS ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
+		if (!m_uHwUID)
+		{
+			m_compilerOutput = "Could not create shader object";
+			return false;
+		}
+
+		const std::string originalShaderCode = m_owner->GetSourceCode(m_eType);  //获取相对应shader源码
+		const char* shaderCodeCstr = originalShaderCode.c_str();
+		
+		glShaderSource(m_uHwUID, 1, &shaderCodeCstr, 0);
+		glCompileShader(m_uHwUID);
+
+		int compiled, length;
+		glGetShaderiv(m_uHwUID, GL_COMPILE_STATUS, &compiled);
+		if (!compiled)
+		{
+			glGetShaderiv(m_uHwUID, GL_INFO_LOG_LENGTH, &length);
+			int outLength;
+			m_compilerOutput.resize(length);
+			glGetShaderInfoLog(m_uHwUID, length, &outLength, &m_compilerOutput[0]);
+			glDeleteShader(m_uHwUID);
+			m_uHwUID = 0;
+		}
+		else
+		{
+			m_compilerOutput.clear();
+		}
+
+
+
+
+
+
 		return true;
 	}
 
@@ -93,6 +134,7 @@ namespace Sapphire
 	void GLShaderVariation::OnDeviceLost()
 	{
 		GPUObject::OnDeviceLost();
+		m_compilerOutput.clear();
 	}
 
 }

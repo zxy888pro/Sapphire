@@ -1,11 +1,11 @@
 #include <GraphicDriver.h>
 #include "Texture2D.h"
 #include <ITextureMgr.h>
-#include "ImageMgr.h"
+#include "../ImageMgr.h"
 #include <mathHelper.h>
 #include "GraphicException.h"
 #include "GLGraphicDriver.h"
-#include "RenderSurface.h"
+#include "GLRenderSurface.h"
 
 
 namespace Sapphire
