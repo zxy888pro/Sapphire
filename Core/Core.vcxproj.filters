@@ -186,6 +186,18 @@
     <ClInclude Include="Include\ResourceLoader.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Math\Ray.h">
+      <Filter>头文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Math\Plane.h">
+      <Filter>头文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Math\Frustum.h">
+      <Filter>头文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Math\Sphere.h">
+      <Filter>头文件\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -307,6 +319,15 @@
     </ClCompile>
     <ClCompile Include="Src\ResourceLoader.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Math\Ray.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Math\Plane.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Math\Frustum.cpp">
+      <Filter>源文件\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
