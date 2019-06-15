@@ -8,6 +8,8 @@ namespace Sapphire
 	{
 	public:
 
+		static const String EMPTY;
+
 		String();
 
 		String(const char* pstr);
@@ -17,6 +19,8 @@ namespace Sapphire
 		String(std::string& str);
 
 		String(char c, uint count);
+
+		String(const String& other);
 
 
 		virtual ~String();

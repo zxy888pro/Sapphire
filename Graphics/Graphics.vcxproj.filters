@@ -16,6 +16,9 @@
     <Filter Include="源文件\OpenGL">
       <UniqueIdentifier>{6b5c5ab4-54d6-444d-8611-ba271ff1404d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Scene">
+      <UniqueIdentifier>{c16e7a86-579a-4e95-94d7-7b8304084e2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Image.h">
@@ -152,6 +155,18 @@
     </ClInclude>
     <ClInclude Include="Include\View.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Camera.h">
+      <Filter>头文件\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene.h">
+      <Filter>头文件\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\SceneNode.h">
+      <Filter>头文件\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Component.h">
+      <Filter>头文件\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

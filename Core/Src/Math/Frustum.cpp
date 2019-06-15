@@ -1,6 +1,7 @@
 
 #include "Math/Frustum.h"
 #include "Math/Sphere.h"
+#include "Math/BoundingBox.h"
 
 namespace Sapphire
 {
@@ -54,8 +55,8 @@ namespace Sapphire
 		for (unsigned i = 0; i < NUM_FRUSTUM_PLANES; ++i)
 		{
 			const Plane& plane = planes_[i];
-			float dist = plane.normal_.DotProduct(center) + plane.d_;
-			float absDist = plane.absNormal_.DotProduct(edge);
+			float dist = plane._normal.DotProduct(center) + plane._d;
+			float absDist = plane._absNormal.DotProduct(edge);
 
 			if (dist < -absDist)
 				return OUTSIDE;
@@ -75,8 +76,8 @@ namespace Sapphire
 		for (unsigned i = 0; i < NUM_FRUSTUM_PLANES; ++i)
 		{
 			const Plane& plane = planes_[i];
-			float dist = plane.normal_.DotProduct(center) + plane.d_;
-			float absDist = plane.absNormal_.DotProduct(edge);
+			float dist = plane._normal.DotProduct(center) + plane._d;
+			float absDist = plane._absNormal.DotProduct(edge);
 
 			if (dist < -absDist)
 				return OUTSIDE;

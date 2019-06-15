@@ -4,7 +4,7 @@
 
 namespace Sapphire
 {
-
+	static const float M_MIN_NEARCLIP = 0.01f;
 	//32位和64位架构
 #define SAPPHIRE_ARCHITECTURE_32 1
 #define SAPPHIRE_ARCHITECTURE_64 2

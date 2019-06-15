@@ -1,5 +1,8 @@
 ﻿#include "Math/Ray.h"
 #include "Math/Plane.h"
+#include "Math/BoundingBox.h"
+#include "Math/Sphere.h"
+#include "Math/Frustum.h"
 #include "mathHelper.h"
 
 namespace Sapphire

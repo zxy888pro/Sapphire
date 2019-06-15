@@ -4,12 +4,17 @@
 #include "Graphics.h"
 #include "IVewport.h"
 #include "Math/Rect.h"
-
+#include "Math/Ray.h"
+#include "Math/Rect.h"
+#include "Math/Vector2.h"
 
 namespace Sapphire
 {
 
 	class View;
+	class Camera;
+	class RenderPath;
+	class Scene;
 
 	//视口由renderSurface或backBuffer定义
 	class SAPPHIRE_CLASS Viewport : public BaseObject
@@ -22,7 +27,7 @@ namespace Sapphire
 		virtual ~Viewport();
 
 		
-
+		Ray GetScreenRay(int x, int y) const;
 
 
 

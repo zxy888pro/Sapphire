@@ -6,6 +6,13 @@
 
 namespace Sapphire
 {
+	const ResourceRef Variant::emptyResourceRef;
+	const ResourceRefList Variant::emptyResourceRefList;
+	const VariantVector Variant::emptyVariantVector;
+	const StringVector Variant::emptyStringVector;
+	const VariantMap Variant::emptyVariantMap;
+
+
 	static const char* typeNames[] =
 	{
 		"None",
@@ -17,7 +24,7 @@ namespace Sapphire
 		"Vector4",
 		"Quaternion",
 		"Color",
-		//"String",
+		"String",
 		"VoidPtr",
 		"ResourceRef",
 		"ResourceRefList",
@@ -55,12 +62,12 @@ namespace Sapphire
 
 	bool ResourceRef::operator!=(const ResourceRef& rhs) const
 	{
-		return type_ == rhs.type_ && name_ == rhs.name_;
+		return type_ != rhs.type_ && name_ != rhs.name_;
 	}
 
 	bool ResourceRef::operator==(const ResourceRef& rhs) const
 	{
-		return type_ != rhs.type_ || name_ != rhs.name_;
+		return type_ == rhs.type_ || name_ == rhs.name_;
 
 	}
 
@@ -70,12 +77,12 @@ namespace Sapphire
 
 		switch (type_)
 		{
-		/*case VAR_STRING:
-			*(reinterpret_cast<String*>(&value_)) = *(reinterpret_cast<const String*>(&rhs.value_));
-			break;*/
+		case VAR_STRING:
+			*(reinterpret_cast<String*>(value_.ptr_)) = *(reinterpret_cast<const String*>(&rhs.value_.ptr_)); //字符串对象大小超16字节,在堆上分配，去ptr指针的值
+			break;
 
 		case VAR_RESOURCEREF:
-			*(reinterpret_cast<ResourceRef*>(&value_)) = *(reinterpret_cast<const ResourceRef*>(&rhs.value_));
+			*(reinterpret_cast<ResourceRef*>(value_.ptr_)) = *(reinterpret_cast<const ResourceRef*>(rhs.value_.ptr_));
 			break;
 
 		case VAR_RESOURCEREFLIST:
@@ -146,14 +153,13 @@ namespace Sapphire
 		case VAR_VECTOR4:
 		case VAR_QUATERNION:
 		case VAR_COLOR:
-			// Hack: use the Vector4 compare for all these classes, as they have the same memory structure
 			return *(reinterpret_cast<const Vector4*>(&value_)) == *(reinterpret_cast<const Vector4*>(&rhs.value_));
 
-		/*case VAR_STRING:
-			return *(reinterpret_cast<const String*>(&value_)) == *(reinterpret_cast<const String*>(&rhs.value_));*/
+		case VAR_STRING:
+			return *(reinterpret_cast<const String*>(value_.ptr_)) == *(reinterpret_cast<const String*>(rhs.value_.ptr_));
 
 		case VAR_RESOURCEREF:
-			return *(reinterpret_cast<const ResourceRef*>(&value_)) == *(reinterpret_cast<const ResourceRef*>(&rhs.value_));
+			return *(reinterpret_cast<const ResourceRef*>(value_.ptr_)) == *(reinterpret_cast<const ResourceRef*>(rhs.value_.ptr_));
 
 		case VAR_RESOURCEREFLIST:
 			return *(reinterpret_cast<const ResourceRefList*>(&value_)) == *(reinterpret_cast<const ResourceRefList*>(&rhs.value_));
@@ -229,6 +235,99 @@ namespace Sapphire
 		return (VariantType)GetStringListIndex(typeName, typeNames, VAR_NONE);
 	}
 
+	const Sapphire::String& Variant::GetString() const
+	{
+		return type_ == VAR_STRING ? *reinterpret_cast<const String*>(value_.ptr_) : String::EMPTY;;
+	}
+
+	bool Variant::IsZero() const
+	{
+		switch (type_)
+		{
+		case VAR_INT:
+			return value_.int_ == 0;
+
+		case VAR_BOOL:
+			return value_.bool_ == false;
+
+		case VAR_FLOAT:
+			return value_.float_ == 0.0f;
+
+		case VAR_VECTOR2:
+			return *reinterpret_cast<const Vector2*>(&value_) == Vector2::ZERO;
+
+		case VAR_VECTOR3:
+			return *reinterpret_cast<const Vector3*>(&value_) == Vector3::ZERO;
+
+		case VAR_VECTOR4:
+			return *reinterpret_cast<const Vector4*>(&value_) == Vector4::ZERO;
+
+		case VAR_QUATERNION:
+			return *reinterpret_cast<const Quaternion*>(&value_) == Quaternion::IDENTITY;
+
+		case VAR_COLOR:
+			 
+			return *reinterpret_cast<const Color*>(&value_) == Color::WHITE;
+		case VAR_STRING:
+			return reinterpret_cast<const String*>(value_.ptr_)->empty();
+			//return reinterpret_cast<const String*>(&value_)->Empty();
+
+		/*case VAR_BUFFER:
+			return reinterpret_cast<const PODVector<unsigned char>*>(&value_)->Empty();*/
+
+		case VAR_VOIDPTR:
+			return value_.ptr_ == 0;
+
+		case VAR_RESOURCEREF:
+			//return reinterpret_cast<const ResourceRef*>(&value_)->name_.empty();
+			return reinterpret_cast<const ResourceRef*>(value_.ptr_)->name_.empty();
+
+		case VAR_RESOURCEREFLIST:
+		{
+			const StringVector& names = reinterpret_cast<const ResourceRefList*>(&value_)->names_;
+			for (StringVector::const_iterator i = names.begin(); i != names.end(); ++i)
+			{
+				if (!i->empty())
+					return false;
+			}
+			return true;
+		}
+
+		case VAR_VARIANTVECTOR:
+			return reinterpret_cast<const VariantVector*>(&value_)->empty();
+
+		case VAR_STRINGVECTOR:
+			return reinterpret_cast<const StringVector*>(&value_)->empty();
+
+		case VAR_VARIANTMAP:
+			return reinterpret_cast<const VariantMap*>(&value_)->empty();
+
+		case VAR_INTRECT:
+			return *reinterpret_cast<const IntRect*>(&value_) == IntRect::ZERO;
+
+		case VAR_INTVECTOR2:
+			return *reinterpret_cast<const IntVector2*>(&value_) == IntVector2::ZERO;
+
+		case VAR_PTR:
+			return *reinterpret_cast<const WeakPtr<RefCounter>*>(&value_) == (RefCounter*)0;
+
+		case VAR_MATRIX3X3:
+			return *reinterpret_cast<const Matrix3x3*>(value_.ptr_) == Matrix3x3::IDENTITY;
+
+		case VAR_MATRIX3X4:
+			return *reinterpret_cast<const Matrix3x4*>(value_.ptr_) == Matrix3x4::IDENTITY;
+
+		case VAR_MATRIX4X4:
+			return *reinterpret_cast<const Matrix4x4*>(value_.ptr_) == Matrix4x4::IDENTITY;
+
+		case VAR_DOUBLE:
+			return *reinterpret_cast<const double*>(&value_) == 0.0;
+
+		default:
+			return true;
+		}
+	}
+
 	void Variant::FromString(const String& type, const String& value)
 	{
 		return FromString(GetTypeFromName(type), value.c_str());
@@ -279,9 +378,9 @@ namespace Sapphire
 			*this = ToColor(value);
 			break;
 
-			/*case VAR_STRING:
+		case VAR_STRING:
 				*this = value;
-				break;*/
+				break;
 
 		break;
 
@@ -296,7 +395,7 @@ namespace Sapphire
 			if (values.size() == 2)
 			{
 				SetType(VAR_RESOURCEREF);
-				ResourceRef& ref = *(reinterpret_cast<ResourceRef*>(&value_));
+				ResourceRef& ref = *(reinterpret_cast<ResourceRef*>(value_.ptr_));
 				ref.type_ = values[0];
 				ref.name_ = values[1];
 			}
@@ -361,12 +460,14 @@ namespace Sapphire
 		//placement new要显示的调用他们的析构函数来销毁，不要使用delete
 		switch (type_)
 		{
-			/*case VAR_STRING:
-				(reinterpret_cast<String*>(&value_))->~String();
-				break;*/
+		case VAR_STRING:
+				//(reinterpret_cast<String*>(&value_))->~String();
+				delete reinterpret_cast<String*>(value_.ptr_);
+				break;
 
 		case VAR_RESOURCEREF:
-			(reinterpret_cast<ResourceRef*>(&value_))->~ResourceRef();
+			//(reinterpret_cast<ResourceRef*>(&value_))->~ResourceRef();
+			delete reinterpret_cast<ResourceRef*>(value_.ptr_);
 			break;
 
 		case VAR_RESOURCEREFLIST:
@@ -411,12 +512,14 @@ namespace Sapphire
 		//placement new 方式
 		switch (type_)
 		{
-		/*case VAR_STRING:
-			new(reinterpret_cast<String*>(&value_)) String();
-			break;*/
+		case VAR_STRING:
+			//new(reinterpret_cast<String*>(&value_)) String();
+			value_.ptr_ = new String();
+			break;
 
 		case VAR_RESOURCEREF:
-			new(reinterpret_cast<ResourceRef*>(&value_)) ResourceRef();
+			//new(reinterpret_cast<ResourceRef*>(&value_)) ResourceRef();
+			value_.ptr_ = new ResourceRef();
 			break;
 
 		case VAR_RESOURCEREFLIST:
@@ -454,5 +557,191 @@ namespace Sapphire
 		default:
 			break;
 		}
+	}
+
+
+	template <> int Variant::Get<int>() const
+	{
+		return GetInt();
+	}
+
+	template <> unsigned Variant::Get<unsigned>() const
+	{
+		return GetUInt();
+	}
+
+	template <> StringHash Variant::Get<StringHash>() const
+	{
+		return GetStringHash();
+	}
+
+	template <> bool Variant::Get<bool>() const
+	{
+		return GetBool();
+	}
+
+	template <> float Variant::Get<float>() const
+	{
+		return GetFloat();
+	}
+
+	template <> double Variant::Get<double>() const
+	{
+		return GetDouble();
+	}
+
+	template <> const Vector2& Variant::Get<const Vector2&>() const
+	{
+		return GetVector2();
+	}
+
+	template <> const Vector3& Variant::Get<const Vector3&>() const
+	{
+		return GetVector3();
+	}
+
+	template <> const Vector4& Variant::Get<const Vector4&>() const
+	{
+		return GetVector4();
+	}
+
+	template <> const Quaternion& Variant::Get<const Quaternion&>() const
+	{
+		return GetQuaternion();
+	}
+
+	template <> const Color& Variant::Get<const Color&>() const
+	{
+		return GetColor();
+	}
+
+	template <> const String& Variant::Get<const String&>() const
+	{
+		return GetString();
+	}
+
+	template <> const IntRect& Variant::Get<const IntRect&>() const
+	{
+		return GetIntRect();
+	}
+
+	template <> const IntVector2& Variant::Get<const IntVector2&>() const
+	{
+		return GetIntVector2();
+	}
+
+	/*template <> const PODVector<unsigned char>& Variant::Get<const PODVector<unsigned char>&>() const
+	{
+	return GetBuffer();
+	}*/
+
+	template <> void* Variant::Get<void*>() const
+	{
+		return GetVoidPtr();
+	}
+
+	template <> RefCounter* Variant::Get<RefCounter*>() const
+	{
+		return GetPtr();
+	}
+
+	template <> const Matrix3x3& Variant::Get<const Matrix3x3&>() const
+	{
+		return GetMatrix3x3();
+	}
+
+	template <> const Matrix3x4& Variant::Get<const Matrix3x4&>() const
+	{
+		return GetMatrix3x4();
+	}
+
+	template <> const Matrix4x4& Variant::Get<const Matrix4x4&>() const
+	{
+		return GetMatrix4();
+	}
+
+	template <> ResourceRef Variant::Get<ResourceRef>() const
+	{
+		return GetResourceRef();
+	}
+
+	template <> ResourceRefList Variant::Get<ResourceRefList>() const
+	{
+		return GetResourceRefList();
+	}
+
+	template <> VariantVector Variant::Get<VariantVector>() const
+	{
+		return GetVariantVector();
+	}
+
+	template <> StringVector Variant::Get<StringVector >() const
+	{
+		return GetStringVector();
+	}
+
+	template <> VariantMap Variant::Get<VariantMap>() const
+	{
+		return GetVariantMap();
+	}
+
+	template <> Vector2 Variant::Get<Vector2>() const
+	{
+		return GetVector2();
+	}
+
+	template <> Vector3 Variant::Get<Vector3>() const
+	{
+		return GetVector3();
+	}
+
+	template <> Vector4 Variant::Get<Vector4>() const
+	{
+		return GetVector4();
+	}
+
+	template <> Quaternion Variant::Get<Quaternion>() const
+	{
+		return GetQuaternion();
+	}
+
+	template <> Color Variant::Get<Color>() const
+	{
+		return GetColor();
+	}
+
+	template <> String Variant::Get<String>() const
+	{
+		return GetString();
+	}
+
+	template <> IntRect Variant::Get<IntRect>() const
+	{
+		return GetIntRect();
+	}
+
+	template <> IntVector2 Variant::Get<IntVector2>() const
+	{
+		return GetIntVector2();
+	}
+
+	/*template <> PODVector<unsigned char> Variant::Get<PODVector<unsigned char> >() const
+	{
+	return GetBuffer();
+	}*/
+
+	template <> Matrix3x3 Variant::Get<Matrix3x3>() const
+	{
+		return GetMatrix3x3();
+	}
+
+	template <> Matrix3x4 Variant::Get<Matrix3x4>() const
+	{
+		return GetMatrix3x4();
+	}
+
+	template <> Matrix4x4 Variant::Get<Matrix4x4>() const
+	{
+		return GetMatrix4();
 	}
 }

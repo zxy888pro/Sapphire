@@ -4,6 +4,7 @@
 
 namespace Sapphire
 {
+	const String String::EMPTY;
 
 	StringHash::StringHash(const char* str) :value_(Calculate(str))
 	{
@@ -66,6 +67,11 @@ namespace Sapphire
 	String::String(const wchar_t* pstr)
 	{
 		m_wstr = pstr;
+	}
+
+	String::String(const String& other)
+	{
+		m_str = other.str();
 	}
 
 	String::~String()

@@ -5,7 +5,8 @@
 #include "Thread.h"
 #include "FileStream.h"
 #include "RingQueue.h"
-
+#include "Variant.h"
+#include "Math/Matrix4x4.h"
 //#define jimi_b2(x)              (        (x) | (        (x) >>  1))
 //#define jimi_b4(x)              ( jimi_b2(x) | ( jimi_b2(x) >>  2))
 //#define jimi_b8(x)              ( jimi_b4(x) | ( jimi_b4(x) >>  4))
@@ -78,6 +79,35 @@ private:
 
 };
 
+void TestFunc()
+{
+	using namespace Sapphire;
+	Vector3 v3(1, 2, 3);
+	Variant v = v3;
+	String str = "asdd";
+	int strSize = sizeof(String);
+	int mat4x4Size = sizeof(Matrix4x4);
+	int resrefSize = sizeof(ResourceRef);
+	int vec3Size = sizeof(Vector3);
+	Matrix4x4 mat;
+	Variant vm = mat;
+	Matrix4x4 mat2 = vm.GetMatrix4();
+	Vector3 vec3 = v.GetVector3();
+	Variant v2 = str;
+	String s = v2.GetString();
+	v2 = "bibli";
+	s = v2.GetString();
+	v = "bibli";
+	bool ret = v == v2;
+	StringHash hashStr(s);
+	ResourceRef ref(hashStr, s);
+	Variant rv = ref;
+	ResourceRef ref2 = rv.GetResourceRef();
+	ret = ref == ref2;
+	int a = 0;
+	return;
+}
+
 Sapphire::RingQueue<float> queue;
 int main()
 {
@@ -88,7 +118,8 @@ int main()
 	
 	using namespace Sapphire;
 	
-	
+	TestFunc();
+
 	const char* str = "{\"uploadid\": \"UP000000\",\"code\": 100,\"msg\": \"\",\"files\": \"\"}";
 		FileStream fs("images\\1.json", FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
 	if (fs.IsOpen())

@@ -98,6 +98,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Camera.h" />
+    <ClInclude Include="Include\Component.h" />
     <ClInclude Include="Include\FontFace.h" />
     <ClInclude Include="Include\GraphicDriver.h" />
     <ClInclude Include="Include\GraphicException.h" />
@@ -120,6 +122,8 @@
     <ClInclude Include="Include\IVewport.h" />
     <ClInclude Include="Include\Material.h" />
     <ClInclude Include="Include\IShader.h" />
+    <ClInclude Include="Include\Scene.h" />
+    <ClInclude Include="Include\SceneNode.h" />
     <ClInclude Include="Include\ShaderScript.h" />
     <ClInclude Include="Include\ShaderScriptMgr.h" />
     <ClInclude Include="Include\View.h" />

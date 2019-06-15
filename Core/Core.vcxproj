@@ -36,11 +36,13 @@
     <ClInclude Include="Include\IStream.h" />
     <ClInclude Include="Include\logUtil.h" />
     <ClInclude Include="Include\mathHelper.h" />
+    <ClInclude Include="Include\Math\BoundingBox.h" />
     <ClInclude Include="Include\Math\Frustum.h" />
     <ClInclude Include="Include\Math\Matrix3x3.h" />
     <ClInclude Include="Include\Math\Matrix3x4.h" />
     <ClInclude Include="Include\Math\Matrix4x4.h" />
     <ClInclude Include="Include\Math\Plane.h" />
+    <ClInclude Include="Include\Math\Polyhedron.h" />
     <ClInclude Include="Include\Math\Quaternion.h" />
     <ClInclude Include="Include\Math\Ray.h" />
     <ClInclude Include="Include\Math\Rect.h" />
@@ -89,14 +91,17 @@
     <ClCompile Include="Src\inifile.cpp" />
     <ClCompile Include="Src\logUtil.cpp" />
     <ClCompile Include="Src\MathHelper.cpp" />
+    <ClCompile Include="Src\Math\BoundingBox.cpp" />
     <ClCompile Include="Src\Math\Frustum.cpp" />
     <ClCompile Include="Src\Math\Matrix4x4.cpp" />
     <ClCompile Include="Src\Math\Matrix3x3.cpp" />
     <ClCompile Include="Src\Math\Matrix3x4.cpp" />
     <ClCompile Include="Src\Math\Plane.cpp" />
+    <ClCompile Include="Src\Math\Polyhedron.cpp" />
     <ClCompile Include="Src\Math\Quaternion.cpp" />
     <ClCompile Include="Src\Math\Ray.cpp" />
     <ClCompile Include="Src\Math\Rect.cpp" />
+    <ClCompile Include="Src\Math\Sphere.cpp" />
     <ClCompile Include="Src\Math\Vector2.cpp" />
     <ClCompile Include="Src\Math\Vector3.cpp" />
     <ClCompile Include="Src\Math\Vector4.cpp" />
@@ -168,7 +173,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SAPPHIRE_SSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

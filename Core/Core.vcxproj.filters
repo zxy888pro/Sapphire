@@ -198,6 +198,12 @@
     <ClInclude Include="Include\Math\Sphere.h">
       <Filter>头文件\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Math\Polyhedron.h">
+      <Filter>头文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Math\BoundingBox.h">
+      <Filter>头文件\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -327,6 +333,15 @@
       <Filter>源文件\Math</Filter>
     </ClCompile>
     <ClCompile Include="Src\Math\Frustum.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Math\Sphere.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Math\Polyhedron.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Math\BoundingBox.cpp">
       <Filter>源文件\Math</Filter>
     </ClCompile>
   </ItemGroup>

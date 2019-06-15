@@ -1,6 +1,7 @@
 #include "Viewport.h"
 #include "View.h"
 
+
 namespace Sapphire
 {
 
@@ -12,6 +13,11 @@ namespace Sapphire
 	Viewport::~Viewport()
 	{
 
+	}
+
+	Sapphire::Ray Viewport::GetScreenRay(int x, int y) const
+	{
+		return Ray();
 	}
 
 }
