@@ -32,23 +32,23 @@ namespace Sapphire
 
 	void ResourceLoader::Initialize()
 	{
-		SubscribeEvent(ET_SUBSYTEM_EVENT, EVENT_SUBSYS_RESOURCEREQUEST_EVENT);	//资源加载请求
-		SubscribeEvent(ET_SUBSYTEM_EVENT, EVENT_SUBSYS_RESOURCELOADEND_EVENT);  //资源加载完成
+		SubscribeEvent(ET_CORE_EVENT, EVENT_CORE_RESOURCEREQUEST_EVENT);	//资源加载请求
+		SubscribeEvent(ET_CORE_EVENT, EVENT_CORE_RESOURCELOADEND_EVENT);  //资源加载完成
 	}
 
 
 
 	void ResourceLoader::Release()
 	{
-		UnSubscribeEvent(ET_SUBSYTEM_EVENT, EVENT_SUBSYS_RESOURCEREQUEST_EVENT);
-		UnSubscribeEvent(ET_SUBSYTEM_EVENT, EVENT_SUBSYS_RESOURCELOADEND_EVENT);
+		UnSubscribeEvent(ET_CORE_EVENT, EVENT_CORE_RESOURCEREQUEST_EVENT);
+		UnSubscribeEvent(ET_CORE_EVENT, EVENT_CORE_RESOURCELOADEND_EVENT);
 	}
 
 	void ResourceLoader::Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData /*= NULL*/)
 	{
 		switch (eEvent)
 		{
-		case EVENT_SUBSYS_RESOURCEREQUEST_EVENT:
+		case EVENT_CORE_RESOURCEREQUEST_EVENT:
 		{
 			if (eventData)
 			{
@@ -57,7 +57,7 @@ namespace Sapphire
 				LoadResource(res);
 			}
 		}
-		case EVENT_SUBSYS_RESOURCELOADEND_EVENT:
+		case EVENT_CORE_RESOURCELOADEND_EVENT:
 		{
 			if (eventData)
 			{
@@ -90,7 +90,7 @@ namespace Sapphire
 			if(m_resource->Load()) //加载资源
 			{
 				m_resource->OnLoadEnd(); //进行资源加载完成后处理
-				m_resource->FireEvent(ET_SUBSYTEM_EVENT, EVENT_SUBSYS_RESOURCELOADEND_EVENT, m_resource); //发送资源加载完成事件
+				m_resource->FireEvent(ET_CORE_EVENT, EVENT_CORE_RESOURCELOADEND_EVENT, m_resource); //发送资源加载完成事件
 			}else
 			{
 				m_resource->OnLoadError();

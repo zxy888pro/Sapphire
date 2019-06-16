@@ -19,6 +19,9 @@
     <Filter Include="头文件\Scene">
       <UniqueIdentifier>{c16e7a86-579a-4e95-94d7-7b8304084e2b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Scene">
+      <UniqueIdentifier>{c8697346-1554-49da-8d5d-c0c91545fc00}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Image.h">
@@ -168,6 +171,9 @@
     <ClInclude Include="Include\Component.h">
       <Filter>头文件\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Node.h">
+      <Filter>头文件\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
@@ -241,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="Src\Viewport.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Node.cpp">
+      <Filter>源文件\Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

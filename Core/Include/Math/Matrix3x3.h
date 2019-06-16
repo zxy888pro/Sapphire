@@ -50,7 +50,7 @@ namespace Sapphire
 		{
 		}
 
-		virtual ~Matrix3x3();
+		 
 
 
 		

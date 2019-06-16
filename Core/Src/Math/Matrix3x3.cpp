@@ -9,10 +9,7 @@ namespace Sapphire
 
 	}
 
-	Matrix3x3::~Matrix3x3()
-	{
-
-	}
+	 
 
 	Sapphire::Matrix3x3 Matrix3x3::Transpose() const
 	{

@@ -82,29 +82,27 @@ private:
 void TestFunc()
 {
 	using namespace Sapphire;
-	Vector3 v3(1, 2, 3);
-	Variant v = v3;
-	String str = "asdd";
-	int strSize = sizeof(String);
-	int mat4x4Size = sizeof(Matrix4x4);
-	int resrefSize = sizeof(ResourceRef);
-	int vec3Size = sizeof(Vector3);
-	Matrix4x4 mat;
-	Variant vm = mat;
-	Matrix4x4 mat2 = vm.GetMatrix4();
-	Vector3 vec3 = v.GetVector3();
-	Variant v2 = str;
-	String s = v2.GetString();
-	v2 = "bibli";
-	s = v2.GetString();
-	v = "bibli";
-	bool ret = v == v2;
-	StringHash hashStr(s);
-	ResourceRef ref(hashStr, s);
-	Variant rv = ref;
-	ResourceRef ref2 = rv.GetResourceRef();
-	ret = ref == ref2;
-	int a = 0;
+	
+	String name1 = "adbklg";
+	StringHash name1hash(name1);
+	ResourceRef ref1(name1hash, name1);
+	String name2 = "mkalsl";
+	StringHash name2hash(name1);
+	ResourceRef ref2(name1hash, name1);
+	String name3 = "jvksdf";
+	StringHash name3hash(name1);
+	ResourceRef ref3(name1hash, name1);
+	StringVector sv;
+	sv.push_back(name2);
+	sv.push_back(name3);
+	ResourceRefList list1(name1hash, sv);
+	Variant v = list1;
+	ResourceRefList list2 = v.GetResourceRefList();
+	int _size = list2.names_.size();
+	bool ret = list1 == list2;
+	Variant v2 = v;
+	list2 = v2.GetResourceRefList();
+	v2.Clear();
 	return;
 }
 

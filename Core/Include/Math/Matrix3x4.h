@@ -15,7 +15,6 @@ namespace Sapphire
 	public:
 
 		Matrix3x4();
-		virtual ~Matrix3x4();
 		
 		Matrix3x4(const Matrix3x3& matrix) :
 			m00_(matrix.m00_),

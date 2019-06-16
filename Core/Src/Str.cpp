@@ -16,6 +16,11 @@ namespace Sapphire
 
 	}
 
+	StringHash::StringHash(const std::string& str) : value_(Calculate(str.c_str()))
+	{
+
+	}
+
 	Sapphire::String StringHash::ToString() const
 	{
 		char tempBuffer[STRING_BUFFERSIZE];

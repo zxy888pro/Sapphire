@@ -167,6 +167,8 @@ namespace Sapphire
 
 		StringHash(const char* str);
 
+		StringHash(const std::string& str);
+
 		StringHash(const String& str);
 
 		StringHash& operator =(const StringHash& rhs)

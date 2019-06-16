@@ -227,7 +227,7 @@ namespace Sapphire
 
 	void BaseLightMapMesh::Invoke(ushort eEventType, ushort eEvent,EventContext* src, void* eventData /*= NULL*/)
 	{
-		if (eEventType == EventType::ET_OBJECT_EVENT)
+		if (eEventType == EventType::ET_SCENE_EVENT)
 		{
 			switch (eEvent)
 			{

@@ -20,22 +20,22 @@ namespace Sapphire
 
 	template <> inline unsigned MakeHash(void* value)
 	{
-		return (unsigned)(size_t)value;
+		return (unsigned)(size_t)value; //指针返回地址指针
 	}
 
 	template <> inline unsigned MakeHash(const void* value)
 	{
-		return (unsigned)(size_t)value;
+		return (unsigned)(size_t)value; //指针返回地址指针
 	}
 
 	template <> inline unsigned MakeHash(const long long& value)
 	{
-		return (unsigned)((value >> 32) | (value & 0xffffffff));
+		return (unsigned)((value >> 32) | (value & 0xffffffff)); //取高位部分
 	}
 
 	template <> inline unsigned MakeHash(const unsigned long long& value)
 	{
-		return (unsigned)((value >> 32) | (value & 0xffffffff));
+		return (unsigned)((value >> 32) | (value & 0xffffffff));   //取高位部分
 	}
 
 	template <> inline unsigned MakeHash(const int& value)

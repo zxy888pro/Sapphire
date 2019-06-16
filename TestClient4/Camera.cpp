@@ -36,7 +36,7 @@ namespace Sapphire
 	void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime)
 	{
 		{
-			FireEvent(ET_OBJECT_EVENT, EVENT_OBJECT_CUSTOM_EVENT, NULL);
+			FireEvent(ET_SCENE_EVENT, EVENT_OBJECT_CUSTOM_EVENT, NULL);
 			float velocity = getMoveSpeed() * deltaTime;
 			if (direction == FORWARD)
 				m_position += m_forward * velocity;

@@ -26,6 +26,7 @@ namespace Sapphire
 		"Color",
 		"String",
 		"VoidPtr",
+		//"Buffer",
 		"ResourceRef",
 		"ResourceRefList",
 		"VariantVector",
@@ -86,19 +87,19 @@ namespace Sapphire
 			break;
 
 		case VAR_RESOURCEREFLIST:
-			*(reinterpret_cast<ResourceRefList*>(&value_)) = *(reinterpret_cast<const ResourceRefList*>(&rhs.value_));
+			*(reinterpret_cast<ResourceRefList*>(value_.ptr_)) = *(reinterpret_cast<const ResourceRefList*>(rhs.value_.ptr_));
 			break;
 
 		case VAR_VARIANTVECTOR:
-			*(reinterpret_cast<VariantVector*>(&value_)) = *(reinterpret_cast<const VariantVector*>(&rhs.value_));
+			*(reinterpret_cast<VariantVector*>(value_.ptr_)) = *(reinterpret_cast<const VariantVector*>(rhs.value_.ptr_));
 			break;
 
 		case VAR_STRINGVECTOR:
-			*(reinterpret_cast<StringVector*>(&value_)) = *(reinterpret_cast<const StringVector*>(&rhs.value_));
+			*(reinterpret_cast<StringVector*>(value_.ptr_)) = *(reinterpret_cast<const StringVector*>(rhs.value_.ptr_));
 			break;
 
 		case VAR_VARIANTMAP:
-			*(reinterpret_cast<VariantMap*>(&value_)) = *(reinterpret_cast<const VariantMap*>(&rhs.value_));
+			*(reinterpret_cast<VariantMap*>(value_.ptr_)) = *(reinterpret_cast<const VariantMap*>(rhs.value_.ptr_));
 			break;
 
 		case VAR_PTR:
@@ -151,7 +152,9 @@ namespace Sapphire
 			return *(reinterpret_cast<const Vector3*>(&value_)) == *(reinterpret_cast<const Vector3*>(&rhs.value_));
 
 		case VAR_VECTOR4:
+			return *(reinterpret_cast<const Vector4*>(&value_)) == *(reinterpret_cast<const Vector4*>(&rhs.value_));
 		case VAR_QUATERNION:
+			return *(reinterpret_cast<const Quaternion*>(&value_)) == *(reinterpret_cast<const Quaternion*>(&rhs.value_));
 		case VAR_COLOR:
 			return *(reinterpret_cast<const Vector4*>(&value_)) == *(reinterpret_cast<const Vector4*>(&rhs.value_));
 
@@ -162,16 +165,16 @@ namespace Sapphire
 			return *(reinterpret_cast<const ResourceRef*>(value_.ptr_)) == *(reinterpret_cast<const ResourceRef*>(rhs.value_.ptr_));
 
 		case VAR_RESOURCEREFLIST:
-			return *(reinterpret_cast<const ResourceRefList*>(&value_)) == *(reinterpret_cast<const ResourceRefList*>(&rhs.value_));
+			return *(reinterpret_cast<const ResourceRefList*>(value_.ptr_)) == *(reinterpret_cast<const ResourceRefList*>(rhs.value_.ptr_));
 
 		case VAR_VARIANTVECTOR:
-			return *(reinterpret_cast<const VariantVector*>(&value_)) == *(reinterpret_cast<const VariantVector*>(&rhs.value_));
+			return *(reinterpret_cast<const VariantVector*>(value_.ptr_)) == *(reinterpret_cast<const VariantVector*>(rhs.value_.ptr_));
 
 		case VAR_STRINGVECTOR:
-			return *(reinterpret_cast<const StringVector*>(&value_)) == *(reinterpret_cast<const StringVector*>(&rhs.value_));
+			return *(reinterpret_cast<const StringVector*>(value_.ptr_)) == *(reinterpret_cast<const StringVector*>(rhs.value_.ptr_));
 
 		case VAR_VARIANTMAP:
-			return *(reinterpret_cast<const VariantMap*>(&value_)) == *(reinterpret_cast<const VariantMap*>(&rhs.value_));
+			return *(reinterpret_cast<const VariantMap*>(value_.ptr_)) == *(reinterpret_cast<const VariantMap*>(rhs.value_.ptr_));
 
 		case VAR_INTRECT:
 			return *(reinterpret_cast<const IntRect*>(&value_)) == *(reinterpret_cast<const IntRect*>(&rhs.value_));
@@ -211,12 +214,12 @@ namespace Sapphire
 
 	bool ResourceRefList::operator!=(const ResourceRefList& rhs) const
 	{
-		return type_ == rhs.type_ && names_ == rhs.names_;
+		return type_ != rhs.type_ && names_ != rhs.names_;
 	}
 
 	bool ResourceRefList::operator==(const ResourceRefList& rhs) const
 	{
-		return type_ != rhs.type_ || names_ != rhs.names_;
+		return type_ == rhs.type_ || names_ == rhs.names_;
 	}
 
 
@@ -272,7 +275,7 @@ namespace Sapphire
 			return reinterpret_cast<const String*>(value_.ptr_)->empty();
 			//return reinterpret_cast<const String*>(&value_)->Empty();
 
-		/*case VAR_BUFFER:
+	/*	case VAR_BUFFER:
 			return reinterpret_cast<const PODVector<unsigned char>*>(&value_)->Empty();*/
 
 		case VAR_VOIDPTR:
@@ -284,7 +287,7 @@ namespace Sapphire
 
 		case VAR_RESOURCEREFLIST:
 		{
-			const StringVector& names = reinterpret_cast<const ResourceRefList*>(&value_)->names_;
+			const StringVector& names = reinterpret_cast<const ResourceRefList*>(value_.ptr_)->names_;
 			for (StringVector::const_iterator i = names.begin(); i != names.end(); ++i)
 			{
 				if (!i->empty())
@@ -294,13 +297,13 @@ namespace Sapphire
 		}
 
 		case VAR_VARIANTVECTOR:
-			return reinterpret_cast<const VariantVector*>(&value_)->empty();
+			return reinterpret_cast<const VariantVector*>(value_.ptr_)->empty();
 
 		case VAR_STRINGVECTOR:
-			return reinterpret_cast<const StringVector*>(&value_)->empty();
+			return reinterpret_cast<const StringVector*>(value_.ptr_)->empty();
 
 		case VAR_VARIANTMAP:
-			return reinterpret_cast<const VariantMap*>(&value_)->empty();
+			return reinterpret_cast<const VariantMap*>(value_.ptr_)->empty();
 
 		case VAR_INTRECT:
 			return *reinterpret_cast<const IntRect*>(&value_) == IntRect::ZERO;
@@ -408,7 +411,7 @@ namespace Sapphire
 			if (values.size() >= 1)
 			{
 				SetType(VAR_RESOURCEREFLIST);
-				ResourceRefList& refList = *(reinterpret_cast<ResourceRefList*>(&value_));
+				ResourceRefList& refList = *(reinterpret_cast<ResourceRefList*>(value_.ptr_));
 				refList.type_ = values[0];
 				refList.names_.resize(values.size() - 1);
 				for (unsigned i = 1; i < values.size(); ++i)
@@ -453,9 +456,11 @@ namespace Sapphire
 
 	void Variant::SetType(VariantType newType)
 	{
+		//如果类型一致，不用重分配内存
 		if (type_ == newType)
 			return;
 
+		//非POD对象类型，需要进行内存分配
 		//如有先释放
 		//placement new要显示的调用他们的析构函数来销毁，不要使用delete
 		switch (type_)
@@ -471,19 +476,23 @@ namespace Sapphire
 			break;
 
 		case VAR_RESOURCEREFLIST:
-			(reinterpret_cast<ResourceRefList*>(&value_))->~ResourceRefList();
+			//(reinterpret_cast<ResourceRefList*>(&value_))->~ResourceRefList();
+			delete reinterpret_cast<ResourceRefList*>(value_.ptr_);
 			break;
 
 		case VAR_VARIANTVECTOR:
-			(reinterpret_cast<VariantVector*>(&value_))->~VariantVector();
+			//(reinterpret_cast<VariantVector*>(&value_))->~VariantVector();
+			delete reinterpret_cast<VariantVector*>(value_.ptr_);
 			break;
 
 		case VAR_STRINGVECTOR:
-			(reinterpret_cast<StringVector*>(&value_))->~StringVector();
+			//(reinterpret_cast<StringVector*>(&value_))->~StringVector();
+			delete reinterpret_cast<StringVector*>(value_.ptr_);
 			break;
 
 		case VAR_VARIANTMAP:
-			(reinterpret_cast<VariantMap*>(&value_))->~VariantMap();
+			//(reinterpret_cast<VariantMap*>(&value_))->~VariantMap();
+			delete reinterpret_cast<VariantMap*>(value_.ptr_);
 			break;
 
 		case VAR_PTR:
@@ -523,19 +532,23 @@ namespace Sapphire
 			break;
 
 		case VAR_RESOURCEREFLIST:
-			new(reinterpret_cast<ResourceRefList*>(&value_)) ResourceRefList();
+			//new(reinterpret_cast<ResourceRefList*>(&value_)) ResourceRefList();
+			value_.ptr_ = new ResourceRefList();
 			break;
 
 		case VAR_VARIANTVECTOR:
-			new(reinterpret_cast<VariantVector*>(&value_)) VariantVector();
+			//new(reinterpret_cast<VariantVector*>(&value_)) VariantVector();
+			value_.ptr_ = new VariantVector();
 			break;
 
 		case VAR_STRINGVECTOR:
-			new(reinterpret_cast<StringVector*>(&value_)) StringVector();
+			//new(reinterpret_cast<StringVector*>(&value_)) StringVector();
+			value_.ptr_ = new StringVector();
 			break;
 
 		case VAR_VARIANTMAP:
-			new(reinterpret_cast<VariantMap*>(&value_)) VariantMap();
+			//new(reinterpret_cast<VariantMap*>(&value_)) VariantMap();
+			value_.ptr_ = new VariantMap();
 			break;
 
 		case VAR_PTR:

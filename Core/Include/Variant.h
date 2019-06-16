@@ -44,6 +44,7 @@ namespace Sapphire
 
 	/// Union 结构
 	// 保存非POD对象如String和数学对象（矩阵），它不可以超过16字节。对象超过16字节通过堆指针_ptr来保存
+	// POD对象直接复制字节数值来赋值
 	struct VariantValue
 	{
 		union
@@ -113,6 +114,7 @@ namespace Sapphire
 
 	/// 变体Map  Key字符串Hash，   Value:變體
 	typedef std::unordered_map<uint, Variant> VariantMap;
+
 
 
 	//资源引用类型列表
@@ -442,28 +444,28 @@ namespace Sapphire
 		Variant& operator =(const ResourceRefList& rhs)
 		{
 			SetType(VAR_RESOURCEREFLIST);
-			*(reinterpret_cast<ResourceRefList*>(&value_)) = rhs;
+			*(reinterpret_cast<ResourceRefList*>(value_.ptr_)) = rhs;
 			return *this;
 		}
 
 		Variant& operator =(const VariantVector& rhs)
 		{
 			SetType(VAR_VARIANTVECTOR);
-			*(reinterpret_cast<VariantVector*>(&value_)) = rhs;
+			*(reinterpret_cast<VariantVector*>(value_.ptr_)) = rhs;
 			return *this;
 		}
 
 		Variant& operator =(const StringVector& rhs)
 		{
 			SetType(VAR_STRINGVECTOR);
-			*(reinterpret_cast<StringVector*>(&value_)) = rhs;
+			*(reinterpret_cast<StringVector*>(value_.ptr_)) = rhs;
 			return *this;
 		}
 
 		Variant& operator =(const VariantMap& rhs)
 		{
 			SetType(VAR_VARIANTMAP);
-			*(reinterpret_cast<VariantMap*>(&value_)) = rhs;
+			*(reinterpret_cast<VariantMap*>(value_.ptr_)) = rhs;
 			return *this;
 		}
 
@@ -587,25 +589,25 @@ namespace Sapphire
 		 
 		bool operator ==(const ResourceRefList& rhs) const
 		{
-			return type_ == VAR_RESOURCEREFLIST ? *(reinterpret_cast<const ResourceRefList*>(&value_)) == rhs : false;
+			return type_ == VAR_RESOURCEREFLIST ? *(reinterpret_cast<const ResourceRefList*>(value_.ptr_)) == rhs : false;
 		}
 
 		 
 		bool operator ==(const VariantVector& rhs) const
 		{
-			return type_ == VAR_VARIANTVECTOR ? *(reinterpret_cast<const VariantVector*>(&value_)) == rhs : false;
+			return type_ == VAR_VARIANTVECTOR ? *(reinterpret_cast<const VariantVector*>(value_.ptr_)) == rhs : false;
 		}
 
 		 
 		bool operator ==(const StringVector& rhs) const
 		{
-			return type_ == VAR_STRINGVECTOR ? *(reinterpret_cast<const StringVector*>(&value_)) == rhs : false;
+			return type_ == VAR_STRINGVECTOR ? *(reinterpret_cast<const StringVector*>(value_.ptr_)) == rhs : false;
 		}
 
 		 
 		bool operator ==(const VariantMap& rhs) const
 		{
-			return type_ == VAR_VARIANTMAP ? *(reinterpret_cast<const VariantMap*>(&value_)) == rhs : false;
+			return type_ == VAR_VARIANTMAP ? *(reinterpret_cast<const VariantMap*>(value_.ptr_)) == rhs : false;
 		}
 
 		 
@@ -844,25 +846,25 @@ namespace Sapphire
 		/// Return a resource reference list or empty on type mismatch.
 		const ResourceRefList& GetResourceRefList() const
 		{
-			return type_ == VAR_RESOURCEREFLIST ? *reinterpret_cast<const ResourceRefList*>(&value_) : emptyResourceRefList;
+			return type_ == VAR_RESOURCEREFLIST ? *reinterpret_cast<const ResourceRefList*>(value_.ptr_) : emptyResourceRefList;
 		}
 
 		/// Return a variant vector or empty on type mismatch.
 		const VariantVector& GetVariantVector() const
 		{
-			return type_ == VAR_VARIANTVECTOR ? *reinterpret_cast<const VariantVector*>(&value_) : emptyVariantVector;
+			return type_ == VAR_VARIANTVECTOR ? *reinterpret_cast<const VariantVector*>(value_.ptr_) : emptyVariantVector;
 		}
 
 		/// Return a string vector or empty on type mismatch.
 		const StringVector& GetStringVector() const
 		{
-			return type_ == VAR_STRINGVECTOR ? *reinterpret_cast<const StringVector*>(&value_) : emptyStringVector;
+			return type_ == VAR_STRINGVECTOR ? *reinterpret_cast<const StringVector*>(value_.ptr_) : emptyStringVector;
 		}
 
 		/// Return a variant map or empty on type mismatch.
 		const VariantMap& GetVariantMap() const
 		{
-			return type_ == VAR_VARIANTMAP ? *reinterpret_cast<const VariantMap*>(&value_) : emptyVariantMap;
+			return type_ == VAR_VARIANTMAP ? *reinterpret_cast<const VariantMap*>(value_.ptr_) : emptyVariantMap;
 		}
 
 		/// Return an integer rect or empty on type mismatch.
@@ -965,7 +967,7 @@ namespace Sapphire
 
 	template <> inline VariantType GetVariantType<Color>() { return VAR_COLOR; }
 
-	//template <> inline VariantType GetVariantType<String>() { return VAR_STRING; }
+	template <> inline VariantType GetVariantType<String>() { return VAR_STRING; }
 
 	template <> inline VariantType GetVariantType<StringHash>() { return VAR_INT; }
 

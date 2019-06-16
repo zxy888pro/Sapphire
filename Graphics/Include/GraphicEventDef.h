@@ -2,7 +2,7 @@
 
 namespace Sapphire
 {
-	enum  GraphicEvent
+	enum  GraphicEventDef
 	{
 
 		GraphicEvent_MaxCount

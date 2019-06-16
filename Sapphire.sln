@@ -29,6 +29,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestReadElf", "TestReadElf\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestResourceLoad", "TestResourceLoad\TestResourceLoad.vcxproj", "{FFD01B4A-C6C7-4E10-9767-00F0533B5B09}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestXML", "TestXML\TestXML.vcxproj", "{DF1BDB85-CD8B-43AF-AAFC-4674135E335B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -83,6 +85,10 @@ Global
 		{FFD01B4A-C6C7-4E10-9767-00F0533B5B09}.Debug|Win32.Build.0 = Debug|Win32
 		{FFD01B4A-C6C7-4E10-9767-00F0533B5B09}.Release|Win32.ActiveCfg = Release|Win32
 		{FFD01B4A-C6C7-4E10-9767-00F0533B5B09}.Release|Win32.Build.0 = Release|Win32
+		{DF1BDB85-CD8B-43AF-AAFC-4674135E335B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DF1BDB85-CD8B-43AF-AAFC-4674135E335B}.Debug|Win32.Build.0 = Debug|Win32
+		{DF1BDB85-CD8B-43AF-AAFC-4674135E335B}.Release|Win32.ActiveCfg = Release|Win32
+		{DF1BDB85-CD8B-43AF-AAFC-4674135E335B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

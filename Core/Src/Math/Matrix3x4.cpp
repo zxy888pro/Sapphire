@@ -21,10 +21,6 @@ namespace Sapphire
 		   
 	}
 
-	Matrix3x4::~Matrix3x4()
-	{
-
-	}
 
 	Sapphire::Matrix3x4 Matrix3x4::Inverse() const
 	{
