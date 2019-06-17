@@ -3,8 +3,8 @@
 
 enum EventType
 {
-	ET_CORE_EVENT,  //子系统事件
-	ET_SCENE_EVENT,    //对象事件
+	ET_CORE_EVENT,  //核心系统事件
+	ET_SCENE_EVENT,    //场景事件
 	ET_OTHER_EVENT,	//全局广播
 	ET_MAXCOUNT
 };
@@ -18,7 +18,6 @@ enum CoreEventDef
 	EVENT_CORE_RESOURCELOADEND_EVENT,
 	//对象事件
 	EVENT_OBJECT_CUSTOM_EVENT,
-	//全局
 	
-	EVENT_MAXCOUNT
+	EVENT_CORE_MAXCOUNT
 };

@@ -1,6 +1,8 @@
 #include <json/json.h>
 #include <iostream>
 #include "Sapphire.h"
+#include "RefCounter.h"
+#include "Ptr.h"
 #include "AsynTaskPool.h"
 #include "Thread.h"
 #include "FileStream.h"
@@ -79,31 +81,26 @@ private:
 
 };
 
-void TestFunc()
+class TestSharePtr : public Sapphire::RefCounter
 {
-	using namespace Sapphire;
-	
-	String name1 = "adbklg";
-	StringHash name1hash(name1);
-	ResourceRef ref1(name1hash, name1);
-	String name2 = "mkalsl";
-	StringHash name2hash(name1);
-	ResourceRef ref2(name1hash, name1);
-	String name3 = "jvksdf";
-	StringHash name3hash(name1);
-	ResourceRef ref3(name1hash, name1);
-	StringVector sv;
-	sv.push_back(name2);
-	sv.push_back(name3);
-	ResourceRefList list1(name1hash, sv);
-	Variant v = list1;
-	ResourceRefList list2 = v.GetResourceRefList();
-	int _size = list2.names_.size();
-	bool ret = list1 == list2;
-	Variant v2 = v;
-	list2 = v2.GetResourceRefList();
-	v2.Clear();
-	return;
+public:
+	TestSharePtr(const char* str)
+	{
+		testStr = str;
+		cout << "Create TestSharePtr :" << str << endl;
+	}
+	~TestSharePtr()
+	{
+		cout << "Delete TestSharePtr :" << testStr << endl;
+	}
+private:
+	std::string testStr;
+};
+
+Sapphire::SharedPtr<TestSharePtr> TestFunc(Sapphire::SharedPtr<TestSharePtr> pTestShare)
+{
+	Sapphire::SharedPtr<TestSharePtr> tmp = pTestShare;
+	return tmp;
 }
 
 Sapphire::RingQueue<float> queue;
@@ -115,8 +112,12 @@ int main()
 	
 	
 	using namespace Sapphire;
+	TestSharePtr* tp = new TestSharePtr("abc");
+	{
+		SharedPtr<TestSharePtr> tp1 = TestFunc(SharedPtr<TestSharePtr>(tp));
+		int a = 0;
+	}
 	
-	TestFunc();
 
 	const char* str = "{\"uploadid\": \"UP000000\",\"code\": 100,\"msg\": \"\",\"files\": \"\"}";
 		FileStream fs("images\\1.json", FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);

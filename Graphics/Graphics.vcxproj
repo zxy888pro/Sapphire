@@ -124,9 +124,11 @@
     <ClInclude Include="Include\IShader.h" />
     <ClInclude Include="Include\Node.h" />
     <ClInclude Include="Include\Scene.h" />
+    <ClInclude Include="Include\SceneEventDef.h" />
     <ClInclude Include="Include\SceneNode.h" />
     <ClInclude Include="Include\ShaderScript.h" />
     <ClInclude Include="Include\ShaderScriptMgr.h" />
+    <ClInclude Include="Include\TransformComponent.h" />
     <ClInclude Include="Include\View.h" />
     <ClInclude Include="Include\Viewport.h" />
     <ClInclude Include="Renderer.h" />
