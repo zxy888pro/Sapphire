@@ -180,6 +180,9 @@
     <ClInclude Include="Include\TransformComponent.h">
       <Filter>头文件\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Include\LogicComponent.h">
+      <Filter>头文件\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
@@ -255,6 +258,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\Node.cpp">
+      <Filter>源文件\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Camera.cpp">
       <Filter>源文件\Scene</Filter>
     </ClCompile>
   </ItemGroup>

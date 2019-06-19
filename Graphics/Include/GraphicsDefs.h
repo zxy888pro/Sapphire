@@ -2,6 +2,9 @@
 
 namespace Sapphire
 {
+	
+
+
 
 	enum ImageType
 	{
@@ -144,6 +147,24 @@ namespace Sapphire
 		CS,      //计算着色器
 		UNKNOWN
 	};
+	/// 填充模式
+	enum FillMode
+	{
+		FILL_SOLID = 0,
+		FILL_WIREFRAME,
+		FILL_POINT
+	};
+
+	/// Billboardx相机朝向模式
+	enum FaceCameraMode
+	{
+		FC_NONE = 0,
+		FC_ROTATE_XYZ,
+		FC_ROTATE_Y,
+		FC_LOOKAT_XYZ,
+		FC_LOOKAT_Y
+	};
+
 
 	/// shader 参数组 用于决定是否更新. 
 	enum ShaderParameterGroup
@@ -182,6 +203,7 @@ namespace Sapphire
 	static const unsigned MASK_INSTANCEMATRIX3 = 0x1000;
 	static const unsigned MASK_DEFAULT = 0xffffffff;
 	static const unsigned NO_ELEMENT = 0xffffffff;
+	static const unsigned MAX_FOV = 160;
 
 	//最大顶点流数, 决定同时有多少顶点缓冲区可用
 	static const int MAX_VERTEX_STREAMS = 4;

@@ -22,6 +22,14 @@ namespace Sapphire
 		OnDestory();
 	}
 
+	 
+
+	Sapphire::WeakPtr<Node> Node::GetParent() const
+	{
+		 
+		return m_parent;
+	}
+
 	void Node::SetNodeName(std::string val)
 	{
 		if (m_nodeName != val)
