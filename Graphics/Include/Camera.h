@@ -112,7 +112,7 @@ namespace Sapphire
 
 		const Matrix3x4& GetView() const;
 
-		void GetFrustumSize(Vector3& near, Vector3& far) const;
+		void GetFrustumSize(Vector3& nearPoint, Vector3& farPont) const;
  
 		float GetHalfViewSize() const;
 		///返回由自定义近剪裁面和远剪裁面分割的视椎体

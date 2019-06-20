@@ -186,6 +186,15 @@ namespace Sapphire
 #define MAX_TEXTURE_QUALITY_LEVELS  3
 #define MAX_SCRIPT_LENGTH  8192
 
+
+	//默认掩码设置
+	static const unsigned DEFAULT_VIEWMASK = M_MAX_UNSIGNED;
+	static const unsigned DEFAULT_LIGHTMASK = M_MAX_UNSIGNED;
+	static const unsigned DEFAULT_SHADOWMASK = M_MAX_UNSIGNED;
+	static const unsigned DEFAULT_ZONEMASK = M_MAX_UNSIGNED;
+
+
+
 	//顶点元素掩码
 	static const unsigned MASK_NONE = 0x0;
 	static const unsigned MASK_POSITION = 0x1;
@@ -204,6 +213,9 @@ namespace Sapphire
 	static const unsigned MASK_DEFAULT = 0xffffffff;
 	static const unsigned NO_ELEMENT = 0xffffffff;
 	static const unsigned MAX_FOV = 160;
+
+
+
 
 	//最大顶点流数, 决定同时有多少顶点缓冲区可用
 	static const int MAX_VERTEX_STREAMS = 4;

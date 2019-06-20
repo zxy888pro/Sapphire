@@ -37,6 +37,7 @@ namespace Sapphire
 		return direction - (2.0f * _normal.DotProduct(direction) * _normal);
 	}
 
+	//∑¥…‰æÿ’Û
 	Matrix3x4 Plane::ReflectionMatrix() const
 	{
 		return Matrix3x4(

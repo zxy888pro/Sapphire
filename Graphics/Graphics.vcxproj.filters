@@ -183,6 +183,9 @@
     <ClInclude Include="Include\LogicComponent.h">
       <Filter>头文件\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Drawable.h">
+      <Filter>头文件\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
