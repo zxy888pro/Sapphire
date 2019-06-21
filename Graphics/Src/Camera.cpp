@@ -552,32 +552,34 @@ namespace Sapphire
 
 	bool Camera::IsProjectionValid() const
 	{
-
+		return farClip_ > GetNearClip();
 	}
 
 	void Camera::SetAspectRatioInternal(float aspectRatio)
 	{
-
+		aspectRatio_ = aspectRatio;
+		frustumDirty_ = true;
+		projectionDirty_ = true;
 	}
 
 	void Camera::SetReflectionPlaneAttr(const Vector4& value)
 	{
-
+		SetReflectionPlane(Plane(value));
 	}
 
 	Sapphire::Vector4 Camera::GetReflectionPlaneAttr() const
 	{
-
+		return reflectionPlane_.ToVector4();
 	}
 
 	void Camera::SetClipPlaneAttr(const Vector4& value)
 	{
-
+		SetClipPlane(Plane(value));
 	}
 
 	Sapphire::Vector4 Camera::GetClipPlaneAttr() const
 	{
-
+		return reflectionPlane_.ToVector4();
 	}
 
 }
