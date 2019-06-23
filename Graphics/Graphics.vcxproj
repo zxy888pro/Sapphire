@@ -62,7 +62,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SAPPHIRE_OPENGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;SAPPHIRE_OPENGL;SAPPHIRE_SSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Core\Include;..\dependences\glew\include;..\dependences\glfw\include;..\ThirdParty\glm;..\dependences\assimp\include;Include\;..\dependences\jsoncpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
@@ -179,6 +179,7 @@
     <ClCompile Include="Src\OpenGL\VertexBuffer.cpp" />
     <ClCompile Include="Src\ShaderScript.cpp" />
     <ClCompile Include="Src\ShaderScriptMgr.cpp" />
+    <ClCompile Include="Src\TransformComponent.cpp" />
     <ClCompile Include="Src\Viewport.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

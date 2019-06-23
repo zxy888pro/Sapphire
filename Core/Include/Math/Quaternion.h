@@ -49,21 +49,22 @@ namespace Sapphire
 		{
 
 		}
-
+		//从一个角度构造一个旋转 (2D模式)
 		explicit Quaternion(float angle)
 		{
 			FromAngleAxis(angle, Vector3::FORWARD);
 		}
-
+		//从欧拉角构造一个旋转
 		Quaternion(float x, float y, float z)
 		{
 			FromEulerAngles(x, y, z);
 		}
+		//构造一个从start到end的旋转
 		Quaternion(const Vector3& start, const Vector3& end)
 		{
 			FromRotationTo(start, end);
 		}
-
+		//从一个轴和角度构造一个旋转
 		Quaternion(float angle, const Vector3& axis)
 		{
 			FromAngleAxis(angle, axis);
@@ -72,11 +73,18 @@ namespace Sapphire
 		{
 			FromAxes(xAxis, yAxis, zAxis);
 		}
-
+		//通过矩阵构造一个旋转
 		explicit Quaternion(const Matrix3x3& matrix)
 		{
 			FromRotationMatrix(matrix);
 		}
+
+#ifdef SAPPHIRE_SSE
+		explicit Quaternion(__m128 wxyz)
+		{
+			_mm_storeu_ps(&w_, wxyz);
+		}
+#endif
 
 		Quaternion& operator +=(const Quaternion& rhs)
 		{
@@ -153,6 +161,7 @@ namespace Sapphire
 		void FromRotationTo(const Vector3& start, const Vector3& end);
 		void FromAxes(const Vector3& xAxis, const Vector3& yAxis, const Vector3& zAxis);
 		void FromRotationMatrix(const Matrix3x3& matrix);
+		//定义一个方向和up向量构成的旋转，如果成功返回true，false的话结果是NaN
 		bool FromLookRotation(const Vector3& direction, const Vector3& up = Vector3::UP);
 		void Normalize();
 		Quaternion Normalized() const;

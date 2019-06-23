@@ -22,17 +22,22 @@ namespace Sapphire
 		TransformComponent(Core* pCore);
 		virtual ~TransformComponent();
 
-		//转换坐标
+		//局部转换世界坐标
 		Vector3 LocalToWorld(const Vector3& position) const;
 
+		//局部转换世界坐标
 		Vector3 LocalToWorld(const Vector4& vector) const;
 
+		//局部转换世界坐标 （2D模式）
 		Vector2 LocalToWorld2D(const Vector2& vector) const;
 
+		//世界坐标转局部坐标
 		Vector3 WorldToLocal(const Vector3& position) const;
 
+		//世界坐标转局部坐标(2D模式)
 		Vector2 WorldToLocal2D(const Vector2& vector) const;
 
+		//世界坐标转局部坐标
 		Vector3 WorldToLocal(const Vector4& vector) const;
 
 		//////////////////父节点空间的Transform设置//////////////////////////
@@ -41,6 +46,8 @@ namespace Sapphire
 		void SetPosition(const Vector3& position);
 		//设置局部坐标位置 (2D 模式)
 		void SetPosition2D(const Vector2& position);
+		//设置局部坐标位置 (2D 模式)
+		void SetPosition2D(float x, float y) { SetPosition(Vector3(x, y, 0.0f)); }
 		//设置局部旋转
 		void SetRotation(const Quaternion& rotation);
 		//设置局部旋 （2D模式）
@@ -170,28 +177,51 @@ namespace Sapphire
 		//获取局部空间的旋转
 		const Quaternion& GetRotation() const { return m_rotation; }
 		
-
+		//获取世界空间的位置
 		Vector3 GetWorldPosition() const;
 
+		//获取世界空间的位置(2D模式)
 		Vector2 GetWorldPosition2D() const;
 
+		//获取世界空间的旋转
 		Quaternion GetWorldRotation() const;
 
+		//获取世界空间的旋转(2D模式)
 		float GetWorldRotation2D() const;
 
+		//获取世界空间的方向
 		Vector3 GetWorldDirection() const;
 
-
+		//获取世界空间的Up向量
 		Vector3 GetWorldUp() const;
-
+		//获取世界空间的Right向量
 		Vector3 GetWorldRight() const;
-
+		//获取世界空间的缩放
 		Vector3 GetWorldScale() const;
 
-
+		//获取世界空间的缩放(2D模式)
 		Vector2 GetWorldScale2D() const;
 
+		//获取世界空间的变换矩阵
 		const Matrix3x4& GetWorldTransform() const;
+
+		//获取局部空气变换矩阵
+		Matrix3x4 GetTransform() const { return Matrix3x4(m_position, m_rotation, m_scale); }
+
+		//更新世界变化
+		void UpdateWorldTransform() const;
+
+		/// 设置位置  不标记脏，通常用于动画模式
+		void SetPositionSilent(const Vector3& position) { m_position = position; }
+
+		/// 设置旋转  不标记脏，通常用于动画模式
+		void SetRotationSilent(const Quaternion& rotation) { m_rotation = rotation; }
+
+		/// 设置缩放  不标记脏，通常用于动画模式
+		void SetScaleSilent(const Vector3& scale) { m_scale = scale; }
+
+		/// 设置变换  不标记脏，通常用于动画模式
+		void SetTransformSilent(const Vector3& position, const Quaternion& rotation, const Vector3& scale);
 
 
 		bool IsDirty() const { return m_bDirty; }
@@ -199,9 +229,9 @@ namespace Sapphire
 
 	protected:
 
-		///位置
+		///相对父节点位置
 		Vector3 m_position;
-		/// 旋转
+		/// 相对父节点旋转
 		Quaternion m_rotation;
 		/// 缩放
 		Vector3 m_scale;
@@ -210,8 +240,8 @@ namespace Sapphire
 		/// 世界空间的transform矩阵
 		mutable Matrix3x4 m_worldTransform;
 
-		//dirty标志
-		mutable bool m_bDirty;
+		//dirty标志 和Node的脏标记同步，transformComponent必须是节点的监听组件
+		mutable bool m_bDirty;  
 	};
 
 }

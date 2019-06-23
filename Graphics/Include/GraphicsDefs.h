@@ -1,5 +1,6 @@
 #pragma once
 
+
 namespace Sapphire
 {
 	
@@ -188,10 +189,10 @@ namespace Sapphire
 
 
 	//ƒ¨»œ—⁄¬Î…Ë÷√
-	static const unsigned DEFAULT_VIEWMASK = M_MAX_UNSIGNED;
-	static const unsigned DEFAULT_LIGHTMASK = M_MAX_UNSIGNED;
-	static const unsigned DEFAULT_SHADOWMASK = M_MAX_UNSIGNED;
-	static const unsigned DEFAULT_ZONEMASK = M_MAX_UNSIGNED;
+	static const unsigned DEFAULT_VIEWMASK = 0xffffffff;
+	static const unsigned DEFAULT_LIGHTMASK = 0xffffffff;
+	static const unsigned DEFAULT_SHADOWMASK = 0xffffffff;
+	static const unsigned DEFAULT_ZONEMASK = 0xffffffff;
 
 
 

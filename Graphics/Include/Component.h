@@ -19,6 +19,9 @@ namespace Sapphire
 	class SAPPHIRE_CLASS Component : public BaseObject
 	{
 		SAPPHIRE_OBJECT(Component, BaseObject)
+
+		friend class Node;
+		friend class Scene;
 	public:
 		Component(Core* pCore);
 		virtual ~Component();
@@ -30,9 +33,10 @@ namespace Sapphire
 		bool			SetActive(bool val);
 		void			SetNode(WeakPtr<Node> node);
 
-
+		         
 	protected:
 
+		virtual  void  OnMarkedDirty(Node* node){};
 		virtual  void  OnNodeSet(WeakPtr<Node> node) {};
 		
 

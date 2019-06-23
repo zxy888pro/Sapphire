@@ -103,6 +103,19 @@ namespace Sapphire
 
 		}
 
+		Matrix3x4(const Vector3& translation, const Quaternion& rotation, const Vector3& scale)
+		{
+#ifdef SAPPHIRE_SSE
+			__m128 t = _mm_set_ps(1.f, translation.z_, translation.y_, translation.x_);
+			__m128 q = _mm_loadu_ps(&rotation.w_);
+			__m128 s = _mm_set_ps(1.f, scale.z_, scale.y_, scale.x_);
+			SetFromTRS(t, q, s);
+#else
+			SetRotation(rotation.RotationMatrix().Scaled(scale));
+			SetTranslation(translation);
+#endif
+		}
+
 		Matrix3x4(const Vector3& translation, const Quaternion& rotation, float scale)
 		{
 #ifdef SAPPHIRE_SSE

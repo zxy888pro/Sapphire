@@ -14,6 +14,7 @@ namespace Sapphire
 		NodeType_MaxCount
 	};
 
+	class Scene;
 
 	class SAPPHIRE_CLASS Node : public BaseObject
 	{
@@ -43,7 +44,12 @@ namespace Sapphire
 		void				SetParent(SharedPtr<Node> parent);
 		WeakPtr<Node>		GetParent() const;
 
+		//设置场景根节点, 由Scene调用
+		void SetScene(Scene* scene);
+		//重置场景,ID或所有者  由Scene调用
+		void ResetScene();
 
+		Scene* GetScene() const { return m_scene; }
 
 		UINT				GetInstanceID() const { return m_UID; };
 		bool				IsActive() const { return m_bActive; }
@@ -53,6 +59,12 @@ namespace Sapphire
 		void				SetNodeName(std::string val);
 		const StringHash&	 GetNameHash() const { return m_nodeNameHash; }
 
+		//标记节点和子节点为脏，需要重写计算世界空间变换。 通知所有监听组件
+		void MarkDirty();
+		//是否为脏
+		bool IsDirty() const { return m_bDirty; }
+		void ClearDirtyFlag() { m_bDirty = false; }
+
 		//获取组件
 		SharedPtr<Component>			 GetComponent(ComponentType type) const;
 		bool							 HasComponent(ComponentType type) const;
@@ -60,13 +72,18 @@ namespace Sapphire
 		void                             AddComponent(SharedPtr<Component> component);
 		void                             RemoveComponent(ComponentType type);
 		void						     RemoveComponent(SharedPtr<ComponentType> component);
-		
 
+
+		void							 AddListener(SharedPtr<Component> component);   //增加一个监听的组件
+		void							 RemoveListener(SharedPtr<Component> component);   //增加一个监听的组件
+		
+		template <class T> const T*		 GetComponent() const;
 
 	protected:
 
 		WeakPtr<Node>						m_parent;
 		std::vector<SharedPtr<Node>>	    m_children;  // （避免循环引用）
+		std::vector<WeakPtr<Component>>   m_listeners;    //节点监听者
 		std::map<ushort, SharedPtr<Component>>   m_componentMap;    //每种类型的组件只能有一个
 
 		std::string							m_nodeName;  //节点名字
@@ -75,7 +92,20 @@ namespace Sapphire
 		bool								m_bActive;
 		NodeType							m_eNodeType;
 		UINT								m_UID;   //id用对象地址来表示ID
-
+		Scene*								m_scene;   //场景根节点
+	    mutable bool						m_bDirty;   //脏标志
 	};
+
+	template <class T>
+	const T* Sapphire::Node::GetComponent() const
+	{
+		for (std::map<ushort, SharedPtr<Component>>::const_iterator it = m_componentMap.begin(); it != m_componentMap.end(); it++)
+		{
+			
+			T* component = dynamic_cast<T*>(it->second.Get());
+			if (component)
+				return component;
+		}
+	}
 
 }

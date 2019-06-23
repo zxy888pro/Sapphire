@@ -357,7 +357,19 @@ namespace Sapphire
 
 	Sapphire::Frustum Camera::GetViewSpaceSplitFrustum(float nearClip, float farClip) const
 	{
+		Frustum ret;
 
+		nearClip = MAX(nearClip, GetNearClip());
+		farClip = MIN(farClip, farClip_);
+		if (farClip < nearClip)
+			farClip = nearClip;
+
+		if (!orthographic_)
+			ret.Define(fov_, aspectRatio_, zoom_, nearClip, farClip);
+		else
+			ret.DefineOrtho(orthoSize_, aspectRatio_, zoom_, nearClip, farClip);
+
+		return ret;
 	}
 
 	Sapphire::Ray Camera::GetScreenRay(float x, float y) const
@@ -369,7 +381,7 @@ namespace Sapphire
 			{
 				SharedPtr<TransformComponent> transform;
 				transform.DynamicCast(m_pNode->GetComponent(ComponentType_Transform)); 
-				if (transform.NotNull)
+				if (transform.NotNull())
 				{
 					ret._origin = transform->GetWorldPosition();
 					ret._direction = transform->GetWorldDirection();

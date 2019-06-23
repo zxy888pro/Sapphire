@@ -6,11 +6,13 @@
 namespace Sapphire
 {
 
-	class SAPPHIRE_CLASS Scene :public SceneNode
+	//场景节点，整个场景的根
+	class SAPPHIRE_CLASS Scene :public Node
 	{
+		SAPPHIRE_OBJECT(Scene, Node)
 	public:
 
-		Scene();
+		Scene(Core* pCore);
 		virtual ~Scene();
 
 	protected:

@@ -266,5 +266,8 @@
     <ClCompile Include="Src\Camera.cpp">
       <Filter>源文件\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Src\TransformComponent.cpp">
+      <Filter>源文件\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
