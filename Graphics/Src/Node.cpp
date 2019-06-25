@@ -1,5 +1,6 @@
 #include "SceneEventDef.h"
 #include "Node.h"
+#include "Variant.h"
 
 
 namespace Sapphire
@@ -24,10 +25,122 @@ namespace Sapphire
 
 	 
 
+	Sapphire::SharedPtr<Node> Node::GetChild(int index /*= 0*/) const
+	{
+
+	}
+
+	Sapphire::SharedPtr<Node> Node::GetChild(const char* name) const
+	{
+
+	}
+
+	Sapphire::SharedPtr<Node> Node::GetChild(const std::string& name) const
+	{
+
+	}
+
+	bool Node::AddChild(SharedPtr<Node> child, uint index)
+	{
+		//非空，不能是自己， 不能添加已经添加过的
+		if (!child.Null() || child == this || child->GetParent() == this)
+			return;
+
+		WeakPtr<Node> parent = m_parent;
+		while (!parent.Expired())
+		{
+			if (parent == child)
+				return;
+			parent = parent->GetParent();
+		}
+
+		 
+	}
+
+	bool Node::RemoveChild(const char* childName)
+	{
+		/* 
+		for (std::vector<SharedPtr<Node>>::iterator it = m_children.begin(); it != m_children.end(); ++it)
+		{
+			 
+		 
+		}*/
+		std::vector<SharedPtr<Node>>::iterator it = m_children.begin();
+		 
+	}
+
+	bool Node::RemoveChild(int index)
+	{
+
+	}
+
+	bool Node::RemoveChild(Node* node)
+	{
+		if (!node)
+			return;
+
+		for (std::vector<SharedPtr<Node> >::iterator it = m_children.begin(); it != m_children.end(); ++it)
+		{
+			if (*it == node)
+			{
+				std::vector<SharedPtr<Node> >::iterator dIt = it;
+				++it;
+				//发送事件
+				/*VariantMap& eventData = GetEventDataMap();
+				eventData[P_SCENE] = scene_;
+				eventData[P_PARENT] = this;
+				eventData[P_NODE] = child;
+
+				scene_->SendEvent(E_NODEREMOVED, eventData);*/
+				//m_scene->FireEvent()
+
+				m_children.erase(dIt);
+				//RemoveChild(*it);
+				return;
+			}
+		}
+	}
+
+	void Node::RemoveAllChildren()
+	{
+
+	}
+
+	uint Node::GetNumChildren(bool recursive /*= false*/)
+	{
+		if (m_parent)
+			m_parent->RemoveChild(this);
+	}
+
+	void Node::Remove()
+	{
+		
+	}
+
+	void Node::SetParent(SharedPtr<Node> parent)
+	{
+
+	}
+
 	Sapphire::WeakPtr<Node> Node::GetParent() const
 	{
 		 
 		return m_parent;
+	}
+
+	void Node::SetScene(Scene* scene)
+	{
+
+	}
+
+	void Node::ResetScene()
+	{
+
+	}
+
+	void Node::SetDeepActive(bool enable)
+	{
+
 	}
 
 	void Node::SetNodeName(std::string val)
@@ -83,6 +196,51 @@ namespace Sapphire
 			else
 				return;
 		}
+	}
+
+	Sapphire::SharedPtr<Sapphire::Component> Node::GetComponent(ComponentType type) const
+	{
+
+	}
+
+	bool Node::HasComponent(ComponentType type) const
+	{
+
+	}
+
+	int Node::GetNumComponents() const
+	{
+
+	}
+
+	void Node::AddComponent(SharedPtr<Component> component)
+	{
+
+	}
+
+	void Node::RemoveComponent(ComponentType type)
+	{
+
+	}
+
+	void Node::RemoveComponent(SharedPtr<ComponentType> component)
+	{
+
+	}
+
+	void Node::RemoveAllComponent()
+	{
+
+	}
+
+	void Node::AddListener(SharedPtr<Component> component)
+	{
+
+	}
+
+	void Node::RemoveListener(SharedPtr<Component> component)
+	{
+
 	}
 
 }

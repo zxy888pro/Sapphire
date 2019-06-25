@@ -15,6 +15,10 @@ namespace Sapphire
 		Scene(Core* pCore);
 		virtual ~Scene();
 
+		/// 节点已添加，管理场景指针并且添加到id map
+		void NodeAdded(SharedPtr<Node> node);
+		 
+
 	protected:
 
 

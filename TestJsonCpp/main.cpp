@@ -103,20 +103,48 @@ Sapphire::SharedPtr<TestSharePtr> TestFunc(Sapphire::SharedPtr<TestSharePtr> pTe
 	return tmp;
 }
 
+
+
+
 Sapphire::RingQueue<float> queue;
 int main()
 {
 	/*int t = jimi_b2(64);
 	t = jimi_b32(64);
 	t = roundUpToNextPowerOfTwo(128);*/
-	
+	 
 	
 	using namespace Sapphire;
 	TestSharePtr* tp = new TestSharePtr("abc");
+	bool ret = false;
+	WeakPtr<TestSharePtr> wp1;
+	WeakPtr<TestSharePtr> wp2;
 	{
 		SharedPtr<TestSharePtr> tp1 = TestFunc(SharedPtr<TestSharePtr>(tp));
+		wp1 = tp1;
 		int a = 0;
+		TestSharePtr* pTsp = wp1.Get();
+		ret = wp1.Expired();
+		if (wp1 == tp1)
+		{
+			ret = true;
+		}
+		if (tp1 == wp1)//类型不一样自动调用类型转换重载
+		{
+			ret = true;
+		}
+		if (tp1 == tp)
+		{
+			ret = true;
+		}
+		if (wp1 == tp)
+		{
+			ret = true;
+		}
+		wp2 = tp;
 	}
+	ret = wp1.Expired();
+	TestSharePtr* pTsp = wp1.Get();
 	
 
 	const char* str = "{\"uploadid\": \"UP000000\",\"code\": 100,\"msg\": \"\",\"files\": \"\"}";

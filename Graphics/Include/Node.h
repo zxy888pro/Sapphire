@@ -36,10 +36,12 @@ namespace Sapphire
 		SharedPtr<Node>     GetChild(const char* name) const;
 		SharedPtr<Node>     GetChild(const std::string& name) const;
 		const std::vector<SharedPtr<Node>>& GetChildren() const { return m_children; }
-		bool				AddChild(SharedPtr<Node> child);
+		bool				AddChild(SharedPtr<Node> child, uint index);
 		bool				RemoveChild(const char* childName);
-		bool				RemoveChild(int index);
+		bool				RemoveChild(int child);
+		bool                RemoveChild(Node* node);
 		void				RemoveAllChildren();
+		uint				GetNumChildren(bool recursive = false); //是否获取所有孩子数目
 		void				Remove(); //从父节点删除，如果没有引用会导致对象被删除
 		void				SetParent(SharedPtr<Node> parent);
 		WeakPtr<Node>		GetParent() const;
@@ -68,14 +70,16 @@ namespace Sapphire
 		//获取组件
 		SharedPtr<Component>			 GetComponent(ComponentType type) const;
 		bool							 HasComponent(ComponentType type) const;
-		int								 GetComponentsNum() const;
+		int								 GetNumComponents() const;
 		void                             AddComponent(SharedPtr<Component> component);
 		void                             RemoveComponent(ComponentType type);
 		void						     RemoveComponent(SharedPtr<ComponentType> component);
-
+		void							 RemoveAllComponent();   //移除所有组件
+		
 
 		void							 AddListener(SharedPtr<Component> component);   //增加一个监听的组件
 		void							 RemoveListener(SharedPtr<Component> component);   //增加一个监听的组件
+		
 		
 		template <class T> const T*		 GetComponent() const;
 
@@ -95,6 +99,12 @@ namespace Sapphire
 		Scene*								m_scene;   //场景根节点
 	    mutable bool						m_bDirty;   //脏标志
 	};
+
+	template <class T>
+	const T* Sapphire::Node::GetComponent() const
+	{
+
+	}
 
 	template <class T>
 	const T* Sapphire::Node::GetComponent() const

@@ -104,9 +104,9 @@ namespace Sapphire
 		/// Test for inequality with another shared pointer.
 		bool operator !=(const SharedPtr<T>& rhs) const { return ptr_ != rhs.ptr_; }
 
-		/// Convert to a raw pointer.
-		//  转换到原始指针
-		operator T*() const { return ptr_; }
+		 
+		//类型转换重载  自动转换到原始指针
+		operator T*() const { return ptr_; } 
 
 		/// Reset to null and release the object reference.
 		//  重置到空并且释放对象引用
