@@ -36,14 +36,14 @@ namespace Sapphire
 		SharedPtr<Node>     GetChild(const char* name) const;
 		SharedPtr<Node>     GetChild(const std::string& name) const;
 		const std::vector<SharedPtr<Node>>& GetChildren() const { return m_children; }
-		bool				AddChild(SharedPtr<Node> child, uint index);
-		bool				RemoveChild(const char* childName);
-		bool				RemoveChild(int child);
-		bool                RemoveChild(Node* node);
-		void				RemoveAllChildren();
-		uint				GetNumChildren(bool recursive = false); //是否获取所有孩子数目
+		void                GetAllChildren(std::vector<SharedPtr<Node>>& dest, bool recursive = false);
+		bool				AddChild(SharedPtr<Node> child, uint index = 0);
+		bool                RemoveChild(Node* node); //从孩子节点中找到node并移除
+		void				RemoveAllChildren();  //移除所有的孩子节点
+		void				RemoveChildren(bool recursive);
+		uint				GetNumChildren(bool recursive = false); //是否递归获取所有孩子数目
 		void				Remove(); //从父节点删除，如果没有引用会导致对象被删除
-		void				SetParent(SharedPtr<Node> parent);
+		void				SetParent(Node* parent);
 		WeakPtr<Node>		GetParent() const;
 
 		//设置场景根节点, 由Scene调用
@@ -53,13 +53,14 @@ namespace Sapphire
 
 		Scene* GetScene() const { return m_scene; }
 
-		UINT				GetInstanceID() const { return m_UID; };
+		UINT64				GetInstanceID() const { return m_UID; };
 		bool				IsActive() const { return m_bActive; }
 		void				SetActive(bool val) { m_bActive = val; }
 		void				SetDeepActive(bool enable);  //影响到所有的孩子节点
 		std::string			GetNodeName() const { return m_nodeName; }
 		void				SetNodeName(std::string val);
 		const StringHash&	 GetNameHash() const { return m_nodeNameHash; }
+
 
 		//标记节点和子节点为脏，需要重写计算世界空间变换。 通知所有监听组件
 		void MarkDirty();
@@ -73,7 +74,6 @@ namespace Sapphire
 		int								 GetNumComponents() const;
 		void                             AddComponent(SharedPtr<Component> component);
 		void                             RemoveComponent(ComponentType type);
-		void						     RemoveComponent(SharedPtr<ComponentType> component);
 		void							 RemoveAllComponent();   //移除所有组件
 		
 
@@ -81,7 +81,8 @@ namespace Sapphire
 		void							 RemoveListener(SharedPtr<Component> component);   //增加一个监听的组件
 		
 		
-		template <class T> const T*		 GetComponent() const;
+		template <class T>  T*		 GetComponent() const;
+
 
 	protected:
 
@@ -95,19 +96,14 @@ namespace Sapphire
 		//是否激活
 		bool								m_bActive;
 		NodeType							m_eNodeType;
-		UINT								m_UID;   //id用对象地址来表示ID
+		UINT64								m_UID;   //id用对象地址来表示ID
 		Scene*								m_scene;   //场景根节点
 	    mutable bool						m_bDirty;   //脏标志
 	};
 
-	template <class T>
-	const T* Sapphire::Node::GetComponent() const
-	{
-
-	}
 
 	template <class T>
-	const T* Sapphire::Node::GetComponent() const
+	 T* Sapphire::Node::GetComponent() const
 	{
 		for (std::map<ushort, SharedPtr<Component>>::const_iterator it = m_componentMap.begin(); it != m_componentMap.end(); it++)
 		{
@@ -116,6 +112,7 @@ namespace Sapphire
 			if (component)
 				return component;
 		}
+		return NULL;
 	}
 
 }

@@ -13,6 +13,7 @@ namespace Sapphire
 
 	class ResourceContainer;
 	class MemoryManager;
+	class UIDCreator;
 
 	 SAPPHIRE_API void Mem_Set_WORD(void *dest, ushort data, int count);
 	 SAPPHIRE_API void Mem_Set_QUAD(void *dest, uint   data, int count);
@@ -29,6 +30,7 @@ namespace Sapphire
 		 virtual ~Core();
 		 void Init();
 		 void Release();
+		 UINT64 GenUID();
 		 IEventMgr*  GetEventManager(){ return m_eventMgr; }
 
 		 SubSystem*  GetSubSystemWithName(std::string name) const;
@@ -53,6 +55,7 @@ namespace Sapphire
 		 
 		 //事件系统作为核心系统，不在子系统中
 		 IEventMgr*      m_eventMgr;
+		 UIDCreator*     m_uidCreator;
 		 
 
 

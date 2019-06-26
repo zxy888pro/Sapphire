@@ -22,6 +22,7 @@ namespace Sapphire
 
 		friend class Node;
 		friend class Scene;
+
 	public:
 		Component(Core* pCore);
 		virtual ~Component();

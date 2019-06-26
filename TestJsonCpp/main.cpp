@@ -87,14 +87,39 @@ public:
 	TestSharePtr(const char* str)
 	{
 		testStr = str;
+		name = str;
 		cout << "Create TestSharePtr :" << str << endl;
 	}
 	~TestSharePtr()
 	{
 		cout << "Delete TestSharePtr :" << testStr << endl;
 	}
+
+	void TestFunc(TestSharePtr* other)
+	{
+		name = other->name;
+		testStr = other->testStr;
+	}
+protected:
+	std::string name;
 private:
 	std::string testStr;
+};
+
+class TestClassA
+{
+public:
+	TestClassA(const char* str)
+	{
+		name = str;
+	}
+	void TestFunc(TestClassA* pta)
+	{
+		name = pta->name;
+	}
+private:
+
+	std::string name;
 };
 
 Sapphire::SharedPtr<TestSharePtr> TestFunc(Sapphire::SharedPtr<TestSharePtr> pTestShare)
@@ -112,10 +137,15 @@ int main()
 	/*int t = jimi_b2(64);
 	t = jimi_b32(64);
 	t = roundUpToNextPowerOfTwo(128);*/
-	 
+	TestClassA a1("waht");
+	TestClassA a2("waht");
+	a1.TestFunc(&a2);
 	
 	using namespace Sapphire;
 	TestSharePtr* tp = new TestSharePtr("abc");
+	TestSharePtr* ntp = new TestSharePtr("gku");
+	tp->TestFunc(ntp);
+	
 	bool ret = false;
 	WeakPtr<TestSharePtr> wp1;
 	WeakPtr<TestSharePtr> wp2;
@@ -145,7 +175,7 @@ int main()
 	}
 	ret = wp1.Expired();
 	TestSharePtr* pTsp = wp1.Get();
-	
+	safeDelete(ntp)
 
 	const char* str = "{\"uploadid\": \"UP000000\",\"code\": 100,\"msg\": \"\",\"files\": \"\"}";
 		FileStream fs("images\\1.json", FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);

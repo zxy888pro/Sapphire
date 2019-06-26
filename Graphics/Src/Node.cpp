@@ -1,6 +1,8 @@
 #include "SceneEventDef.h"
 #include "Node.h"
 #include "Variant.h"
+#include "Scene.h"
+#include "TransformComponent.h"
 
 
 namespace Sapphire
@@ -15,7 +17,8 @@ namespace Sapphire
 		m_parent(NULL),
 		m_bActive(false)
 	{
-		m_UID = reinterpret_cast<UINT>(this);
+		assert(pCore);
+		m_UID = pCore->GenUID();
 	}
 
 	Node::~Node()
@@ -27,99 +30,224 @@ namespace Sapphire
 
 	Sapphire::SharedPtr<Node> Node::GetChild(int index /*= 0*/) const
 	{
-
+		SharedPtr<Node> ret;
+		if (index >= m_children.size() || index < 0)
+			return ret;
+		return m_children[index];
 	}
 
 	Sapphire::SharedPtr<Node> Node::GetChild(const char* name) const
 	{
-
+		SharedPtr<Node> child;
+		for (std::vector<SharedPtr<Node>>::const_iterator it = m_children.begin(); it != m_children.end(); it++)
+		{
+			child = *it;
+			if (child->GetNodeName() == name)
+			{
+				return child;
+			}
+		}
+ 
+		return child;
 	}
 
 	Sapphire::SharedPtr<Node> Node::GetChild(const std::string& name) const
 	{
+		SharedPtr<Node> child;
+		for (std::vector<SharedPtr<Node>>::const_iterator it = m_children.begin(); it != m_children.end(); it++)
+		{
+			child = *it;
+			if (child->GetNodeName() == name)
+			{
+				return child;
+			}
+		}
+		return child;
 
+	}
+
+	void Node::GetAllChildren(std::vector<SharedPtr<Node>>& dest, bool recursive /*= false*/)
+	{
+		dest.clear();
+		for (std::vector<SharedPtr<Node>>::const_iterator it = m_children.begin(); it != m_children.end(); it++)
+		{
+			SharedPtr<Node> child = *it;
+			if (recursive)//是否递归
+			{
+				child->GetAllChildren(dest, recursive);
+			}
+			dest.push_back(child);
+		}
 	}
 
 	bool Node::AddChild(SharedPtr<Node> child, uint index)
 	{
+		
 		//非空，不能是自己， 不能添加已经添加过的
-		if (!child.Null() || child == this || child->GetParent() == this)
-			return;
+		if (child.Null() || child == this || child->GetParent() == this)
+			return false;
 
 		WeakPtr<Node> parent = m_parent;
 		while (!parent.Expired())
 		{
-			if (parent == child)
-				return;
-			parent = parent->GetParent();
+			if (parent == child) //要添加的孩子不能是自己的父节点
+				return false;
+			parent = parent->GetParent();//检查所有的父节点
 		}
 
-		 
-	}
-
-	bool Node::RemoveChild(const char* childName)
-	{
-		/* 
-		for (std::vector<SharedPtr<Node>>::iterator it = m_children.begin(); it != m_children.end(); ++it)
+		//检查孩子的旧父亲节点
+		WeakPtr<Node> oldParent = child->GetParent();
+		if (!oldParent.Expired())
 		{
-			 
-		 
-		}*/
-		std::vector<SharedPtr<Node>>::iterator it = m_children.begin();
+			//如果旧父亲的场景和当前场景不一致
+			if (oldParent->GetScene() != m_scene)
+				oldParent->RemoveChild(child);
+			else
+			{
+				if (m_scene)
+				{
+					//发送事件
+					VariantVector eventData;
+					eventData.push_back(m_scene);
+					eventData.push_back(Variant(oldParent));
+					eventData.push_back(Variant(child));
+					m_scene->FireEvent(ET_SCENE_EVENT, EVENT_SCENE_NODE_REMOVE, &eventData);
+				}
+
+				oldParent->RemoveChild(child);
+			}
+
+		}
+
+		//准备添加孩子节点
+		m_children.push_back(child);
+		if (m_scene && child->GetScene() != m_scene)
+			m_scene->NodeAdded(child); //添加到场景管理
+
+
+		child->m_parent = this;
+		child->MarkDirty();
+
+		if (m_scene)
+		{
+
+			VariantVector eventData;
+			eventData.push_back(Variant(m_scene));
+			eventData.push_back(Variant(this));
+			eventData.push_back(Variant(child));
+
+			m_scene->FireEvent(ET_SCENE_EVENT, EVENT_SCENE_NODEADDED, &eventData);
+		}
+		return true;
 		 
 	}
 
-	bool Node::RemoveChild(int index)
-	{
-
-	}
 
 	bool Node::RemoveChild(Node* node)
 	{
 		if (!node)
-			return;
+			return false;
 
 		for (std::vector<SharedPtr<Node> >::iterator it = m_children.begin(); it != m_children.end(); ++it)
 		{
 			if (*it == node)
 			{
+				SharedPtr<Node> child = *it;
 				std::vector<SharedPtr<Node> >::iterator dIt = it;
 				++it;
-				//发送事件
-				/*VariantMap& eventData = GetEventDataMap();
-				eventData[P_SCENE] = scene_;
-				eventData[P_PARENT] = this;
-				eventData[P_NODE] = child;
+				if (Refs() > 0 && m_scene)
+				{
+					
+					//发送节点删除事件事件
+					VariantVector eventData;
+					eventData.push_back(Variant(m_scene));
+					eventData.push_back(Variant(this));
+					eventData.push_back(Variant(child));
+					m_scene->FireEvent(ET_SCENE_EVENT, EVENT_SCENE_NODE_REMOVE, &eventData);
+				}
 
-				scene_->SendEvent(E_NODEREMOVED, eventData);*/
-				//m_scene->FireEvent()
-
-				m_children.erase(dIt);
-				//RemoveChild(*it);
-				return;
+				child->m_parent.Reset();
+				child->MarkDirty(); //标记为脏
+				if (m_scene)
+					m_scene->NodeRemoved(child);  //从场景的管理的节点表中移除
+				m_children.erase(dIt);		//如果没别的引用，就会删除
 			}
 		}
+		return true;
 	}
 
 	void Node::RemoveAllChildren()
 	{
+		RemoveChildren(true); //递归移除所有子节点孙子节点
+	}
 
+	void Node::RemoveChildren(bool recursive)
+	{
+		unsigned numRemoved = 0;
+		std::vector<SharedPtr<Node>>  deleteList = m_children; //先复制一份对照删除表，免得出错
+
+		for (unsigned i = deleteList.size() - 1; i < deleteList.size(); --i)
+		{
+			bool remove = false;
+			Node* childNode = deleteList[i];
+
+			if (recursive)
+			{
+				childNode->RemoveChildren(true);//先移除该孩子节点下的孙子节点
+				remove = true; 
+			}
+				
+
+			if (remove)
+			{
+				RemoveChild(childNode); //再移除该孩子节点
+				++numRemoved;
+			}
+		}
 	}
 
 	uint Node::GetNumChildren(bool recursive /*= false*/)
 	{
-		if (m_parent)
-			m_parent->RemoveChild(this);
+		if (!recursive)
+			return m_children.size();
+		else
+		{
+			unsigned allChildren = m_children.size();
+			for (std::vector<SharedPtr<Node> >::const_iterator i = m_children.begin(); i != m_children.end(); ++i)
+				allChildren += (*i)->GetNumChildren(true);
+
+			return allChildren;
+		}
 	}
 
 	void Node::Remove()
 	{
-		
+		if (m_parent.Expired()) //是否过期
+			m_parent->RemoveChild(this);
 	}
 
-	void Node::SetParent(SharedPtr<Node> parent)
+	void Node::SetParent(Node* parent)
 	{
+		if (!m_parent.Expired())
+		{
+			 TransformComponent* transform = GetComponent<TransformComponent>();
+			 TransformComponent* parentTransform = m_parent->GetComponent<TransformComponent>();
 
+			Matrix3x4 oldWorldTransform = transform->GetWorldTransform();
+			SharedPtr<Node> curNode = m_scene->FindSceneNode(this->m_UID); //每个节点都必须添加到场景中统一管理
+			parent->AddChild(curNode);
+
+			if (parent !=  m_scene)
+			{
+				Matrix3x4 newTransform = parentTransform->GetWorldTransform().Inverse() * oldWorldTransform;
+				transform->SetTransform(newTransform.GetTranslation(), newTransform.GetRotation(), newTransform.GetScale());
+			}
+			else
+			{
+				// 根节点，不必在转换世界空间了
+				transform->SetTransform(oldWorldTransform.GetTranslation(), oldWorldTransform.GetRotation(), oldWorldTransform.GetScale());
+			}
+		}
 	}
 
 	Sapphire::WeakPtr<Node> Node::GetParent() const
@@ -200,17 +328,18 @@ namespace Sapphire
 
 	Sapphire::SharedPtr<Sapphire::Component> Node::GetComponent(ComponentType type) const
 	{
-
+		SharedPtr<Component> ret;
+		return ret;
 	}
 
 	bool Node::HasComponent(ComponentType type) const
 	{
-
+		return false;
 	}
 
 	int Node::GetNumComponents() const
 	{
-
+		return 0;
 	}
 
 	void Node::AddComponent(SharedPtr<Component> component)
@@ -219,11 +348,6 @@ namespace Sapphire
 	}
 
 	void Node::RemoveComponent(ComponentType type)
-	{
-
-	}
-
-	void Node::RemoveComponent(SharedPtr<ComponentType> component)
 	{
 
 	}

@@ -204,6 +204,12 @@
     <ClInclude Include="Include\Math\BoundingBox.h">
       <Filter>头文件\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Include\UUID.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\UIDCreator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -343,6 +349,12 @@
     </ClCompile>
     <ClCompile Include="Src\Math\BoundingBox.cpp">
       <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\UUID.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\UIDCreator.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

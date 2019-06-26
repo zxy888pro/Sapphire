@@ -10,6 +10,7 @@
 #include <BaseResource.h>
 #include <MemoryMgr.h>
 #include "EventMgr.h"
+#include "UIDCreator.h"
 
 namespace Sapphire
 {
@@ -65,12 +66,12 @@ namespace Sapphire
 
 	Core::Core()
 	{
-		
+		m_uidCreator = new UIDCreator();
 	}
 
 	Core::~Core()
 	{
-		
+		safeDelete(m_uidCreator);
 	}
 
 
@@ -94,6 +95,11 @@ namespace Sapphire
 		safeDelete(m_resMgr);
 		m_memMgr->release();
 		safeDelete(m_memMgr);*/
+	}
+
+	UINT64 Core::GenUID()
+	{
+		return m_uidCreator->GetNewUID();
 	}
 
 	Sapphire::SubSystem* Core::GetSubSystemWithName(std::string name) const
