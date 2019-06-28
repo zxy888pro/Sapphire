@@ -29,8 +29,8 @@ namespace Sapphire
 		virtual void		OnEnable(){};
 		//关闭时执行
 		virtual void		OnDisable(){};
-		//销毁时执行
-		virtual void		OnDestory(){};
+		//销毁之前执行
+		virtual void		OnDestory(){};  
 
 		SharedPtr<Node>     GetChild(int index = 0) const;   
 		SharedPtr<Node>     GetChild(const char* name) const;
@@ -79,10 +79,17 @@ namespace Sapphire
 
 		void							 AddListener(SharedPtr<Component> component);   //增加一个监听的组件
 		void							 RemoveListener(SharedPtr<Component> component);   //增加一个监听的组件
-		
+		virtual void                     Destroy();  //销毁节点，清理内容
 		
 		template <class T>  T*		 GetComponent() const;
 
+		typedef std::map<ushort, SharedPtr<Component>>  NODE_COMPONENT_MAP;
+		typedef std::map<ushort, SharedPtr<Component>>::iterator  NODE_COMPONENT_MAP_ITERATOR;
+		typedef std::map<ushort, SharedPtr<Component>>::const_iterator  NODE_COMPONENT_MAP_CITERATOR;
+
+		typedef std::vector<SharedPtr<Node>>						NODE_CHILDREN_LIST;
+		typedef std::vector<SharedPtr<Node>>::iterator				NODE_CHILDREN_LIST_ITERATOR;
+		typedef std::vector<SharedPtr<Node>>::const_iterator		NODE_CHILDREN_LIST_CITERATOR;
 
 	protected:
 

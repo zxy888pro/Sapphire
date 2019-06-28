@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Camera.cpp" />
+    <ClCompile Include="Src\Component.cpp" />
     <ClCompile Include="Src\Font.cpp" />
     <ClCompile Include="Src\GraphicException.cpp" />
     <ClCompile Include="Src\Image.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="Src\OpenGL\Texture2D.cpp" />
     <ClCompile Include="Src\OpenGL\TextureMgr.cpp" />
     <ClCompile Include="Src\OpenGL\VertexBuffer.cpp" />
+    <ClCompile Include="Src\Scene.cpp" />
     <ClCompile Include="Src\ShaderScript.cpp" />
     <ClCompile Include="Src\ShaderScriptMgr.cpp" />
     <ClCompile Include="Src\TransformComponent.cpp" />

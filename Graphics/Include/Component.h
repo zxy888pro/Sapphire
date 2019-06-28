@@ -12,6 +12,7 @@ namespace Sapphire
 		ComponentType_Default,
 		ComponentType_Transform,   //变换组件
 		ComponentType_Logic,	  //逻辑组件
+		ComponentType_Drawable,	  //可绘制组件
 		ComponentType_MaxCount
 	};
 

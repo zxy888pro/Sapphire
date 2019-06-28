@@ -24,6 +24,7 @@ namespace Sapphire
 	Node::~Node()
 	{
 		OnDestory();
+		Destroy();
 	}
 
 	 
@@ -108,13 +109,13 @@ namespace Sapphire
 				{
 					//发送事件
 					VariantVector eventData;
-					eventData.push_back(m_scene);
+					eventData.push_back(Variant(m_scene));
 					eventData.push_back(Variant(oldParent));
 					eventData.push_back(Variant(child));
-					m_scene->FireEvent(ET_SCENE_EVENT, EVENT_SCENE_NODE_REMOVE, &eventData);
+					m_scene->FireEvent(ET_SCENE_EVENT, EVENT_SCENE_NODE_REMOVE, &eventData);  //发送个事件
 				}
 
-				oldParent->RemoveChild(child);
+				oldParent->RemoveChild(child); //从旧父亲那里移除
 			}
 
 		}
@@ -122,7 +123,7 @@ namespace Sapphire
 		//准备添加孩子节点
 		m_children.push_back(child);
 		if (m_scene && child->GetScene() != m_scene)
-			m_scene->NodeAdded(child); //添加到场景管理
+			m_scene->NodeAdded(child); //再添加到场景管理节点表中
 
 
 		child->m_parent = this;
@@ -136,7 +137,7 @@ namespace Sapphire
 			eventData.push_back(Variant(this));
 			eventData.push_back(Variant(child));
 
-			m_scene->FireEvent(ET_SCENE_EVENT, EVENT_SCENE_NODEADDED, &eventData);
+			m_scene->FireEvent(ET_SCENE_EVENT, EVENT_SCENE_NODEADDED, &eventData);  //发送个事件
 		}
 		return true;
 		 
@@ -150,6 +151,7 @@ namespace Sapphire
 
 		for (std::vector<SharedPtr<Node> >::iterator it = m_children.begin(); it != m_children.end(); ++it)
 		{
+			//从孩子节点中找到这个节点
 			if (*it == node)
 			{
 				SharedPtr<Node> child = *it;
@@ -263,7 +265,8 @@ namespace Sapphire
 
 	void Node::ResetScene()
 	{
-
+		m_UID = 0;
+		m_scene = NULL;
 	}
 
 	void Node::SetDeepActive(bool enable)
@@ -349,12 +352,20 @@ namespace Sapphire
 
 	void Node::RemoveComponent(ComponentType type)
 	{
-
+		NODE_COMPONENT_MAP_ITERATOR it = m_componentMap.find(type);
+		if (it != m_componentMap.end())
+		{
+			it->second->Remove();
+		}
 	}
 
 	void Node::RemoveAllComponent()
 	{
-
+		for (NODE_COMPONENT_MAP_ITERATOR it = m_componentMap.begin(); it != m_componentMap.end(); it++)
+		{
+			it->second->Remove();
+			RemoveListener(it->second); //如果是监听组件，移除它
+		}
 	}
 
 	void Node::AddListener(SharedPtr<Component> component)
@@ -365,6 +376,15 @@ namespace Sapphire
 	void Node::RemoveListener(SharedPtr<Component> component)
 	{
 
+	}
+
+	void Node::Destroy()
+	{
+		//移除所有的孩子节点和组件
+		RemoveAllComponent();
+		m_componentMap.clear();
+		RemoveAllChildren();
+		m_children.clear();
 	}
 
 }
