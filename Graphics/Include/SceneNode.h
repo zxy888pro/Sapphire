@@ -15,7 +15,6 @@ namespace Sapphire
 		SceneNode();
 		virtual ~SceneNode();
 
-
 	protected:
 
 		
