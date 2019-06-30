@@ -43,7 +43,7 @@ namespace Sapphire
 		void				RemoveChildren(bool recursive);
 		uint				GetNumChildren(bool recursive = false); //是否递归获取所有孩子数目
 		void				Remove(); //从父节点删除，如果没有引用会导致对象被删除
-		void				SetParent(Node* parent);
+		void				ChangeParent(Node* parent);  //改变父亲节点  (会重新计算节点空间变换)
 		WeakPtr<Node>		GetParent() const;
 
 		//设置场景根节点, 由Scene调用
@@ -80,6 +80,7 @@ namespace Sapphire
 		void							 AddListener(SharedPtr<Component> component);   //增加一个监听的组件
 		void							 RemoveListener(SharedPtr<Component> component);   //增加一个监听的组件
 		virtual void                     Destroy();  //销毁节点，清理内容
+		NodeType                         GetNodeType() const { return m_eNodeType; }
 		
 		template <class T>  T*		 GetComponent() const;
 

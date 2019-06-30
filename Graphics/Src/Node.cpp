@@ -228,7 +228,7 @@ namespace Sapphire
 			m_parent->RemoveChild(this);
 	}
 
-	void Node::SetParent(Node* parent)
+	void Node::ChangeParent(Node* parent)
 	{
 		if (!m_parent.Expired())
 		{
@@ -260,18 +260,25 @@ namespace Sapphire
 
 	void Node::SetScene(Scene* scene)
 	{
-
+		m_scene = scene;
 	}
 
 	void Node::ResetScene()
 	{
-		m_UID = 0;
+		//	m_UID = 0;  
 		m_scene = NULL;
 	}
 
 	void Node::SetDeepActive(bool enable)
 	{
-
+		SetActive(enable);
+		for (NODE_CHILDREN_LIST_ITERATOR it = m_children.begin(); it != m_children.end(); ++it)
+		{
+			if ((*it).NotNull())
+			{
+				(*it)->SetActive(enable);
+			}
+		}
 	}
 
 	void Node::SetNodeName(std::string val)
@@ -281,8 +288,19 @@ namespace Sapphire
 			m_nodeName = val;
 			m_nodeNameHash = val; //拷贝构造函数
 		}
+		if (m_scene)
+		{
+			 
+			VariantVector eventData;
+			eventData.push_back(Variant(m_scene));
+			eventData.push_back(Variant(this));
+			eventData.push_back(Variant(m_scene));
+
+			m_scene->FireEvent(ET_SCENE_EVENT, EVENT_SCENE_NODE_RENAME, this);
+		}
+
 		//发送节点重命名事件
-		FireEvent(ET_SCENE_EVENT, EVENT_SCENE_NODE_RENAME, this);		
+				
 	}
 
 	void Node::MarkDirty()
@@ -337,45 +355,127 @@ namespace Sapphire
 
 	bool Node::HasComponent(ComponentType type) const
 	{
-		return false;
+		if (m_componentMap.find(type) != m_componentMap.end())
+		{
+			return true;
+		}
+		return true;
 	}
 
 	int Node::GetNumComponents() const
 	{
-		return 0;
+		return m_componentMap.size();
 	}
 
 	void Node::AddComponent(SharedPtr<Component> component)
 	{
+		if (component.Null())
+			return;
+
+		if (m_componentMap.find(component->GetComponentType()) != m_componentMap.end())
+		{
+			if (m_scene)
+			{
+				//已经存在同类型的组件了,先移除
+				SharedPtr<Component> oldComponent = m_componentMap[component->GetComponentType()];
+				VariantVector eventData;
+				eventData.push_back(Variant(this));
+				eventData.push_back(Variant(oldComponent));
+
+				m_scene->FireEvent(ET_SCENE_EVENT, EVENT_SCENE_COMPONENT_REMOVE, &eventData);
+			}
+			
+			RemoveComponent(component->GetComponentType());
+		}
+		m_componentMap[component->GetComponentType()] = component;
+
+		if (!component->GetNode())
+			SAPPHIRE_LOGWARNING(StringFormat("Component %s already belongs to other one", component->GetClassTypeName()));
+		//绑定该组件节点
+		component->SetNode(this);
+		component->SetScene(m_scene);
+
+		component->OnMarkedDirty(this);
+
+		//发送场景事件
+		if (m_scene)
+		{
+			VariantVector eventData;
+			eventData.push_back(Variant(m_scene));
+			eventData.push_back(Variant(this));
+			eventData.push_back(Variant(component));
+
+			m_scene->FireEvent(ET_SCENE_EVENT, EVENT_SCENE_COMPONENT_ADDED, &eventData);
+		}
+
+		
 
 	}
 
 	void Node::RemoveComponent(ComponentType type)
 	{
+		
+
 		NODE_COMPONENT_MAP_ITERATOR it = m_componentMap.find(type);
 		if (it != m_componentMap.end())
 		{
-			it->second->Remove();
+			if (Refs() > 0 && m_scene)
+			{
+
+				VariantVector eventData;
+				eventData.push_back(Variant(m_scene));
+				eventData.push_back(Variant(this));
+				eventData.push_back(Variant(it->second));
+				 
+
+				m_scene->FireEvent(ET_SCENE_EVENT, EVENT_SCENE_COMPONENT_REMOVE, &eventData);
+			}
+			it->second->SetNode(0);
+			RemoveListener(it->second);
+			m_componentMap.erase(it);
 		}
 	}
 
 	void Node::RemoveAllComponent()
 	{
-		for (NODE_COMPONENT_MAP_ITERATOR it = m_componentMap.begin(); it != m_componentMap.end(); it++)
+		NODE_COMPONENT_MAP map = m_componentMap; //用副本删除
+		for (NODE_COMPONENT_MAP_ITERATOR it = map.begin(); it != map.end(); it++)
 		{
-			it->second->Remove();
-			RemoveListener(it->second); //如果是监听组件，移除它
+			RemoveComponent(it->second->GetComponentType());
 		}
+		m_componentMap.clear();
 	}
 
 	void Node::AddListener(SharedPtr<Component> component)
 	{
+		if (component.Null())
+			return;
 
+		for (std::vector<WeakPtr<Component>>::iterator it = m_listeners.begin(); it != m_listeners.end(); ++it)
+		{
+			if (*it == component) //已经存在了
+				return;
+		}
+		m_listeners.push_back(component);
+
+		if (m_bDirty)
+		{
+			//如果节点脏了，通知更新
+			component->OnMarkedDirty(this);
+		}
 	}
 
 	void Node::RemoveListener(SharedPtr<Component> component)
 	{
-
+		for (std::vector<WeakPtr<Component>>::iterator it = m_listeners.begin(); it != m_listeners.end(); ++it)
+		{
+			if (*it == component)
+			{
+				m_listeners.erase(it);
+				return;
+			}
+				
+		}
 	}
 
 	void Node::Destroy()

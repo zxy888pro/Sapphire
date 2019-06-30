@@ -100,6 +100,10 @@ public:
 		name = other->name;
 		testStr = other->testStr;
 	}
+	void Test()
+	{
+		cout << name << endl;
+	}
 protected:
 	std::string name;
 private:
@@ -117,6 +121,7 @@ public:
 	{
 		name = pta->name;
 	}
+	
 private:
 
 	std::string name;
@@ -149,6 +154,8 @@ int main()
 	bool ret = false;
 	WeakPtr<TestSharePtr> wp1;
 	WeakPtr<TestSharePtr> wp2;
+	wp1 = tp;
+	wp1->Test();
 	{
 		SharedPtr<TestSharePtr> tp1 = TestFunc(SharedPtr<TestSharePtr>(tp));
 		wp1 = tp1;
@@ -157,7 +164,7 @@ int main()
 		ret = wp1.Expired();
 		if (wp1 == tp1)
 		{
-			ret = true;
+			ret = true; 
 		}
 		if (tp1 == wp1)//类型不一样自动调用类型转换重载
 		{

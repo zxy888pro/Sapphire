@@ -15,11 +15,17 @@ namespace Sapphire
 		Scene(Core* pCore);
 		virtual ~Scene();
 
-		/// 节点已添加，管理场景指针并且添加到id map
+		/// 添加节点到场景中
 		void NodeAdded(SharedPtr<Node> node);
+		//	从场景中移除节点
 		void NodeRemoved(SharedPtr<Node> node);
 
 		SharedPtr<Node> FindSceneNode(UINT64 nodeUid);
+
+		typedef std::unordered_map<UINT64, SharedPtr<Node>>  SCENE_NODE_MAP;
+		typedef std::unordered_map<UINT64, SharedPtr<Node>>::iterator  SCENE_NODE_MAP_ITERATOR;
+		typedef std::unordered_map<UINT64, SharedPtr<Node>>::const_iterator  SCENE_NODE_MAP_CITERATOR;
+
 
 	protected:
 

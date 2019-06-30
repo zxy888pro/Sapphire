@@ -38,8 +38,10 @@ namespace Sapphire
 		flipVertical_(false),
 		useReflection_(false),
 		useClipping_(false)
+		
 	{
 		reflectionMatrix_ = reflectionPlane_.ReflectionMatrix();
+		m_eCompType = ComponentType_Camera;
 	}
 
 	void Camera::SetNearClip(float nearClip)
@@ -377,7 +379,7 @@ namespace Sapphire
 		Ray ret;
 		if (!IsProjectionValid())
 		{
-			if (m_pNode.NotNull())
+			if (m_pNode)
 			{
 				SharedPtr<TransformComponent> transform;
 				transform.DynamicCast(m_pNode->GetComponent(ComponentType_Transform)); 
@@ -450,7 +452,7 @@ namespace Sapphire
 		if (!orthographic_)
 		{
 			Vector3 cameraPos = cameraPos = Vector3::ZERO;
-			if (m_pNode.NotNull())
+			if (m_pNode)
 			{
 				SharedPtr<TransformComponent> transform;
 				transform.DynamicCast(m_pNode->GetComponent(ComponentType_Transform));
@@ -468,7 +470,7 @@ namespace Sapphire
 		if (!orthographic_)
 		{
 			Vector3 cameraPos = cameraPos = Vector3::ZERO;
-			if (m_pNode.NotNull())
+			if (m_pNode)
 			{
 				SharedPtr<TransformComponent> transform;
 				transform.DynamicCast(m_pNode->GetComponent(ComponentType_Transform));
@@ -497,7 +499,7 @@ namespace Sapphire
 	Sapphire::Quaternion Camera::GetFaceCameraRotation(const Vector3& position, const Quaternion& rotation, FaceCameraMode mode)
 	{
 		SharedPtr<TransformComponent> transform;
-		if (m_pNode.NotNull())
+		if (m_pNode)
 		{
 			transform.DynamicCast(m_pNode->GetComponent(ComponentType_Transform));
 		}
@@ -547,7 +549,7 @@ namespace Sapphire
 
 	Sapphire::Matrix3x4 Camera::GetEffectiveWorldTransform() const
 	{
-		if (m_pNode.NotNull())
+		if (m_pNode)
 		{
 			SharedPtr<TransformComponent> transform;
 			transform.DynamicCast(m_pNode->GetComponent(ComponentType_Transform));

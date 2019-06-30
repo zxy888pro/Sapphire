@@ -8,7 +8,7 @@ namespace Sapphire
 
 	TransformComponent::TransformComponent(Core* pCore) :Component(pCore)
 	{
-
+		m_eCompType = ComponentType_Transform;
 	}
 
 	TransformComponent::~TransformComponent()
