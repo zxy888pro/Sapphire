@@ -189,6 +189,9 @@
     <ClInclude Include="Src\OpenGL\GLDisplayContext.h">
       <Filter>源文件\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="Include\IDisplayContext.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">

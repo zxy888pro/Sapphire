@@ -8,8 +8,10 @@ namespace Sapphire
 	class GLGraphicDriver;
 	//OpenGL的绘制渲染系统
 	//管理和繪製3D物件
-	class GLRenderSystem : public IRenderSystem
+	class SAPPHIRE_CLASS GLRenderSystem : public IRenderSystem
 	{
+		SAPPHIRE_OBJECT(GLRenderSystem, IRenderSystem)
+
 	public:
 		GLRenderSystem(Core* pCore);
 		GLRenderSystem(Core* pCore,GLGraphicDriver* pDriver);

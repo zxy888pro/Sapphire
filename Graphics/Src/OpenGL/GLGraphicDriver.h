@@ -19,6 +19,7 @@ namespace Sapphire
 	class ConstantBuffer;
 	class GLShaderVariation;
 	class GLShaderProgram;
+	class GLDisplayContext;
 
 
 	///方便顶点更新的CPU端缓冲区
@@ -63,8 +64,10 @@ namespace Sapphire
 
 	//OpenGL 与硬件层访问驱动类。  
 	//需抽出IGraphicDriver接口, 无关图形API
-	class GLGraphicDriver : public IGraphicDriver
+	class SAPPHIRE_CLASS GLGraphicDriver : public IGraphicDriver
 	{
+		SAPPHIRE_OBJECT(GLGraphicDriver, IGraphicDriver)
+
 	public:
 
 		typedef std::unordered_map<std::string, ImageType>   ImageTypeNameMap;
@@ -191,6 +194,12 @@ namespace Sapphire
 		virtual void* GetMainWindow() override;
 
 
+
+		virtual bool IsInitialized() override;
+
+
+		virtual IDisplayContext* GetDisplayContext() const override;
+
 	public:
 
 		static int GetHWTextureWarpParam(TextureAddressMode mode);
@@ -231,7 +240,7 @@ namespace Sapphire
 		ShaderMgr*     m_pShaderMgr;
 		ShaderScriptMgr*   m_pShaderScriptMgr;
 		GLRenderSystem*  m_renderSys;
-
+		GLDisplayContext*  m_displayContext;
 
 		static  bool   m_gl3Support;
 

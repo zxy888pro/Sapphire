@@ -1,27 +1,30 @@
 #pragma once
 #include "Sapphire.h"
 #include "Graphics.h"
+#include "IDisplayContext.h"
 
 
 namespace Sapphire
 {
 	//µ◊≤„OpenGLœ‘ æª∑æ≥
-	class GLDisplayContext
+	class GLDisplayContext : public IDisplayContext
 	{
 	public:
 		GLDisplayContext();
 		virtual ~GLDisplayContext();
 		
 
-		void Init();
+		virtual void Initialize();
 
-		void SetContextAttribute(int attr, int val);
+			virtual void SetContextAttribute(int attr, int val);
 
-		void CreateNativeWindow(const char* wndName, int x, int y, int width, int height, bool bFullScreen, bool bVsync);
+			virtual void CreateNativeWindow(const char* wndName, int x, int y, int width, int height, bool bFullScreen, bool bVsync);
 
-		void SwapBuffers();
+			virtual void SwapBuffers();
 
-		void Terminate();
+			virtual void Terminate();
+
+			virtual void* GetWindow();
 
 	private:
 

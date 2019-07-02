@@ -1,5 +1,6 @@
 #include "GLGraphicDriver.h"
 #include <GraphicException.h>
+#include "GLDisplayContext.h"
 #include "IRenderSystem.h"
 #include "Texture2D.h"
 #include "TextureMgr.h"
@@ -13,6 +14,7 @@
 #include "VertexBuffer.h"
 #include "GLRenderSurface.h"
 #include "GLRenderSystem.h"
+
 
 namespace Sapphire
 {
@@ -31,6 +33,7 @@ namespace Sapphire
 		m_nTextureQuality = QUALITY_HIGH;
 		m_driverType = GRAPHICDRIVER_OPENGL;
 		m_bGL3Support = false;
+		m_displayContext = NULL;
 
 	}
 
@@ -41,6 +44,8 @@ namespace Sapphire
 
 	void GLGraphicDriver::Init()
 	{
+		
+
 		m_pTextureMgr = new TextureMgr(m_pCore);
 		m_pImageMgr = new ImageMgr();
 		m_pShaderScriptMgr = new ShaderScriptMgr();
@@ -53,10 +58,13 @@ namespace Sapphire
 		m_imagetypeNames[ENUM2STR(ImageType_RAW_R8G8B8A8)] = ImageType_RAW_R8G8B8A8;
 		m_imagetypeNames[ENUM2STR(ImageType_Tga32)] = ImageType_Tga32;
 		m_imagetypeNames[ENUM2STR(ImageType_Tga24)] = ImageType_Tga24;
+		m_displayContext = new GLDisplayContext(); //创建OpenGL窗口显示环境
+		m_displayContext->Initialize(); //初始化OpenGL窗口显示环境
 		CheckFeature();
 		//初始化渲染系統接口
 		IRenderSystem* pRenderSys = new GLRenderSystem(m_pCore,this);
 		m_pCore->RegisterSubSystem<IRenderSystem>(pRenderSys, ESST_RENDERSYSTEM);
+
 	}
 
 	void GLGraphicDriver::Release()
@@ -545,6 +553,16 @@ namespace Sapphire
 	void* GLGraphicDriver::GetMainWindow()
 	{
 		return NULL;
+	}
+
+	bool GLGraphicDriver::IsInitialized()
+	{
+		return false;
+	}
+
+	Sapphire::IDisplayContext* GLGraphicDriver::GetDisplayContext() const
+	{
+		throw std::logic_error("The method or operation is not implemented.");
 	}
 
 	int GLGraphicDriver::GetHWTextureWarpParam(TextureAddressMode mode)

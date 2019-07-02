@@ -26,7 +26,7 @@ namespace Sapphire
 	//如果是Windows/Linux使用GLFW
 #if defined(SAPPHIRE_WIN)||defined(SAPPHIRE_LINUX)
 	
-	void GLDisplayContext::Init()
+	void GLDisplayContext::Initialize()
 	{
 
 #include <GLFW/glfw3.h>

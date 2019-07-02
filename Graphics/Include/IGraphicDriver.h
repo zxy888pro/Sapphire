@@ -7,6 +7,7 @@ namespace Sapphire
 {
 	struct  ITextureMgr;
 	struct  IImageMgr;
+	struct  IDisplayContext;
 	
 
 	//OpenGL 与硬件层访问驱动类。  
@@ -33,6 +34,10 @@ namespace Sapphire
 		
 		virtual IImageMgr* getImageMgr() const = 0;
 		virtual GraphicDriverType getDriverType() const = 0;
+
+		virtual bool    IsInitialized() = 0;   //是否初始化完成
+
+		virtual IDisplayContext*   GetDisplayContext() const = 0;
 
 	protected:
 
