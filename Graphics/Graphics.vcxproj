@@ -137,6 +137,7 @@
     <ClInclude Include="Src\ImageMgr.h" />
     <ClInclude Include="Src\OpenGL\ConstantBuffer.h" />
     <ClInclude Include="Src\OpenGL\CubeTexture.h" />
+    <ClInclude Include="Src\OpenGL\GLDisplayContext.h" />
     <ClInclude Include="Src\OpenGL\GLGraphicDriver.h" />
     <ClInclude Include="Src\OpenGL\GLRenderSurface.h" />
     <ClInclude Include="Src\OpenGL\GLRenderSystem.h" />
@@ -165,6 +166,7 @@
     <ClCompile Include="Src\Node.cpp" />
     <ClCompile Include="Src\OpenGL\ConstantBuffer.cpp" />
     <ClCompile Include="Src\OpenGL\CubeTexture.cpp" />
+    <ClCompile Include="Src\OpenGL\GLDisplayContext.cpp" />
     <ClCompile Include="Src\OpenGL\GLGraphicDriver.cpp" />
     <ClCompile Include="Src\OpenGL\GLRenderSurface.cpp" />
     <ClCompile Include="Src\OpenGL\GLRenderSystem.cpp" />

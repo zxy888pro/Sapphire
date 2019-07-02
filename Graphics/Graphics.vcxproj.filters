@@ -186,6 +186,9 @@
     <ClInclude Include="Include\Drawable.h">
       <Filter>头文件\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Src\OpenGL\GLDisplayContext.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
@@ -274,6 +277,9 @@
     </ClCompile>
     <ClCompile Include="Src\Component.cpp">
       <Filter>源文件\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\GLDisplayContext.cpp">
+      <Filter>源文件\OpenGL</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

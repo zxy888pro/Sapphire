@@ -187,6 +187,10 @@ namespace Sapphire
 
 		virtual GraphicDriverType getDriverType() const override;
 
+
+		virtual void* GetMainWindow() override;
+
+
 	public:
 
 		static int GetHWTextureWarpParam(TextureAddressMode mode);

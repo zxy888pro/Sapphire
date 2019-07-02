@@ -542,6 +542,11 @@ namespace Sapphire
 		return m_driverType;
 	}
 
+	void* GLGraphicDriver::GetMainWindow()
+	{
+		return NULL;
+	}
+
 	int GLGraphicDriver::GetHWTextureWarpParam(TextureAddressMode mode)
 	{
 		switch (mode)
