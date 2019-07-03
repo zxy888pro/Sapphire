@@ -24,8 +24,9 @@ namespace Sapphire
 		virtual void Stop() { }
 
 		//主循环
-		virtual void Run();
+		virtual int Run();
 
+		//弹报错对话框退出
 		void ErrorExit(const std::string& message = "");
 
 	protected:
@@ -41,7 +42,7 @@ namespace Sapphire
 	};
 
 #if defined(SAPPHIRE_WIN) || defined(SAPPHIRE_LINUX)
-#define SAPPHIRE_DEFINE_APPLICATION_MAIN(className) \
+#define SAPPHIRE_APPLICATION_MAIN(className) \
 int RunApplication() \
 		{ \
     Sapphire::SharedPtr<Sapphire::Core> pCore = new Sapphire::Core(); \

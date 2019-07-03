@@ -49,6 +49,14 @@
 #  define SAPPHIRE_API
 #endif
 
+
+#ifdef SAPPHIRE_WIN
+#define  SAPPHIRE_MINIDUMPS     //是否使用dump文件
+#elif SAPPHIRE_LINUX
+
+#endif
+
+
 //win32下unicode和多字节字符集的函数重定义
 #ifdef UNICODE
 

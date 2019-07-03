@@ -55,6 +55,7 @@
     <ClInclude Include="Include\FrameMem.h" />
     <ClInclude Include="Include\MemoryMgr.h" />
     <ClInclude Include="Include\MemoryStream.h" />
+    <ClInclude Include="Include\minidump.h" />
     <ClInclude Include="Include\Mutex.h" />
     <ClInclude Include="Include\path.h" />
     <ClInclude Include="Include\Ptr.h" />
@@ -113,6 +114,7 @@
     <ClCompile Include="Src\FrameMem.cpp" />
     <ClCompile Include="Src\MemoryMgr.cpp" />
     <ClCompile Include="Src\MemoryStream.cpp" />
+    <ClCompile Include="Src\minidump.cpp" />
     <ClCompile Include="Src\Mutex.cpp" />
     <ClCompile Include="Src\path.cpp" />
     <ClCompile Include="Src\RefCounter.cpp" />

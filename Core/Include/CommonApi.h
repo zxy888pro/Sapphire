@@ -18,7 +18,7 @@ namespace Sapphire
 	/// 返回之前解析的参数
 	SAPPHIRE_API const std::vector<std::string>& GetArguments();
 
-	
+	SAPPHIRE_API void                            ErrorDialog(const std::string& title, const std::string& message);
 
 	SAPPHIRE_API std::string GetPlatform();
 

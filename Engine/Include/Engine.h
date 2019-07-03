@@ -28,6 +28,8 @@ namespace Sapphire
 
 		void Exit();
 
+		bool IsExiting();
+
 
 	};
 

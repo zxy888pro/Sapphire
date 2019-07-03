@@ -213,6 +213,9 @@
     <ClInclude Include="Include\CommonApi.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\minidump.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -360,6 +363,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\CommonApi.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\minidump.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

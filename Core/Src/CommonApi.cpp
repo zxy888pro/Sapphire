@@ -97,6 +97,11 @@ namespace  Sapphire
 
 	
 
+	SAPPHIRE_API void ErrorDialog(const std::string& title, const std::string& message)
+	{
+
+	}
+
 	SAPPHIRE_API std::string GetPlatform()
 	{
 #if defined(ANDROID)
