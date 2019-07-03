@@ -113,7 +113,7 @@ namespace Sapphire
 	typedef std::vector<String> StringVector;
 
 	/// ±äÌåMap  Key×Ö·û´®Hash£¬   Value:×ƒów
-	typedef std::unordered_map<uint, Variant> VariantMap;
+	typedef std::unordered_map<std::string, Variant> VariantMap;
 
 
 

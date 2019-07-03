@@ -24,16 +24,28 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Input.h">
-      <Filter>源文件\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\InputEvent.h">
+    <ClInclude Include="Include\InputDefs.h">
       <Filter>头文件\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Input.h">
+      <Filter>头文件\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Application.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Main.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Engine.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Input.cpp">
       <Filter>源文件\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application.cpp">
+      <Filter>源文件\Engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

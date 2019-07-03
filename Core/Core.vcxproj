@@ -23,6 +23,7 @@
     <ClInclude Include="Include\BaseResource.h" />
     <ClInclude Include="Include\charset.h" />
     <ClInclude Include="Include\Color.h" />
+    <ClInclude Include="Include\CommonApi.h" />
     <ClInclude Include="Include\Core.h" />
     <ClInclude Include="Include\Deserializer.h" />
     <ClInclude Include="Include\EventContext.h" />
@@ -85,6 +86,7 @@
     <ClCompile Include="Src\BaseResource.cpp" />
     <ClCompile Include="Src\charset.cpp" />
     <ClCompile Include="Src\Color.cpp" />
+    <ClCompile Include="Src\CommonApi.cpp" />
     <ClCompile Include="Src\Core.cpp" />
     <ClCompile Include="Src\Deserializer.cpp" />
     <ClCompile Include="Src\EventContext.cpp" />

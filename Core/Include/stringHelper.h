@@ -31,7 +31,9 @@ namespace Sapphire
 
 	size_t StringFindNoCase(std::string strSource, const char* szTarget);
 	
-	 
+	std::string WString2String(const std::wstring& ws);
+
+	std::wstring String2WString(const std::string& s);
 
 	SAPPHIRE_API uint CStringLength(const char* str);
 

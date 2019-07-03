@@ -29,6 +29,10 @@ namespace Sapphire
 
 	}
 
+	void OnMouseButton(GLFWwindow* window, int button, int state, int mods)
+	{
+
+	}
 
 
 	void Input::Initialize()
@@ -48,11 +52,20 @@ namespace Sapphire
 			SAPPHIRE_LOGERROR("Input Init Error! window is null");
 			return;
 		}
+		SubscribeEvent(ET_CORE_EVENT, EVENT_CORE_BEGINFRAME);	//注册帧开始事件
 		
 		//注册glfw回调函数
 		glfwSetKeyCallback((GLFWwindow*)window, keyCallback); //按键输入回调
 		glfwSetCursorPosCallback((GLFWwindow*)window, OnMouseMove); //鼠标移动回调
 		glfwSetScrollCallback((GLFWwindow*)window, OnMouseScroll); //鼠标滚轮回调
+		glfwSetMouseButtonCallback((GLFWwindow*)window, OnMouseButton); //鼠标按键回调
+
+		ResetState();
+	}
+
+	void Input::Release()
+	{
+		UnSubscribeEvent(ET_CORE_EVENT, EVENT_CORE_BEGINFRAME);
 	}
 
 	void Input::Update()
@@ -61,10 +74,30 @@ namespace Sapphire
 		glfwPollEvents();
 	}
 
+	
+
 #else
 	//否则Android平台使用EGL
 
 #endif
+
+	void Input::Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData /*= NULL*/)
+	{
+		if (eEventType == ET_CORE_EVENT)
+		{
+			switch (eEvent)
+			{
+			case EVENT_CORE_BEGINFRAME:
+				{
+
+				}
+				break;
+			default:
+				break;
+			}
+		}
+		
+	}
 	
 
 }

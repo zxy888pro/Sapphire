@@ -68,10 +68,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Include\InputEvent.h" />
-    <ClInclude Include="Src\Input.h" />
+    <ClInclude Include="Include\Application.h" />
+    <ClInclude Include="Include\Engine.h" />
+    <ClInclude Include="Include\Input.h" />
+    <ClInclude Include="Include\InputDefs.h" />
+    <ClInclude Include="Include\Main.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Input.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
