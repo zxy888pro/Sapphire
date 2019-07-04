@@ -320,16 +320,24 @@ namespace Sapphire
 	bool Serializer::WriteVLE(unsigned value)
 	{
 		unsigned char data[4];
-
-		if (value < 0x80)
+		//VLE变长整型采用1个标志位和7个数据位的方式来对一个正整型数值进行压缩,标志位的作用是表明除7位数据位外余下数据位的值是否为零
+		//具体计算方式为：将数值与~0x7f进行与运算，如果数值为0表明该数值的有效数据位为7位，否则数值为1表明仍然有有效数据将数值>>>7位后继续前面的步骤，直至为0。
+		//把一个uint拆分为4个7位
+		/*如127 二进制表示为0b01111111，编码为 0b 0_1111111,
+		128二进制表示为0b10000000，编码为 0b 00000001_10000000,
+		16384二进制表示为 0b01000000_00000000, 编码为0b 00000001_10000000_10000000
+		这里可以看到128采用变长整型编码后占2个字节，如果采用无符号整型编码只占1个字节，说明变长整型编码在某些情况下反而占用更多的空间，以下是变长编码占用字节的详细情况：
+		由于负数的符号位是1，那么采用该编码后是不能达到压缩数据的效果的，改进的方法之一是采用zigzag编码
+		*/
+		if (value < 0x80)   //< 2^7
 			return WriteUByte((unsigned char)value);
-		else if (value < 0x4000)
+		else if (value < 0x4000)   //<2^14
 		{
-			data[0] = (unsigned char)(value | 0x80);
-			data[1] = (unsigned char)(value >> 7);
+			data[0] = (unsigned char)(value | 0x80); //低7位
+			data[1] = (unsigned char)(value >> 7);  //高7位
 			return Write(data, 2) == 2;
 		}
-		else if (value < 0x200000)
+		else if (value < 0x200000) //2^21
 		{
 			data[0] = (unsigned char)(value | 0x80);
 			data[1] = (unsigned char)((value >> 7) | 0x80);
@@ -337,7 +345,7 @@ namespace Sapphire
 			return Write(data, 3) == 3;
 		}
 		else
-		{
+		{				//2^28
 			data[0] = (unsigned char)(value | 0x80);
 			data[1] = (unsigned char)((value >> 7) | 0x80);
 			data[2] = (unsigned char)((value >> 14) | 0x80);
