@@ -25,6 +25,12 @@
     <Filter Include="源文件\Event">
       <UniqueIdentifier>{bdb41ee1-06ff-4161-a5e9-5637e0f354a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\XML">
+      <UniqueIdentifier>{6895fdf4-a0a1-4335-9f68-975ea84c0600}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\XML">
+      <UniqueIdentifier>{a0cd89c5-aedc-4c5a-a1e8-73a770dcd610}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Sapphire.h">
@@ -216,6 +222,15 @@
     <ClInclude Include="Include\minidump.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Src\XML\pugiconfig.hpp">
+      <Filter>源文件\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\XML\pugixml.hpp">
+      <Filter>源文件\XML</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\XML\XMLElement.h">
+      <Filter>头文件\XML</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -367,6 +382,9 @@
     </ClCompile>
     <ClCompile Include="Src\minidump.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\XML\pugixml.cpp">
+      <Filter>源文件\XML</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

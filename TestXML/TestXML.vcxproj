@@ -38,15 +38,22 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\bin</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\Core\Include;..\dependences\jsoncpp\include;..\Graphics\Include;..\dependences\glew\include;..\dependences\glfw\include;..\dependences\freetype\include;..\ThirdParty\glm;..\dependences\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\libs;..\dependences\glew\lib\Release\Win32;..\dependences\glfw\lib-vc2013;..\dependences\freetype\lib;..\dependences\assimp\lib;..\dependences\jsoncpp\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Core.lib;Graphics.lib;opengl32.lib;glfw3.lib;glew32s.lib;jsoncpp.lib;freetyped.lib;assimp-vc120-mt.lib;IrrXML.lib;zlibstaticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

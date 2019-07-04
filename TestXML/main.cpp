@@ -1,19 +1,22 @@
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-#include <string>
- 
-using namespace std;
+#include "Sapphire.h"
+#include "Variant.h"
+
+void TestVariant()
+{
+	using namespace Sapphire;
+	std::string testStr = "abcd123";
+	int len = testStr.length();
+	std::vector<byte> data;
+	data.resize(len);
+	memcpy(&data[0], testStr.data(), len);
+	Variant v = data;
+	std::vector<byte> data2 = v.GetBuffer();
+	return;
+
+}
 
 int main() {
- 
-	unordered_map<string, string>* pMap = new unordered_map<string, string>();
-	pair<string,string> pair = make_pair("jack", "smith");
-	pMap->insert(pair);
-	string name = (*pMap)["jack"];
-	cout << name<< endl;
-	delete pMap;
-	getchar();
-
+  
+	TestVariant();
 	return 0;
 }

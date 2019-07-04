@@ -114,6 +114,12 @@ namespace Sapphire
 	SAPPHIRE_API String ToString(void* value);
 	/// Convert an unsigned integer to string as hexadecimal.
 	SAPPHIRE_API String ToStringHex(unsigned value);
+	/// Convert a byte buffer to a string.
+	SAPPHIRE_API void BufferToString(std::string& dest, const void* data, unsigned size);
+	/// Convert a string to a byte buffer.
+	SAPPHIRE_API void StringToBuffer(std::vector<byte>& dest, const std::string& source);
+	/// Convert a C string to a byte buffer.
+	SAPPHIRE_API void StringToBuffer(std::vector<byte>& dest, const char* source);
 
 
 }

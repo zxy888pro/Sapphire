@@ -26,6 +26,7 @@ namespace Sapphire
 		VAR_QUATERNION,
 		VAR_COLOR,
 		VAR_STRING,
+		VAR_BUFFER,
 		VAR_VOIDPTR,
 		VAR_RESOURCEREF,
 		VAR_RESOURCEREFLIST,
@@ -217,7 +218,14 @@ namespace Sapphire
 			*this = value;
 		}
 
+
 		Variant(const String& value) :
+			type_(VAR_NONE)
+		{
+			*this = value;
+		}
+
+		Variant(const std::vector<byte>& value) :
 			type_(VAR_NONE)
 		{
 			*this = value;
@@ -427,6 +435,14 @@ namespace Sapphire
 			return *this;
 		}
 
+		//用std::vector<byte>分配一个buffer
+		Variant& operator =(const std::vector<byte>& rhs)
+		{
+			SetType(VAR_BUFFER);
+			*(reinterpret_cast<std::vector<byte>*>(value_.ptr_)) = rhs;
+			return *this;
+		}
+
 		Variant& operator =(void* rhs)
 		{
 			SetType(VAR_VOIDPTR);
@@ -569,6 +585,7 @@ namespace Sapphire
 			return type_ == VAR_STRING ? *(reinterpret_cast<const String*>(&value_)) == rhs : false;
 		}
 
+		bool operator ==(const std::vector<byte>& rhs) const;
 		 
 		bool operator ==(void* rhs) const
 		{
@@ -687,6 +704,8 @@ namespace Sapphire
 		 
 		bool operator !=(const String& rhs) const { return !(*this == rhs); }
 
+		bool operator !=(const std::vector<byte>& rhs) const { return !(*this == rhs); }
+
 		 
 		bool operator !=(void* rhs) const { return !(*this == rhs); }
 
@@ -727,7 +746,7 @@ namespace Sapphire
 		bool operator !=(const Matrix4x4& rhs) const { return !(*this == rhs); }
 
 		//设置变体类型
-		void SetType(VariantType newType);
+		void SetType(VariantType newType);  //有分配需要的根据类型分配空间
 		///通过字符串设置类型名字和值
 		void FromString(const String& type, const String& value);
 		 
@@ -737,7 +756,7 @@ namespace Sapphire
 		 
 		void FromString(VariantType type, const char* value);
 
-
+		void SetBuffer(const void* data, unsigned size);
 
 		/// Return name for variant type.
 		static String GetTypeName(VariantType type);
@@ -825,6 +844,10 @@ namespace Sapphire
 		/// Return string or empty on type mismatch.
 		const String& GetString() const;
 
+		const std::vector<byte>& GetBuffer() const
+		{
+			return type_ == VAR_BUFFER ? *reinterpret_cast<const std::vector<byte>*>(value_.ptr_) : emptyBuffer;
+		}
 
 		/// Return void pointer or null on type mismatch. RefCounted pointer will be converted.
 		void* GetVoidPtr() const
@@ -915,6 +938,11 @@ namespace Sapphire
 		/// Return the value, template version.
 		template <class T> T Get() const;
 
+		std::vector<byte>* GetBufferPtr()
+		{
+			return type_ == VAR_BUFFER ? reinterpret_cast<std::vector<byte>*>(&value_) : 0;
+		}
+
 		/// Return a pointer to a modifiable variant vector or null on type mismatch.
 		VariantVector* GetVariantVectorPtr() { return type_ == VAR_VARIANTVECTOR ? reinterpret_cast<VariantVector*>(&value_) : 0; }
 
@@ -938,6 +966,9 @@ namespace Sapphire
 		static const VariantVector emptyVariantVector;
 		/// Empty string vector.
 		static const StringVector emptyStringVector;
+
+
+		static const std::vector<byte> emptyBuffer;
 
 		VariantType type_;
 		VariantValue value_;
@@ -970,6 +1001,8 @@ namespace Sapphire
 	template <> inline VariantType GetVariantType<String>() { return VAR_STRING; }
 
 	template <> inline VariantType GetVariantType<StringHash>() { return VAR_INT; }
+
+	template <> inline VariantType GetVariantType<std::vector<byte> >() { return VAR_BUFFER; }
 
 	template <> inline VariantType GetVariantType<ResourceRef>() { return VAR_RESOURCEREF; }
 

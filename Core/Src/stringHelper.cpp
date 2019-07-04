@@ -640,4 +640,101 @@ namespace Sapphire
 	}
 
 	
+	 
+
+	SAPPHIRE_API void BufferToString(std::string& dest, const void* data, unsigned size)
+	{
+		//预先计算需要的字符串大小
+		const unsigned char* bytes = (const unsigned char*)data;
+		unsigned length = 0;
+		for (unsigned i = 0; i < size; ++i)
+		{
+			// 分隔符的空间
+			if (i)
+				++length;
+
+			// 值的空间
+			if (bytes[i] < 10)
+				++length;
+			else if (bytes[i] < 100)
+				length += 2;
+			else
+				length += 3;
+		}
+
+		dest.resize(length);
+		unsigned index = 0;
+
+		// 转换值
+		for (unsigned i = 0; i < size; ++i)
+		{
+			if (i)
+				dest[index++] = ' ';
+
+			if (bytes[i] < 10)
+			{
+				dest[index++] = '0' + bytes[i];
+			}
+			else if (bytes[i] < 100)
+			{
+				dest[index++] = (char)('0' + bytes[i] / 10);
+				dest[index++] = (char)('0' + bytes[i] % 10);
+			}
+			else
+			{
+				dest[index++] = (char)('0' + bytes[i] / 100);
+				dest[index++] = (char)('0' + bytes[i] % 100 / 10);
+				dest[index++] = (char)('0' + bytes[i] % 10);
+			}
+		}
+	}
+
+	SAPPHIRE_API void StringToBuffer(std::vector<byte>& dest, const String& source)
+	{
+		StringToBuffer(dest, source.c_str());
+	}
+
+	SAPPHIRE_API void StringToBuffer(std::vector<byte>& dest, const char* source)
+	{
+		if (!source)
+		{
+			dest.clear();
+			return;
+		}
+
+		unsigned size = CountElements(source, ' ');
+		dest.resize(size);
+
+		bool inSpace = true;
+		unsigned index = 0;
+		unsigned value = 0;
+
+		// Parse values
+		const char* ptr = source;
+		while (*ptr)
+		{
+			if (inSpace && *ptr != ' ')
+			{
+				inSpace = false;
+				value = (unsigned)(*ptr - '0');
+			}
+			else if (!inSpace && *ptr != ' ')
+			{
+				value *= 10;
+				value += *ptr - '0';
+			}
+			else if (!inSpace && *ptr == ' ')
+			{
+				dest[index++] = (unsigned char)value;
+				inSpace = true;
+			}
+
+			++ptr;
+		}
+
+		// Write the final value
+		if (!inSpace && index < size)
+			dest[index] = (unsigned char)value;
+	}
+
 }

@@ -52,7 +52,7 @@ namespace Sapphire
 		CloseHandle(file);
 
 		if (success)
-			ErrorDialog(applicationName, "An unexpected error occurred. A minidump was generated to " + miniDumpName);
+			ErrorDialog(applicationName, "An unexpected error occurred. A minidump was generated to " + WString2String(miniDumpName));
 		else
 			ErrorDialog(applicationName, "An unexpected error occurred. Could not write minidump.");
 

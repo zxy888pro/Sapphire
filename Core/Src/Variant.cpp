@@ -11,6 +11,7 @@ namespace Sapphire
 	const VariantVector Variant::emptyVariantVector;
 	const StringVector Variant::emptyStringVector;
 	const VariantMap Variant::emptyVariantMap;
+	const std::vector<byte> Variant::emptyBuffer;
 
 
 	static const char* typeNames[] =
@@ -80,6 +81,10 @@ namespace Sapphire
 		{
 		case VAR_STRING:
 			*(reinterpret_cast<String*>(value_.ptr_)) = *(reinterpret_cast<const String*>(&rhs.value_.ptr_)); //字符串对象大小超16字节,在堆上分配，去ptr指针的值
+			break;
+
+		case VAR_BUFFER:
+			*(reinterpret_cast<std::vector<byte>*>(value_.ptr_)) = *(reinterpret_cast<const std::vector<byte>*>(rhs.value_.ptr_));
 			break;
 
 		case VAR_RESOURCEREF:
@@ -161,6 +166,10 @@ namespace Sapphire
 		case VAR_STRING:
 			return *(reinterpret_cast<const String*>(value_.ptr_)) == *(reinterpret_cast<const String*>(rhs.value_.ptr_));
 
+		case VAR_BUFFER:
+			return *(reinterpret_cast<const std::vector<byte>*>(value_.ptr_)) ==
+				*(reinterpret_cast<const std::vector<byte>*>(rhs.value_.ptr_));
+
 		case VAR_RESOURCEREF:
 			return *(reinterpret_cast<const ResourceRef*>(value_.ptr_)) == *(reinterpret_cast<const ResourceRef*>(rhs.value_.ptr_));
 
@@ -199,6 +208,14 @@ namespace Sapphire
 		}
 	}
 
+	bool Variant::operator ==(const std::vector<byte>& rhs) const
+	{
+		// 用strncmp()来当字符串比较
+		const std::vector<byte>& buffer = *(reinterpret_cast<const std::vector<byte>*>(value_.ptr_));
+		return type_ == VAR_BUFFER && buffer.size() == rhs.size() ?
+			strncmp(reinterpret_cast<const char*>(&buffer[0]), reinterpret_cast<const char*>(&rhs[0]), buffer.size()) == 0 :
+			false;
+	}
 
 	ResourceRefList::ResourceRefList(StringHash type) :type_(type)
 	{
@@ -275,8 +292,8 @@ namespace Sapphire
 			return reinterpret_cast<const String*>(value_.ptr_)->empty();
 			//return reinterpret_cast<const String*>(&value_)->Empty();
 
-	/*	case VAR_BUFFER:
-			return reinterpret_cast<const PODVector<unsigned char>*>(&value_)->Empty();*/
+		case VAR_BUFFER:
+			return reinterpret_cast<const std::vector<byte>*>(value_.ptr_)->empty();
 
 		case VAR_VOIDPTR:
 			return value_.ptr_ == 0;
@@ -386,6 +403,13 @@ namespace Sapphire
 				break;
 
 		break;
+		case VAR_BUFFER:
+		{
+			SetType(VAR_BUFFER); //预先分配一下
+			std::vector<byte>& buffer = *(reinterpret_cast<std::vector<byte>*>(value_.ptr_));
+			StringToBuffer(buffer, value);
+		}
+		break;
 
 		case VAR_VOIDPTR:
 			// From string to void pointer not supported, set to null
@@ -454,6 +478,18 @@ namespace Sapphire
 		}
 	}
 
+	void Variant::SetBuffer(const void* data, unsigned size)
+	{
+		if (size && !data)
+			size = 0;
+
+		SetType(VAR_BUFFER);
+		std::vector<byte>& buffer = *(reinterpret_cast<std::vector<byte>*>(value_.ptr_));
+		buffer.resize(size);
+		if (size)
+			memcpy(&buffer[0], data, size);
+	}
+
 	void Variant::SetType(VariantType newType)
 	{
 		//如果类型一致，不用重分配内存
@@ -469,6 +505,10 @@ namespace Sapphire
 				//(reinterpret_cast<String*>(&value_))->~String();
 				delete reinterpret_cast<String*>(value_.ptr_);
 				break;
+
+		case VAR_BUFFER:
+			delete (reinterpret_cast<std::vector<byte>*>(value_.ptr_)); //删掉分配的vector指针
+			break;
 
 		case VAR_RESOURCEREF:
 			//(reinterpret_cast<ResourceRef*>(&value_))->~ResourceRef();
@@ -524,6 +564,11 @@ namespace Sapphire
 		case VAR_STRING:
 			//new(reinterpret_cast<String*>(&value_)) String();
 			value_.ptr_ = new String();
+			break;
+
+		case VAR_BUFFER:
+			//new(reinterpret_cast<std::vector<byte>*>(&value_)) std::vector<byte>();
+			value_.ptr_ = new std::vector<byte>();
 			break;
 
 		case VAR_RESOURCEREF:
@@ -643,10 +688,10 @@ namespace Sapphire
 		return GetIntVector2();
 	}
 
-	/*template <> const PODVector<unsigned char>& Variant::Get<const PODVector<unsigned char>&>() const
+	template <> const std::vector<byte>& Variant::Get<const std::vector<byte>&>() const
 	{
-	return GetBuffer();
-	}*/
+		return GetBuffer();
+	}
 
 	template <> void* Variant::Get<void*>() const
 	{

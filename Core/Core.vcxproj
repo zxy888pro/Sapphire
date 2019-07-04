@@ -77,7 +77,10 @@
     <ClInclude Include="Include\Variant.h" />
     <ClInclude Include="Include\Vector.h" />
     <ClInclude Include="Include\WorkQueue.h" />
+    <ClInclude Include="Include\XML\XMLElement.h" />
     <ClInclude Include="Src\EventMgr.h" />
+    <ClInclude Include="Src\XML\pugiconfig.hpp" />
+    <ClInclude Include="Src\XML\pugixml.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\AsynTaskPool.cpp" />
@@ -130,6 +133,7 @@
     <ClCompile Include="Src\Variant.cpp" />
     <ClCompile Include="Src\Vector.cpp" />
     <ClCompile Include="Src\WorkQueue.cpp" />
+    <ClCompile Include="Src\XML\pugixml.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{24788D97-0E75-453E-A528-03EF9E9C6D55}</ProjectGuid>
