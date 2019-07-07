@@ -5,6 +5,8 @@
 namespace Sapphire
 {
 	const String String::EMPTY;
+	static const int CONVERSION_BUFFER_LENGTH = 128;
+	static const int MATRIX_CONVERSION_BUFFER_LENGTH = 256;
 
 	StringHash::StringHash(const char* str) :value_(Calculate(str))
 	{
@@ -78,6 +80,109 @@ namespace Sapphire
 	{
 		m_str = other.str();
 	}
+
+	String::String(int val)
+	{
+		char tempBuffer[CONVERSION_BUFFER_LENGTH];
+		sprintf(tempBuffer, "%d", val);
+		*this = tempBuffer;
+		m_str = tempBuffer;
+	}
+
+	String::String(short value)
+	{
+		char tempBuffer[CONVERSION_BUFFER_LENGTH];
+		sprintf(tempBuffer, "%d", value);
+		*this = tempBuffer;
+		m_str = tempBuffer;
+	}
+
+	String::String(long value)
+	{
+		char tempBuffer[CONVERSION_BUFFER_LENGTH];
+		sprintf(tempBuffer, "%ld", value);
+		*this = tempBuffer;
+		m_str = tempBuffer;
+	}
+
+	String::String(long long value)
+	{
+		char tempBuffer[CONVERSION_BUFFER_LENGTH];
+		sprintf(tempBuffer, "%lld", value);
+		*this = tempBuffer;
+		m_str = tempBuffer;
+	}
+
+	String::String(unsigned value)
+	{
+		char tempBuffer[CONVERSION_BUFFER_LENGTH];
+		sprintf(tempBuffer, "%u", value);
+		*this = tempBuffer;
+		m_str = tempBuffer;
+	}
+
+	String::String(unsigned short value)
+	{
+		char tempBuffer[CONVERSION_BUFFER_LENGTH];
+		sprintf(tempBuffer, "%u", value);
+		*this = tempBuffer;
+		m_str = tempBuffer;
+	}
+
+	String::String(unsigned long value)
+	{
+		char tempBuffer[CONVERSION_BUFFER_LENGTH];
+		sprintf(tempBuffer, "%lu", value);
+		*this = tempBuffer;
+		m_str = tempBuffer;
+	}
+
+	String::String(unsigned long long value)
+	{
+		char tempBuffer[CONVERSION_BUFFER_LENGTH];
+		sprintf(tempBuffer, "%llu", value);
+		*this = tempBuffer;
+		m_str = tempBuffer;
+	}
+
+	String::String(float value)
+	{
+		char tempBuffer[CONVERSION_BUFFER_LENGTH];
+		sprintf(tempBuffer, "%g", value);
+		*this = tempBuffer;
+		m_str = tempBuffer;
+	}
+
+	String::String(double value)
+	{
+		char tempBuffer[CONVERSION_BUFFER_LENGTH];
+		sprintf(tempBuffer, "%.15g", value);
+		*this = tempBuffer;
+		m_str = tempBuffer;
+	}
+
+	String::String(bool value)
+	{
+		if (value)
+			*this = "true";
+		else
+			*this = "false";
+	}
+
+	String::String(char value)
+	{
+		m_str.resize(1);
+		m_str[0] = value;
+	}
+
+	String::String(char value, unsigned length)
+	{
+		m_str.resize(length);
+		for (unsigned i = 0; i < length; ++i)
+			m_str[i] = value;
+	}
+
+	
 
 	String::~String()
 	{

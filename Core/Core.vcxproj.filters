@@ -31,6 +31,12 @@
     <Filter Include="源文件\XML">
       <UniqueIdentifier>{a0cd89c5-aedc-4c5a-a1e8-73a770dcd610}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\IO">
+      <UniqueIdentifier>{fe27e150-c3fa-484e-a2f2-36947f6518e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\IO">
+      <UniqueIdentifier>{9a0e7174-9c52-43c6-97d9-b2e1f40f14aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Sapphire.h">
@@ -40,9 +46,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Include\charset.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\FileStream.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Include\handle.h">
@@ -120,9 +123,6 @@
     <ClInclude Include="Include\Color.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Include\MemoryStream.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Variant.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -134,9 +134,6 @@
     </ClInclude>
     <ClInclude Include="Include\Math\Rect.h">
       <Filter>头文件\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\IStream.h">
-      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Include\HashMap.h">
       <Filter>头文件</Filter>
@@ -183,12 +180,6 @@
     <ClInclude Include="Include\RingQueue.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Serializer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Deserializer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Include\ResourceLoader.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -231,6 +222,24 @@
     <ClInclude Include="Include\XML\XMLElement.h">
       <Filter>头文件\XML</Filter>
     </ClInclude>
+    <ClInclude Include="Include\IStream.h">
+      <Filter>头文件\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\FileStream.h">
+      <Filter>头文件\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Serializer.h">
+      <Filter>头文件\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MemoryStream.h">
+      <Filter>头文件\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Deserializer.h">
+      <Filter>头文件\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\XML\XMLFile.h">
+      <Filter>头文件\XML</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -240,9 +249,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\charset.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\FileStream.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\inifile.cpp">
@@ -302,9 +308,6 @@
     <ClCompile Include="Src\Math\Matrix4x4.cpp">
       <Filter>源文件\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Src\MemoryStream.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Str.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -344,12 +347,6 @@
     <ClCompile Include="Src\Atom.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Serializer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Deserializer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Src\ResourceLoader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -384,6 +381,21 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\XML\pugixml.cpp">
+      <Filter>源文件\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Deserializer.cpp">
+      <Filter>源文件\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\FileStream.cpp">
+      <Filter>源文件\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\MemoryStream.cpp">
+      <Filter>源文件\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Serializer.cpp">
+      <Filter>源文件\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\XML\XMLElement.cpp">
       <Filter>源文件\XML</Filter>
     </ClCompile>
   </ItemGroup>

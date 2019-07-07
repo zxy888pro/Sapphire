@@ -78,6 +78,7 @@
     <ClInclude Include="Include\Vector.h" />
     <ClInclude Include="Include\WorkQueue.h" />
     <ClInclude Include="Include\XML\XMLElement.h" />
+    <ClInclude Include="Include\XML\XMLFile.h" />
     <ClInclude Include="Src\EventMgr.h" />
     <ClInclude Include="Src\XML\pugiconfig.hpp" />
     <ClInclude Include="Src\XML\pugixml.hpp" />
@@ -134,6 +135,7 @@
     <ClCompile Include="Src\Vector.cpp" />
     <ClCompile Include="Src\WorkQueue.cpp" />
     <ClCompile Include="Src\XML\pugixml.cpp" />
+    <ClCompile Include="Src\XML\XMLElement.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{24788D97-0E75-453E-A528-03EF9E9C6D55}</ProjectGuid>

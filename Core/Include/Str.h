@@ -22,6 +22,32 @@ namespace Sapphire
 
 		String(const String& other);
 
+		explicit String(int val);
+
+		explicit String(short value);
+
+		explicit String(long value);
+
+		explicit String(long long value);
+
+		explicit String(unsigned value);
+
+		explicit String(unsigned short value);
+
+		explicit String(unsigned long value);
+
+		explicit String(unsigned long long value);
+
+		explicit String(float value);
+
+		explicit String(double value);
+
+		explicit String(bool value);
+
+		explicit String(char value);
+
+		explicit String(char value, unsigned length);
+
 
 		virtual ~String();
 
