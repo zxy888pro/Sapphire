@@ -115,6 +115,7 @@ namespace Sapphire
 		 
 		bool SetVariant(const Variant& value);
 		 
+		//设置变体
 		bool SetVariantValue(const Variant& value);
 		 
 		bool SetResourceRef(const ResourceRef& value);
@@ -281,7 +282,7 @@ namespace Sapphire
 	class SAPPHIRE_CLASS XPathResultSet
 	{
 	public:
-		/// Construct empty result set.
+		/// 构造一个空结果集
 		XPathResultSet();
 		/// Construct with result set from XPath query.
 		XPathResultSet(XMLFile* file, pugi::xpath_node_set* resultSet);

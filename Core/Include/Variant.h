@@ -778,7 +778,7 @@ namespace Sapphire
 				return 0;
 		}
 
-		/// Return unsigned int or zero on type mismatch. Floats and doubles are converted.
+		// 返回Uint或者0，浮点类型自动转换
 		unsigned GetUInt() const
 		{
 			if (type_ == VAR_INT)
@@ -791,13 +791,13 @@ namespace Sapphire
 				return 0;
 		}
 
-		/// Return StringHash or zero on type mismatch.
+		/// 返回StringHash或0
 		StringHash GetStringHash() const { return StringHash(GetUInt()); }
 
-		/// Return bool or false on type mismatch.
+		 
 		bool GetBool() const { return type_ == VAR_BOOL ? value_.bool_ : false; }
 
-		/// Return float or zero on type mismatch. Ints and doubles are converted.
+		 
 		float GetFloat() const
 		{
 			if (type_ == VAR_FLOAT)
@@ -810,7 +810,7 @@ namespace Sapphire
 				return 0.0f;
 		}
 
-		/// Return double or zero on type mismatch. Ints and floats are converted.
+		 
 		double GetDouble() const
 		{
 			if (type_ == VAR_DOUBLE)
@@ -823,25 +823,25 @@ namespace Sapphire
 				return 0.0;
 		}
 
-		/// Return Vector2 or zero on type mismatch.
+		 
 		const Vector2& GetVector2() const { return type_ == VAR_VECTOR2 ? *reinterpret_cast<const Vector2*>(&value_) : Vector2::ZERO; }
 
-		/// Return Vector3 or zero on type mismatch.
+		 
 		const Vector3& GetVector3() const { return type_ == VAR_VECTOR3 ? *reinterpret_cast<const Vector3*>(&value_) : Vector3::ZERO; }
 
-		/// Return Vector4 or zero on type mismatch.
+		 
 		const Vector4& GetVector4() const { return type_ == VAR_VECTOR4 ? *reinterpret_cast<const Vector4*>(&value_) : Vector4::ZERO; }
 
-		/// Return quaternion or identity on type mismatch.
+		 
 		const Quaternion& GetQuaternion() const
 		{
 			return type_ == VAR_QUATERNION ? *reinterpret_cast<const Quaternion*>(&value_) : Quaternion::IDENTITY;
 		}
 
-		/// Return color or default on type mismatch.
+		
 		const Color& GetColor() const { return type_ == VAR_COLOR ? *reinterpret_cast<const Color*>(&value_) : Color::WHITE; }
 
-		/// Return string or empty on type mismatch.
+		
 		const String& GetString() const;
 
 		const std::vector<byte>& GetBuffer() const
@@ -849,7 +849,7 @@ namespace Sapphire
 			return type_ == VAR_BUFFER ? *reinterpret_cast<const std::vector<byte>*>(value_.ptr_) : emptyBuffer;
 		}
 
-		/// Return void pointer or null on type mismatch. RefCounted pointer will be converted.
+		///返回一个void指针， 引用计数器自动转换
 		void* GetVoidPtr() const
 		{
 			if (type_ == VAR_VOIDPTR)
@@ -860,82 +860,83 @@ namespace Sapphire
 				return 0;
 		}
 
-		/// Return a resource reference or empty on type mismatch.
+	 
 		const ResourceRef& GetResourceRef() const
 		{
 			return type_ == VAR_RESOURCEREF ? *reinterpret_cast<const ResourceRef*>(value_.ptr_) : emptyResourceRef;
 		}
 
-		/// Return a resource reference list or empty on type mismatch.
+ 
 		const ResourceRefList& GetResourceRefList() const
 		{
 			return type_ == VAR_RESOURCEREFLIST ? *reinterpret_cast<const ResourceRefList*>(value_.ptr_) : emptyResourceRefList;
 		}
 
-		/// Return a variant vector or empty on type mismatch.
+	 
 		const VariantVector& GetVariantVector() const
 		{
 			return type_ == VAR_VARIANTVECTOR ? *reinterpret_cast<const VariantVector*>(value_.ptr_) : emptyVariantVector;
 		}
 
-		/// Return a string vector or empty on type mismatch.
+	 
 		const StringVector& GetStringVector() const
 		{
 			return type_ == VAR_STRINGVECTOR ? *reinterpret_cast<const StringVector*>(value_.ptr_) : emptyStringVector;
 		}
 
-		/// Return a variant map or empty on type mismatch.
+		 
 		const VariantMap& GetVariantMap() const
 		{
 			return type_ == VAR_VARIANTMAP ? *reinterpret_cast<const VariantMap*>(value_.ptr_) : emptyVariantMap;
 		}
 
-		/// Return an integer rect or empty on type mismatch.
+		 
 		const IntRect& GetIntRect() const { return type_ == VAR_INTRECT ? *reinterpret_cast<const IntRect*>(&value_) : IntRect::ZERO; }
 
-		/// Return an IntVector2 or empty on type mismatch.
+		 
 		const IntVector2& GetIntVector2() const
 		{
 			return type_ == VAR_INTVECTOR2 ? *reinterpret_cast<const IntVector2*>(&value_) : IntVector2::ZERO;
 		}
 
-		/// Return a RefCounted pointer or null on type mismatch. Will return null if holding a void pointer, as it can not be safely verified that the object is a RefCounted.
+		//返回一个RefCounter指针，如果保存一个void指针返回null, 判断对象是一个RefCounter可能不安全
 		RefCounter* GetPtr() const
 		{
 			return type_ == VAR_PTR ? *reinterpret_cast<const WeakPtr<RefCounter>*>(&value_) : (RefCounter*)0;
 		}
 
-		/// Return a Matrix3 or identity on type mismatch.
+		 
 		const Matrix3x3& GetMatrix3x3() const
 		{
 			return type_ == VAR_MATRIX3X3 ? *(reinterpret_cast<const Matrix3x3*>(value_.ptr_)) : Matrix3x3::IDENTITY;
 		}
 
-		/// Return a Matrix3x4 or identity on type mismatch.
+		 
 		const Matrix3x4& GetMatrix3x4() const
 		{
 			return type_ == VAR_MATRIX3X4 ? *(reinterpret_cast<const Matrix3x4*>(value_.ptr_)) : Matrix3x4::IDENTITY;
 		}
 
-		/// Return a Matrix4 or identity on type mismatch.
+		 
 		const Matrix4x4& GetMatrix4() const
 		{
 			return type_ == VAR_MATRIX4X4 ? *(reinterpret_cast<const Matrix4x4*>(value_.ptr_)) : Matrix4x4::IDENTITY;
 		}
 
-		/// Return value's type.
+		String GetTypeName() const;
+		 
 		VariantType GetType() const { return type_; }
 
-		/// Convert value to string. Pointers are returned as null, and VariantBuffer or VariantMap are not supported and return empty.
+		 
 		String ToString() const;
 
-		/// Return true when the variant value is considered zero according to its actual type.
+		 
 		bool IsZero() const;
 
-		/// Return true when the variant is empty (i.e. not initialized yet).
+		 
 		bool IsEmpty() const { return type_ == VAR_NONE; }
 
-		/// Return the value, template version.
+		/// 返回值
 		template <class T> T Get() const;
 
 		std::vector<byte>* GetBufferPtr()
@@ -943,28 +944,28 @@ namespace Sapphire
 			return type_ == VAR_BUFFER ? reinterpret_cast<std::vector<byte>*>(&value_) : 0;
 		}
 
-		/// Return a pointer to a modifiable variant vector or null on type mismatch.
+		 
 		VariantVector* GetVariantVectorPtr() { return type_ == VAR_VARIANTVECTOR ? reinterpret_cast<VariantVector*>(&value_) : 0; }
 
-		/// Return a pointer to a modifiable string vector or null on type mismatch.
+		 
 		StringVector* GetStringVectorPtr() { return type_ == VAR_STRINGVECTOR ? reinterpret_cast<StringVector*>(&value_) : 0; }
 
-		/// Return a pointer to a modifiable variant map or null on type mismatch.
+	 
 		VariantMap* GetVariantMapPtr() { return type_ == VAR_VARIANTMAP ? reinterpret_cast<VariantMap*>(&value_) : 0; }
 
 
 
-		/// Empty variant.
+
 		static const Variant EMPTY;
-		/// Empty resource reference.
+
 		static const ResourceRef emptyResourceRef;
-		/// Empty resource reference list.
+
 		static const ResourceRefList emptyResourceRefList;
-		/// Empty variant map.
+
 		static const VariantMap emptyVariantMap;
-		/// Empty variant vector.
+
 		static const VariantVector emptyVariantVector;
-		/// Empty string vector.
+
 		static const StringVector emptyStringVector;
 
 
@@ -974,10 +975,8 @@ namespace Sapphire
 		VariantValue value_;
 	};
 
-	/// Return variant type from type.
 	template <typename T> VariantType GetVariantType();
 
-	/// Return variant type from concrete types.
 	template <> inline VariantType GetVariantType<int>() { return VAR_INT; }
 
 	template <> inline VariantType GetVariantType<unsigned>() { return VAR_INT; }

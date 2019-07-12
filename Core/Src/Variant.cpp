@@ -245,6 +245,11 @@ namespace Sapphire
 		return typeNames[type];
 	}
 
+	Sapphire::String Variant::GetTypeName() const
+	{
+		return typeNames[type_];
+	}
+
 	VariantType Variant::GetTypeFromName(const String& typeName)
 	{
 		return GetTypeFromName(typeName.c_str());

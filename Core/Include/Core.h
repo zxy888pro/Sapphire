@@ -5,6 +5,7 @@
 #include <Ptr.h>
 #include <SubSystem.h>
 #include <IEventMgr.h>
+#include "Str.h"
 
 namespace Sapphire
 {
@@ -23,6 +24,9 @@ namespace Sapphire
 		 typedef std::unordered_map<std::string, SubSystem*> SUBSYTEM_MAP;
 		 typedef std::unordered_map<std::string, SubSystem*>::iterator   SUBSYTEM_ITEM;
 		 typedef std::unordered_map<std::string, SubSystem*>::const_iterator   SUBSYTEM_CONST_ITEM;
+		 typedef std::unordered_map<StringHash, SharedPtr<ObjectFactory>, StringHashFunc, StringHashCMP>   OBJECTFACTORY_MAP;
+		 typedef std::unordered_map<StringHash, SharedPtr<ObjectFactory>, StringHashFunc, StringHashCMP>::iterator   OBJECTFACTORY_MAP_ITERATOR;
+		 typedef std::unordered_map<StringHash, SharedPtr<ObjectFactory>, StringHashFunc, StringHashCMP>::const_iterator   OBJECTFACTORY_MAP_CITERATOR;
 
 	 public:
 
@@ -31,6 +35,14 @@ namespace Sapphire
 		 void Init();
 		 void Release();
 		 UINT64 GenUID();
+
+		 /// 注册一个对象工厂
+		 void RegisterFactory(ObjectFactory* factory);
+		 /// 注册一个对象工厂 (带目录)
+		 void RegisterFactory(ObjectFactory* factory, const char* category);
+
+		 const std::string GetTypeName(StringHash objectType) const;
+
 		 IEventMgr*  GetEventManager(){ return m_eventMgr; }
 
 		 SubSystem*  GetSubSystemWithName(std::string name) const;
@@ -44,6 +56,11 @@ namespace Sapphire
 		 //ResourceMgr*  GetResourceManager();
 		 //Sapphire::MemoryManager* GetMemoryMgr();
 
+ 
+		 template <class T> void RegisterFactory();
+	 
+		 template <class T> void RegisterFactory(const char* category);
+
 	 private:
 
 		 //以后子系统通通放到SUBSYTEM_MAP中, 用一个通用模板函数取到
@@ -56,10 +73,24 @@ namespace Sapphire
 		 //事件系统作为核心系统，不在子系统中
 		 IEventMgr*      m_eventMgr;
 		 UIDCreator*     m_uidCreator;
+
+		 //对象目录
+		 std::unordered_map<std::string, std::vector<StringHash>> m_objCategories;
+		 //对象工厂
+		 OBJECTFACTORY_MAP  m_objFactories;
 		 
 
 
 	 };
+
+
+	 template <class T> void Core::RegisterFactory() { RegisterFactory(new ObjectFactoryImpl<T>(this)); }
+
+	 template <class T> void Core::RegisterFactory(const char* category)
+	 {
+		 RegisterFactory(new ObjectFactoryImpl<T>(this), category);
+	 }
+
 
 	 
 	 //template <class T> T* Core::GetSubSystem() const { return GetSubSystemWithName(T::GetTypeNameStatic());}

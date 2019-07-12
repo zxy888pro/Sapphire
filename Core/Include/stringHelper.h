@@ -98,6 +98,7 @@ namespace Sapphire
 	SAPPHIRE_API Rect ToRect(const String& source);
 	/// Parse a Rect from a C string.
 	SAPPHIRE_API Rect ToRect(const char* source);
+
 	/// Parse a Matrix3 from a string.
 	SAPPHIRE_API Matrix3x3 ToMatrix3x3(const String& source);
 	/// Parse a Matrix3 from a C string.
@@ -120,6 +121,8 @@ namespace Sapphire
 	SAPPHIRE_API void StringToBuffer(std::vector<byte>& dest, const std::string& source);
 	/// Convert a C string to a byte buffer.
 	SAPPHIRE_API void StringToBuffer(std::vector<byte>& dest, const char* source);
+
+	 
 
 
 }

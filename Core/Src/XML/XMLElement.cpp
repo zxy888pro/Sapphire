@@ -1,6 +1,8 @@
 #include "Sapphire.h"
 #include "pugixml.hpp"
 #include "XML/XMLElement.h"
+#include "XML/XMLFile.h"
+
 
 namespace Sapphire
 {
@@ -248,7 +250,6 @@ namespace Sapphire
 
 	bool XMLElement::SetAttribute(const char* value)
 	{
-		// If xpath_node contains just attribute, set its value
 		return xpathNode_ && xpathNode_->attribute() && xpathNode_->attribute().set_value(value);
 	}
 
@@ -366,10 +367,10 @@ namespace Sapphire
 		if (!file_ || (!node_ && !xpathNode_))
 			return false;
 
-		// Need the context to query for the type
-		Context* context = file_->GetContext();
-
-		return SetAttribute("value", String(context->GetTypeName(value.type_)) + ";" + value.name_);
+		// 需要查询类型
+		Core* pCore = file_->GetCore();
+		//通过对象工厂查询类型 对象类型名:资源名
+		return SetAttribute("value", std::string(pCore->GetTypeName(value.type_)) + ";" + value.name_.c_str());
 	}
 
 	bool XMLElement::SetResourceRefList(const ResourceRefList& value)
@@ -377,26 +378,27 @@ namespace Sapphire
 		if (!file_ || (!node_ && !xpathNode_))
 			return false;
 
-		// Need the context to query for the type
-		Context* context = file_->GetContext();
-
-		String str(context->GetTypeName(value.type_));
-		for (unsigned i = 0; i < value.names_.Size(); ++i)
+		// 需要查询类型
+		Core* pCore = file_->GetCore();
+		
+		String str(pCore->GetTypeName(value.type_));
+		for (unsigned i = 0; i < value.names_.size(); ++i)
 		{
+			//对象类型名:资源名
 			str += ";";
 			str += value.names_[i];
 		}
 
-		return SetAttribute("value", str.CString());
+		return SetAttribute("value", str.c_str());
 	}
 
 	bool XMLElement::SetVariantVector(const VariantVector& value)
 	{
-		// Must remove all existing variant child elements (if they exist) to not cause confusion
+		//必须一次所有存在的变体子元素才不会导致冲突
 		if (!RemoveChildren("variant"))
 			return false;
 
-		for (VariantVector::ConstIterator i = value.Begin(); i != value.End(); ++i)
+		for (VariantVector::const_iterator i = value.begin(); i != value.end(); ++i)
 		{
 			XMLElement variantElem = CreateChild("variant");
 			if (!variantElem)
@@ -412,7 +414,7 @@ namespace Sapphire
 		if (!RemoveChildren("string"))
 			return false;
 
-		for (StringVector::ConstIterator i = value.Begin(); i != value.End(); ++i)
+		for (StringVector::const_iterator i = value.begin(); i != value.end(); ++i)
 		{
 			XMLElement stringElem = CreateChild("string");
 			if (!stringElem)
@@ -428,13 +430,13 @@ namespace Sapphire
 		if (!RemoveChildren("variant"))
 			return false;
 
-		for (VariantMap::ConstIterator i = value.Begin(); i != value.End(); ++i)
+		for (VariantMap::const_iterator i = value.begin(); i != value.end(); ++i)
 		{
 			XMLElement variantElem = CreateChild("variant");
 			if (!variantElem)
 				return false;
-			variantElem.SetUInt("hash", i->first_.Value());
-			variantElem.SetVariant(i->second_);
+			variantElem.SetString("hash", i->first);
+			variantElem.SetVariant(i->second);
 		}
 
 		return true;
@@ -458,14 +460,14 @@ namespace Sapphire
 	bool XMLElement::SetVectorVariant(const String& name, const Variant& value)
 	{
 		VariantType type = value.GetType();
-		if (type == VAR_FLOAT || type == VAR_VECTOR2 || type == VAR_VECTOR3 || type == VAR_VECTOR4 || type == VAR_MATRIX3 ||
-			type == VAR_MATRIX3X4 || type == VAR_MATRIX4)
+		if (type == VAR_FLOAT || type == VAR_VECTOR2 || type == VAR_VECTOR3 || type == VAR_VECTOR4 || type == VAR_MATRIX3X3 ||
+			type == VAR_MATRIX3X4 || type == VAR_MATRIX4X4)
 			return SetAttribute(name, value.ToString());
 		else
 			return false;
 	}
 
-	bool XMLElement::SetMatrix3(const String& name, const Matrix3& value)
+	bool XMLElement::SetMatrix3x3(const String& name, const Matrix3x3& value)
 	{
 		return SetAttribute(name, value.ToString());
 	}
@@ -475,7 +477,7 @@ namespace Sapphire
 		return SetAttribute(name, value.ToString());
 	}
 
-	bool XMLElement::SetMatrix4(const String& name, const Matrix4& value)
+	bool XMLElement::SetMatrix4x4(const String& name, const Matrix4x4& value)
 	{
 		return SetAttribute(name, value.ToString());
 	}
@@ -500,7 +502,7 @@ namespace Sapphire
 		if ((!file_ || !node_) && !xpathNode_)
 			return String();
 
-		// If xpath_node contains just attribute, return its name instead
+		// 如果xpath_node 包含属性，返回它的名字
 		if (xpathNode_ && xpathNode_->attribute())
 			return String(xpathNode_->attribute().name());
 
@@ -510,7 +512,7 @@ namespace Sapphire
 
 	bool XMLElement::HasChild(const String& name) const
 	{
-		return HasChild(name.CString());
+		return HasChild(name.c_str());
 	}
 
 	bool XMLElement::HasChild(const char* name) const
@@ -524,7 +526,7 @@ namespace Sapphire
 
 	XMLElement XMLElement::GetChild(const String& name) const
 	{
-		return GetChild(name.CString());
+		return GetChild(name.c_str());
 	}
 
 	XMLElement XMLElement::GetChild(const char* name) const
@@ -533,7 +535,7 @@ namespace Sapphire
 			return XMLElement();
 
 		const pugi::xml_node& node = xpathNode_ ? xpathNode_->node() : pugi::xml_node(node_);
-		if (!String::CStringLength(name))
+		if (!CStringLength(name))
 			return XMLElement(file_, node.first_child().internal_object());
 		else
 			return XMLElement(file_, node.child(name).internal_object());
@@ -541,7 +543,7 @@ namespace Sapphire
 
 	XMLElement XMLElement::GetNext(const String& name) const
 	{
-		return GetNext(name.CString());
+		return GetNext(name.c_str());
 	}
 
 	XMLElement XMLElement::GetNext(const char* name) const
@@ -550,7 +552,7 @@ namespace Sapphire
 			return XMLElement();
 
 		const pugi::xml_node& node = xpathNode_ ? xpathNode_->node() : pugi::xml_node(node_);
-		if (!String::CStringLength(name))
+		if (!CStringLength(name))
 			return XMLElement(file_, node.next_sibling().internal_object());
 		else
 			return XMLElement(file_, node.next_sibling(name).internal_object());
@@ -585,7 +587,7 @@ namespace Sapphire
 
 	bool XMLElement::HasAttribute(const String& name) const
 	{
-		return HasAttribute(name.CString());
+		return HasAttribute(name.c_str());
 	}
 
 	bool XMLElement::HasAttribute(const char* name) const
@@ -593,7 +595,7 @@ namespace Sapphire
 		if (!file_ || (!node_ && !xpathNode_))
 			return false;
 
-		// If xpath_node contains just attribute, check against it
+ 
 		if (xpathNode_ && xpathNode_->attribute())
 			return String(xpathNode_->attribute().name()) == name;
 
@@ -612,7 +614,7 @@ namespace Sapphire
 
 	String XMLElement::GetAttribute(const String& name) const
 	{
-		return String(GetAttributeCString(name.CString()));
+		return String(GetAttributeCString(name.c_str()));
 	}
 
 	String XMLElement::GetAttribute(const char* name) const
@@ -625,7 +627,7 @@ namespace Sapphire
 		if (!file_ || (!node_ && !xpathNode_))
 			return 0;
 
-		// If xpath_node contains just attribute, return it regardless of the specified name
+		 
 		if (xpathNode_ && xpathNode_->attribute())
 			return xpathNode_->attribute().value();
 
@@ -653,18 +655,18 @@ namespace Sapphire
 		return String(GetAttribute(name)).ToUpper();
 	}
 
-	Vector<String> XMLElement::GetAttributeNames() const
+	std::vector<std::string> XMLElement::GetAttributeNames() const
 	{
 		if (!file_ || (!node_ && !xpathNode_))
-			return Vector<String>();
+			return std::vector<std::string>();
 
 		const pugi::xml_node& node = xpathNode_ ? xpathNode_->node() : pugi::xml_node(node_);
-		Vector<String> ret;
+		std::vector<std::string> ret;
 
 		pugi::xml_attribute attr = node.first_attribute();
 		while (!attr.empty())
 		{
-			ret.Push(String(attr.name()));
+			ret.push_back(std::string(attr.name()));
 			attr = attr.next_attribute();
 		}
 
@@ -685,21 +687,21 @@ namespace Sapphire
 		return ret;
 	}
 
-	PODVector<unsigned char> XMLElement::GetBuffer(const String& name) const
+	std::vector<unsigned char> XMLElement::GetBuffer(const String& name) const
 	{
-		PODVector<unsigned char> ret;
-		StringToBuffer(ret, GetAttribute(name));
+		std::vector<unsigned char> ret;
+		StringToBuffer(ret, GetAttribute(name).c_str());
 		return ret;
 	}
 
 	bool XMLElement::GetBuffer(const String& name, void* dest, unsigned size) const
 	{
-		Vector<String> bytes = GetAttribute(name).Split(' ');
-		if (size < bytes.Size())
+		std::vector<String> bytes = GetAttribute(name.c_str()).Split(' ');
+		if (size < bytes.size())
 			return false;
 
 		unsigned char* destBytes = (unsigned char*)dest;
-		for (unsigned i = 0; i < bytes.Size(); ++i)
+		for (unsigned i = 0; i < bytes.size(); ++i)
 			destBytes[i] = (unsigned char)ToInt(bytes[i]);
 		return true;
 	}
@@ -779,8 +781,8 @@ namespace Sapphire
 	{
 		ResourceRef ret;
 
-		Vector<String> values = GetAttribute("value").Split(';');
-		if (values.Size() == 2)
+		std::vector<String> values = GetAttribute("value").Split(';');
+		if (values.size() == 2)
 		{
 			ret.type_ = values[0];
 			ret.name_ = values[1];
@@ -793,12 +795,12 @@ namespace Sapphire
 	{
 		ResourceRefList ret;
 
-		Vector<String> values = GetAttribute("value").Split(';', true);
-		if (values.Size() >= 1)
+		std::vector<String> values = GetAttribute("value").Split(';', true);
+		if (values.size() >= 1)
 		{
 			ret.type_ = values[0];
-			ret.names_.Resize(values.Size() - 1);
-			for (unsigned i = 1; i < values.Size(); ++i)
+			ret.names_.resize(values.size() - 1);
+			for (unsigned i = 1; i < values.size(); ++i)
 				ret.names_[i - 1] = values[i];
 		}
 
@@ -812,7 +814,7 @@ namespace Sapphire
 		XMLElement variantElem = GetChild("variant");
 		while (variantElem)
 		{
-			ret.Push(variantElem.GetVariant());
+			ret.push_back(variantElem.GetVariant());
 			variantElem = variantElem.GetNext("variant");
 		}
 
@@ -826,7 +828,7 @@ namespace Sapphire
 		XMLElement stringElem = GetChild("string");
 		while (stringElem)
 		{
-			ret.Push(stringElem.GetAttributeCString("value"));
+			ret.push_back(stringElem.GetAttributeCString("value"));
 			stringElem = stringElem.GetNext("string");
 		}
 
@@ -840,7 +842,8 @@ namespace Sapphire
 		XMLElement variantElem = GetChild("variant");
 		while (variantElem)
 		{
-			StringHash key(variantElem.GetUInt("hash"));
+			//StringHash key(variantElem.GetUInt("hash"));
+			std::string key = variantElem.GetAttribute("hash").str(); //variantMap暂时没有用hash，就用字符串了
 			ret[key] = variantElem.GetVariant();
 			variantElem = variantElem.GetNext("variant");
 		}
@@ -870,12 +873,52 @@ namespace Sapphire
 
 	Variant XMLElement::GetVectorVariant(const String& name) const
 	{
-		return ToVectorVariant(GetAttribute(name));
+		Variant ret;
+		String source = GetAttribute(name);
+		unsigned elements = CountElements(source.c_str(), ' ');
+
+		switch (elements)
+		{
+		case 1:
+			ret.FromString(VAR_FLOAT, source);
+			break;
+
+		case 2:
+			ret.FromString(VAR_VECTOR2, source);
+			break;
+
+		case 3:
+			ret.FromString(VAR_VECTOR3, source);
+			break;
+
+		case 4:
+			ret.FromString(VAR_VECTOR4, source);
+			break;
+
+		case 9:
+			ret.FromString(VAR_MATRIX3X3, source);
+			break;
+
+		case 12:
+			ret.FromString(VAR_MATRIX3X4, source);
+			break;
+
+		case 16:
+			ret.FromString(VAR_MATRIX4X4, source);
+			break;
+
+		default:
+			assert(false);   
+			break;
+		}
+
+		return ret;
+		//return ToVectorVariant(GetAttribute(name));
 	}
 
-	Matrix3 XMLElement::GetMatrix3(const String& name) const
+	Matrix3x3 XMLElement::GetMatrix3x3(const String& name) const
 	{
-		return ToMatrix3(GetAttribute(name));
+		return ToMatrix3x3(GetAttribute(name));
 	}
 
 	Matrix3x4 XMLElement::GetMatrix3x4(const String& name) const
@@ -883,9 +926,9 @@ namespace Sapphire
 		return ToMatrix3x4(GetAttribute(name));
 	}
 
-	Matrix4 XMLElement::GetMatrix4(const String& name) const
+	Matrix4x4 XMLElement::GetMatrix4x4(const String& name) const
 	{
-		return ToMatrix4(GetAttribute(name));
+		return ToMatrix4x4(GetAttribute(name));
 	}
 
 	XMLFile* XMLElement::GetFile() const
@@ -937,7 +980,7 @@ namespace Sapphire
 	XMLElement XPathResultSet::operator [](unsigned index) const
 	{
 		if (!resultSet_)
-			URHO3D_LOGERRORF(
+			SAPPHIRE_LOGERROR(
 			"Could not return result at index: %u. Most probably this is caused by the XPathResultSet not being stored in a lhs variable.",
 			index);
 
@@ -984,26 +1027,26 @@ namespace Sapphire
 	{
 		// Delete previous query object and create a new one binding it with variable set
 		delete query_;
-		query_ = new pugi::xpath_query(queryString_.CString(), variables_);
+		query_ = new pugi::xpath_query(queryString_.c_str(), variables_);
 	}
 
 	bool XPathQuery::SetVariable(const String& name, bool value)
 	{
 		if (!variables_)
 			variables_ = new pugi::xpath_variable_set();
-		return variables_->set(name.CString(), value);
+		return variables_->set(name.c_str(), value);
 	}
 
 	bool XPathQuery::SetVariable(const String& name, float value)
 	{
 		if (!variables_)
 			variables_ = new pugi::xpath_variable_set();
-		return variables_->set(name.CString(), value);
+		return variables_->set(name.c_str(), value);
 	}
 
 	bool XPathQuery::SetVariable(const String& name, const String& value)
 	{
-		return SetVariable(name.CString(), value.CString());
+		return SetVariable(name.c_str(), value.c_str());
 	}
 
 	bool XPathQuery::SetVariable(const char* name, const char* value)
@@ -1022,22 +1065,22 @@ namespace Sapphire
 		if (!nodeSet)
 			return false;
 
-		return variables_->set(name.CString(), *nodeSet);
+		return variables_->set(name.c_str(), *nodeSet);
 	}
 
 	bool XPathQuery::SetQuery(const String& queryString, const String& variableString, bool bind)
 	{
-		if (!variableString.Empty())
+		if (!variableString.empty())
 		{
 			Clear();
 			variables_ = new pugi::xpath_variable_set();
 
 			// Parse the variable string having format "name1:type1,name2:type2,..." where type is one of "Bool", "Float", "String", "ResultSet"
-			Vector<String> vars = variableString.Split(',');
-			for (Vector<String>::ConstIterator i = vars.Begin(); i != vars.End(); ++i)
+			std::vector<String> vars = variableString.Split(',');
+			for (std::vector<String>::const_iterator i = vars.begin(); i != vars.end(); ++i)
 			{
-				Vector<String> tokens = i->Trimmed().Split(':');
-				if (tokens.Size() != 2)
+				std::vector<String> tokens = i->Trimmed().Split(':');
+				if (tokens.size() != 2)
 					continue;
 
 				pugi::xpath_value_type type;
@@ -1052,7 +1095,7 @@ namespace Sapphire
 				else
 					return false;
 
-				if (!variables_->add(tokens[0].CString(), type))
+				if (!variables_->add(tokens[0].c_str(), type))
 					return false;
 			}
 		}
@@ -1103,7 +1146,7 @@ namespace Sapphire
 		// First call get the size
 		result.Reserve((unsigned)query_->evaluate_string(0, 0, node));
 		// Second call get the actual string
-		query_->evaluate_string(const_cast<pugi::char_t*>(result.CString()), result.Capacity(), node);
+		query_->evaluate_string(const_cast<pugi::char_t*>(result.c_str()), result.Capacity(), node);
 		return result;
 	}
 

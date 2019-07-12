@@ -102,6 +102,31 @@ namespace Sapphire
 		return m_uidCreator->GetNewUID();
 	}
 
+	void Core::RegisterFactory(ObjectFactory* factory)
+	{
+		if (!factory)
+			return;
+
+		m_objFactories[factory->GetType()] = factory;
+	}
+
+	void Core::RegisterFactory(ObjectFactory* factory, const char* category)
+	{
+		if (!factory)
+			return;
+
+		RegisterFactory(factory);
+		if (strlen(category))  //如果目录名有效
+			m_objCategories[category].push_back(factory->GetType());
+	}
+
+	const std::string Core::GetTypeName(StringHash objectType) const
+	{
+		//从对象工厂中找对象获取其类型名
+		OBJECTFACTORY_MAP_CITERATOR it = m_objFactories.find(objectType);
+		return it != m_objFactories.end() ? it->second->GetTypeName() : "";
+	}
+
 	Sapphire::SubSystem* Core::GetSubSystemWithName(std::string name) const
 	{
 		SubSystem* pss = NULL;

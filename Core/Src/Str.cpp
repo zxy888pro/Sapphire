@@ -74,6 +74,7 @@ namespace Sapphire
 	String::String(const wchar_t* pstr)
 	{
 		m_wstr = pstr;
+		m_str = WString2String(m_wstr);
 	}
 
 	String::String(const String& other)
@@ -175,14 +176,14 @@ namespace Sapphire
 		m_str[0] = value;
 	}
 
-	String::String(char value, unsigned length)
-	{
-		m_str.resize(length);
-		for (unsigned i = 0; i < length; ++i)
-			m_str[i] = value;
-	}
+	
 
 	
+
+	String::String(const std::string& str)
+	{
+		m_str = str.c_str();
+	}
 
 	String::~String()
 	{
@@ -191,22 +192,33 @@ namespace Sapphire
 
 	const std::string& String::str() const
 	{
-		return m_str;
+		if (!m_str.empty())
+			return m_str;
+		else if (!m_wstr.empty())
+			return WString2String(m_wstr);
+		else
+			return "";
+
 	}
 
 	const std::wstring& String::wstr() const
 	{
-		return m_wstr;
+		if (!m_wstr.empty())
+			return m_wstr;
+		else if (!m_str.empty())
+			return String2WString(m_str);
+		else
+			return L"";
 	}
 
 	const char* String::c_str() const
 	{
-		return m_str.c_str();
+		return str().c_str();
 	}
 
 	const wchar_t* String::c_wstr() const
 	{
-		return m_wstr.c_str();
+		return wstr().c_str();
 	}
 
 	 
@@ -296,13 +308,69 @@ namespace Sapphire
 		return ret;
 	}
 
-	Sapphire::String String::GetSubString(int nBeginPos, int nEndPos)
-	{
-		if(nBeginPos == std::string::npos || nEndPos == std::string::npos || nEndPos > m_str.length() || nBeginPos > nEndPos);
-			throw StringException(StringException::SError_OutOfRange);
+	
 
-		String ret = m_str.substr(nBeginPos, nEndPos - nBeginPos);
+	Sapphire::String String::ToUpper() const
+	{
+		String ret(*this);
+		for (unsigned i = 0; i < ret.Length(); ++i)
+			ret[i] = (char)tolower(m_str[i]);
+
 		return ret;
+	}
+
+	Sapphire::String String::ToLower() const
+	{
+		String ret(*this);
+		for (unsigned i = 0; i < ret.Length(); ++i)
+			ret[i] = (char)toupper(m_str[i]);
+
+		return ret;
+	}
+
+	int String::Length() const
+	{
+		return m_str.length();
+	}
+
+	String String::Trimmed() const
+	{
+		unsigned trimStart = 0;
+		unsigned trimEnd = m_str.length();
+
+		while (trimStart < trimEnd)
+		{
+			char c = m_str[trimStart];
+			if (c != ' ' && c != 9)
+				break;
+			++trimStart;
+		}
+		while (trimEnd > trimStart)
+		{
+			char c = m_str[trimEnd - 1];
+			if (c != ' ' && c != 9)
+				break;
+			--trimEnd;
+		}
+
+		return GetSubString(trimStart, trimEnd - trimStart);
+	}
+
+	int String::Capacity() const
+	{
+		return m_str.capacity();
+	}
+
+	void String::Clear()
+	{
+		m_str.clear();
+		m_wstr.clear();
+
+	}
+
+	void String::Reserve(unsigned newCapacity)
+	{
+		m_str.reserve(newCapacity);
 	}
 
 	std::vector<Sapphire::String> String::Split(const char* str, char separator, bool keepEmptyStrings /*= false*/)
@@ -322,6 +390,20 @@ namespace Sapphire
 		}
 		tmp = src.substr(pos1);
 		ret.push_back(tmp);
+		return ret;
+	}
+
+	std::vector<Sapphire::String> String::Split(char separator, bool keepEmptyStrings /*= false*/) const
+	{
+		return Split(str().c_str(), separator, keepEmptyStrings);
+	}
+
+	Sapphire::String String::GetSubString(int nBeginPos, int nEndPos) const
+	{
+		if (nBeginPos == std::string::npos || nEndPos == std::string::npos || nEndPos > m_str.length() || nBeginPos > nEndPos);
+		throw StringException(StringException::SError_OutOfRange);
+
+		String ret = m_str.substr(nBeginPos, nEndPos - nBeginPos);
 		return ret;
 	}
 

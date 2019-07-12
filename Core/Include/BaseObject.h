@@ -54,6 +54,8 @@ namespace Sapphire
 		BaseObject(Core* pCore);
 		virtual ~BaseObject();
 
+		Core*  GetCore() const { return m_pCore; }
+
 		static const ClassTypeInfo* GetClassTypeInfoStatic() { return 0; }
 
 	protected:
@@ -65,5 +67,56 @@ namespace Sapphire
 
 
 
+	};
+
+
+	///对象工厂
+	class SAPPHIRE_CLASS ObjectFactory : public RefCounter
+	{
+	public:
+		 
+		ObjectFactory(Core* pCore) :
+			m_pCore(pCore)
+		{
+			assert(pCore);
+		}
+
+		/// 创建一个对象， 在模板子类里实现
+		virtual SharedPtr<BaseObject> CreateObject() = 0;
+
+		 
+		Core* GetCore() const { return m_pCore; }
+
+		/// 通过这个工厂获取这个的类的运行时信息
+		const ClassTypeInfo* GetTypeInfo() const { return typeInfo_; }
+
+		/// 通过这个工厂获取对象的hash类型
+		StringHash GetType() const { return typeInfo_->GetClassType(); }
+
+		/// 通过这个工厂获取这个对象的类型名
+		const std::string& GetTypeName() const { return typeInfo_->GetClassTypeName(); }
+
+	protected:
+		 
+		Core* m_pCore;
+		//运行时信息
+		const ClassTypeInfo* typeInfo_;
+	};
+
+
+
+	/// 对象工厂的实现模板
+	template <class T> class ObjectFactoryImpl : public ObjectFactory
+	{
+	public:
+		/// Construct.
+		ObjectFactoryImpl(Core* pCore) :
+			ObjectFactory(context)
+		{
+			typeInfo_ = T::GetClassTypeInfoStatic(); //获取模板类的运行时信息
+		}
+
+		/// 通过指定的类型创建这个对象
+		virtual SharedPtr<BaseObject> CreateObject() { return SharedPtr<BaseObject>(new T(m_pCore)); }
 	};
 }

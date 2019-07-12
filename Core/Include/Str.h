@@ -18,6 +18,8 @@ namespace Sapphire
 
 		String(std::string& str);
 
+		String(const std::string& str);
+
 		String(char c, uint count);
 
 		String(const String& other);
@@ -46,7 +48,6 @@ namespace Sapphire
 
 		explicit String(char value);
 
-		explicit String(char value, unsigned length);
 
 
 		virtual ~String();
@@ -149,11 +150,27 @@ namespace Sapphire
 
 		int ReplaceAll(const char* replaceThis, const char* replaceWith, bool caseSensitive = true);
 
-		String GetSubString(int nBeginPos, int nEndPos);
+		std::vector<String> Split(char separator, bool keepEmptyStrings = false) const;
 
+		String GetSubString(int nBeginPos, int nEndPos) const;
+
+		String ToUpper() const;
+
+		String ToLower() const;
+
+		int	   Length() const;
+
+		String Trimmed() const;
+
+		int    Capacity() const;
+
+		void   Clear();
+
+		void   Reserve(unsigned newCapacity);
 
 		static int Compare(const char* lhs, const char* rhs, bool caseSensitive);
 
+		
 
 		static std::vector<String> Split(const char* str, char separator, bool keepEmptyStrings = false);
 
@@ -244,7 +261,21 @@ namespace Sapphire
 
 	};
 
-
-
+	struct SAPPHIRE_CLASS StringHashFunc
+	{
+		size_t operator()(const StringHash &strhash) const
+		{
+			return strhash.Value();
+		}
+		
+ 
+	};
+	struct SAPPHIRE_CLASS StringHashCMP  
+	{
+		bool operator()(const StringHash &strhash1, const StringHash &strhash2) const
+		{
+			return strhash1 == strhash2;
+		}
+	};
 
 }
