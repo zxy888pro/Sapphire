@@ -1,4 +1,7 @@
+#include <iostream>
 #include "Sapphire.h"
+#include "Str.h"
+#include "stringHelper.h"
 #include "Variant.h"
 
 void TestVariant()
@@ -22,8 +25,21 @@ void TestVariant()
 
 }
 
+
+void TestString()
+{
+	using namespace Sapphire;
+	String str = "   °®µÄsakkABJ J  ";
+	String str_small = str.ToUpper();
+	String str_trim = str.Trimmed();
+	int ret = str.ReplaceSubString("°®µÄ", "bosmo");
+	return;
+
+}
+
 int main() {
   
 	TestVariant();
+	TestString();
 	return 0;
 }

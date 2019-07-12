@@ -4,6 +4,7 @@
 
 namespace Sapphire
 {
+#define STRING_NOPOS  0xffffffff
 	class SAPPHIRE_CLASS String
 	{
 	public:
@@ -65,44 +66,41 @@ namespace Sapphire
 			return m_str.empty();
 		}
 
-		String& operator =(const char* rhs)
-		{
+		String& operator =(const char* rhs);
+		
 
-			m_str = rhs;
-			return *this;
+		String& operator =(std::string& rhs);
+		
+
+		String operator +(const String& rhs) const
+		{
+			String ret = m_str + rhs.str();
+			return ret;
 		}
 
-		String& operator =(std::string& rhs)
+		String operator +(const std::string& rhs) const
 		{
-
-			m_str = rhs.c_str();
-			return *this;
+			String ret = m_str + rhs.c_str();
+			return ret;
 		}
 
-
-		String& operator =(const String& rhs)
+		String operator +(const char* rhs) const
 		{
-			m_str = rhs.c_str();
-			return *this;
+			String ret = m_str + rhs;
+			return ret;
 		}
 
-		String& operator +=(const String& rhs)
-		{
-			m_str += rhs.str();
-			return *this;
-		}
+		String& operator =(const String& rhs);
+		
 
-		String& operator +=(const char* rhs)
-		{
-			m_str += rhs;
-			return *this;
-		}
+		String& operator +=(const String& rhs);
+		
 
-		String& operator +=(char rhs)
-		{
-			m_str += rhs;
-			return *this;
-		}
+		String& operator +=(const char* rhs);
+	
+
+		String& operator +=(char rhs);
+		
 
 		bool operator ==(const String& rhs) const { return m_str == rhs.str(); }
 
@@ -142,13 +140,10 @@ namespace Sapphire
 
 		int Find(String rhs, int beginPos, int strNo = 0, bool reverse = false, bool caseSensitive = true);
 
-		int Replace(const String& replaceThis, const String& replaceWith, bool caseSensitive = true);
+		int ReplaceSubString(const String& replaceThis, const String& replaceWith, bool caseSensitive = true, int repNum = 0);
 
-		int Replace(const char* replaceThis, const char* replaceWith, bool caseSensitive = true);
+		int ReplaceSubString(const char* replaceThis, const char* replaceWith, bool caseSensitive = true, int repNum = 0);
 
-		int ReplaceAll(const String& replaceThis, const String& replaceWith, bool caseSensitive = true);
-
-		int ReplaceAll(const char* replaceThis, const char* replaceWith, bool caseSensitive = true);
 
 		std::vector<String> Split(char separator, bool keepEmptyStrings = false) const;
 
@@ -180,7 +175,11 @@ namespace Sapphire
 		std::string m_str;
 		std::wstring m_wstr;
 
+		
+
 	};
+
+
 
 	FORCEINLINE String operator +(const char* lhs, const String& rhs);
 

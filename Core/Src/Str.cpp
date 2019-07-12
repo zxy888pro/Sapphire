@@ -58,16 +58,19 @@ namespace Sapphire
 	String::String(const char* pstr)
 	{
 		m_str = pstr;
+		m_wstr = String2WString(m_str);
 	}
 
 	String::String(std::string& str)
 	{
 		m_str = str;
+		m_wstr = String2WString(m_str);
 	}
 
 	String::String(char c, uint count)
 	{
 		m_str = std::string(c, count);
+		m_wstr = String2WString(m_str);
 	}
 
 
@@ -80,6 +83,7 @@ namespace Sapphire
 	String::String(const String& other)
 	{
 		m_str = other.str();
+		m_wstr = String2WString(m_str);
 	}
 
 	String::String(int val)
@@ -88,6 +92,7 @@ namespace Sapphire
 		sprintf(tempBuffer, "%d", val);
 		*this = tempBuffer;
 		m_str = tempBuffer;
+		m_wstr = String2WString(m_str);
 	}
 
 	String::String(short value)
@@ -96,6 +101,7 @@ namespace Sapphire
 		sprintf(tempBuffer, "%d", value);
 		*this = tempBuffer;
 		m_str = tempBuffer;
+		m_wstr = String2WString(m_str);
 	}
 
 	String::String(long value)
@@ -104,6 +110,7 @@ namespace Sapphire
 		sprintf(tempBuffer, "%ld", value);
 		*this = tempBuffer;
 		m_str = tempBuffer;
+		m_wstr = String2WString(m_str);
 	}
 
 	String::String(long long value)
@@ -112,6 +119,7 @@ namespace Sapphire
 		sprintf(tempBuffer, "%lld", value);
 		*this = tempBuffer;
 		m_str = tempBuffer;
+		m_wstr = String2WString(m_str);
 	}
 
 	String::String(unsigned value)
@@ -120,6 +128,7 @@ namespace Sapphire
 		sprintf(tempBuffer, "%u", value);
 		*this = tempBuffer;
 		m_str = tempBuffer;
+		m_wstr = String2WString(m_str);
 	}
 
 	String::String(unsigned short value)
@@ -128,6 +137,7 @@ namespace Sapphire
 		sprintf(tempBuffer, "%u", value);
 		*this = tempBuffer;
 		m_str = tempBuffer;
+		m_wstr = String2WString(m_str);
 	}
 
 	String::String(unsigned long value)
@@ -136,6 +146,7 @@ namespace Sapphire
 		sprintf(tempBuffer, "%lu", value);
 		*this = tempBuffer;
 		m_str = tempBuffer;
+		m_wstr = String2WString(m_str);
 	}
 
 	String::String(unsigned long long value)
@@ -144,6 +155,7 @@ namespace Sapphire
 		sprintf(tempBuffer, "%llu", value);
 		*this = tempBuffer;
 		m_str = tempBuffer;
+		m_wstr = String2WString(m_str);
 	}
 
 	String::String(float value)
@@ -152,6 +164,7 @@ namespace Sapphire
 		sprintf(tempBuffer, "%g", value);
 		*this = tempBuffer;
 		m_str = tempBuffer;
+		m_wstr = String2WString(m_str);
 	}
 
 	String::String(double value)
@@ -160,6 +173,7 @@ namespace Sapphire
 		sprintf(tempBuffer, "%.15g", value);
 		*this = tempBuffer;
 		m_str = tempBuffer;
+		m_wstr = String2WString(m_str);
 	}
 
 	String::String(bool value)
@@ -168,12 +182,14 @@ namespace Sapphire
 			*this = "true";
 		else
 			*this = "false";
+		 
 	}
 
 	String::String(char value)
 	{
 		m_str.resize(1);
 		m_str[0] = value;
+		m_wstr = String2WString(m_str);
 	}
 
 	
@@ -183,6 +199,7 @@ namespace Sapphire
 	String::String(const std::string& str)
 	{
 		m_str = str.c_str();
+		m_wstr = String2WString(m_str);
 	}
 
 	String::~String()
@@ -192,36 +209,68 @@ namespace Sapphire
 
 	const std::string& String::str() const
 	{
-		if (!m_str.empty())
-			return m_str;
-		else if (!m_wstr.empty())
-			return WString2String(m_wstr);
-		else
-			return "";
+		return m_str;
 
 	}
 
 	const std::wstring& String::wstr() const
 	{
-		if (!m_wstr.empty())
-			return m_wstr;
-		else if (!m_str.empty())
-			return String2WString(m_str);
-		else
-			return L"";
+		return m_wstr;
 	}
 
 	const char* String::c_str() const
 	{
-		return str().c_str();
+		return m_str.c_str();
 	}
 
 	const wchar_t* String::c_wstr() const
 	{
-		return wstr().c_str();
+		return m_wstr.c_str();
 	}
 
 	 
+
+	String& String::operator=(const String& rhs)
+	{
+		m_str = rhs.c_str();
+		m_wstr = String2WString(m_str);
+		return *this;
+	}
+
+	String& String::operator=(std::string& rhs)
+	{
+		m_str = rhs.c_str();
+		m_wstr = String2WString(m_str);
+		return *this;
+	}
+
+	String& String::operator=(const char* rhs)
+	{
+		m_str = rhs;
+		m_wstr = String2WString(m_str);
+		return *this;
+	}
+
+	String& String::operator+=(const String& rhs)
+	{
+		m_str += rhs.str();
+		m_wstr = String2WString(m_str);
+		return *this;
+	}
+
+	String& String::operator+=(const char* rhs)
+	{
+		m_str += rhs;
+		m_wstr = String2WString(m_str);
+		return *this;
+	}
+
+	String& String::operator+=(char rhs)
+	{
+		m_str += rhs;
+		m_wstr = String2WString(m_str);
+		return *this;
+	}
 
 	unsigned String::ToHash() const
 	{
@@ -284,29 +333,79 @@ namespace Sapphire
 		return ret;
 	}
 
-	int String::Replace(const String& replaceThis, const String& replaceWith, bool caseSensitive /*= true*/)
+	int String::ReplaceSubString(const String& replaceThis, const String& replaceWith, bool caseSensitive /*= true*/,  int repNum)
 	{
+		unsigned nextPos = 0;
 		int ret = 0;
+		std::string source = "";
+		std::string src = "";
+		std::string dst = "";
+		if (caseSensitive)
+		{
+			source = m_str.c_str();
+			src = replaceThis.c_str();
+			dst = replaceWith.c_str();
+		}
+		else
+		{
+			source = ToLower().c_str();
+			src = replaceThis.ToLower().c_str();
+			dst = replaceWith.c_str();
+		}
+		  
+
+		while (nextPos < m_str.length())
+		{
+			unsigned pos = source.find(src, nextPos);
+			if (pos == std::string::npos)
+				break;
+			source.replace(pos, src.length(), dst);
+			nextPos = pos + dst.length();
+			ret++;
+			if (ret > repNum && repNum > 0)
+				break;
+		}
+		(*this) = source;
 		return ret;
 	}
 
-	int String::Replace(const char* replaceThis, const char* replaceWith, bool caseSensitive /*= true*/)
+	int String::ReplaceSubString(const char* replaceThis, const char* replaceWith, bool caseSensitive /*= true*/, int repNum)
 	{
+		unsigned nextPos = 0;
 		int ret = 0;
+		std::string source = "";
+		std::string src = "";
+		std::string dst = "";
+		if (caseSensitive)
+		{
+			source = m_str.c_str();
+			src = replaceThis;
+			dst = replaceWith;
+		}
+		else
+		{
+			source = ToLower().c_str();
+			src = String(replaceThis).ToLower().c_str();
+			dst = replaceWith;
+		}
+
+
+		while (nextPos < m_str.length())
+		{
+			unsigned pos = source.find(src, nextPos);
+			if (pos == std::string::npos)
+				break;
+			source.replace(pos, src.length(), dst);
+			nextPos = pos + dst.length();
+			ret++;
+			if (ret > repNum && repNum > 0)
+				break;
+		}
+		(*this) = source;
 		return ret;
 	}
 
-	int String::ReplaceAll(const String& replaceThis, const String& replaceWith, bool caseSensitive /*= true*/)
-	{
-		int ret = 0;
-		return ret;
-	}
 
-	int String::ReplaceAll(const char* replaceThis, const char* replaceWith, bool caseSensitive /*= true*/)
-	{
-		int ret = 0;
-		return ret;
-	}
 
 	
 
@@ -314,7 +413,7 @@ namespace Sapphire
 	{
 		String ret(*this);
 		for (unsigned i = 0; i < ret.Length(); ++i)
-			ret[i] = (char)tolower(m_str[i]);
+			ret[i] = (char)toupper(m_str[i]);
 
 		return ret;
 	}
@@ -323,7 +422,7 @@ namespace Sapphire
 	{
 		String ret(*this);
 		for (unsigned i = 0; i < ret.Length(); ++i)
-			ret[i] = (char)toupper(m_str[i]);
+			ret[i] = (char)tolower(m_str[i]);
 
 		return ret;
 	}
@@ -371,6 +470,7 @@ namespace Sapphire
 	void String::Reserve(unsigned newCapacity)
 	{
 		m_str.reserve(newCapacity);
+		m_wstr = String2WString(m_str);
 	}
 
 	std::vector<Sapphire::String> String::Split(const char* str, char separator, bool keepEmptyStrings /*= false*/)
@@ -400,8 +500,8 @@ namespace Sapphire
 
 	Sapphire::String String::GetSubString(int nBeginPos, int nEndPos) const
 	{
-		if (nBeginPos == std::string::npos || nEndPos == std::string::npos || nEndPos > m_str.length() || nBeginPos > nEndPos);
-		throw StringException(StringException::SError_OutOfRange);
+		if (nBeginPos == std::string::npos || nEndPos == std::string::npos || nEndPos > m_str.length() || nBeginPos > nEndPos)
+			throw StringException(StringException::SError_OutOfRange);
 
 		String ret = m_str.substr(nBeginPos, nEndPos - nBeginPos);
 		return ret;
