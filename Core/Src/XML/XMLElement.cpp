@@ -951,9 +951,9 @@ namespace Sapphire
 
 	XPathResultSet::XPathResultSet(XMLFile* file, pugi::xpath_node_set* resultSet) :
 		file_(file),
-		resultSet_(resultSet ? new pugi::xpath_node_set(resultSet->begin(), resultSet->end()) : 0)
+		resultSet_(resultSet ? new pugi::xpath_node_set(resultSet->begin(), resultSet->end()) : 0) //空的话，new一个
 	{
-		// Sort the node set in forward document order
+		// 对集合进行排序
 		if (resultSet_)
 			resultSet_->sort();
 	}
@@ -1025,7 +1025,7 @@ namespace Sapphire
 
 	void XPathQuery::Bind()
 	{
-		// Delete previous query object and create a new one binding it with variable set
+		// 删除之前的查询对象并且创建一个新的
 		delete query_;
 		query_ = new pugi::xpath_query(queryString_.c_str(), variables_);
 	}
@@ -1075,7 +1075,7 @@ namespace Sapphire
 			Clear();
 			variables_ = new pugi::xpath_variable_set();
 
-			// Parse the variable string having format "name1:type1,name2:type2,..." where type is one of "Bool", "Float", "String", "ResultSet"
+			// 按格式 "name1:type1,name2:type2,..."类型  "Bool", "Float", "String", "ResultSet"来解析字符串
 			std::vector<String> vars = variableString.Split(',');
 			for (std::vector<String>::const_iterator i = vars.begin(); i != vars.end(); ++i)
 			{
@@ -1143,9 +1143,9 @@ namespace Sapphire
 
 		const pugi::xml_node& node = element.GetXPathNode() ? element.GetXPathNode()->node() : pugi::xml_node(element.GetNode());
 		String result;
-		// First call get the size
+		// 首先得到其大小
 		result.Reserve((unsigned)query_->evaluate_string(0, 0, node));
-		// Second call get the actual string
+		
 		query_->evaluate_string(const_cast<pugi::char_t*>(result.c_str()), result.Capacity(), node);
 		return result;
 	}

@@ -2,6 +2,7 @@
 
 
 #include "SapphireDef.h"
+#include "Thread.h"
 #include <SubSystem.h>
 #include "BaseResource.h"
 
@@ -90,6 +91,10 @@ namespace Sapphire
 		BaseResource* GetResource(const std::string& name);
 		BaseResource* GetResource(const char* name);
 
+		void StoreResourceDependency(BaseResource* resource, const std::string& dependency);  //保存资源的依赖
+
+		void ResetDependencies(BaseResource* resource);  //重置资源依赖
+
 		// 锁定资源，保证不会被自动清理
 		BaseResource* Lock(const char* name);
 
@@ -98,18 +103,26 @@ namespace Sapphire
 
 
 	protected:
-		// 内部函数
-		inline void AddMemory(size_t nMem)		{ m_nCurrentUsedMemory += nMem; }
-		inline void RemoveMemory(size_t nMem)	{ m_nCurrentUsedMemory -= nMem; }
-		//检查已释放资源
-		bool CheckForOverallocation();
-
+		
 		size_t			m_nCurrentUsedMemory;	//当前内存占用
 		size_t			m_nMaximumMemory;		//最大内存上限
 		bool			m_bResourceReserved;   //是否预分配内存
 		ResCMapItor		m_CurrentResource;     //当前资源迭代器
 		ResCMap        m_ResourceMap;
-		 
+
+		MutexEx        m_resMutex;
+		MutexEx        m_depMutex;
+		
+		std::unordered_map<std::string, std::unordered_set<std::string>>   m_ResourceDependences;
+
+
+	private:
+
+		// 内部函数
+		inline void AddMemory(size_t nMem)		{ m_nCurrentUsedMemory += nMem; }
+		inline void RemoveMemory(size_t nMem)	{ m_nCurrentUsedMemory -= nMem; }
+		//检查已释放资源
+		bool CheckForOverallocation();
 
 	};
 

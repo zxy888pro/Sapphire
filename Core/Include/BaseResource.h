@@ -20,6 +20,7 @@ namespace Sapphire
 		ResoureType_Texture,
 		ResourceType_Model,
 		ResourceType_Shader,
+		ResourceType_XML,
 		ResourceType_Unkown,
 		ResourceType_Max
 	};
@@ -68,6 +69,8 @@ namespace Sapphire
 		virtual bool Load(const char* resPath) { m_resName = resPath; return Load(); }; //重新指定资源路径
 		virtual bool Recreate() = 0;  //重新创建，相当于重新加载 (给ResourceLoader发个加载事件即可)
 		virtual void Dispose() = 0;
+
+		virtual void Save() {};  //重新保存资源到文件
 
 		ResourceState GetState() const { return m_eState; }
 		void SetState(ResourceState state) { m_eState = state; }

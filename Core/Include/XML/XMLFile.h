@@ -2,6 +2,7 @@
 
 #include "Sapphire.h"
 #include "XML/XMLElement.h"
+#include "Deserializer.h"
 
 namespace pugi
 {
@@ -20,45 +21,93 @@ namespace Sapphire
 		SAPPHIRE_OBJECT(XMLFile, BaseResource)
 
 	public: 
-		XMLFile(Core* pcore);
+		XMLFile(Core* pcore, const char* resName="");
 		virtual ~XMLFile();
 
-		/// Deserialize from a string. Return true if successful.
+		/// 从字符串反序列化
 		bool FromString(const String& source);
-		/// Clear the document and create a root element.
+		/// 清空文档，创建一个root元素
 		XMLElement CreateRoot(const String& name);
 
-		/// Return the root element, with optionally specified name. Return null element if not found.
+		/// 返回root元素
 		XMLElement GetRoot(const String& name = String::EMPTY);
 
-		/// Return the pugixml document.
+		/// 返回 pugixml document.
 		pugi::xml_document* GetDocument() const { return document_; }
 
-		/// Serialize the XML content to a string.
+		/// 序列化XMLFile内容到一个字符串
 		String ToString(const String& indentation = "\t") const;
 
-		/// Patch the XMLFile with another XMLFile. Based on RFC 5261.
+		/// 用另外一个XML文件修补一个XML文件，基于RFC 5261
 		void Patch(XMLFile* patchFile);
-		/// Patch the XMLFile with another XMLElement. Based on RFC 5261.
+		/// 用另外一个XML元素修补一个XML文件，基于RFC 5261
 		void Patch(XMLElement patchElement);
+		//從一個反序列化對象中讀取
+		bool Load(Deserializer& deserializer);
+
+		virtual void Clear() override;
+
+		virtual bool Create() override;
+
+
+		virtual void Destroy() override;
+
+
+		virtual bool Load() override;
+
+		//從文件加載XML對象
+		virtual bool Load(const char* resPath) override;
+
+
+		virtual bool Recreate() override;
+
+
+		virtual void Dispose() override;
+
+
+		virtual void OnLoadStart() override;
+
+
+		virtual void OnLoadEnd() override;
+
+
+		virtual void OnLoadError() override;
+
+
+		virtual size_t GetSize() override;
+
+
+		virtual bool IsDisposed() override;
+
+
+		virtual bool operator <(BaseResource& container) override
+		{
+			throw std::logic_error("The method or operation is not implemented.");
+		}
 
 	private:
 
-		/// Add an node in the Patch.
+		/// 添加一个节点到Patch
 		void PatchAdd(const pugi::xml_node& patch, pugi::xpath_node& original) const;
-		/// Replace a node or attribute in the Patch.
+		/// 这个patch中替换一个节点或者属性在
 		void PatchReplace(const pugi::xml_node& patch, pugi::xpath_node& original) const;
-		/// Remove a node or attribute in the Patch.
+		///  这个patch中移除一个节点或者属性在 
 		void PatchRemove(const pugi::xpath_node& original) const;
 
-		/// Add a node in the Patch.
+		///添加一个节点到Patch
 		void AddNode(const pugi::xml_node& patch, const pugi::xpath_node& original) const;
-		/// Add an attribute in the Patch.
+		/// 添加一个属性到Patch
 		void AddAttribute(const pugi::xml_node& patch, const pugi::xpath_node& original) const;
-		/// Combine two text nodes.
+		/// 合并两个节点
 		bool CombineText(const pugi::xml_node& patch, const pugi::xml_node& original, bool prepend) const;
 
 		pugi::xml_document* document_;
+
+		std::string m_name;
+
+	public:
+		
+		
 	};
 
 }

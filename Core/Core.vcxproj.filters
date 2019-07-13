@@ -240,6 +240,12 @@
     <ClInclude Include="Include\XML\XMLFile.h">
       <Filter>头文件\XML</Filter>
     </ClInclude>
+    <ClInclude Include="Include\VectorBuffer.h">
+      <Filter>头文件\IO</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\MemoryBuffer.h">
+      <Filter>头文件\IO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -397,6 +403,15 @@
     </ClCompile>
     <ClCompile Include="Src\XML\XMLElement.cpp">
       <Filter>源文件\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\XML\XMLFile.cpp">
+      <Filter>源文件\XML</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\VectorBuffer.cpp">
+      <Filter>源文件\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\MemoryBuffer.cpp">
+      <Filter>源文件\IO</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -113,6 +113,7 @@ namespace Sapphire
 	SAPPHIRE_API Matrix4x4 ToMatrix4x4(const char* source);
 	/// Convert a pointer to string (returns hexadecimal.)
 	SAPPHIRE_API String ToString(void* value);
+	SAPPHIRE_API String ToString(const char* formatString, ...);
 	/// Convert an unsigned integer to string as hexadecimal.
 	SAPPHIRE_API String ToStringHex(unsigned value);
 	/// Convert a byte buffer to a string.

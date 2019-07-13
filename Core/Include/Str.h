@@ -15,6 +15,8 @@ namespace Sapphire
 
 		String(const char* pstr);
 
+		String(const char* pstr,  uint length);
+
 		String(const wchar_t* pstr);
 
 		String(std::string& str);
@@ -136,9 +138,9 @@ namespace Sapphire
 
 		int Compare(String& rhs);
 
-		int Find(const char* pstr, int beginPos, int strNo = 0, bool reverse = false);
+		int Find(const char* pstr, int beginPos,  bool reverse = false, bool caseSensitive = true);
 
-		int Find(String rhs, int beginPos, int strNo = 0, bool reverse = false, bool caseSensitive = true);
+		int Find(String rhs, int beginPos,  bool reverse = false, bool caseSensitive = true);
 
 		int ReplaceSubString(const String& replaceThis, const String& replaceWith, bool caseSensitive = true, int repNum = 0);
 

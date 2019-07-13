@@ -284,84 +284,84 @@ namespace Sapphire
 	public:
 		/// 构造一个空结果集
 		XPathResultSet();
-		/// Construct with result set from XPath query.
+		/// 从xpath query构造一个结果集
 		XPathResultSet(XMLFile* file, pugi::xpath_node_set* resultSet);
-		// Copy-construct.
+		// 拷贝构造
 		XPathResultSet(const XPathResultSet& rhs);
-		/// Destruct.
+		
 		~XPathResultSet();
-		/// Assignment operator.
+		
 		XPathResultSet& operator =(const XPathResultSet& rhs);
-		/// Return the n-th result in the set. Call XMLElement::GetNextResult() to get the subsequent result in the set.
-		/// Note: The XPathResultSet return value must be stored in a lhs variable to ensure the underlying xpath_node_set* is still valid while performing XPathResultSet::FirstResult(), XPathResultSet::operator [], and XMLElement::NextResult().
+		/// 返回集合中第n个结果, 调用 XMLElement::GetNextResult()来获取这个集合的下一个
+		/// 注意：当使用XPathResultSet::FirstResult(), XPathResultSet::operator [],  XMLElement::NextResult()的时候，XPathResultSet返回值必须保持在左边变量相关的xpath_node_set是有效的
 		XMLElement operator [](unsigned index) const;
-		/// Return the first result in the set. Call XMLElement::GetNextResult() to get the subsequent result in the set.
-		/// Note: The XPathResultSet return value must be stored in a lhs variable to ensure the underlying xpath_node_set* is still valid while performing XPathResultSet::FirstResult(), XPathResultSet::operator [], and XMLElement::NextResult().
+		/// 返回集合中第n个结果, 调用 XMLElement::GetNextResult()来获取这个集合的下一个
+		/// 注意：当使用XPathResultSet::FirstResult(), XPathResultSet::operator [],  XMLElement::NextResult()的时候，XPathResultSet返回值必须保持在左边变量相关的xpath_node_set是有效的
 		XMLElement FirstResult();
-		/// Return size of result set.
+		///返回结果集的大小
 		unsigned Size() const;
-		/// Return whether result set is empty.
+		
 		bool Empty() const;
 
-		/// Return pugixml xpath_node_set.
+		/// 返回 pugixml xpath_node_set.
 		pugi::xpath_node_set* GetXPathNodeSet() const { return resultSet_; }
 
 	private:
-		/// XML file.
+		 
 		WeakPtr<XMLFile> file_;
-		/// Pugixml xpath_node_set.
+		 
 		pugi::xpath_node_set* resultSet_;
 	};
 
 	/// XPath query.
+	// 对pugi xml query包装
 	class SAPPHIRE_CLASS XPathQuery
 	{
 	public:
-		/// Construct empty.
+		 
 		XPathQuery();
-		/// Construct XPath query object with query string and variable string. The variable string format is "name1:type1,name2:type2,..." where type is one of "Bool", "Float", "String", "ResultSet".
+		/// 用查询字符串和可变字符串构造Xpath 查询对象， 可变字符串格式是"name1:type1,name2:type2,..."，type可以是"Bool", "Float", "String", "ResultSet".
 		XPathQuery(const String& queryString, const String& variableString = String::EMPTY);
-		/// Destruct.
+		
 		~XPathQuery();
-		/// Bind query object with variable set.
+		/// 用一般可变集绑定查询对象
 		void Bind();
-		/// Add/Set a bool variable. Return true if successful.
+		/// 添加设置bool变量
 		bool SetVariable(const String& name, bool value);
-		/// Add/Set a float variable. Return true if successful.
+
 		bool SetVariable(const String& name, float value);
-		/// Add/Set a string variable. Return true if successful.
+
 		bool SetVariable(const String& name, const String& value);
-		/// Add/Set a string variable. Return true if successful.
+	
 		bool SetVariable(const char* name, const char* value);
-		/// Add/Set an XPath query result set variable. Return true if successful.
+
 		bool SetVariable(const String& name, const XPathResultSet& value);
-		/// Set XPath query string and variable string. The variable string format is "name1:type1,name2:type2,..." where type is one of "Bool", "Float", "String", "ResultSet".
+		/// 设置Xpath查询字符串和可变字符串
 		bool SetQuery(const String& queryString, const String& variableString = String::EMPTY, bool bind = true);
-		/// Clear by removing all variables and XPath query object.
+		/// 清空所有变量和Xpath query object
 		void Clear();
-		/// Evaluate XPath query and expecting a boolean return value.
+		 
 		bool EvaluateToBool(XMLElement element) const;
-		/// Evaluate XPath query and expecting a float return value.
+ 
 		float EvaluateToFloat(XMLElement element) const;
-		/// Evaluate XPath query and expecting a string return value.
+ 
 		String EvaluateToString(XMLElement element) const;
-		/// Evaluate XPath query and expecting an XPath query result set as return value.
-		/// Note: The XPathResultSet return value must be stored in a lhs variable to ensure the underlying xpath_node_set* is still valid while performing XPathResultSet::FirstResult(), XPathResultSet::operator [], and XMLElement::NextResult().
+		 
 		XPathResultSet Evaluate(XMLElement element) const;
 
-		/// Return query string.
+	 
 		String GetQuery() const { return queryString_; }
 
-		/// Return pugixml xpath_query.
+ 
 		pugi::xpath_query* GetXPathQuery() const { return query_; }
 
-		/// Return pugixml xpath_variable_set.
+ 
 		pugi::xpath_variable_set* GetXPathVariableSet() const { return variables_; }
 
 	private:
-		/// XPath query string.
+		 
 		String queryString_;
-		/// Pugixml xpath_query.
+	 
 		pugi::xpath_query* query_;
 		/// Pugixml xpath_variable_set.
 		pugi::xpath_variable_set* variables_;

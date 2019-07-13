@@ -36,6 +36,7 @@
 #include<time.h>
 #include <stdlib.h>
 #include <unordered_map>
+#include <unordered_set>
 #include <assert.h>
 #if defined(SAPPHIRE_STATIC_LIB) && defined(SAPPHIRE_LIB)
 #  define SAPPHIRE_CLASS

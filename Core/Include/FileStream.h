@@ -62,7 +62,7 @@ namespace Sapphire
 
 		virtual bool Release();
 
-		virtual std::string ReadString(int nCharCount);
+		virtual std::string ReadString(int nCharCount = 0); //如果不指定字符数，那么一直读取到文件最后一个字符
 
 		virtual bool ReadLine(std::string& str);
 

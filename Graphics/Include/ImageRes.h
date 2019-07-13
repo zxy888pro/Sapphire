@@ -96,7 +96,7 @@ namespace Sapphire
 		virtual ulonglong getDataSize() const { return m_ullDataSize; }
 
 
-		virtual bool Load(bool bCreateMipmap);
+		virtual bool Load(bool bCreateMipmap);  //Ö÷Òª¼ÓÝdº¯”µ
 
 		virtual bool Load() override;
 

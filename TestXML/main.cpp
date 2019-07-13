@@ -33,6 +33,7 @@ void TestString()
 	String str_small = str.ToUpper();
 	String str_trim = str.Trimmed();
 	int ret = str.ReplaceSubString("°®µÄ", "bosmo");
+	ret = str.Find("bosmo", str.Length(),true);
 	return;
 
 }

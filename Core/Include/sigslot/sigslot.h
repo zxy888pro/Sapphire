@@ -248,31 +248,31 @@ namespace sigslot {
 	public:
 		multi_threaded_local()
 		{
-			pthread_mutex_init(&m_mutex, NULL);
+			pthread_mutex_init(&m_resMutex, NULL);
 		}
 
 		multi_threaded_local(const multi_threaded_local&)
 		{
-			pthread_mutex_init(&m_mutex, NULL);
+			pthread_mutex_init(&m_resMutex, NULL);
 		}
 
 		virtual ~multi_threaded_local()
 		{
-			pthread_mutex_destroy(&m_mutex);
+			pthread_mutex_destroy(&m_resMutex);
 		}
 
 		virtual void lock()
 		{
-			pthread_mutex_lock(&m_mutex);
+			pthread_mutex_lock(&m_resMutex);
 		}
 
 		virtual void unlock()
 		{
-			pthread_mutex_unlock(&m_mutex);
+			pthread_mutex_unlock(&m_resMutex);
 		}
 
 	private:
-		pthread_mutex_t m_mutex;
+		pthread_mutex_t m_resMutex;
 	};
 #endif // _SIGSLOT_HAS_POSIX_THREADS
 

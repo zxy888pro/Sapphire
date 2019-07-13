@@ -53,6 +53,7 @@
     <ClInclude Include="Include\Math\Vector4.h" />
     <ClInclude Include="Include\md5.h" />
     <ClInclude Include="Include\FrameMem.h" />
+    <ClInclude Include="Include\MemoryBuffer.h" />
     <ClInclude Include="Include\MemoryMgr.h" />
     <ClInclude Include="Include\MemoryStream.h" />
     <ClInclude Include="Include\minidump.h" />
@@ -76,6 +77,7 @@
     <ClInclude Include="Include\UUID.h" />
     <ClInclude Include="Include\Variant.h" />
     <ClInclude Include="Include\Vector.h" />
+    <ClInclude Include="Include\VectorBuffer.h" />
     <ClInclude Include="Include\WorkQueue.h" />
     <ClInclude Include="Include\XML\XMLElement.h" />
     <ClInclude Include="Include\XML\XMLFile.h" />
@@ -116,6 +118,7 @@
     <ClCompile Include="Src\Math\Vector4.cpp" />
     <ClCompile Include="Src\md5.cpp" />
     <ClCompile Include="Src\FrameMem.cpp" />
+    <ClCompile Include="Src\MemoryBuffer.cpp" />
     <ClCompile Include="Src\MemoryMgr.cpp" />
     <ClCompile Include="Src\MemoryStream.cpp" />
     <ClCompile Include="Src\minidump.cpp" />
@@ -133,9 +136,11 @@
     <ClCompile Include="Src\UUID.cpp" />
     <ClCompile Include="Src\Variant.cpp" />
     <ClCompile Include="Src\Vector.cpp" />
+    <ClCompile Include="Src\VectorBuffer.cpp" />
     <ClCompile Include="Src\WorkQueue.cpp" />
     <ClCompile Include="Src\XML\pugixml.cpp" />
     <ClCompile Include="Src\XML\XMLElement.cpp" />
+    <ClCompile Include="Src\XML\XMLFile.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{24788D97-0E75-453E-A528-03EF9E9C6D55}</ProjectGuid>

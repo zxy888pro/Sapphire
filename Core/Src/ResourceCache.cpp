@@ -71,7 +71,7 @@ namespace Sapphire
 	}
 
 	bool ResourceCache::InsertResource(const char* name, BaseResource* pResource)
-	{
+	{	
 		if (m_ResourceMap.find(name) == m_ResourceMap.end())
 		{
 			m_ResourceMap.insert(std::make_pair(name, pResource));
@@ -185,6 +185,40 @@ namespace Sapphire
 			Unlock(name);
 		}
 		return itor->second;
+	}
+
+	void ResourceCache::StoreResourceDependency(BaseResource* resource, const std::string& dependency)
+	{
+		if (!resource)
+			return;
+	
+		std::string name = resource->GetName();
+		std::unordered_set<std::string>& dependents = m_ResourceDependences[dependency];
+		dependents.insert(name);
+	}
+
+	void ResourceCache::ResetDependencies(BaseResource* resource)
+	{
+		if (!resource)
+			return;
+
+		std::string name  = resource->GetName().c_str();
+
+		for (std::unordered_map<std::string, std::unordered_set<std::string> >::iterator it = m_ResourceDependences.begin(); it != m_ResourceDependences.end();)
+		{
+			std::unordered_set<std::string>& dependents = it->second;
+			dependents.erase(name);
+			if (dependents.empty())
+			{
+				std::unordered_map<std::string, std::unordered_set<std::string> >::iterator delIt = it;
+				++it;
+				m_ResourceDependences.erase(delIt);
+			}
+			else
+			{
+				++it;
+			}
+		}
 	}
 
 	Sapphire::BaseResource* ResourceCache::Lock(const char* name)

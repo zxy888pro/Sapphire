@@ -225,7 +225,7 @@ namespace Sapphire
 
 		char ch;
 		int iCount = 0;
-		while (EOF != (ch = m_fstream.get()) && iCount < nCharCount)
+		while (EOF != (ch = m_fstream.get()) && (nCharCount > 0 ?iCount < nCharCount:true)) 
 		{
 			ss << ch;
 			++iCount;

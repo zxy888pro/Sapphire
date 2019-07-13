@@ -15,6 +15,7 @@ namespace Sapphire
 
 	}
 
+
 	GLDisplayContext::~GLDisplayContext()
 	{
 
@@ -98,13 +99,23 @@ namespace Sapphire
 		{
 			glfwSwapBuffers((GLFWwindow*)m_mainWindow);
 			glfwPollEvents(); //处理所有事件
-		}
-			
-
-
 	}
 
 
+
+}
+
+
+
+	void GLDisplayContext::Terminate()
+	{
+
+	}
+
+	void* GLDisplayContext::GetWindow()
+	{
+		return NULL;
+	}
 
 #else
 	//否则Android平台使用EGL

@@ -202,6 +202,13 @@ namespace Sapphire
 		m_wstr = String2WString(m_str);
 	}
 
+	String::String(const char* pstr, uint length)
+	{
+		m_str.resize(length);
+		memcpy(&m_str[0], pstr, length);
+		m_wstr = String2WString(m_str);
+	}
+
 	String::~String()
 	{
 
@@ -321,15 +328,43 @@ namespace Sapphire
 		return Compare(m_str.c_str(), rhs.c_str());
 	}
 
-	int String::Find(const char* pstr, int beginPos, int strNo /*= 0*/, bool reverse /*= false*/)
+	int String::Find(const char* pstr, int beginPos, bool reverse /*= false*/, bool caseSensitive)
 	{
 		int ret = 0;
+		std::string source = m_str.c_str();
+		if (!caseSensitive)
+		{
+			source = String(pstr).ToLower().str();
+		}
+		if (!reverse)
+		{
+			ret = source.find(pstr, beginPos);
+		}
+		else
+		{
+			ret = source.rfind(pstr, beginPos);
+		}
+		
 		return ret;
 	}
 
-	int String::Find(String rhs, int beginPos, int strNo /*= 0*/, bool reverse /*= false*/, bool caseSensitive /*= true*/)
+	int String::Find(String rhs, int beginPos,  bool reverse /*= false*/, bool caseSensitive /*= true*/)
 	{
 		int ret = 0;
+		std::string source = m_str.c_str();
+		if (!caseSensitive)
+		{
+			source = rhs.ToLower().str();
+		}
+		if (!reverse)
+		{
+			ret = source.find(rhs.str(), beginPos);
+		}
+		else
+		{
+			ret = source.rfind(rhs.str(), beginPos);
+		}
+
 		return ret;
 	}
 

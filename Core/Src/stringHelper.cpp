@@ -633,6 +633,18 @@ namespace Sapphire
 		return ToStringHex((unsigned)(size_t)value);
 	}
 
+	SAPPHIRE_API String ToString(const char* formatString, ...)
+	{
+		char szBuffer[FORMAT_MSG_BUFFER_SIZE + 1] = { 0 };
+		memset(szBuffer, 0, FORMAT_MSG_BUFFER_SIZE + 1);
+		va_list args;
+		va_start(args, formatString);
+		vsnprintf(szBuffer, FORMAT_MSG_BUFFER_SIZE, formatString, args);
+		va_end(args);
+		std::string strRet = szBuffer;
+		return strRet;
+	}
+
 	String ToStringHex(unsigned value)
 	{
 		char tempBuffer[STRING_BUFFERSIZE];
