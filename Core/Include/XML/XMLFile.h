@@ -103,6 +103,8 @@ namespace Sapphire
 
 		pugi::xml_document* document_;
 
+		size_t      m_uDataSize;
+
 		std::string m_name;
 
 	public:

@@ -265,6 +265,74 @@ namespace Sapphire
 		return type_ == VAR_STRING ? *reinterpret_cast<const String*>(value_.ptr_) : String::EMPTY;;
 	}
 
+	Sapphire::String Variant::ToString() const
+	{
+		switch (type_)
+		{
+		case VAR_INT:
+			return String(value_.int_);
+
+		case VAR_BOOL:
+			return String(value_.bool_);
+
+		case VAR_FLOAT:
+			return String(value_.float_);
+
+		case VAR_VECTOR2:
+			return (reinterpret_cast<const Vector2*>(&value_))->ToString();
+
+		case VAR_VECTOR3:
+			return (reinterpret_cast<const Vector3*>(&value_))->ToString();
+
+		case VAR_VECTOR4:
+			return (reinterpret_cast<const Vector4*>(&value_))->ToString();
+
+		case VAR_QUATERNION:
+			return (reinterpret_cast<const Quaternion*>(&value_))->ToString();
+
+		case VAR_COLOR:
+			return (reinterpret_cast<const Color*>(&value_))->ToString();
+
+		case VAR_STRING:
+			return *(reinterpret_cast<const String*>(value_.ptr_));
+
+		case VAR_BUFFER:
+		{
+			std::vector<byte>& buffer = *(reinterpret_cast<std::vector<byte>*>(value_.ptr_));
+			std::string ret;
+			BufferToString(ret, &buffer[0], buffer.size());
+			return ret;
+		}
+
+		case VAR_VOIDPTR:
+		case VAR_PTR:
+			//不支持指针序列化
+			return String(0);
+
+		case VAR_INTRECT:
+			return (reinterpret_cast<const IntRect*>(&value_))->ToString();
+
+		case VAR_INTVECTOR2:
+			return (reinterpret_cast<const IntVector2*>(&value_))->ToString();
+
+		case VAR_MATRIX3X3:
+			return (reinterpret_cast<const Matrix3x3*>(value_.ptr_))->ToString();
+
+		case VAR_MATRIX3X4:
+			return (reinterpret_cast<const Matrix3x4*>(value_.ptr_))->ToString();
+
+		case VAR_MATRIX4X4:
+			return (reinterpret_cast<const Matrix4x4*>(value_.ptr_))->ToString();
+
+		case VAR_DOUBLE:
+			return String(*reinterpret_cast<const double*>(&value_));
+
+		default:
+			 
+			return String::EMPTY;
+		}
+	}
+
 	bool Variant::IsZero() const
 	{
 		switch (type_)

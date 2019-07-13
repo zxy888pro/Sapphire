@@ -276,6 +276,7 @@ namespace Sapphire
 		/// 当前查询结果集索引
 		mutable unsigned xpathResultIndex_;
 
+
 	};
 
 	///  

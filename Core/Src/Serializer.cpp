@@ -7,6 +7,11 @@ namespace Sapphire
 	 
 	static const float q = 32767.0f;
 
+	Serializer::~Serializer()
+	{
+
+	}
+
 	bool Serializer::WriteInt(int value)
 	{
 		return Write(&value, sizeof value) == sizeof value;

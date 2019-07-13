@@ -1,6 +1,7 @@
 #include "ImageRes.h"
 #include "ImageHelper.h"
 #include "mathHelper.h"
+#include "ResourceCache.h"
 
 namespace Sapphire
 {
@@ -192,6 +193,11 @@ namespace Sapphire
 	void ImageRes::OnLoadEnd()
 	{
 		m_eState = ResourceState_Loaded;
+		ResourceCache* cache = dynamic_cast<ResourceCache*>(m_pCore->GetSubSystemWithType(ESST_RESOURCECACHE));
+		if (cache)
+		{
+			cache->InsertResource(m_resName.c_str(), this);
+		}
 	}
 
 	void ImageRes::OnLoadError()

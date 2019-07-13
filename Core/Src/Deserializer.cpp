@@ -1,6 +1,7 @@
 #include "Deserializer.h"
 
 static const float invQ = 1.0f / 32767.0f;
+static const std::string EmptyString = "";
 namespace Sapphire
 {
 
@@ -21,6 +22,11 @@ namespace Sapphire
 	Deserializer::~Deserializer()
 	{
 
+	}
+
+	const std::string& Deserializer::GetName() const
+	{
+		return EmptyString;
 	}
 
 	int Deserializer::ReadInt()

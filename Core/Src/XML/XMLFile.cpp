@@ -45,7 +45,10 @@ namespace Sapphire
 
 	XMLFile::~XMLFile()
 	{
-		safeDelete(document_);
+		if (!IsDisposed())
+		{
+			Dispose();
+		}
 	}
 
 	bool XMLFile::FromString(const String& source)
@@ -124,17 +127,28 @@ namespace Sapphire
 
 	void XMLFile::Clear()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		if (!IsDisposed())
+		{
+			Dispose();
+		}
 	}
 
 	bool XMLFile::Create()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		if (IsDisposed())
+		{
+			return Load();
+		}
+		return false;
 	}
 
 	void XMLFile::Destroy()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		if (!IsDisposed())
+		{
+			Dispose();
+		}
+
 	}
 
 	bool XMLFile::Load()
@@ -219,8 +233,8 @@ namespace Sapphire
 			// Ôö¼Ópatch µÄdata size
 			dataSize += inheritedXMLFile->GetSize();
 		}
-		
-		return false;
+		m_eState = ResourceState_Loaded;
+		return true;
 	}
 
 	bool XMLFile::Recreate()
@@ -230,27 +244,33 @@ namespace Sapphire
 
 	void XMLFile::Dispose()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		safeDelete(document_);
+		m_uDataSize = 0;
 	}
 
 	void XMLFile::OnLoadStart()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		m_eState = ResourceState_Loading;
 	}
 
 	void XMLFile::OnLoadEnd()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		m_eState = ResourceState_Loaded;
+		ResourceCache* cache  = dynamic_cast<ResourceCache*>(m_pCore->GetSubSystemWithType(ESST_RESOURCECACHE));
+		if (cache)
+		{
+			cache->InsertResource(m_resName.c_str(), this);
+		}
 	}
 
 	void XMLFile::OnLoadError()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		m_eState = ResourceState_Unload;
 	}
 
 	size_t XMLFile::GetSize()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		return m_uDataSize;
 	}
 
 	bool XMLFile::IsDisposed()

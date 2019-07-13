@@ -1,46 +1,115 @@
-#include <iostream>
 #include "Sapphire.h"
-#include "Str.h"
-#include "stringHelper.h"
-#include "Variant.h"
+#include "Core.h"
+#include "GraphicDriver.h"
+#include "ResourceLoader.h"
+#include "ResourceCache.h"
+#include "path.h"
+#include <iostream>
+#include "ImageRes.h"
+#include "XML/XMLFile.h"
 
-void TestVariant()
+namespace Sapphire
 {
-	using namespace Sapphire;
-	std::string testStr = "abcd123";
-	int len = testStr.length();
-	std::vector<byte> data;
-	data.resize(len);
-	memcpy(&data[0], testStr.data(), len);
-	Variant v = data;
-	std::vector<byte> data2 = v.GetBuffer();
-	Variant v2;
-	v2.SetBuffer(testStr.data(), len);
-	bool ret = v == v2;
-	VariantMap vmap;
-	vmap["v1"] = v;
-	vmap["v2"] = v2;
+	class App : public Thread
+	{
 
-	return;
 
+	public:
+
+		App()
+		{
+
+		}
+		virtual ~App()
+		{
+
+		}
+
+		void Initialize()
+		{
+			pCore = new Core();
+			LogUtil::getInstancePtr()->Init("log.txt");
+			LogUtil::LogMsgLn("初始化程序");
+			pCore->Init();
+			MathHelper::SetRandomSeed(GetTickCount());
+			createGraphicDriver();
+
+			resourceLoader = new ResourceLoader(pCore);
+			asynTaskPool = new AsynTaskPool(pCore, 8, 2, 100);
+			resourceCache = new ResourceCache(pCore);
+			pCore->RegisterSubSystem(resourceLoader, ESubSystemType::ESST_RESOURCELOADER);
+			pCore->RegisterSubSystem(asynTaskPool, ESubSystemType::ESST_ASYNTASKPOOL);
+			pCore->RegisterSubSystem(resourceCache, ESubSystemType::ESST_RESOURCECACHE);
+			resourceLoader->Initialize();
+			asynTaskPool->Initialize();
+		}
+		virtual void ThreadFunc() override
+		{
+			XMLFile* xml1 = new XMLFile(pCore, "NinjaSnowWarShaders.xml");
+			//ImageRes* img1 = new ImageRes(pCore, "container2.png");
+			//resourceLoader->LoadResource(img1);
+			resourceLoader->LoadResource(xml1);
+			while (!getExitFlag())
+			{
+				BaseResource* resource = resourceCache->GetResource("NinjaSnowWarShaders.xml");
+				if (resource)
+				{
+					XMLFile* xmlFile = dynamic_cast<XMLFile*>(resource);
+					XMLElement root =  xmlFile->GetRoot();
+					XMLElement child = root.GetChild("shader");
+					SAPPHIRE_LOGERROR(StringFormatA("resource name %s   size %d", resource->GetName(), resource->GetSize()));
+					break;
+				}
+				Sleep(50);
+			}
+		}
+
+
+
+		bool getExitFlag() const { return bExitFlag; }
+		void setExitFlag(bool val) { bExitFlag = val; }
+
+		void Close()
+		{
+
+			resourceLoader->Release();
+			asynTaskPool->Close();
+			resourceCache->Clear();
+			safeDelete(resourceLoader);
+			safeDelete(asynTaskPool);
+			safeDelete(resourceCache);
+			pCore->Release();
+		}
+
+	private:
+		Core* pCore;
+		bool bExitFlag = false;
+		ResourceLoader* resourceLoader;
+		AsynTaskPool* asynTaskPool;
+		ResourceCache* resourceCache;
+
+	};
 }
 
-
-void TestString()
-{
-	using namespace Sapphire;
-	String str = "   爱的sakkABJ J  ";
-	String str_small = str.ToUpper();
-	String str_trim = str.Trimmed();
-	int ret = str.ReplaceSubString("爱的", "bosmo");
-	ret = str.Find("bosmo", str.Length(),true);
-	return;
-
-}
 
 int main() {
-  
-	TestVariant();
-	TestString();
+	 
+	//测试资源加载
+	using namespace Sapphire;
+	App* app = new App();
+	app->Initialize();
+	app->Run();
+
+
+	Path curDir = GetCurrentDir();
+	std::cout << curDir.c_str() << std::endl;
+
+
+	char c = getchar();
+	while (c != 'q')
+	{
+		c = getchar();
+	}
+	app->Close();
 	return 0;
 }
