@@ -10,6 +10,102 @@
 
 namespace Sapphire
 {
+
+	class TestMutexClass
+	{
+	public:
+
+		TestMutexClass()
+		{
+
+		}
+
+		void TestAdd(const char* name)
+		{
+			//ResGuard<MutexEx> reslock(m_mutex);
+			std::unordered_map<std::string, int>::iterator it = m_testDict.find(name);
+			if (it != m_testDict.end())
+			{
+				m_testDict[name] += 1;
+			}
+			else
+			{
+				m_testDict[name] = 1;
+			}
+			 
+		}
+
+		int Get(const char* name)
+		{
+			//ResGuard<MutexEx> reslock(m_mutex);
+			std::unordered_map<std::string, int>::iterator it = m_testDict.find(name);
+			if (it != m_testDict.end())
+			{
+				return it->second;
+			}
+			return 0;
+			 
+		}
+
+		void Set(const char* name, int val)
+		{
+			m_testDict[name] = val;
+		}
+
+	private:
+		MutexEx   m_mutex;
+		std::unordered_map<std::string, int>  m_testDict;
+	};
+}
+
+Sapphire::TestMutexClass tmc;
+
+namespace Sapphire
+{
+	
+
+	
+
+	class TestThreadLock : public Thread
+	{
+	public:
+
+		TestThreadLock()
+		{
+
+		}
+		~TestThreadLock()
+		{
+
+		}
+
+
+
+		virtual void ThreadFunc() override
+		{
+			ulong handlle = reinterpret_cast<uint>(GetHandle());
+			String idStr(handlle);
+			printf("thread Id %s  is Started \n", idStr.c_str());
+			while (m_number)
+			{
+				
+				
+				int num = tmc.Get("number");
+				num++;
+				printf("thread Id %s   number is %d \n", idStr.c_str(), num);
+				tmc.Set("number",num);
+				Sleep(200);
+				m_number--;
+			}
+			printf("thread Id %s  is Terminated \n", idStr.c_str());
+		}
+
+	private:
+
+		int m_number = 10;
+
+	};
+
 	class App : public Thread
 	{
 
@@ -46,18 +142,29 @@ namespace Sapphire
 		virtual void ThreadFunc() override
 		{
 			XMLFile* xml1 = new XMLFile(pCore, "NinjaSnowWarShaders.xml");
+			XMLFile* xml2 = new XMLFile(pCore, "NinjaSnowWar.xml");
 			//ImageRes* img1 = new ImageRes(pCore, "container2.png");
 			//resourceLoader->LoadResource(img1);
 			resourceLoader->LoadResource(xml1);
+			resourceLoader->LoadResource(xml2);
 			while (!getExitFlag())
 			{
 				BaseResource* resource = resourceCache->GetResource("NinjaSnowWarShaders.xml");
 				if (resource)
 				{
 					XMLFile* xmlFile = dynamic_cast<XMLFile*>(resource);
-					XMLElement root =  xmlFile->GetRoot();
-					XMLElement child = root.GetChild("shader");
-					SAPPHIRE_LOGERROR(StringFormatA("resource name %s   size %d", resource->GetName(), resource->GetSize()));
+					XMLElement root = xmlFile->GetRoot();
+					XMLElement element = root.GetChild();
+					while (!element.IsNull())
+					{
+						String vs = element.GetAttribute("vs");
+						String vsdefines = element.GetAttribute("vsdefines");
+						SAPPHIRE_LOGERROR(StringFormatA("xmlElement name %s  vs= %s  vsdefine= %s ", element.GetName().c_str(), vs.c_str(), vsdefines.c_str()));
+						element = element.GetNext();
+					}
+					
+					SAPPHIRE_LOGERROR(StringFormatA("resource name %s   size %d", resource->GetName().c_str(), resource->GetSize()));
+
 					break;
 				}
 				Sleep(50);
@@ -96,11 +203,17 @@ int main() {
 	 
 	//≤‚ ‘◊ ‘¥º”‘ÿ
 	using namespace Sapphire;
+	
+	/*tmc = TestMutexClass();
+	for (int i = 0; i < 4; ++i)
+	{
+	TestThreadLock* thread = new TestThreadLock();
+	thread->Run();
+	}*/
+
 	App* app = new App();
 	app->Initialize();
 	app->Run();
-
-
 	Path curDir = GetCurrentDir();
 	std::cout << curDir.c_str() << std::endl;
 

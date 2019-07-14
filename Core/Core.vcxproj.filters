@@ -246,6 +246,9 @@
     <ClInclude Include="Include\MemoryBuffer.h">
       <Filter>头文件\IO</Filter>
     </ClInclude>
+    <ClInclude Include="Include\TimeSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -412,6 +415,9 @@
     </ClCompile>
     <ClCompile Include="Src\MemoryBuffer.cpp">
       <Filter>源文件\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TimeSystem.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

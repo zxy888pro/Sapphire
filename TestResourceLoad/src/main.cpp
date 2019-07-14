@@ -9,6 +9,9 @@
 
 namespace Sapphire
 {
+
+	
+
 	class App : public Thread
 	{
 		

@@ -2,6 +2,8 @@
 #include "ImageHelper.h"
 #include "mathHelper.h"
 #include "ResourceCache.h"
+#include "ResourceLoader.h"
+
 
 namespace Sapphire
 {
@@ -149,7 +151,13 @@ namespace Sapphire
 		{
 			Dispose();
 		}
-		return Load(m_bCreateMipmap);
+		ResourceLoader*  resourceLoader = dynamic_cast<ResourceLoader*>(m_pCore->GetSubSystemWithType(ESST_RESOURCELOADER));
+		if (resourceLoader)
+		{
+			resourceLoader->LoadResource(this);
+		}
+		//return Load(m_bCreateMipmap);
+		return true;
 	}
 
 	void ImageRes::Dispose()

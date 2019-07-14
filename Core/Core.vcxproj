@@ -73,6 +73,7 @@
     <ClInclude Include="Include\stringHelper.h" />
     <ClInclude Include="Include\SubSystem.h" />
     <ClInclude Include="Include\Thread.h" />
+    <ClInclude Include="Include\TimeSystem.h" />
     <ClInclude Include="Include\UIDCreator.h" />
     <ClInclude Include="Include\UUID.h" />
     <ClInclude Include="Include\Variant.h" />
@@ -132,6 +133,7 @@
     <ClCompile Include="Src\stringHelper.cpp" />
     <ClCompile Include="Src\SubSystem.cpp" />
     <ClCompile Include="Src\Thread.cpp" />
+    <ClCompile Include="Src\TimeSystem.cpp" />
     <ClCompile Include="Src\UIDCreator.cpp" />
     <ClCompile Include="Src\UUID.cpp" />
     <ClCompile Include="Src\Variant.cpp" />

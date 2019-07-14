@@ -41,7 +41,7 @@ namespace Sapphire
 				return m_exitCode;
 #if defined(SAPPHIRE_WIN) || defined(SAPPHIRE_LINUX)
 			while (!m_engine->IsExiting())
-				m_engine->RunFrame();         //游戏主循环
+				m_engine->RunFrame();         //游戏主循环, 引擎运行一帧
 
 			Stop();
 #else

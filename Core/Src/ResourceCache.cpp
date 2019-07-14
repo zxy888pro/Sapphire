@@ -33,7 +33,7 @@ namespace Sapphire
 		}
 		m_ResourceMap.clear();
 		m_nCurrentUsedMemory = 0;
-		m_nMaximumMemory = 0;
+		m_nMaximumMemory = 1024*1024*512;
 		m_bResourceReserved = false;
 		m_CurrentResource = m_ResourceMap.end();
 		//m_resMutex.Unlock();
@@ -54,8 +54,8 @@ namespace Sapphire
 
 	bool ResourceCache::SetMaximumMemory(size_t nMem)
 	{
+		ResGuard<MutexEx> resGurad(m_resMutex);
 		m_nMaximumMemory = nMem;
-		//m_resMutex.Lock();
 		bool ret = CheckForOverallocation();
 		//m_resMutex.Unlock();
 		return ret;
@@ -63,12 +63,11 @@ namespace Sapphire
 
 	bool ResourceCache::ReserveMemory(size_t nMem)
 	{
+		ResGuard<MutexEx> resGurad(m_resMutex);
 		AddMemory(nMem);
-		//m_resMutex.Lock();
 		if (!CheckForOverallocation())
 			return false;
 		m_bResourceReserved = true;
-		//m_resMutex.Unlock();
 		return true;
 	}
 
@@ -79,7 +78,7 @@ namespace Sapphire
 
 	bool ResourceCache::InsertResource(const char* name, BaseResource* pResource)
 	{	
-		//m_resMutex.Lock();
+		ResGuard<MutexEx> resGurad(m_resMutex);
 		if (m_ResourceMap.find(name) == m_ResourceMap.end())
 		{
 			m_ResourceMap.insert(std::make_pair(name, pResource));
@@ -96,13 +95,13 @@ namespace Sapphire
 			SAPPHIRE_LOG(StringFormat("InsertResource Failed! Resource %s has existed!", name));
 			return false;
 		}
-		//m_resMutex.Unlock();
+ 
 		
 	}
 
 	bool ResourceCache::RemoveResource(BaseResource* pResource)
 	{
-		//m_resMutex.Lock();
+		ResGuard<MutexEx> resGurad(m_resMutex);
 		//查找资源
 		ResCMapItor itor;
 		for (itor = m_ResourceMap.begin(); itor != m_ResourceMap.end(); ++itor)
@@ -118,7 +117,6 @@ namespace Sapphire
 		//从总内存减掉这部分
 		RemoveMemory(pResource->GetSize());
 		m_ResourceMap.erase(itor);
-		//m_resMutex.Unlock();
 	}
 
 	BaseResource* ResourceCache::RemoveResource(const std::string& name)
@@ -128,7 +126,7 @@ namespace Sapphire
 
 	BaseResource* ResourceCache::RemoveResource(const char* name)
 	{
-		//m_resMutex.Lock();
+		ResGuard<MutexEx> resGurad(m_resMutex);
 		//查找资源
 		ResCMapItor itor = m_ResourceMap.find(name);
 		if (itor == m_ResourceMap.end())
@@ -143,7 +141,6 @@ namespace Sapphire
 			RemoveMemory(itor->second->GetSize());
 			m_ResourceMap.erase(itor);
 		}
-		//m_resMutex.Unlock();
 		return pResource;
 
 	}
@@ -179,7 +176,7 @@ namespace Sapphire
 
 	Sapphire::BaseResource* ResourceCache::GetResource(const char* name)
 	{
-		//m_resMutex.Lock();
+		ResGuard<MutexEx> resGurad(m_resMutex);
 		ResCMapItor itor = m_ResourceMap.find(name);
 
 		if (itor == m_ResourceMap.end())
@@ -192,32 +189,31 @@ namespace Sapphire
 		if (itor->second->IsDisposed())
 		{
 			itor->second->Recreate();
-			AddMemory(itor->second->GetSize());
+			//AddMemory(itor->second->GetSize()); 异步资源加载，这里资源还没加载上没有用
 
 			//确保检查时不会被移除内存
-			Lock(name);
+			/*Lock(name);
 			CheckForOverallocation();
-			Unlock(name);
+			Unlock(name);*/
 		}
-		//m_resMutex.Unlock();
 		return itor->second;
 	}
 
 	void ResourceCache::StoreResourceDependency(BaseResource* resource, const std::string& dependency)
 	{
-		//m_depMutex.Lock();
+		ResGuard<MutexEx> resGurad(m_depMutex);
 		if (!resource)
 			return;
 	
 		std::string name = resource->GetName();
 		std::unordered_set<std::string>& dependents = m_ResourceDependences[dependency];
 		dependents.insert(name);
-		//m_depMutex.Unlock();
+		 
 	}
 
 	void ResourceCache::ResetDependencies(BaseResource* resource)
 	{
-		//m_depMutex.Lock();
+		ResGuard<MutexEx> resGurad(m_depMutex);
 		if (!resource)
 			return;
 
@@ -243,6 +239,7 @@ namespace Sapphire
 
 	Sapphire::BaseResource* ResourceCache::Lock(const char* name)
 	{
+		ResGuard<MutexEx> resGurad(m_resMutex);
 		ResCMapItor itor = m_ResourceMap.find(name);
 		if (itor == m_ResourceMap.end())
 			return NULL;
@@ -263,6 +260,7 @@ namespace Sapphire
 
 	int ResourceCache::Unlock(const char* name)
 	{
+		ResGuard<MutexEx> resGurad(m_resMutex);
 		ResCMapItor itor = m_ResourceMap.find(name);
 		if (itor == m_ResourceMap.end())
 			return -1;
@@ -281,6 +279,7 @@ namespace Sapphire
 		//当前使用内存大于最大内存上限
 		if (m_nCurrentUsedMemory > m_nMaximumMemory)
 		{
+			ResGuard<MutexEx> resGurad(m_resMutex);
 			//要清理内存了
 			int iMemToPurge = m_nCurrentUsedMemory - m_nMaximumMemory;
 

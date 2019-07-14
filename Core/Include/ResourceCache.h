@@ -104,8 +104,8 @@ namespace Sapphire
 
 	protected:
 		
-		size_t			m_nCurrentUsedMemory;	//当前内存占用
-		size_t			m_nMaximumMemory;		//最大内存上限
+		volatile size_t			m_nCurrentUsedMemory;	//当前内存占用
+		volatile size_t			m_nMaximumMemory;		//最大内存上限
 		bool			m_bResourceReserved;   //是否预分配内存
 		ResCMapItor		m_CurrentResource;     //当前资源迭代器
 		ResCMap        m_ResourceMap;

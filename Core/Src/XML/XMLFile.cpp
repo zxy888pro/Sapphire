@@ -8,6 +8,7 @@
 #include "XML/XMLFile.h"
 #include "pugixml.hpp"
 #include "ResourceCache.h"
+#include "ResourceLoader.h"
 
 
 namespace Sapphire
@@ -197,7 +198,7 @@ namespace Sapphire
 			document_->reset();
 			return false;
 		}
-
+		
 		XMLElement rootElem = GetRoot();
 		String inherit = rootElem.GetAttribute("inherit"); 
 		if (!inherit.empty())
@@ -233,13 +234,21 @@ namespace Sapphire
 			// Ôö¼Ópatch µÄdata size
 			dataSize += inheritedXMLFile->GetSize();
 		}
-		m_eState = ResourceState_Loaded;
+		m_uDataSize = dataSize;
 		return true;
 	}
 
 	bool XMLFile::Recreate()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		if (IsDisposed())
+		{
+			ResourceLoader*  resourceLoader = dynamic_cast<ResourceLoader*>(m_pCore->GetSubSystemWithType(ESST_RESOURCELOADER));
+			if (resourceLoader)
+			{
+				resourceLoader->LoadResource(this);
+			}
+		}
+		return true;
 	}
 
 	void XMLFile::Dispose()
