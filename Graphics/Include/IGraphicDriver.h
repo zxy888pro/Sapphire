@@ -28,6 +28,11 @@ namespace Sapphire
 		virtual void Init() = 0;
 		virtual void Release() = 0;
 
+		/// 渲染帧的开始，如果设备有效可以渲染，返回true
+		virtual bool BeginFrame() = 0;
+		/// 渲染帧结束，交换双缓冲区
+		virtual void EndFrame() = 0;
+
 		virtual void PrepareDraw() = 0;
 		virtual void* GetMainWindow() = 0;
 		virtual ITextureMgr* getTextureMgr() const = 0;

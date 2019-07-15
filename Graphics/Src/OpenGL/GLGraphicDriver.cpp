@@ -565,6 +565,16 @@ namespace Sapphire
 		throw std::logic_error("The method or operation is not implemented.");
 	}
 
+	bool GLGraphicDriver::BeginFrame()
+	{
+		return true;
+	}
+
+	void GLGraphicDriver::EndFrame()
+	{
+		
+	}
+
 	int GLGraphicDriver::GetHWTextureWarpParam(TextureAddressMode mode)
 	{
 		switch (mode)

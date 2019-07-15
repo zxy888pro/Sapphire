@@ -200,6 +200,10 @@ namespace Sapphire
 
 		virtual IDisplayContext* GetDisplayContext() const override;
 
+
+		virtual bool BeginFrame() override;
+
+		virtual void EndFrame() override;
 	public:
 
 		static int GetHWTextureWarpParam(TextureAddressMode mode);

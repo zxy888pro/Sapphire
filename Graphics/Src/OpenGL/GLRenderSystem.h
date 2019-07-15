@@ -26,6 +26,8 @@ namespace Sapphire
 		virtual bool getDrawShadow() const { return m_bDrawShadow; }
 		virtual void setDrawShadow(bool val) { m_bDrawShadow = val; }
 
+
+		virtual void Initialize() override;
 	private:
 
 		GLGraphicDriver*  m_pGraphicDriver;

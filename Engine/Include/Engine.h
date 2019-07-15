@@ -20,6 +20,11 @@ namespace Sapphire
 		//解析参数
 		static VariantMap ParseParameters(const std::vector<std::string>& arguments);
 
+		static bool HasParameter(const VariantMap& parameters, const String& parameter);
+
+		static const Variant
+			& GetParameter(const VariantMap& parameters, const String& parameter, const Variant& defaultValue = Variant::EMPTY);
+
 		//运行一帧
 		void RunFrame();
 

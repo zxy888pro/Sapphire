@@ -39,4 +39,9 @@ namespace Sapphire
 
 	}
 
+	void GLRenderSystem::Initialize()
+	{
+		
+	}
+
 }

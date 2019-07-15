@@ -17,6 +17,7 @@ namespace Sapphire
 			m_type = ESST_RENDERSYSTEM;
 		}
 		virtual ~IRenderSystem(){};
+		virtual void Initialize() = 0;
 		virtual void Update(float dTime) = 0;
 		virtual void Render() = 0;
 		virtual void QueueRenderSurface(IRenderSurface* renderTarget) = 0;

@@ -2,6 +2,7 @@
 #include "Sapphire.h"
 
 
+//声明main函数
 //调试模式
 #if defined(_MSC_VER) && defined(_DEBUG) && !defined(SAPPHIRE_WIN32_CONSOLE)
 #define SAPPHIRE_MAIN(function) \

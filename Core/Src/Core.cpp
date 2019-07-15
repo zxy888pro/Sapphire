@@ -171,6 +171,9 @@ namespace Sapphire
 		case Sapphire::ESST_RESOURCECACHE:
 			name = ENUM2STR(ESST_RESOURCECACHE);
 			break;
+		case Sapphire::ESST_ENGINE:
+			name = ENUM2STR(ESST_ENGINE);
+			break;
 		case Sapphire::ESST_MAXCOUNT:
 			return NULL;
 		default:

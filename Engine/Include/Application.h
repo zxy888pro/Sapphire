@@ -41,6 +41,7 @@ namespace Sapphire
 
 	};
 
+//定义传入给main函数的回调函数RunApplication, 真正的程序入口
 #if defined(SAPPHIRE_WIN) || defined(SAPPHIRE_LINUX)
 #define SAPPHIRE_APPLICATION_MAIN(className) \
 int RunApplication() \

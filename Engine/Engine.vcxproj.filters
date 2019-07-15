@@ -47,5 +47,8 @@
     <ClCompile Include="Src\Application.cpp">
       <Filter>源文件\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Engine.cpp">
+      <Filter>源文件\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
