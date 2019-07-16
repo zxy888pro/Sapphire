@@ -2,8 +2,6 @@
 #define __SAPPHIRE_CORE_H__
 
 #include "SapphireDef.h"
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
 #include <singleton.h>
 #include <Ptr.h>
 #include <SubSystem.h>

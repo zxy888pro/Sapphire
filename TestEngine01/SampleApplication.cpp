@@ -1,8 +1,7 @@
 #include "SampleApplication.h"
 #include "Ptr.h"
+#include <vld.h>
 
-
-#define new  new(_CLIENT_BLOCK, __FILE__, __LINE__)
 
 namespace Sapphire
 {
@@ -23,7 +22,7 @@ namespace Sapphire
 
 	void SampleApplication::Start()
 	{
-		_CrtDumpMemoryLeaks();
+		
 	}
 
 	void SampleApplication::Stop()
@@ -45,9 +44,8 @@ int RunApplication()
 	return application->Run();
 }
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd) \
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd) 
 {
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF); \
-		Sapphire::ParseArguments(GetCommandLineW()); \
+		Sapphire::ParseArguments(GetCommandLineW()); 
 		return RunApplication();
 }
