@@ -34,18 +34,5 @@ namespace Sapphire
 
 
 
-//SAPPHIRE_APPLICATION_MAIN(SampleApplication);
+SAPPHIRE_APPLICATION_MAIN(Sapphire::SampleApplication);
 
-
-int RunApplication()
-{
-	Sapphire::SharedPtr<Sapphire::Core> pCore(new Sapphire::Core());
-	Sapphire::SharedPtr<Sapphire::SampleApplication> application(new Sapphire::SampleApplication(pCore));
-	return application->Run();
-}
-
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd) 
-{
-		Sapphire::ParseArguments(GetCommandLineW()); 
-		return RunApplication();
-}

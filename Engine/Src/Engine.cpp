@@ -29,6 +29,9 @@ namespace Sapphire
 		m_bInitialized(false),
 		m_bExiting(false)
 	{
+#ifdef SAPPHIRE_WIN
+		CoInitialize(NULL);
+#endif
 		//初始化Log
 		Sapphire::LogUtil::getInstancePtr()->Init("log.txt");
 		Sapphire::LogUtil::LogMsgLn("初始化程序");
@@ -45,7 +48,6 @@ namespace Sapphire
 		pCore->RegisterSubSystem(fileSystem, ESubSystemType::ESST_FILESYSTEM);
 		pCore->RegisterSubSystem(timeSystem, ESubSystemType::ESST_TIMESYSTEM);
 		pCore->RegisterSubSystem(inputsys, ESubSystemType::ESST_INPUTSYSTEM);
-		pCore->RegisterSubSystem(this, ESubSystemType::ESST_ENGINE);
 
 		resourceLoader->Initialize();
 		asynTaskPool->Initialize();
@@ -182,7 +184,7 @@ namespace Sapphire
 
 	void Engine::Exit()
 	{
-
+		m_pCore->Release();
 	}
 
 	void Engine::ApplyFrameLimit()

@@ -14,7 +14,7 @@ namespace Sapphire
 
 	ResourceLoader::~ResourceLoader()
 	{
-
+		Release();
 	}
 
 	void ResourceLoader::LoadResource(BaseResource* resource)
@@ -79,7 +79,7 @@ namespace Sapphire
 
 	ResourceTask::~ResourceTask()
 	{
-		
+		 
 	}
 
 	void ResourceTask::run()

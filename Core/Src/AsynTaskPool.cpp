@@ -21,7 +21,7 @@ namespace Sapphire
 		}
 		~AsynTaskThread()
 		{
-
+			
 		}
 
 		virtual void ThreadFunc() {
@@ -131,7 +131,7 @@ namespace Sapphire
 
 	AsynTaskPool::~AsynTaskPool()
 	{
-
+		Close();
 	}
 
 	void AsynTaskPool::Initialize()

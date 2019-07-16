@@ -39,7 +39,7 @@ namespace Sapphire
 
 	GLGraphicDriver::~GLGraphicDriver()
 	{
-
+		Release();
 	}
 
 	void GLGraphicDriver::Init()

@@ -89,7 +89,14 @@ namespace Sapphire
 	void Core::Release()
 	{
 		
-		
+		for (SUBSYTEM_ITEM it = m_subSystems.begin(); it != m_subSystems.end(); it++)
+		{
+			SubSystem* pSubSystem = it->second;
+			if (pSubSystem)
+			{
+				safeDelete(pSubSystem);
+			}
+		}
 		m_subSystems.clear();
 		/*m_resMgr->Clear();
 		safeDelete(m_resMgr);
@@ -179,9 +186,6 @@ namespace Sapphire
 			break;
 		case Sapphire::ESST_INPUTSYSTEM:
 			name = ENUM2STR(ESST_INPUTSYSTEM);
-			break;
-		case Sapphire::ESST_ENGINE:
-			name = ENUM2STR(ESST_ENGINE);
 			break;
 		case Sapphire::ESST_MAXCOUNT:
 			return NULL;

@@ -139,9 +139,6 @@ namespace Sapphire
 		 case Sapphire::ESST_INPUTSYSTEM:
 			 name = ENUM2STR(ESST_INPUTSYSTEM);
 			 break;
-		 case Sapphire::ESST_ENGINE:
-			 name = ENUM2STR(ESST_ENGINE);
-			 break;
 		 case Sapphire::ESST_MAXCOUNT:
 			 return;
 		 default:

@@ -8,7 +8,6 @@
 #define SAPPHIRE_MAIN(function) \
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd) \
 { \
-_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF); \
 Sapphire::ParseArguments(GetCommandLineW()); \
 return function; \
 }
