@@ -15,5 +15,4 @@
 #include <Core.h>
 #include <logUtil.h>
 
-
 #endif //__SAPPHIRE__

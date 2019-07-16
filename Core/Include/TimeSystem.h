@@ -1,3 +1,4 @@
+#pragma once
 #include "Sapphire.h"
 
 namespace Sapphire

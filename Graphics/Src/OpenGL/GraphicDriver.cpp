@@ -51,7 +51,7 @@ namespace Sapphire
 			{
 				IRenderSystem* renderSys = new GLRenderSystem(pCore);
 				pCore->RegisterSubSystem(renderSys, ESST_RENDERSYSTEM);
-				renderSys->Init();
+				renderSys->Initialize();
 			}
 		}
 		else

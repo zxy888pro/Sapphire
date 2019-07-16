@@ -1,6 +1,6 @@
 #pragma once
 #include "Sapphire.h"
-
+#include "CommonApi.h"
 
 //声明main函数
 //调试模式

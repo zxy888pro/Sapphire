@@ -249,6 +249,9 @@
     <ClInclude Include="Include\TimeSystem.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\FileSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core.cpp">
@@ -417,6 +420,9 @@
       <Filter>源文件\IO</Filter>
     </ClCompile>
     <ClCompile Include="Src\TimeSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\FileSystem.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -35,6 +35,16 @@ namespace Sapphire
 	}
 
 
+	Input::Input(Core* pCore) :SubSystem(pCore)
+	{
+
+	}
+
+	Input::~Input()
+	{
+
+	}
+
 	void Input::Initialize()
 	{
 
@@ -68,6 +78,81 @@ namespace Sapphire
 		UnSubscribeEvent(ET_CORE_EVENT, EVENT_CORE_BEGINFRAME);
 	}
 
+	int Input::GetKeyFromName(const String& name) const
+	{
+		return 0;
+	}
+
+	int Input::GetKeyFromScancode(int scancode) const
+	{
+		return 0;
+	}
+
+	Sapphire::String Input::GetKeyName(int key) const
+	{
+		return "";
+	}
+
+	int Input::GetScancodeFromKey(int key) const
+	{
+		return 0;
+	}
+
+	int Input::GetScancodeFromName(const String& name) const
+	{
+		return 0;
+	}
+
+	Sapphire::String Input::GetScancodeName(int scancode) const
+	{
+		return "";
+	}
+
+	bool Input::GetKeyDown(int key) const
+	{
+		return false;
+	}
+
+	bool Input::GetKeyPress(int key) const
+	{
+		return false;
+	}
+
+	bool Input::GetScancodeDown(int scancode) const
+	{
+		return false;
+	}
+
+	bool Input::GetScancodePress(int scancode) const
+	{
+		return false;
+	}
+
+	bool Input::GetMouseButtonDown(int button) const
+	{
+		return false;
+	}
+
+	bool Input::GetMouseButtonPress(int button) const
+	{
+		return false;
+	}
+
+	Sapphire::IntVector2 Input::GetMousePosition() const
+	{
+		return IntVector2::ZERO;
+	}
+
+	void Input::SetMouseVisible(bool enable, bool suppressEvent /*= false*/)
+	{
+
+	}
+
+	void Input::ResetMouseVisible()
+	{
+
+	}
+
 	void Input::Update()
 	{
 		
@@ -99,5 +184,50 @@ namespace Sapphire
 		
 	}
 	
+
+	bool Input::IsWindowMinimized() const
+	{
+		return false;
+	}
+
+	bool Input::IsIconic() const
+	{
+		return false;
+	}
+
+	void Input::GainFocus()
+	{
+
+	}
+
+	void Input::LoseFocus()
+	{
+
+	}
+
+	void Input::ResetState()
+	{
+
+	}
+
+	void Input::SetMouseButton(int button, bool newState)
+	{
+
+	}
+
+	void Input::SetKey(int key, int scancode, unsigned raw, bool newState)
+	{
+
+	}
+
+	void Input::SetMouseWheel(int delta)
+	{
+
+	}
+
+	void Input::SetMousePosition(const IntVector2& position)
+	{
+
+	}
 
 }

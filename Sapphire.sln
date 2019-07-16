@@ -33,6 +33,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestXML", "TestXML\TestXML.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine.vcxproj", "{47CA9190-E74D-46CC-B7F7-75E578F879A8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestEngine01", "TestEngine01\TestEngine01.vcxproj", "{4B170E37-0FE6-4798-BA35-F375B9B44835}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -95,6 +97,10 @@ Global
 		{47CA9190-E74D-46CC-B7F7-75E578F879A8}.Debug|Win32.Build.0 = Debug|Win32
 		{47CA9190-E74D-46CC-B7F7-75E578F879A8}.Release|Win32.ActiveCfg = Release|Win32
 		{47CA9190-E74D-46CC-B7F7-75E578F879A8}.Release|Win32.Build.0 = Release|Win32
+		{4B170E37-0FE6-4798-BA35-F375B9B44835}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4B170E37-0FE6-4798-BA35-F375B9B44835}.Debug|Win32.Build.0 = Debug|Win32
+		{4B170E37-0FE6-4798-BA35-F375B9B44835}.Release|Win32.ActiveCfg = Release|Win32
+		{4B170E37-0FE6-4798-BA35-F375B9B44835}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

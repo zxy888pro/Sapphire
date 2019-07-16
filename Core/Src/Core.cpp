@@ -67,11 +67,13 @@ namespace Sapphire
 	Core::Core()
 	{
 		m_uidCreator = new UIDCreator();
+		m_eventMgr = new EventMgr();
 	}
 
 	Core::~Core()
 	{
 		safeDelete(m_uidCreator);
+		safeDelete(m_eventMgr);
 	}
 
 
@@ -79,8 +81,6 @@ namespace Sapphire
 
 	void Core::Init()
 	{
-		
-		m_eventMgr = new EventMgr();
 		/*m_memMgr = new MemoryManager();
 		m_resMgr = new ResourceMgr();
 		m_memMgr->initialize();*/
@@ -170,6 +170,15 @@ namespace Sapphire
 			break;
 		case Sapphire::ESST_RESOURCECACHE:
 			name = ENUM2STR(ESST_RESOURCECACHE);
+			break;
+		case Sapphire::ESST_TIMESYSTEM:
+			name = ENUM2STR(ESST_TIMESYSTEM);
+			break;
+		case Sapphire::ESST_FILESYSTEM:
+			name = ENUM2STR(ESST_FILESYSTEM);
+			break;
+		case Sapphire::ESST_INPUTSYSTEM:
+			name = ENUM2STR(ESST_INPUTSYSTEM);
 			break;
 		case Sapphire::ESST_ENGINE:
 			name = ENUM2STR(ESST_ENGINE);

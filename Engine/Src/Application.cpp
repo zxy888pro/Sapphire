@@ -11,9 +11,8 @@ namespace Sapphire
 
 
 	Application::Application(Core* pCore) :BaseObject(pCore)
-		, m_exitCode(EXIT_SUCCESS)
+		,m_exitCode(EXIT_SUCCESS)
 	{
-		//
 		m_engineParameter = Engine::ParseParameters(GetArguments());
 
 		m_engine = new Engine(pCore);

@@ -75,6 +75,9 @@ namespace Sapphire
 
 		virtual void Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData = NULL) override;
 
+		bool IsWindowMinimized() const;
+
+		bool IsIconic() const;
 
 	private:
 

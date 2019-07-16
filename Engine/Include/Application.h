@@ -46,7 +46,7 @@ namespace Sapphire
 #define SAPPHIRE_APPLICATION_MAIN(className) \
 int RunApplication() \
 		{ \
-    Sapphire::SharedPtr<Sapphire::Core> pCore = new Sapphire::Core(); \
+    Sapphire::SharedPtr<Sapphire::Core> pCore(new Sapphire::Core()); \
     Sapphire::SharedPtr<className> application(new className(pCore)); \
     return application->Run(); \
 		} \

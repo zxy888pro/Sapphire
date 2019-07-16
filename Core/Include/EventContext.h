@@ -6,7 +6,7 @@
 
 namespace Sapphire
 {
-	class IEventMgr;
+	struct IEventMgr;
 
 	class EventContext : public sigslot::has_slots<>
 	{

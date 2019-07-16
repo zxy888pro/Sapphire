@@ -29,6 +29,7 @@
     <ClInclude Include="Include\EventContext.h" />
     <ClInclude Include="Include\EventDef.h" />
     <ClInclude Include="Include\FileStream.h" />
+    <ClInclude Include="Include\FileSystem.h" />
     <ClInclude Include="Include\handle.h" />
     <ClInclude Include="Include\Hash.h" />
     <ClInclude Include="Include\HashMap.h" />
@@ -100,6 +101,7 @@
     <ClCompile Include="Src\EventContext.cpp" />
     <ClCompile Include="Src\EventMgr.cpp" />
     <ClCompile Include="Src\FileStream.cpp" />
+    <ClCompile Include="Src\FileSystem.cpp" />
     <ClCompile Include="Src\inifile.cpp" />
     <ClCompile Include="Src\logUtil.cpp" />
     <ClCompile Include="Src\MathHelper.cpp" />

@@ -1,6 +1,9 @@
 #ifndef __SAPPHIRE_CORE_H__
 #define __SAPPHIRE_CORE_H__
+
 #include "SapphireDef.h"
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
 #include <singleton.h>
 #include <Ptr.h>
 #include <SubSystem.h>
@@ -19,7 +22,7 @@ namespace Sapphire
 	 SAPPHIRE_API void Mem_Set_WORD(void *dest, ushort data, int count);
 	 SAPPHIRE_API void Mem_Set_QUAD(void *dest, uint   data, int count);
 
-	 class SAPPHIRE_CLASS Core : public Singleton<Core>
+	 class SAPPHIRE_CLASS Core : public RefCounter, public Singleton<Core>
 	 {
 		 typedef std::unordered_map<std::string, SubSystem*> SUBSYTEM_MAP;
 		 typedef std::unordered_map<std::string, SubSystem*>::iterator   SUBSYTEM_ITEM;
@@ -117,6 +120,9 @@ namespace Sapphire
 		 case Sapphire::ESST_GRAPHICDRIVER:
 			 name = ENUM2STR(ESST_GRAPHICDRIVER);
 			 break;
+		 case Sapphire::ESST_UNKNOWSYSTEM:
+			 name = ENUM2STR(ESST_UNKNOWSYSTEM);
+			 break;
 		 case Sapphire::ESST_ASYNTASKPOOL:
 			 name = ENUM2STR(ESST_ASYNTASKPOOL);
 			 break;
@@ -126,8 +132,17 @@ namespace Sapphire
 		 case Sapphire::ESST_RESOURCECACHE:
 			 name = ENUM2STR(ESST_RESOURCECACHE);
 			 break;
-		 case Sapphire::ESST_UNKNOWSYSTEM:
-			 name = ENUM2STR(ESST_UNKNOWSYSTEM);
+		 case Sapphire::ESST_TIMESYSTEM:
+			 name = ENUM2STR(ESST_TIMESYSTEM);
+			 break;
+		 case Sapphire::ESST_FILESYSTEM:
+			 name = ENUM2STR(ESST_FILESYSTEM);
+			 break;
+		 case Sapphire::ESST_INPUTSYSTEM:
+			 name = ENUM2STR(ESST_INPUTSYSTEM);
+			 break;
+		 case Sapphire::ESST_ENGINE:
+			 name = ENUM2STR(ESST_ENGINE);
 			 break;
 		 case Sapphire::ESST_MAXCOUNT:
 			 return;
