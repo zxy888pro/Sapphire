@@ -17,13 +17,13 @@ namespace Sapphire
 
 		bool Initialize(const VariantMap& parameters);
 
-		//解析参数
+		//解析启动控制台参数
 		static VariantMap ParseParameters(const std::vector<std::string>& arguments);
 
-		static bool HasParameter(const VariantMap& parameters, const String& parameter);
+		static bool HasParameter(const VariantMap& parameters, const String& parameter);//是否Application有设置的参数
 
 		static const Variant
-			& GetParameter(const VariantMap& parameters, const String& parameter, const Variant& defaultValue = Variant::EMPTY);
+			& GetParameter(const VariantMap& parameters, const String& parameter, const Variant& defaultValue = Variant::EMPTY);//获取Application的设置的引擎参数
 
 		//运行一帧
 		void RunFrame();

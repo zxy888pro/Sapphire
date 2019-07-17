@@ -5,6 +5,7 @@ enum EventType
 {
 	ET_CORE_EVENT,  //核心系统事件
 	ET_SCENE_EVENT,    //场景事件
+	ET_GRAPHIC_EVENT,  //图形渲染事件
 	ET_ENGINE_EVENT,  //引擎事件
 	ET_OTHER_EVENT,	//全局广播
 	ET_MAXCOUNT

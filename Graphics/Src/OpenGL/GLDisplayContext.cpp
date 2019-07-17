@@ -1,4 +1,5 @@
 #include "GLDisplayContext.h"
+#include "Math/Vector2.h"
 //如果是Windows/Linux使用GLFW
 #if defined(SAPPHIRE_WIN)||defined(SAPPHIRE_LINUX)
 #include <GLFW/glfw3.h>
@@ -10,7 +11,16 @@
 namespace Sapphire
 {
 
-	GLDisplayContext::GLDisplayContext() :m_mainWindow(NULL)
+	GLDisplayContext::GLDisplayContext() :m_mainWindow(NULL),
+		m_isTerminated(true),
+		m_windowName("defaultWindow"),
+		m_width(1024),
+		m_height(768),
+		m_posX(0),
+		m_posY(0),
+		m_bVsync(false),
+		m_bFullScreen(false),
+		m_externalWindow(NULL)
 	{
 
 	}
@@ -41,6 +51,8 @@ namespace Sapphire
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+		m_isTerminated = false;
 	}
 
 	void GLDisplayContext::SetContextAttribute(int attr, int val)
@@ -73,6 +85,7 @@ namespace Sapphire
 			if (m_mainWindow == NULL)
 			{
 				SAPPHIRE_LOGERROR("GLDisplayContext CreateWindow Failed!");
+				Terminate();
 				return;
 			}
 		}
@@ -90,26 +103,41 @@ namespace Sapphire
 		else
 			glfwSwapInterval(0);
 
+		glfwMakeContextCurrent((GLFWwindow*)m_mainWindow);
+		//捕捉鼠标
+		glfwSetInputMode((GLFWwindow*)m_mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glewExperimental = GL_TRUE;
+		if (glewInit() != GLEW_OK)
+		{
+
+			SAPPHIRE_LOGERROR(Sapphire::StringFormatA("glew init error! errorCode:! %d", glGetError()));
+			Terminate();
+		}
+		glViewport(0, 0, width, height);
 	}
 
+
+	void GLDisplayContext::CloseWindow()
+	{
+
+	}
 
 	void GLDisplayContext::SwapBuffers()
 	{
-		if (m_mainWindow)
+		if (m_mainWindow && !m_isTerminated)
 		{
 			glfwSwapBuffers((GLFWwindow*)m_mainWindow);
 			glfwPollEvents(); //处理所有事件
+		}
 	}
-
-
-
-}
 
 
 
 	void GLDisplayContext::Terminate()
 	{
-
+		glfwTerminate();
+		
+		m_isTerminated = true;
 	}
 
 	void* GLDisplayContext::GetWindow()
@@ -117,11 +145,82 @@ namespace Sapphire
 		return NULL;
 	}
 
+	void GLDisplayContext::GetCurrentDisplayMode(DisplayMode& mode) const
+	{
+		GLFWmonitor* pMonitor = glfwGetPrimaryMonitor();
+		if (pMonitor)
+		{
+			int count = 0;
+			const GLFWvidmode* videoModes = glfwGetVideoMode(pMonitor);
+			if (videoModes)
+			{
+				mode.width = videoModes->width;
+				mode.height = videoModes->height;
+				mode.redBits = videoModes->redBits;
+				mode.greenBits = videoModes->greenBits;
+				mode.blueBits = videoModes->blueBits;
+				mode.refreshRate = videoModes->refreshRate;
+				return;
+			}
+		}
+		SAPPHIRE_LOGERROR("GetDisplayMode Failed!");
+	}
+
+	void GLDisplayContext::GetDisplayMode(int index, DisplayMode& mode) const
+	{
+		 GLFWmonitor* pMonitor = glfwGetPrimaryMonitor();
+		 if (pMonitor)
+		 {
+			 int count = 0;
+			 const GLFWvidmode* videoModes = glfwGetVideoModes(pMonitor, &count);
+			 if (index >= 0 && index < count)
+			 {
+				 mode.width = videoModes[index].width;
+				 mode.height = videoModes[index].height; 
+				 mode.redBits = videoModes[index].redBits;
+				 mode.greenBits = videoModes[index].greenBits;
+				 mode.blueBits = videoModes[index].blueBits; 
+				 mode.refreshRate = videoModes[index].refreshRate;
+				 return;
+			 }
+		 }
+		 SAPPHIRE_LOGERROR("GetDisplayMode Failed!");
+		 
+	}
+
+	Sapphire::IntVector2 GLDisplayContext::GetWindowSize() const
+	{
+		IntVector2 ret = IntVector2::ZERO;
+		if (m_mainWindow && !m_isTerminated)
+		{
+			glfwGetWindowSize((GLFWwindow*)m_mainWindow, &ret.x_, &ret.y_);
+		}
+		return ret;
+	}
+
+	Sapphire::IntVector2 GLDisplayContext::GetWindowPos() const
+	{
+		IntVector2 ret = IntVector2::ZERO;
+		if (m_mainWindow && !m_isTerminated)
+		{
+			glfwGetWindowPos((GLFWwindow*)m_mainWindow, &ret.x_, &ret.y_);
+			
+		}
+		return ret;
+	}
+
+	void GLDisplayContext::SetExternalWindow(void* val)
+	{
+		if (!m_externalWindow)
+			m_externalWindow = val;
+		else
+			SAPPHIRE_LOGERROR("Window already opened, can not set external window");
+	}
+
 #else
 	//否则Android平台使用EGL
 
 #endif
-
 
 
 

@@ -20,7 +20,7 @@ namespace Sapphire
 
 	Application::~Application()
 	{
-
+		 
 	}
 
 	int Application::Run()

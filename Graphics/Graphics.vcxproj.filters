@@ -192,6 +192,9 @@
     <ClInclude Include="Include\IDisplayContext.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\GraphicsEvent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">

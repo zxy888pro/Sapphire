@@ -105,6 +105,7 @@
     <ClInclude Include="Include\GraphicDriver.h" />
     <ClInclude Include="Include\GraphicException.h" />
     <ClInclude Include="Include\GraphicsDefs.h" />
+    <ClInclude Include="Include\GraphicsEvent.h" />
     <ClInclude Include="Include\ICubeTexture.h" />
     <ClInclude Include="Include\IDisplayContext.h" />
     <ClInclude Include="Include\IGraphicDriver.h" />

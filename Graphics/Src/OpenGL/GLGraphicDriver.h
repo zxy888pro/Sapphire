@@ -79,6 +79,17 @@ namespace Sapphire
 
 		virtual void Release();
 
+
+		//设置显示模式，改变窗口或创建新窗口
+		bool SetDisplayMode(int width, int height, bool bFullScreen, bool bVsync, int multiSample, bool tripleBuffer, bool resizable);
+
+		/// 恢复GPU对象并重新初始化，需要已经打开的窗口
+		void Restore();
+		/// 窗口最大化
+		void Maximize();
+		/// 最小化窗口
+		void Minimize();
+
 		Sapphire::ITextureMgr* getTextureMgr() const { return m_pTextureMgr; }
 
 		Sapphire::IImageMgr* getImageMgr() const { return m_pImageMgr; }
@@ -144,23 +155,38 @@ namespace Sapphire
 
 		//设置多个顶点缓冲区
 		virtual bool SetVertexBuffers(const std::vector<IVertexBuffer*>&  buffers, const std::vector<uint>& elememtMasks, uint instOffset = 0);
-
+		//设置顶点缓冲区
 		virtual void  SetVertexBuffer(IVertexBuffer* vertexBuffer);
 		//设置渲染目标
 		virtual void SetRenderTarget(unsigned index, GLRenderSurface* renderTarget);
-
+		//设置渲染目标
 		virtual void SetRenderTarget(unsigned index, Texture2D* texture);
-
+		//设置深度模板表面
 		virtual void SetDepthStencil(GLRenderSurface* depthStencil);
-
+		//设置深度模板表面
 		virtual void SetDepthStencil(Texture2D* texture);
 
 		virtual IIndexBuffer* GetIndexBuffer() const;
 
 		virtual void SetIndexBuffer(IIndexBuffer* pIndexBuffer); //设置索引缓冲区，同时绑定它
 
+		void SetViewport(const IntVector2& rect);  //设置视口
+
+		/// 设置颜色写入
+		void SetColorWrite(bool enable);
+		///  设置剔除模式
+		void SetCullMode(CullMode mode);
+		///  设置深度测试
+		void SetDepthTest(CompareMode mode);
+		///	设置深度写入
+		void SetDepthWrite(bool enable);
+		///  设置Alpha混合模式
+		void SetBlendMode(BlendMode mode);
+
 		ConstantBuffer* GetOrCreateConstantBuffer(unsigned bindingIndex, unsigned size);  //获取或者创建一个ConstantsBuffer对象
-		 
+
+		/// 重置所有渲染目标，深度缓冲区表面和视口
+		void ResetRenderTargets();
 
 		virtual void ResetRenderTarget(uint index);
 
@@ -204,6 +230,8 @@ namespace Sapphire
 		virtual bool BeginFrame() override;
 
 		virtual void EndFrame() override;
+
+
 	public:
 
 		static int GetHWTextureWarpParam(TextureAddressMode mode);

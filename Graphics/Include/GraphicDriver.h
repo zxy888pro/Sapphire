@@ -9,6 +9,4 @@ namespace Sapphire
 
 	SAPPHIRE_API void createGraphicDriver(Core* pCore);
 
-
-	SAPPHIRE_API void createRenderSystem(Core* pCore);
 }

@@ -1,3 +1,4 @@
+#include "Variant.h"
 #include "GLGraphicDriver.h"
 #include <GraphicException.h>
 #include "GLDisplayContext.h"
@@ -14,6 +15,7 @@
 #include "VertexBuffer.h"
 #include "GLRenderSurface.h"
 #include "GLRenderSystem.h"
+
 
 
 namespace Sapphire
@@ -63,6 +65,7 @@ namespace Sapphire
 		CheckFeature();
 		//初始化渲染系統接口
 		IRenderSystem* pRenderSys = new GLRenderSystem(m_pCore,this);
+		pRenderSys->Initialize();
 		m_pCore->RegisterSubSystem<IRenderSystem>(pRenderSys, ESST_RENDERSYSTEM);
 
 	}
@@ -76,6 +79,53 @@ namespace Sapphire
 	}
 
 
+
+	bool GLGraphicDriver::SetDisplayMode(int width, int height, bool bFullScreen, bool bVsync, int multiSample, bool tripleBuffer, bool resizable)
+	{
+
+		if (!width || !height) //长宽设置有非法
+		{
+			if (bFullScreen) //全屏幕的话，先取得当前显示器的分辨率
+			{
+				DisplayMode mode;
+				m_displayContext->GetCurrentDisplayMode(mode);
+				width = mode.width;
+				height = mode.height;
+			}
+			else
+			{
+				width = 1024;
+				height = 768;
+			}
+		}
+		//把采样次数限制到1~16之间
+		multiSample = MathHelper::Clamp(multiSample, 1, 16);
+
+
+		//发送设置显示模式的事件
+		VariantMap eventData;
+		eventData["Width"] = width;
+		eventData["Height"] = height;
+		eventData["FullScreen"] = bFullScreen;
+		eventData["Resizable"] = resizable;
+		FireEvent(ET_GRAPHIC_EVENT, EVENT_GRAPHICS_ENDRENDERING, &eventData);
+		return true;
+	}
+
+	void GLGraphicDriver::Restore()
+	{
+
+	}
+
+	void GLGraphicDriver::Maximize()
+	{
+
+	}
+
+	void GLGraphicDriver::Minimize()
+	{
+
+	}
 
 	void GLGraphicDriver::PrepareDraw()
 	{
@@ -119,6 +169,36 @@ namespace Sapphire
 		m_indexBuffer = pIndexBuffer;
 	}
 
+	void GLGraphicDriver::SetViewport(const IntVector2& rect)
+	{
+
+	}
+
+	void GLGraphicDriver::SetColorWrite(bool enable)
+	{
+
+	}
+
+	void GLGraphicDriver::SetCullMode(CullMode mode)
+	{
+
+	}
+
+	void GLGraphicDriver::SetDepthTest(CompareMode mode)
+	{
+
+	}
+
+	void GLGraphicDriver::SetDepthWrite(bool enable)
+	{
+
+	}
+
+	void GLGraphicDriver::SetBlendMode(BlendMode mode)
+	{
+
+	}
+
 	Sapphire::ConstantBuffer* GLGraphicDriver::GetOrCreateConstantBuffer(unsigned bindingIndex, unsigned size)
 	{
 		unsigned key = (bindingIndex << 16) | size;
@@ -134,6 +214,11 @@ namespace Sapphire
 		{
 			return i->second.Get();
 		}
+	}
+
+	void GLGraphicDriver::ResetRenderTargets()
+	{
+
 	}
 
 	void GLGraphicDriver::ResetRenderTarget(uint index)
@@ -285,6 +370,7 @@ namespace Sapphire
 
  
 
+	 
 	void GLGraphicDriver::SetShaders(IShaderVariation* vs, IShaderVariation* ps)
 	{
 
@@ -567,12 +653,36 @@ namespace Sapphire
 
 	bool GLGraphicDriver::BeginFrame()
 	{
+		if (!IsInitialized() || IsDeviceLost())
+			return false;
+
+		//重置所有渲染目标，深度缓冲区表面和视口，开始绘制新的一帧
+		ResetRenderTargets();
+
+		//清理前一帧使用的绑定纹理对象
+		for (unsigned i = 0; i < MAX_TEXTURE_UNITS; ++i)
+		{
+			m_pTextureMgr->SetTexture(0, (TextureUnit)i);
+		}
+		//开启颜色和深度写入模式
+		SetColorWrite(true);
+		SetDepthWrite(true);
+		//发送事件
+		FireEvent(ET_GRAPHIC_EVENT, EVENT_GRAPHICS_BEGINRENDERING, NULL);
+
 		return true;
 	}
 
 	void GLGraphicDriver::EndFrame()
 	{
-		
+		if (!IsInitialized())
+			return;
+
+		FireEvent(ET_GRAPHIC_EVENT, EVENT_GRAPHICS_ENDRENDERING, NULL);
+		//双缓冲交换
+		m_displayContext->SwapBuffers();
+		//清理临时的缓冲区
+		CleanScratchBuffers();
 	}
 
 	int GLGraphicDriver::GetHWTextureWarpParam(TextureAddressMode mode)

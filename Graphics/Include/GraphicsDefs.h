@@ -156,6 +156,42 @@ namespace Sapphire
 		FILL_POINT
 	};
 
+	/// Alpha混合模式
+	enum BlendMode
+	{
+		BLEND_REPLACE = 0,
+		BLEND_ADD,
+		BLEND_MULTIPLY,
+		BLEND_ALPHA,
+		BLEND_ADDALPHA,
+		BLEND_PREMULALPHA,
+		BLEND_INVDESTALPHA,
+		BLEND_SUBTRACT,
+		BLEND_SUBTRACTALPHA,
+		MAX_BLENDMODES
+	};
+	/// 深度或模板比较模式
+	enum CompareMode
+	{
+		CMP_ALWAYS = 0,
+		CMP_EQUAL,
+		CMP_NOTEQUAL,
+		CMP_LESS,
+		CMP_LESSEQUAL,
+		CMP_GREATER,
+		CMP_GREATEREQUAL,
+		MAX_COMPAREMODES
+	};
+
+	//剔除模式
+	enum CullMode
+	{
+		CULL_NONE = 0,
+		CULL_CCW,
+		CULL_CW,
+		MAX_CULLMODES
+	};
+
 	/// Billboardx相机朝向模式
 	enum FaceCameraMode
 	{

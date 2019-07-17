@@ -43,22 +43,7 @@ namespace Sapphire
 		}
 	}
 
-	SAPPHIRE_API void createRenderSystem(Core* pCore)
-	{
-		if (pCore)
-		{
-			if (!pCore->GetSubSystemWithType(ESST_RENDERSYSTEM))
-			{
-				IRenderSystem* renderSys = new GLRenderSystem(pCore);
-				pCore->RegisterSubSystem(renderSys, ESST_RENDERSYSTEM);
-				renderSys->Initialize();
-			}
-		}
-		else
-		{
-			SAPPHIRE_LOGERROR("error : Sapphire Core is null!");
-		}
-	}
+	 
 
 }
 

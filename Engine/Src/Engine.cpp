@@ -58,7 +58,7 @@ namespace Sapphire
 
 	Engine::~Engine()
 	{
-
+		m_pCore->Release();
 	}
 
 	bool Engine::Initialize(const VariantMap& parameters)
@@ -67,10 +67,7 @@ namespace Sapphire
 			return m_bInitialized;
 
 		//初始化渲染引擎
-		createGraphicDriver(m_pCore);
-		createRenderSystem(m_pCore);
-
-		
+		createGraphicDriver(m_pCore);	
 
 		TimeSystem* timeSys = dynamic_cast<TimeSystem*>(m_pCore->GetSubSystemWithType(ESST_TIMESYSTEM));
 		m_assert(timeSys);
@@ -93,6 +90,7 @@ namespace Sapphire
 			//设置图形参数
 
 
+			
 		}
 		
 
@@ -184,17 +182,70 @@ namespace Sapphire
 
 	void Engine::Exit()
 	{
-		m_pCore->Release();
+		DoExit();
 	}
 
 	void Engine::ApplyFrameLimit()
 	{
+		if (!m_bInitialized)
+			return;
+		uint maxFps = m_uMaxFps;
+		Input* input = dynamic_cast<Input*>(m_pCore->GetSubSystemWithType(ESST_INPUTSYSTEM));
+		m_assert(input);
+
+		if (input && !input->HasFocus())  //是否处于焦点
+			maxFps = MIN(m_uMaxInactiveFps, maxFps);
+
+		long long elapsed = 0;
+
+		if (maxFps)
+		{
+			//SAPPHIRE_PROFILE(ApplyFrameLimit);
+
+			long long targetMax = 1000000LL / maxFps;
+
+			for (;;)
+			{
+				elapsed = m_frameTimer.GetUSecs(false); //获得流逝的时间
+				if (elapsed >= targetMax)
+					break;
+
+				if (targetMax - elapsed >= 1000LL)
+				{
+					unsigned sleepTime = (unsigned)((targetMax - elapsed) / 1000LL);
+					TimeSystem::Sleep(sleepTime);
+				}
+			}
+		}
+		elapsed = m_frameTimer.GetUSecs(true);
+
+		//如果帧数太低了，低于最小值， 剪切流逝时间
+		if (m_uMinFps)
+		{
+			long long targetMin = 1000000LL / m_uMinFps;
+			if (elapsed > targetMin)
+				elapsed = targetMin;
+		}
+
+		// 应用时间步进平滑
+		m_uTimeStep = 0.0f;
+		m_lastTimeSteps.push_back(elapsed / 1000000.0f);
+		if (m_lastTimeSteps.size() > m_uTimeStepSmoothing) //超过平滑帧数量,去掉多余的
+		{
+
+			m_lastTimeSteps.erase(m_lastTimeSteps.begin(), m_lastTimeSteps.begin()+(m_lastTimeSteps.size() - m_uTimeStepSmoothing));
+			for (unsigned i = 0; i < m_lastTimeSteps.size(); ++i)
+				m_uTimeStep += m_lastTimeSteps[i];
+			m_uTimeStep /= m_lastTimeSteps.size(); //取平均值
+		}
+		else
+			m_uTimeStep = m_lastTimeSteps.back();
 
 	}
 
 	void Engine::SetNextTimeStep(float seconds)
 	{
-
+		m_uTimeStep = MAX(seconds, 0.0f);
 	}
 
 	void Engine::DoExit()

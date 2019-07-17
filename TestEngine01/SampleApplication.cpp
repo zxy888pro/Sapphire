@@ -17,7 +17,13 @@ namespace Sapphire
 
 	void SampleApplication::Setup()
 	{
-
+		//设置程序的初始化参数
+		m_engineParameter["FullScreen"] = false;
+		m_engineParameter["WindowTitle"] = "SampleApplication";
+		m_engineParameter["WindowWidth"] = 1024;
+		m_engineParameter["WindowHeight"] = 768;
+		m_engineParameter["Vsync"] = false;
+		m_engineParameter["MultiSample"] = false;
 	}
 
 	void SampleApplication::Start()

@@ -5,6 +5,16 @@
 namespace Sapphire
 {
 
+	struct DisplayMode
+	{
+		int		width;
+		int		height;
+		short	redBits;
+		int		greenBits;
+		int		blueBits;
+		int		refreshRate;
+	};
+
 	struct IDisplayContext
 	{
 		virtual void Initialize() = 0;
