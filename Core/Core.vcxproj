@@ -76,7 +76,6 @@
     <ClInclude Include="Include\Thread.h" />
     <ClInclude Include="Include\TimeSystem.h" />
     <ClInclude Include="Include\UIDCreator.h" />
-    <ClInclude Include="Include\UUID.h" />
     <ClInclude Include="Include\Variant.h" />
     <ClInclude Include="Include\Vector.h" />
     <ClInclude Include="Include\VectorBuffer.h" />
@@ -137,7 +136,6 @@
     <ClCompile Include="Src\Thread.cpp" />
     <ClCompile Include="Src\TimeSystem.cpp" />
     <ClCompile Include="Src\UIDCreator.cpp" />
-    <ClCompile Include="Src\UUID.cpp" />
     <ClCompile Include="Src\Variant.cpp" />
     <ClCompile Include="Src\Vector.cpp" />
     <ClCompile Include="Src\VectorBuffer.cpp" />
