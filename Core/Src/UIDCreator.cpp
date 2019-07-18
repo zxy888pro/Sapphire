@@ -14,7 +14,7 @@ namespace Sapphire
 	{
 		m_lock.Lock();
 		++m_uSeqId;
-		m_lock.UnLock();
+		m_lock.Unlock();
 		return m_uSeqId;
 	}
 

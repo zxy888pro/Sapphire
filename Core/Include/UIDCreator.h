@@ -15,7 +15,7 @@ namespace Sapphire
 
 	private:
 
-		SpinLock  m_lock;
+		MutexEx  m_lock;
 		volatile UINT64 m_uSeqId;
 
 	};

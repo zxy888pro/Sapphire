@@ -30,27 +30,31 @@ namespace Sapphire
 
 	GLGraphicDriver::GLGraphicDriver(Core* pCore) :IGraphicDriver(pCore)
 	{
+		m_bIsInitialized = false;
 		m_pTextureMgr = NULL;
 		m_pImageMgr = NULL;
 		m_nTextureQuality = QUALITY_HIGH;
 		m_driverType = GRAPHICDRIVER_OPENGL;
 		m_bGL3Support = false;
 		m_displayContext = NULL;
+		m_pTextureMgr = new TextureMgr(m_pCore);
+		m_pImageMgr = new ImageMgr();
+		m_pShaderScriptMgr = new ShaderScriptMgr();
+		m_displayContext = new GLDisplayContext(); //创建OpenGL窗口显示环境
 
 	}
 
 	GLGraphicDriver::~GLGraphicDriver()
 	{
 		Release();
+		safeDelete(m_pImageMgr);
+		safeDelete(m_pTextureMgr);
+		safeDelete(m_pShaderScriptMgr);
 	}
 
 	void GLGraphicDriver::Init()
 	{
 		
-
-		m_pTextureMgr = new TextureMgr(m_pCore);
-		m_pImageMgr = new ImageMgr();
-		m_pShaderScriptMgr = new ShaderScriptMgr();
 		m_imagetypeNames.clear();
 		m_imagetypeNames[ENUM2STR(ImageType_Bmp_A8R8G8B8)] = ImageType_Bmp_A8R8G8B8;
 		m_imagetypeNames[ENUM2STR(ImageType_Bmp_R8G8B8)] = ImageType_Bmp_R8G8B8;
@@ -60,24 +64,82 @@ namespace Sapphire
 		m_imagetypeNames[ENUM2STR(ImageType_RAW_R8G8B8A8)] = ImageType_RAW_R8G8B8A8;
 		m_imagetypeNames[ENUM2STR(ImageType_Tga32)] = ImageType_Tga32;
 		m_imagetypeNames[ENUM2STR(ImageType_Tga24)] = ImageType_Tga24;
-		m_displayContext = new GLDisplayContext(); //创建OpenGL窗口显示环境
 		m_displayContext->Initialize(); //初始化OpenGL窗口显示环境
 		CheckFeature();
 		//初始化渲染系統接口
 		IRenderSystem* pRenderSys = new GLRenderSystem(m_pCore,this);
 		pRenderSys->Initialize();
 		m_pCore->RegisterSubSystem<IRenderSystem>(pRenderSys, ESST_RENDERSYSTEM);
+		m_bIsInitialized = true;
 
 	}
 
 	void GLGraphicDriver::Release()
 	{
-		safeDelete(m_pImageMgr);
-		safeDelete(m_pTextureMgr);
-		safeDelete(m_pShaderScriptMgr);
+		if (!m_bIsInitialized)
+			return;
+
+		Release(true, true);
 
 	}
 
+
+
+	void GLGraphicDriver::Release(bool clearGpuObjects, bool closeWindow)
+	{
+		if (!GetMainWindow())
+			return;
+
+		{
+			ResGuard<MutexEx> resGuard(m_gpuObjMutex);
+
+			if (clearGpuObjects)
+			{
+				//释放所有的存在的GPU对象，
+				//ShaderProgram也作为一个GPU对象，首先清理它们避免迭代的时候列表被修改
+				m_shaderProgramDict.clear();
+
+				std::unordered_map<std::string, GPUObject*>::iterator it = m_gpuObjects.begin();
+				for (; it != m_gpuObjects.end(); ++it)
+				{
+					it->second->Release();
+				}
+				m_gpuObjects.clear();
+			}
+			else
+			{
+				//要重新创建环境，使得GpuObject都丢失
+				std::unordered_map<std::string, GPUObject*>::iterator it = m_gpuObjects.begin();
+				for (; it != m_gpuObjects.end(); ++it)
+				{
+					it->second->OnDeviceLost();
+				}
+				//最后清理shaderProgram
+				m_shaderProgramDict.clear();
+				
+
+				FireEvent(ET_GRAPHIC_EVENT, EVENT_GRAPHICS_DEVICELOST, NULL);
+			}
+			
+		}
+
+		CleanFrameBuffers();
+		m_depthTextures.clear();
+
+		if (m_displayContext)
+		{
+			//终止显示环境
+			m_displayContext->Terminate();
+		}
+		//销毁窗口
+		if (closeWindow)
+		{
+			m_displayContext->CloseWindow();
+		}
+		
+	}
+
+	bool GLGraphicDriver::m_gl3Support;
 
 
 	bool GLGraphicDriver::SetDisplayMode(int width, int height, bool bFullScreen, bool bVsync, int multiSample, bool tripleBuffer, bool resizable)
@@ -101,6 +163,22 @@ namespace Sapphire
 		//把采样次数限制到1~16之间
 		multiSample = MathHelper::Clamp(multiSample, 1, 16);
 
+		{
+			//作为嵌入窗口时不能关闭
+			if (!m_displayContext->GetExternalWindow())
+			{
+				//DisplayContext关闭存在的窗口，并标记GpuObject Lost
+				Release(false, true);
+				//重新再创建窗口
+				m_displayContext->CreateNativeWindow("sapphireWindow", 0, 0, width, height, bFullScreen, multiSample, bVsync);
+				 
+			}
+			if (!m_displayContext->GetWindow())
+				return false;
+		}
+		
+		ResetRenderTargets();
+		//m_displayContext->Clear()
 
 		//发送设置显示模式的事件
 		VariantMap eventData;
@@ -371,6 +449,11 @@ namespace Sapphire
  
 
 	 
+	Sapphire::IShaderVariation* GLGraphicDriver::GetShader(ShaderType type, const std::string& name, const std::string define /*= ""*/) const
+	{
+
+	}
+
 	void GLGraphicDriver::SetShaders(IShaderVariation* vs, IShaderVariation* ps)
 	{
 
@@ -638,12 +721,12 @@ namespace Sapphire
 
 	void* GLGraphicDriver::GetMainWindow()
 	{
-		return NULL;
+		return m_displayContext->GetWindow();
 	}
 
 	bool GLGraphicDriver::IsInitialized()
 	{
-		return false;
+		return m_bIsInitialized;
 	}
 
 	Sapphire::IDisplayContext* GLGraphicDriver::GetDisplayContext() const
@@ -881,6 +964,8 @@ namespace Sapphire
 
 	}
 
+
+
 	void GLGraphicDriver::BindColorAttachment(uint index, uint target, uint obj)
 	{
 #ifndef GL_ES_VERSION_2_0
@@ -957,6 +1042,21 @@ namespace Sapphire
 #endif
 			glGenFramebuffers(1, &newFbo);
 		return newFbo;
+	}
+
+	void GLGraphicDriver::CleanFrameBuffers()
+	{
+
+	}
+
+	void GLGraphicDriver::AddGPUObject(GPUObject* gpuObj)
+	{
+
+	}
+
+	void GLGraphicDriver::RemoveGPUObject(GPUObject* gpuObj)
+	{
+
 	}
 
 }

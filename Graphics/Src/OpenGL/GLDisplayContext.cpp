@@ -20,6 +20,7 @@ namespace Sapphire
 		m_posY(0),
 		m_bVsync(false),
 		m_bFullScreen(false),
+		m_multiSample(1),
 		m_externalWindow(NULL)
 	{
 
@@ -40,19 +41,18 @@ namespace Sapphire
 	void GLDisplayContext::Initialize()
 	{
 
-#include <GLFW/glfw3.h>
-		glfwInit();
-#ifndef GL_ES_VERSION_2_0
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#endif  
-
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-		m_isTerminated = false;
+//		glfwInit();
+//#ifndef GL_ES_VERSION_2_0
+//		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+//		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+//		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+//#endif  
+//
+//		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+//		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+//		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+//
+//		m_isTerminated = false;
 	}
 
 	void GLDisplayContext::SetContextAttribute(int attr, int val)
@@ -61,20 +61,65 @@ namespace Sapphire
 	}
 
 
-	void GLDisplayContext::CreateNativeWindow(const char* wndName, int x, int y, int width, int height, bool bFullScreen, bool bVsync)
+	void GLDisplayContext::CreateNativeWindow(const char* wndName, int x, int y, int width, int height, bool bFullScreen, int m_multiSample, bool bVsync)
 	{
+		m_posX = x;
+		m_posY = y;
+		m_windowName = wndName;
+		m_width = width;
+		m_height = height;
+		m_bFullScreen = bFullScreen;
+		m_multiSample = m_multiSample;
+		m_bVsync = bVsync;
+
 		//如果窗口没创建就创建，已创建就不创建了
 		if (m_mainWindow == NULL)
 		{
 			SAPPHIRE_LOG("GLDisplayContext::CreateNativeWindow");
-#ifndef GL_ES_VERSION_2_0  //OpenGLES 2.0
+			glfwInit();
+			SetContextAttribute(GLFW_DOUBLEBUFFER, 1);
 
+#ifndef GL_ES_VERSION_2_0 
+			SetContextAttribute(GLFW_CONTEXT_VERSION_MAJOR, 3);
+			SetContextAttribute(GLFW_CONTEXT_VERSION_MINOR, 3);
+			SetContextAttribute(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 			SetContextAttribute(GLFW_RED_BITS, 8);
 			SetContextAttribute(GLFW_GREEN_BITS, 8);
 			SetContextAttribute(GLFW_BLUE_BITS, 8);
 			SetContextAttribute(GLFW_DEPTH_BITS, 24);   //24位深度
 			SetContextAttribute(GLFW_STENCIL_BITS, 8);  //8位模板
+
+			if(m_externalWindow) //嵌入的外部主窗口
+			{
+				SetContextAttribute(GLFW_ALPHA_BITS, 8);
+			}
+			else
+			{
+				SetContextAttribute(GLFW_ALPHA_BITS, 0);
+			}
+
+#else
+			//OpenGLES 2.0
+			SetContextAttribute(GLFW_CONTEXT_VERSION_MAJOR, 2);
+			SetContextAttribute(GLFW_CONTEXT_VERSION_MINOR, 0);
+			SetContextAttribute(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 #endif
+			if (m_multiSample > 1)
+			{
+				SetContextAttribute(GLFW_SAMPLES, m_multiSample);
+				 
+			}
+			else
+			{
+				SetContextAttribute(GLFW_SAMPLES, 0);
+			}
+
+			if (m_bFullScreen)
+			{
+				m_posX = 0;
+				m_posY = 0;
+			}
 
 			int monitorCount;  //先获取显示器数量
 			GLFWmonitor** pMonitors = glfwGetMonitors(&monitorCount);
@@ -114,6 +159,7 @@ namespace Sapphire
 			Terminate();
 		}
 		glViewport(0, 0, width, height);
+		m_isTerminated = false;
 	}
 
 
@@ -207,6 +253,11 @@ namespace Sapphire
 			
 		}
 		return ret;
+	}
+
+	void GLDisplayContext::Clear(uint flags, Color& color, float depth, uint stencil)
+	{
+
 	}
 
 	void GLDisplayContext::SetExternalWindow(void* val)

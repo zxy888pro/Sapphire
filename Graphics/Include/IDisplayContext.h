@@ -21,7 +21,7 @@ namespace Sapphire
 
 		virtual void SetContextAttribute(int attr, int val) = 0;
 
-		virtual void CreateNativeWindow(const char* wndName, int x, int y, int width, int height, bool bFullScreen, bool bVsync) = 0;
+		virtual void CreateNativeWindow(const char* wndName, int x, int y, int width, int height, bool bFullScreen, int m_multiSample, bool bVsync) = 0;
 
 		virtual void SwapBuffers() = 0;
 

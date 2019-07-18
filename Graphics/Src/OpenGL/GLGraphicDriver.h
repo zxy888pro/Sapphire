@@ -1,6 +1,7 @@
 #pragma once
 #include <Graphics.h>
 #include "IGraphicDriver.h"
+#include "Thread.h"
 
 namespace Sapphire
 {
@@ -79,7 +80,6 @@ namespace Sapphire
 
 		virtual void Release();
 
-
 		//设置显示模式，改变窗口或创建新窗口
 		bool SetDisplayMode(int width, int height, bool bFullScreen, bool bVsync, int multiSample, bool tripleBuffer, bool resizable);
 
@@ -134,6 +134,13 @@ namespace Sapphire
 		virtual void DeleteFrameBuffer(uint fbo);
 		//创建帧缓冲区
 		virtual uint CreateFramebuffer();
+		/// 清理所有的帧缓冲区，在销毁DisplayContext之前调用
+		virtual void CleanFrameBuffers();
+
+		/// 添加一个跟踪的GPUObject对象，由GPUObject调用
+		void AddGPUObject(GPUObject*  gpuObj);
+		/// 移除一个GPUObject对象，由GPUObject调用
+		void RemoveGPUObject(GPUObject* gpuObj);
 
 
 		int getTextureQuality() const { return m_nTextureQuality; }
@@ -216,13 +223,10 @@ namespace Sapphire
 
 		virtual GraphicDriverType getDriverType() const override;
 
-
+		//返回OpenGL主窗口
 		virtual void* GetMainWindow() override;
 
-
-
 		virtual bool IsInitialized() override;
-
 
 		virtual IDisplayContext* GetDisplayContext() const override;
 
@@ -264,6 +268,7 @@ namespace Sapphire
 
 		void CheckFeature();
 
+		void Release(bool clearGpuObjects, bool closeWindow);
 
 
 		GraphicDriverType  m_driverType;
@@ -289,10 +294,19 @@ namespace Sapphire
 		uint m_curBoundBO;  //当前绑定FBO
 		uint m_sysFBO;      //系统FBO
 
+		//gpu 对象表
+		std::unordered_map<std::string, GPUObject*>   m_gpuObjects;
+		//已链接的shaderProgames
+		std::unordered_map<std::string, GLShaderProgram*>    m_shaderProgramDict;
+
+
+		MutexEx  m_gpuObjMutex;
 		/// 所有在用的渲染目标
 		GLRenderSurface* m_renderTargets[MAX_RENDERTARGETS];
 		/// 当前的目标缓冲区
 		GLRenderSurface* m_depthStencil;
+		// 深度纹理, 用来模拟dx9的功能混合渲染纹理和后备缓冲区
+		std::unordered_map<int,Texture2D*>   m_depthTextures;
 
 		//可用的顶点缓冲区数
 		IVertexBuffer* m_vertexBuffers[MAX_VERTEX_STREAMS];
@@ -335,6 +349,7 @@ namespace Sapphire
 		GLShaderVariation* m_computeShader;
 		GLShaderProgram* m_shaderProgram;
 
+		bool  m_bIsInitialized;
 
 	};
 }

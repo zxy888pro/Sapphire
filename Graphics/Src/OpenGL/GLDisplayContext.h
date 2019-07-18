@@ -19,12 +19,13 @@ namespace Sapphire
 
 			virtual void SetContextAttribute(int attr, int val);
 
-			virtual void CreateNativeWindow(const char* wndName, int x, int y, int width, int height, bool bFullScreen, bool bVsync);
+			virtual void CreateNativeWindow(const char* wndName, int x, int y, int width, int height, bool bFullScreen, int m_multiSample, bool bVsync);
 
+			//关闭并销毁opengl渲染窗口
 			virtual void CloseWindow();
 
 			virtual void SwapBuffers();
-
+			//终止OpenGL显示环境
 			virtual void Terminate();
 
 			virtual void* GetWindow();
@@ -38,6 +39,9 @@ namespace Sapphire
 			IntVector2 GetWindowPos() const;
 
 			bool IsTerminated() const { return m_isTerminated; }
+
+			//清理缓存区
+			void  Clear(uint flags, Color& color, float depth, uint stencil);
 			
 
 			void* GetExternalWindow() const { return m_externalWindow; }
@@ -45,7 +49,7 @@ namespace Sapphire
 	private:
 
 		void*          m_mainWindow;
-		void*          m_externalWindow;   //外部窗口句柄
+		void*          m_externalWindow;   ////嵌入的外部主窗口句柄
 		bool           m_isTerminated;
 		int            m_width;
 		int            m_height;
@@ -53,6 +57,7 @@ namespace Sapphire
 		int            m_posY;
 		bool		   m_bFullScreen;
 		bool		   m_bVsync;
+		int            m_multiSample;
 		std::string    m_windowName;
 	};
 
