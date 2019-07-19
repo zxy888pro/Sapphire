@@ -18,7 +18,7 @@ namespace Sapphire
 
 	public:
 
-		GLShaderVariation(ShaderType type, Core* pCore);
+		GLShaderVariation(ShaderType type, Core* pCore, IGraphicDriver* pDriver);
 
 		virtual ~GLShaderVariation();
 		//±‡“ÎΩ≈±æ

@@ -16,9 +16,9 @@ namespace Sapphire
 {
 
 	 
-	CubeTexture::CubeTexture(Core* pCore, const char* name) :
+	CubeTexture::CubeTexture(Core* pCore, IGraphicDriver* pDriver, const char* name) :
 		BaseResource(pCore, name),
-		GPUObject(),
+		GPUObject(pDriver),
 		m_uWidth(0),
 		m_uHeight(0),
 		m_uDepth(0),
@@ -42,12 +42,14 @@ namespace Sapphire
 			m_eAddressMode_[i] = ADDRESS_REPEAT; m_eAddressMode_;
 		for (int i = 0; i < MAX_TEXTURE_QUALITY_LEVELS; ++i)
 			m_skipMips[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);
-		m_pGraphicDriver  = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
+		m_pGraphicDriver  = dynamic_cast<GLGraphicDriver*>(pDriver);
+		m_assert(m_pGraphicDriver);
 
 	}
 
-	CubeTexture::CubeTexture(Core* pCore,const char* name,uint size, uint depth, PixelFormat pf /*= PF_R8G8B8A8*/, uint NumMipmaps /*= 1*/, int glTargerType /*= GL_TEXTURE_2D*/, TextureUsage eUsage /*= TextureUsage::TEXTURE_STATIC*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode r /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/) :
-		BaseResource(pCore, name)
+	CubeTexture::CubeTexture(Core* pCore, IGraphicDriver* pDriver, const char* name, uint size, uint depth, PixelFormat pf /*= PF_R8G8B8A8*/, uint NumMipmaps /*= 1*/, int glTargerType /*= GL_TEXTURE_2D*/, TextureUsage eUsage /*= TextureUsage::TEXTURE_STATIC*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode r /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/) :
+		BaseResource(pCore, name),
+		GPUObject(pDriver)
 	{
 		 
 		m_uWidth = size;
@@ -69,7 +71,8 @@ namespace Sapphire
 		m_uAnisotropyLevel = 8;
 		m_glType = GL_TEXTURE_CUBE_MAP;
 		m_channelNum = 0;
-		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
+		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(pDriver);
+		m_assert(m_pGraphicDriver);
 		for (int i = 0; i < MAX_TEXTURE_QUALITY_LEVELS; ++i)
 			m_skipMips[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);
 

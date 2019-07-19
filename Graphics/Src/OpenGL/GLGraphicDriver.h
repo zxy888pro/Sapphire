@@ -1,7 +1,10 @@
 #pragma once
+#include "Sapphire.h"
 #include <Graphics.h>
 #include "IGraphicDriver.h"
 #include "Thread.h"
+#include "Math/Rect.h"
+
 
 namespace Sapphire
 {
@@ -21,6 +24,7 @@ namespace Sapphire
 	class GLShaderVariation;
 	class GLShaderProgram;
 	class GLDisplayContext;
+	class GPUObject;
 
 
 	///方便顶点更新的CPU端缓冲区
@@ -81,7 +85,7 @@ namespace Sapphire
 		virtual void Release();
 
 		//设置显示模式，改变窗口或创建新窗口
-		bool SetDisplayMode(int width, int height, bool bFullScreen, bool bVsync, int multiSample, bool tripleBuffer, bool resizable);
+		virtual bool SetDisplayMode(int width, int height, bool bFullScreen, bool bVsync, int multiSample, bool tripleBuffer, bool resizable);
 
 		/// 恢复GPU对象并重新初始化，需要已经打开的窗口
 		void Restore();
@@ -97,7 +101,7 @@ namespace Sapphire
 		Sapphire::ShaderMgr* getShaderMgr() const { return m_pShaderMgr; }
 
 		Sapphire::ShaderScriptMgr*  getShaderScriptMgr() const { return m_pShaderScriptMgr; }
-		//绘制前的准备工作
+		//绘制前的准备工作,渲染前调用，更新UBO和FBO
 		virtual void PrepareDraw();
 
 		//绑定一个纹理到指定的纹理单元
@@ -110,11 +114,13 @@ namespace Sapphire
 		//绑定UBO对象
 		void BindUBO(uint uHwUID);  //绑定UBO
 
-		bool  IsDeviceLost();
+		virtual bool  IsDeviceLost();
 
 		bool GetAnisotropySupport(){ return m_bAnisotropySupport; }
 
 		uint GetMaxAnisotropyLevels();
+
+		IntVector2 GetRenderTargetDimensions() const;
 
 		PixelFormat GetPixelFormat(ImageType eImgType);
 
@@ -136,11 +142,13 @@ namespace Sapphire
 		virtual uint CreateFramebuffer();
 		/// 清理所有的帧缓冲区，在销毁DisplayContext之前调用
 		virtual void CleanFrameBuffers();
+		/// 清理所有的渲染目标，深度缓冲区和模板缓冲区
+		virtual void Clear(unsigned flags, const Color& color = Color(0.0f, 0.0f, 0.0f, 0.0f), float depth = 1.0f, unsigned stencil = 0);
 
 		/// 添加一个跟踪的GPUObject对象，由GPUObject调用
-		void AddGPUObject(GPUObject*  gpuObj);
+		virtual void AddGPUObject(GPUObject*  gpuObj);
 		/// 移除一个GPUObject对象，由GPUObject调用
-		void RemoveGPUObject(GPUObject* gpuObj);
+		virtual void RemoveGPUObject(GPUObject* gpuObj);
 
 
 		int getTextureQuality() const { return m_nTextureQuality; }
@@ -177,18 +185,25 @@ namespace Sapphire
 
 		virtual void SetIndexBuffer(IIndexBuffer* pIndexBuffer); //设置索引缓冲区，同时绑定它
 
-		void SetViewport(const IntVector2& rect);  //设置视口
+		virtual void SetViewport(const IntRect& rect);  //设置视口
 
 		/// 设置颜色写入
 		void SetColorWrite(bool enable);
 		///  设置剔除模式
-		void SetCullMode(CullMode mode);
+		virtual void SetCullMode(CullMode mode);
+		///  设置填充模式
+		virtual void SetFillMode(FillMode mode);
 		///  设置深度测试
 		void SetDepthTest(CompareMode mode);
 		///	设置深度写入
 		void SetDepthWrite(bool enable);
 		///  设置Alpha混合模式
 		void SetBlendMode(BlendMode mode);
+		///  设置剪裁测试
+		void SetScissorTest(bool enable, const IntRect& rect);
+		///  设置剪裁测试
+		void SetScissorTest(bool enable, const Rect& rect = Rect::FULL, bool borderInclusive = true);
+
 
 		ConstantBuffer* GetOrCreateConstantBuffer(unsigned bindingIndex, unsigned size);  //获取或者创建一个ConstantsBuffer对象
 
@@ -268,7 +283,7 @@ namespace Sapphire
 
 		void CheckFeature();
 
-		void Release(bool clearGpuObjects, bool closeWindow);
+		void Release(bool clearGpuObjects, bool closeWindow); //释放清理GPU资源和窗口
 
 
 		GraphicDriverType  m_driverType;
@@ -291,16 +306,17 @@ namespace Sapphire
 
 		uint m_curBoundVBO;  //当前绑定VBO
 		uint m_curBoundUBO;  //当前UBO
-		uint m_curBoundBO;  //当前绑定FBO
+		uint m_curBoundFBO;  //当前绑定FBO
 		uint m_sysFBO;      //系统FBO
 
+		MutexEx  m_gpuObjMutex; //GPU对象互斥锁
 		//gpu 对象表
 		std::unordered_map<std::string, GPUObject*>   m_gpuObjects;
 		//已链接的shaderProgames
 		std::unordered_map<std::string, GLShaderProgram*>    m_shaderProgramDict;
 
 
-		MutexEx  m_gpuObjMutex;
+		
 		/// 所有在用的渲染目标
 		GLRenderSurface* m_renderTargets[MAX_RENDERTARGETS];
 		/// 当前的目标缓冲区
@@ -342,6 +358,23 @@ namespace Sapphire
 		uint m_hireShadowMapFormat;
 		uint m_dummyColorFormat;
 
+
+		bool	 m_bColorWrite;        //颜色可写入
+		bool	 m_bDepthWrite;		//深度可写入
+		uint	 m_stencilWriteMask; //模板写入位掩码
+		bool	 m_bScissorTest;      //剪裁测试
+		bool	 m_bStencilTest;     //模板测试开启标志
+
+		CullMode		m_cullmode;         //剔除模式
+		FillMode		m_fillmode;		//填充模式
+		CompareMode     m_depthTestMode;   //深度测试模式
+		BlendMode		m_blendMode;		//alpha混合模式
+
+		/// 剪裁测试区域
+		IntRect			m_scissorRect;    
+		IntRect			m_viewport;   //视口区域
+		///  
+		
 		//当前再用的shader
 		GLShaderVariation* m_vertexShader;
 		GLShaderVariation* m_pixelShader;

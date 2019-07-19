@@ -49,7 +49,7 @@ namespace Sapphire
 			LogUtil::LogMsgLn(StringFormatA("Create Texture Failed! Not found %s", filePath.c_str()));
 			return NULL;
 		}
-		Texture2D* pTexture = new Texture2D(m_pCore,filePath.c_str());
+		Texture2D* pTexture = new Texture2D(m_pCore, m_pGraphicDriver, filePath.c_str());
 		pTexture->Load(himg);
 		pTexture->setName(filePath);
 		RHANDLE handle = 0;
@@ -70,7 +70,7 @@ namespace Sapphire
 
 	Sapphire::ITexture* TextureMgr::CreateEmptyTexture2D(uint width, uint height, PixelFormat pFormat /*= PF_R8G8B8A8*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_REPEAT*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_REPEAT*/)
 	{
-		Texture2D* pTexture = new Texture2D(m_pCore, "",width, height, pFormat);
+		Texture2D* pTexture = new Texture2D(m_pCore , m_pGraphicDriver, "", width, height, pFormat);
 		pTexture->Create();
 		pTexture->SetData(pTexture->getMipLevel(),0,0, width, height, NULL);
 		RHANDLE handle = 0;
@@ -217,7 +217,7 @@ namespace Sapphire
 						throw GraphicDriverException("Parse Cubmap File Failed!", GraphicDriverException::GDError_TextureFileParseError);
 					}
 				}
-				CubeTexture* pTexture = new CubeTexture(m_pCore, filePath.c_str(),width, channel);
+				CubeTexture* pTexture = new CubeTexture(m_pCore,m_pGraphicDriver, filePath.c_str(),width, channel);
 				pTexture->Load(imgs[FACE_NEGATIVE_X], imgs[FACE_POSITIVE_Y], imgs[FACE_POSITIVE_X], imgs[FACE_NEGATIVE_Y], imgs[FACE_POSITIVE_Z], imgs[FACE_NEGATIVE_Z]);
 				pTexture->setName(filePath);
 				pTexture->setPixelFormat(ePixelFormat);

@@ -8,7 +8,7 @@
 
 namespace Sapphire
 {
-	class GLGraphicDriver;
+	class IGraphicDriver;
 	//OpenGL Texture2D
 	class Texture2D : public GPUObject, public BaseResource, public ITexture
 	{
@@ -17,8 +17,8 @@ namespace Sapphire
 
 		friend class TextureMgr;
 
-		Texture2D(Core* pCore, const char* name = "");
-		Texture2D(Core* pCore, const char* name, uint width, uint height, uint depth, PixelFormat pf = PF_R8G8B8A8, uint NumMipmaps = 1, int glTargerType = GL_TEXTURE_2D,
+		Texture2D(Core* pCore, IGraphicDriver* pDriver, const char* name = "");
+		Texture2D(Core* pCore, IGraphicDriver* pDriver, const char* name, uint width, uint height, uint depth, PixelFormat pf = PF_R8G8B8A8, uint NumMipmaps = 1, int glTargerType = GL_TEXTURE_2D,
 			TextureUsage eUsage = TextureUsage::TEXTURE_STATIC,TextureAddressMode s = TextureAddressMode::ADDRESS_REPEAT,
 			TextureAddressMode t = TextureAddressMode::ADDRESS_REPEAT,TextureFilterMode filterMode = TextureFilterMode::FILTER_BILINEAR);
 

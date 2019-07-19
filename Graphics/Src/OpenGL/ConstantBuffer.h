@@ -12,7 +12,7 @@ namespace Sapphire
 		SAPPHIRE_OBJECT(ConstantBuffer, BaseObject)
 	public:
 
-		ConstantBuffer(Core* pCore);
+		ConstantBuffer(Core* pCore, IGraphicDriver* pDriver);
 
 		virtual ~ConstantBuffer();
 

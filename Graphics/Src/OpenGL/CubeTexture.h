@@ -15,8 +15,8 @@ namespace Sapphire
 	{
 		SAPPHIRE_OBJECT(CubeTexture, BaseResource)
 	public:
-		CubeTexture(Core* pCore, const char* name = "");
-		CubeTexture(Core* pCore, const char* name, uint size, uint depth, PixelFormat pf = PF_R8G8B8A8, uint NumMipmaps = 1, int glTargerType = GL_TEXTURE_2D,
+		CubeTexture(Core* pCore, IGraphicDriver* pDriver, const char* name = "");
+		CubeTexture(Core* pCore, IGraphicDriver* pDriver, const char* name, uint size, uint depth, PixelFormat pf = PF_R8G8B8A8, uint NumMipmaps = 1, int glTargerType = GL_TEXTURE_2D,
 			TextureUsage eUsage = TextureUsage::TEXTURE_STATIC, TextureAddressMode s = TextureAddressMode::ADDRESS_REPEAT,
 			TextureAddressMode t = TextureAddressMode::ADDRESS_REPEAT, TextureAddressMode r = TextureAddressMode::ADDRESS_REPEAT, 
 			TextureFilterMode filterMode = TextureFilterMode::FILTER_BILINEAR);

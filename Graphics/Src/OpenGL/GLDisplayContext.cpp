@@ -3,6 +3,10 @@
 //如果是Windows/Linux使用GLFW
 #if defined(SAPPHIRE_WIN)||defined(SAPPHIRE_LINUX)
 #include <GLFW/glfw3.h>
+#if defined(SAPPHIRE_WIN) || !defined(GLFW_EXPOSE_NATIVE_WIN32)
+#define GLFW_EXPOSE_NATIVE_WIN32
+#endif
+#include <GLFW/glfw3native.h>
 #else
 //否则Android平台使用EGL
 
@@ -21,6 +25,7 @@ namespace Sapphire
 		m_bVsync(false),
 		m_bFullScreen(false),
 		m_multiSample(1),
+		m_bResizable(false),
 		m_externalWindow(NULL)
 	{
 
@@ -61,7 +66,7 @@ namespace Sapphire
 	}
 
 
-	void GLDisplayContext::CreateNativeWindow(const char* wndName, int x, int y, int width, int height, bool bFullScreen, int m_multiSample, bool bVsync)
+	void GLDisplayContext::CreateRenderWindow(const char* wndName, int x, int y, int width, int height, bool bFullScreen, int multiSample, bool bResizable, bool bVsync)
 	{
 		m_posX = x;
 		m_posY = y;
@@ -121,12 +126,47 @@ namespace Sapphire
 				m_posY = 0;
 			}
 
+			if (m_bResizable)
+			{
+				SetContextAttribute(GLFW_RESIZABLE, GL_TRUE); //设置是否可调节窗体大小
+			}
+			else
+			{
+				SetContextAttribute(GLFW_RESIZABLE, GL_FALSE);
+			}
+
 			int monitorCount;  //先获取显示器数量
 			GLFWmonitor** pMonitors = glfwGetMonitors(&monitorCount);
 			SAPPHIRE_LOG(StringFormat("monitorCount = %d", monitorCount));
 			GLFWmonitor* pPrimaryMonitor = glfwGetPrimaryMonitor(); //获取主显示器
+			if (!m_externalWindow)
+			{
+				m_mainWindow = glfwCreateWindow(width, height, wndName, pPrimaryMonitor, NULL);
+			}
+			else
+			{
+				//创建嵌入式窗口
+				SetContextAttribute(GLFW_DECORATED, GL_FALSE);  //没有边框和标题栏
+				SetContextAttribute(GLFW_VISIBLE, GL_FALSE);    //初始化显示关闭
+				m_mainWindow = glfwCreateWindow(width, height, wndName, NULL, NULL);
+				if (!m_mainWindow)
+				{
+					SAPPHIRE_LOGERROR("glfwCreateWindow embed window failed!");
+					return;
+				}
+				HWND glHwnd = glfwGetWin32Window((GLFWwindow*)m_mainWindow);
+				SetParent(glHwnd, (HWND)m_externalWindow);
 
-			m_mainWindow = glfwCreateWindow(width, height, wndName, pPrimaryMonitor, NULL);
+				long style = GetWindowLong(glHwnd, GWL_STYLE);
+				style &= ~WS_POPUP; 
+				style |= WS_CHILDWINDOW;  
+				SetWindowLong(glHwnd, GWL_STYLE, style);
+				SetWindowPos(glHwnd, HWND_TOPMOST, x, y, width, height, SWP_NOSIZE);
+				ShowWindow(glHwnd, SW_SHOW);
+				m_bFullScreen = false;
+				 
+			}
+			
 			if (m_mainWindow == NULL)
 			{
 				SAPPHIRE_LOGERROR("GLDisplayContext CreateWindow Failed!");
@@ -148,7 +188,7 @@ namespace Sapphire
 		else
 			glfwSwapInterval(0);
 
-		glfwMakeContextCurrent((GLFWwindow*)m_mainWindow);
+		glfwMakeContextCurrent((GLFWwindow*)m_mainWindow); 
 		//捕捉鼠标
 		glfwSetInputMode((GLFWwindow*)m_mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		glewExperimental = GL_TRUE;
@@ -255,10 +295,6 @@ namespace Sapphire
 		return ret;
 	}
 
-	void GLDisplayContext::Clear(uint flags, Color& color, float depth, uint stencil)
-	{
-
-	}
 
 	void GLDisplayContext::SetExternalWindow(void* val)
 	{

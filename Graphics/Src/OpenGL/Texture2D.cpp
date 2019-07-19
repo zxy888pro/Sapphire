@@ -6,14 +6,15 @@
 #include "GraphicException.h"
 #include "GLGraphicDriver.h"
 #include "GLRenderSurface.h"
+#include "GPUObject.h"
 
 
 namespace Sapphire
 {
 
-	Texture2D::Texture2D(Core* pCore, const char* name) :
+	Texture2D::Texture2D(Core* pCore, IGraphicDriver* pDriver, const char* name):
 		BaseResource(pCore,name),
-		GPUObject(),
+		GPUObject(pDriver),
 		m_uWidth(0),
 		m_uHeight(0),
 		m_uDepth(0),
@@ -38,8 +39,9 @@ namespace Sapphire
 			m_skipMips[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);
 	}
 
-	Texture2D::Texture2D(Core* pCore, const char* name,uint width, uint height, uint depth, PixelFormat pf /*= PF_R8G8B8A8*/, uint NumMipmaps /*= 1*/, int glTargerType /*= GL_TEXTURE_2D*/, TextureUsage eUsage /*= TextureUsage::TEXTURE_STATIC*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_WRAP*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_WRAP*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/) :
-		BaseResource(pCore,name)
+	Texture2D::Texture2D(Core* pCore, IGraphicDriver* pDriver, const char* name, uint width, uint height, uint depth, PixelFormat pf /*= PF_R8G8B8A8*/, uint NumMipmaps /*= 1*/, int glTargerType /*= GL_TEXTURE_2D*/, TextureUsage eUsage /*= TextureUsage::TEXTURE_STATIC*/, TextureAddressMode s /*= TextureAddressMode::ADDRESS_WRAP*/, TextureAddressMode t /*= TextureAddressMode::ADDRESS_WRAP*/, TextureFilterMode filterMode /*= TextureFilterMode::FILTER_BILINEAR*/) :
+		BaseResource(pCore,name),
+		GPUObject(pDriver)
 	{
 		m_uWidth = width;
 		m_uHeight = height;
@@ -58,7 +60,8 @@ namespace Sapphire
 		m_maxMipLevel = 0;
 		m_uAnisotropyLevel = 8;
 		m_glType = glTargerType;
-		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
+		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(pDriver);
+		m_assert(m_pGraphicDriver);
 		for (int i = 0; i < MAX_TEXTURE_QUALITY_LEVELS; ++i)
 			m_skipMips[i] = (unsigned)(MAX_TEXTURE_QUALITY_LEVELS - 1 - i);  //质量越高,跳过的mip越小
 	}

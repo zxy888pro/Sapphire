@@ -1,4 +1,5 @@
 #include "Variant.h"
+#include "Math/Rect.h"
 #include "GLGraphicDriver.h"
 #include <GraphicException.h>
 #include "GLDisplayContext.h"
@@ -26,6 +27,75 @@ namespace Sapphire
 		0, 1, 2, 3, 4, 8, 9, 5, 6, 7, 10, 11, 12
 	};
 
+	static const unsigned glCmpFunc[] =
+	{
+		GL_ALWAYS,
+		GL_EQUAL,
+		GL_NOTEQUAL,
+		GL_LESS,
+		GL_LEQUAL,
+		GL_GREATER,
+		GL_GEQUAL
+	};
+
+	static const unsigned glSrcBlend[] =
+	{
+		GL_ONE,
+		GL_ONE,
+		GL_DST_COLOR,
+		GL_SRC_ALPHA,
+		GL_SRC_ALPHA,
+		GL_ONE,
+		GL_ONE_MINUS_DST_ALPHA,
+		GL_ONE,
+		GL_SRC_ALPHA
+	};
+
+	static const unsigned glDestBlend[] =
+	{
+		GL_ZERO,
+		GL_ONE,
+		GL_ZERO,
+		GL_ONE_MINUS_SRC_ALPHA,
+		GL_ONE,
+		GL_ONE_MINUS_SRC_ALPHA,
+		GL_DST_ALPHA,
+		GL_ONE,
+		GL_ONE
+	};
+
+	static const unsigned glBlendOp[] =
+	{
+		GL_FUNC_ADD,
+		GL_FUNC_ADD,
+		GL_FUNC_ADD,
+		GL_FUNC_ADD,
+		GL_FUNC_ADD,
+		GL_FUNC_ADD,
+		GL_FUNC_ADD,
+		GL_FUNC_REVERSE_SUBTRACT,
+		GL_FUNC_REVERSE_SUBTRACT
+	};
+
+#ifndef GL_ES_VERSION_2_0
+
+	static const unsigned glFillMode[] =
+	{
+		GL_FILL,
+		GL_LINE,
+		GL_POINT
+	};
+
+	static const unsigned glStencilOps[] =
+	{
+		GL_KEEP,
+		GL_ZERO,
+		GL_REPLACE,
+		GL_INCR_WRAP,
+		GL_DECR_WRAP
+	};
+
+#endif // !GL_ES_VERSION_2_0
 
 
 	GLGraphicDriver::GLGraphicDriver(Core* pCore) :IGraphicDriver(pCore)
@@ -170,7 +240,7 @@ namespace Sapphire
 				//DisplayContext关闭存在的窗口，并标记GpuObject Lost
 				Release(false, true);
 				//重新再创建窗口
-				m_displayContext->CreateNativeWindow("sapphireWindow", 0, 0, width, height, bFullScreen, multiSample, bVsync);
+				m_displayContext->CreateRenderWindow("sapphireWindow", 0, 0, width, height, bFullScreen, multiSample,false, bVsync);
 				 
 			}
 			if (!m_displayContext->GetWindow())
@@ -180,6 +250,13 @@ namespace Sapphire
 		ResetRenderTargets();
 		//m_displayContext->Clear()
 
+
+		Restore();//恢复GPU Objects并设置初始状态
+		Clear(CLEAR_COLOR);
+		m_displayContext->SwapBuffers(); //交换缓冲区
+
+
+		CheckFeatureSupport();
 		//发送设置显示模式的事件
 		VariantMap eventData;
 		eventData["Width"] = width;
@@ -247,19 +324,71 @@ namespace Sapphire
 		m_indexBuffer = pIndexBuffer;
 	}
 
-	void GLGraphicDriver::SetViewport(const IntVector2& rect)
+	void GLGraphicDriver::SetViewport(const IntRect& rect)
 	{
+		PrepareDraw();
+
+		IntVector2 rtSize = GetRenderTargetDimensions();
+
+		IntRect rectCopy = rect;
+
+		if (rectCopy.right_ <= rectCopy.left_)
+			rectCopy.right_ = rectCopy.left_ + 1;
+		if (rectCopy.bottom_ <= rectCopy.top_)
+			rectCopy.bottom_ = rectCopy.top_ + 1;
+		rectCopy.left_ = MathHelper::Clamp(rectCopy.left_, 0, rtSize.x_);
+		rectCopy.top_ = MathHelper::Clamp(rectCopy.top_, 0, rtSize.y_);
+		rectCopy.right_ = MathHelper::Clamp(rectCopy.right_, 0, rtSize.x_);
+		rectCopy.bottom_ = MathHelper::Clamp(rectCopy.bottom_, 0, rtSize.y_);
+
+		//glScissor以左下角为坐标原点(0,0)，而通常情况下，坐标系以屏幕左上角为坐标原点(0,0)。因此，需要转换一下
+		glViewport(rectCopy.left_, rtSize.y_ - rectCopy.bottom_, rectCopy.Width(), rectCopy.Height());
+		m_viewport = rectCopy;
+
+		// 关闭剪裁测试，需要用户重新打开
+		SetScissorTest(false);
 
 	}
 
 	void GLGraphicDriver::SetColorWrite(bool enable)
 	{
+		if (enable != m_bColorWrite)
+		{
+			if (enable)
+				glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+			else
+				glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
+			m_bColorWrite = enable;
+		}
 	}
 
 	void GLGraphicDriver::SetCullMode(CullMode mode)
 	{
+		if (mode != m_cullmode)
+		{
+			if (mode == CULL_NONE)
+				glDisable(GL_CULL_FACE);
+			else
+			{
+				// 和Dx 相反
+				glEnable(GL_CULL_FACE);
+				glCullFace(mode == CULL_CCW ? GL_FRONT : GL_BACK);
+			}
 
+			m_cullmode = mode;
+		}
+	}
+
+	void GLGraphicDriver::SetFillMode(FillMode mode)
+	{
+#ifndef GL_ES_VERSION_2_0
+		if (mode != mode)
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, glFillMode[mode]); //设置多边形填充模式
+			m_fillmode = mode;
+		}
+#endif
 	}
 
 	void GLGraphicDriver::SetDepthTest(CompareMode mode)
@@ -269,12 +398,108 @@ namespace Sapphire
 
 	void GLGraphicDriver::SetDepthWrite(bool enable)
 	{
-
+		if (enable != m_bDepthWrite)
+		{
+			glDepthMask(enable ? GL_TRUE : GL_FALSE);
+			m_bDepthWrite = enable;
+		}
 	}
 
 	void GLGraphicDriver::SetBlendMode(BlendMode mode)
 	{
 
+	}
+
+	void GLGraphicDriver::SetScissorTest(bool enable, const IntRect& rect)
+	{
+		//剪裁测试用于限制绘制区域。区域内的像素，将被绘制修改。区域外的像素，将不会被修改
+		IntVector2 rtSize(GetRenderTargetDimensions()); //渲染目标大小
+		IntVector2 viewPos(m_viewport.left_, m_viewport.top_);  //视口位置
+
+		if (enable)
+		{
+			IntRect intRect;
+			intRect.left_ = MathHelper::Clamp(rect.left_ + viewPos.x_, 0, rtSize.x_ - 1);
+			intRect.top_ = MathHelper::Clamp(rect.top_ + viewPos.y_, 0, rtSize.y_ - 1);
+			intRect.right_ = MathHelper::Clamp(rect.right_ + viewPos.x_, 0, rtSize.x_);
+			intRect.bottom_ = MathHelper::Clamp(rect.bottom_ + viewPos.y_, 0, rtSize.y_);
+
+			if (intRect.right_ == intRect.left_)
+				intRect.right_++;
+			if (intRect.bottom_ == intRect.top_)
+				intRect.bottom_++;
+
+			if (intRect.right_ < intRect.left_ || intRect.bottom_ < intRect.top_)
+				enable = false;
+
+			if (enable && m_scissorRect != intRect)
+			{
+				//glScissor以左下角为坐标原点(0,0)，而通常情况下，坐标系以屏幕左上角为坐标原点(0,0)。因此，需要转换一下
+				glScissor(intRect.left_, rtSize.y_ - intRect.bottom_, intRect.Width(), intRect.Height());
+				m_scissorRect = intRect;
+			}
+		}
+		else
+			m_scissorRect = IntRect::ZERO;
+
+		if (enable != m_bScissorTest)
+		{
+			if (enable)
+				glEnable(GL_SCISSOR_TEST);
+			else
+				glDisable(GL_SCISSOR_TEST);
+			m_bScissorTest = enable;
+		}
+	}
+
+	void GLGraphicDriver::SetScissorTest(bool enable, const Rect& rect /*= Rect::FULL*/, bool borderInclusive /*= true*/)
+	{
+		//剪裁测试用于限制绘制区域。区域内的像素，将被绘制修改。区域外的像素，将不会被修改
+		// 在某些渲染循环里，返回开启/关闭一个完整的区域
+		// 关闭剪裁可以减少状态改变
+
+		if (rect.min_.x_ <= 0.0f && rect.min_.y_ <= 0.0f && rect.max_.x_ >= 1.0f && rect.max_.y_ >= 1.0f)
+			enable = false;
+
+		if (enable)
+		{
+			IntVector2 rtSize(GetRenderTargetDimensions());
+			IntVector2 viewSize(m_viewport.Size());
+			IntVector2 viewPos(m_viewport.left_, m_viewport.top_);
+			IntRect intRect;
+			int expand = borderInclusive ? 1 : 0;
+
+			intRect.left_ = MathHelper::Clamp((int)((rect.min_.x_ + 1.0f) * 0.5f * viewSize.x_) + viewPos.x_, 0, rtSize.x_ - 1);
+			intRect.top_ = MathHelper::Clamp((int)((-rect.max_.y_ + 1.0f) * 0.5f * viewSize.y_) + viewPos.y_, 0, rtSize.y_ - 1);
+			intRect.right_ = MathHelper::Clamp((int)((rect.max_.x_ + 1.0f) * 0.5f * viewSize.x_) + viewPos.x_ + expand, 0, rtSize.x_);
+			intRect.bottom_ = MathHelper::Clamp((int)((-rect.min_.y_ + 1.0f) * 0.5f * viewSize.y_) + viewPos.y_ + expand, 0, rtSize.y_);
+
+			if (intRect.right_ == intRect.left_)
+				intRect.right_++;
+			if (intRect.bottom_ == intRect.top_)
+				intRect.bottom_++;
+
+			if (intRect.right_ < intRect.left_ || intRect.bottom_ < intRect.top_)
+				enable = false;
+
+			if (enable && m_scissorRect != intRect)
+			{
+				//glScissor以左下角为坐标原点(0,0)，而通常情况下，坐标系以屏幕左上角为坐标原点(0,0)。因此，需要转换一下
+				glScissor(intRect.left_, rtSize.y_ - intRect.bottom_, intRect.Width(), intRect.Height());
+				m_scissorRect = intRect;
+			}
+		}
+		else
+			m_scissorRect = IntRect::ZERO;
+
+		if (enable != m_bScissorTest)
+		{
+			if (enable)
+				glEnable(GL_SCISSOR_TEST);
+			else
+				glDisable(GL_SCISSOR_TEST);
+			m_bScissorTest = enable;
+		}
 	}
 
 	Sapphire::ConstantBuffer* GLGraphicDriver::GetOrCreateConstantBuffer(unsigned bindingIndex, unsigned size)
@@ -283,7 +508,7 @@ namespace Sapphire
 		std::unordered_map<unsigned, SharedPtr<ConstantBuffer> >::iterator i = m_constantsBuffers.find(key);
 		if (i == m_constantsBuffers.end())
 		{
-			std::pair<unsigned, SharedPtr<ConstantBuffer>> pair = std::make_pair(key, SharedPtr<ConstantBuffer>(new ConstantBuffer(m_pCore)));
+			std::pair<unsigned, SharedPtr<ConstantBuffer>> pair = std::make_pair(key, SharedPtr<ConstantBuffer>(new ConstantBuffer(m_pCore, this)));
 			m_constantsBuffers.insert(pair);
 			pair.second->SetSize(size);
 			return pair.second.Get();
@@ -296,7 +521,12 @@ namespace Sapphire
 
 	void GLGraphicDriver::ResetRenderTargets()
 	{
-
+		//遍历渲染目标，全部重置0
+		for (unsigned i = 0; i < MAX_RENDERTARGETS; ++i)
+			SetRenderTarget(i, (GLRenderSurface*)0);
+		SetDepthStencil((GLRenderSurface*)0);
+		IntVector2 size = m_displayContext->GetWindowSize();
+		SetViewport(IntRect(0, 0, size.x_, size.y_)); //重置视口
 	}
 
 	void GLGraphicDriver::ResetRenderTarget(uint index)
@@ -368,7 +598,7 @@ namespace Sapphire
 
 	bool GLGraphicDriver::IsDeviceLost()
 	{
-		return false;
+		return m_displayContext->IsTerminated();
 	}
 
 	uint GLGraphicDriver::GetMaxAnisotropyLevels()
@@ -376,6 +606,28 @@ namespace Sapphire
 		GLfloat maxAniLevel;    //查询允许的各向异性数量
 		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniLevel);
 		return (uint)maxAniLevel;
+	}
+
+	Sapphire::IntVector2 GLGraphicDriver::GetRenderTargetDimensions() const
+	{
+		int width, height;
+
+		if (m_renderTargets[0])
+		{
+			width = m_renderTargets[0]->GetWidth();
+			height = m_renderTargets[0]->GetHeight();
+		}
+		else if (m_depthStencil)
+		{
+			width = m_depthStencil->GetWidth();
+			height = m_depthStencil->GetHeight();
+		}
+		else
+		{
+			return m_displayContext->GetWindowSize(); //没找到，返回窗口大小
+		}
+
+		return IntVector2(width, height);
 	}
 
 	PixelFormat GLGraphicDriver::GetPixelFormat(ImageType eImgType)
@@ -417,7 +669,7 @@ namespace Sapphire
 
 	uint GLGraphicDriver::GetCurrentBoundFBO() const
 	{
-		return m_curBoundBO;
+		return m_curBoundFBO;
 	}
 
 	void GLGraphicDriver::BindFrameBuffer(uint fbo)
@@ -447,12 +699,6 @@ namespace Sapphire
 	}
 
  
-
-	 
-	Sapphire::IShaderVariation* GLGraphicDriver::GetShader(ShaderType type, const std::string& name, const std::string define /*= ""*/) const
-	{
-
-	}
 
 	void GLGraphicDriver::SetShaders(IShaderVariation* vs, IShaderVariation* ps)
 	{
@@ -616,7 +862,7 @@ namespace Sapphire
 
 	void GLGraphicDriver::SetRenderTarget(unsigned index, Texture2D* texture)
 	{
-		/*RenderSurface* renderTarget = 0;
+		/*GLRenderSurface* renderTarget = 0;
 		if (texture)
 		renderTarget = texture->GetRenderSurface();
 
@@ -1046,17 +1292,93 @@ namespace Sapphire
 
 	void GLGraphicDriver::CleanFrameBuffers()
 	{
+		//先清理所有的fbo
+		if (!IsDeviceLost())
+		{
+			//重新绑定回系统fbo
+			BindFrameBuffer(m_sysFBO);//绑定fbo到系统fbo
+			m_curBoundFBO = m_sysFBO;
+			m_fboDirty = true;
+
+			for (std::map<ulonglong, FrameBufferObject>::iterator it = m_frameBuffers.begin(); it != m_frameBuffers.end(); ++it)
+			{
+				DeleteFrameBuffer(it->second.fbo);
+			}
+		}
+		else
+		{
+			m_curBoundFBO = 0;
+		}
+
+		m_frameBuffers.clear();
+	}
+
+	void GLGraphicDriver::Clear(unsigned flags, const Color& color /*= Color(0.0f, 0.0f, 0.0f, 0.0f)*/, float depth /*= 1.0f*/, unsigned stencil /*= 0*/)
+	{
+		PrepareDraw();
+
+#ifdef GL_ES_VERSION_2_0
+		flags &= ~CLEAR_STENCIL;
+#endif // !GL_ES_VERSION_2_0
+
+		//先保存旧的状态
+		bool oldColorWrite = m_bColorWrite;
+		bool oldDepthWrite = m_bDepthWrite;
+		
+		if (flags & CLEAR_COLOR && !oldColorWrite)
+			SetColorWrite(true);
+		if (flags & CLEAR_DEPTH && !oldDepthWrite)
+			SetDepthWrite(true);
+		if (flags & CLEAR_STENCIL && m_stencilWriteMask != M_MAX_UNSIGNED)
+			glStencilMask(M_MAX_UNSIGNED);
+
+		unsigned glFlags = 0; //设置clear值 clear标志
+		if (flags & CLEAR_COLOR)
+		{
+			glFlags |= GL_COLOR_BUFFER_BIT;
+			glClearColor(color.r_, color.g_, color.b_, color.a_);
+		}
+		if (flags & CLEAR_DEPTH)
+		{
+			glFlags |= GL_DEPTH_BUFFER_BIT;
+			glClearDepth(depth);
+		}
+		if (flags & CLEAR_STENCIL)
+		{
+			glFlags |= GL_STENCIL_BUFFER_BIT;
+			glClearStencil(stencil);
+		}
+
+		// 如果视口不是全屏幕，设置剪裁器限制clear
+
+		IntVector2 viewSize = GetRenderTargetDimensions(); //获取rt范围
+		if (m_viewport.left_ != 0 || m_viewport.top_ != 0 || m_viewport.right_ != viewSize.x_ || m_viewport.bottom_ != viewSize.y_)
+			SetScissorTest(true, IntRect(0, 0, m_viewport.Width(), m_viewport.Height()));
+		else
+			SetScissorTest(false);
+
+		glClear(glFlags); //执行clear
+
+		SetScissorTest(false);
+		SetColorWrite(oldColorWrite);//恢复先前的设置
+		SetDepthWrite(oldDepthWrite);
+		if (flags & CLEAR_STENCIL && m_stencilWriteMask != M_MAX_UNSIGNED)
+			glStencilMask(m_stencilWriteMask);
 
 	}
 
 	void GLGraphicDriver::AddGPUObject(GPUObject* gpuObj)
 	{
-
+		m_gpuObjects[gpuObj->GetUUID()] = gpuObj;
 	}
 
 	void GLGraphicDriver::RemoveGPUObject(GPUObject* gpuObj)
 	{
-
+		std::unordered_map<std::string, GPUObject*>::iterator it = m_gpuObjects.find(gpuObj->GetUUID());
+		if (it != m_gpuObjects.end())
+		{
+			m_gpuObjects.erase(it);
+		}	
 	}
 
 }

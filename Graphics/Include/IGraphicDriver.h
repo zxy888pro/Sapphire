@@ -8,6 +8,7 @@ namespace Sapphire
 	struct  ITextureMgr;
 	struct  IImageMgr;
 	struct  IDisplayContext;
+	class   GPUObject;
 	
 
 	//OpenGL 与硬件层访问驱动类。  
@@ -42,7 +43,23 @@ namespace Sapphire
 
 		virtual bool    IsInitialized() = 0;   //是否初始化完成
 
+		virtual void SetViewport(const IntRect& rect) = 0; //设置视口
+
+		virtual bool  IsDeviceLost() = 0;  //设备是否丢失
+
+		virtual bool SetDisplayMode(int width, int height, bool bFullScreen, bool bVsync, int multiSample, bool tripleBuffer, bool resizable) = 0;
+
+		///  设置剔除模式
+		virtual void SetCullMode(CullMode mode) = 0;
+		///  设置填充模式
+		virtual void SetFillMode(FillMode mode) = 0;
+
 		virtual IDisplayContext*   GetDisplayContext() const = 0;
+
+		/// 添加一个跟踪的GPUObject对象，由GPUObject调用
+		virtual void AddGPUObject(GPUObject*  gpuObj) = 0;
+		/// 移除一个GPUObject对象，由GPUObject调用
+		virtual void RemoveGPUObject(GPUObject* gpuObj) = 0;
 
 	protected:
 

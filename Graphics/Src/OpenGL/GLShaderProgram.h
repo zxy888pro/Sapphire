@@ -32,7 +32,7 @@ namespace Sapphire
 
 	public:
 
-		GLShaderProgram(Core* pCore, GLShaderVariation* vertexShader, GLShaderVariation* pixelShader);
+		GLShaderProgram(Core* pCore,IGraphicDriver* pDriver, GLShaderVariation* vertexShader, GLShaderVariation* pixelShader);
 		virtual ~GLShaderProgram();
 
 		virtual void Release() override;

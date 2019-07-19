@@ -6,14 +6,14 @@
 
 namespace Sapphire
 {
-	class GLGraphicDriver;
+	class IGraphicDriver;
 
 	//GPU对象 texture/shader/Shaderprogram
 	class GPUObject
 	{
 	public:
 
-		GPUObject(GLGraphicDriver* pdriver);
+		GPUObject(IGraphicDriver* pdriver);
 
 		virtual ~GPUObject(){};
 
@@ -37,7 +37,7 @@ namespace Sapphire
 
 	protected:
 
-		WeakPtr<GLGraphicDriver>  m_pGraphicDriver;
+		IGraphicDriver*  m_pGraphicDriver;
 		uint m_uHwUID;
 		//数据丢失
 		bool m_bDataLost;

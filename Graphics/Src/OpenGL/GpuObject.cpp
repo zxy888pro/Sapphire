@@ -5,7 +5,7 @@
 namespace Sapphire
 {
 
-	GPUObject::GPUObject(GLGraphicDriver* pdriver) :m_pGraphicDriver(pdriver)
+	GPUObject::GPUObject(IGraphicDriver* pdriver) :m_pGraphicDriver(pdriver)
 	{
 		m_uuid = GetUUIDStr();
 		if (pdriver)

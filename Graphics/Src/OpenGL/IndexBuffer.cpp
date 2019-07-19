@@ -4,7 +4,8 @@
 namespace Sapphire
 {
 
-	IndexBuffer::IndexBuffer(Core* pCore) :BaseObject(pCore),
+	IndexBuffer::IndexBuffer(Core* pCore, IGraphicDriver* pDriver) :BaseObject(pCore),
+		GPUObject(pDriver),
 		m_indexCount(0),
 		m_indexSize(0),
 		m_eLockState(LOCK_NONE),
@@ -14,7 +15,8 @@ namespace Sapphire
 		m_bShadowed(false),
 		m_bDynamic(false)
 	{
-		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(m_pCore->GetSubSystemWithType(ESST_GRAPHICDRIVER));
+		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(pDriver);
+		m_assert(m_pGraphicDriver);
 		if (m_pGraphicDriver)
 		{
 			m_bShadowed = true;

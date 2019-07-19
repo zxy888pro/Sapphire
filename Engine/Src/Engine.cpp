@@ -30,7 +30,7 @@ namespace Sapphire
 		m_bExiting(false)
 	{
 #ifdef SAPPHIRE_WIN
-		CoInitialize(NULL);
+		CoInitialize(NULL); //UUID要用
 #endif
 		//初始化Log
 		Sapphire::LogUtil::getInstancePtr()->Init("log.txt");
@@ -88,7 +88,7 @@ namespace Sapphire
 		m_assert(pRenderSys);
 		{
 			//设置图形参数
-
+			pGraphicDriver->SetDisplayMode(1024, 768, false, false, 1, 0, false);
 
 			
 		}

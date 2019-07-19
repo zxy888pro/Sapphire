@@ -4,14 +4,16 @@
 namespace Sapphire
 {
 
-	ConstantBuffer::ConstantBuffer(Core* pCore):
+	ConstantBuffer::ConstantBuffer(Core* pCore, IGraphicDriver* pDriver):
 		BaseObject(pCore),
+		GPUObject(pDriver),
 		m_uSize(0),
 		m_bDirty(false),
 		m_pDriver(NULL)
 	{
 		m_shadowData.Reset();
-		m_pDriver = dynamic_cast<GLGraphicDriver*>(Core::GetSingletonPtr()->GetSubSystemWithType(ESST_GRAPHICDRIVER));
+		m_pDriver = dynamic_cast<GLGraphicDriver*>(pDriver);
+		m_assert(pDriver);
 	}
 
 	ConstantBuffer::~ConstantBuffer()

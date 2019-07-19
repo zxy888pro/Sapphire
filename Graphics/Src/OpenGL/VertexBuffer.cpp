@@ -82,8 +82,9 @@ namespace Sapphire
 		return m_uHwUID;
 	}
 
-	VertexBuffer::VertexBuffer(Core* pCore):
+	VertexBuffer::VertexBuffer(Core* pCore, IGraphicDriver* pDriver) :
 		BaseObject(pCore),
+		GPUObject(pDriver),
 		m_vertexCount(0),
 		m_vertexSize(0),
 		m_bShadowed(false),
@@ -96,7 +97,8 @@ namespace Sapphire
 		m_uLockCount(0)
 	{
 		UpdateElementOffset();
-		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(pCore->GetSubSystemWithType(ESST_GRAPHICDRIVER));
+		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(pDriver);
+		m_assert(m_pGraphicDriver);
 		if (m_pGraphicDriver)
 		{
 			m_bShadowed = true;

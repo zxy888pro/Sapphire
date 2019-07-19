@@ -50,7 +50,7 @@ namespace Sapphire
 				 }
 				 else
 				 {
-					 std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type, m_pCore)));
+					 std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type, m_pCore, m_pGraphicDriver)));
 					_pair.second->SetDefines(defines);
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(),ShaderType::VS));
 					m_vsVariation.insert(_pair);
@@ -69,7 +69,7 @@ namespace Sapphire
 				}
 				else
 				{
-					std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type, m_pCore)));
+					std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type,m_pCore, m_pGraphicDriver)));
 					_pair.second->SetDefines(defines);
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(), ShaderType::PS));
 					m_psVariation.insert(_pair);
@@ -87,7 +87,7 @@ namespace Sapphire
 				}
 				else
 				{
-					std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type, m_pCore)));
+					std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type, m_pCore, m_pGraphicDriver)));
 					_pair.second->SetDefines(defines);
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(), ShaderType::GS));
 					m_gsVariation.insert(_pair);
@@ -105,7 +105,7 @@ namespace Sapphire
 				}
 				else
 				{
-					std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type, m_pCore)));
+					std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type, m_pCore, m_pGraphicDriver)));
 					_pair.second->SetDefines(defines);
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(), ShaderType::CS));
 					m_csVariation.insert(_pair);

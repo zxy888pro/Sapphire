@@ -18,15 +18,16 @@ namespace Sapphire
 	};
 
 
-	GLShaderProgram::GLShaderProgram(Core* pCore, GLShaderVariation* vertexShader, GLShaderVariation* pixelShader) :
+	GLShaderProgram::GLShaderProgram(Core* pCore, IGraphicDriver* pDriver, GLShaderVariation* vertexShader, GLShaderVariation* pixelShader) :
 		BaseObject(pCore),
-		GPUObject(),
+		GPUObject(pDriver),
 		m_uFrameNumber(0),
 		m_vertexShader(vertexShader),
 		m_pixelShader(pixelShader),
 		m_pDriver(NULL)
 	{
-		m_pDriver = (GLGraphicDriver*)(Core::GetSingletonPtr()->GetSubSystemWithType(Sapphire::ESST_GRAPHICDRIVER));
+		m_pDriver = dynamic_cast<GLGraphicDriver*>(pDriver);
+		m_assert(m_pDriver);
 		for (unsigned i = 0; i < MAX_TEXTURE_UNITS; ++i)
 			m_bUseTextureUnits[i] = false;
 		for (unsigned i = 0; i < MAX_SHADER_PARAMETER_GROUPS; ++i)
