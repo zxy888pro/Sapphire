@@ -141,7 +141,15 @@ namespace Sapphire
 			GLFWmonitor* pPrimaryMonitor = glfwGetPrimaryMonitor(); //获取主显示器
 			if (!m_externalWindow)
 			{
-				m_mainWindow = glfwCreateWindow(width, height, wndName, pPrimaryMonitor, NULL);
+				if (m_bFullScreen)
+				{
+					m_mainWindow = glfwCreateWindow(width, height, wndName, pPrimaryMonitor, NULL); //指定主显示器，就可以全屏幕
+				}
+				else
+				{
+					m_mainWindow = glfwCreateWindow(width, height, wndName, NULL, NULL);
+				}
+				
 			}
 			else
 			{
@@ -180,8 +188,8 @@ namespace Sapphire
 			glfwSetWindowSize((GLFWwindow*)m_mainWindow, width, height);
 		}
 
-		if (!bFullScreen)
-			glfwSetWindowPos((GLFWwindow*)m_mainWindow, x, y);
+		if (!bFullScreen) //只有非全屏模式才能调节位置
+			glfwSetWindowPos((GLFWwindow*)m_mainWindow, m_posX, m_posY);
 
 		if (bVsync)
 			glfwSwapInterval(1);  //垂直同步
@@ -202,6 +210,11 @@ namespace Sapphire
 		m_isTerminated = false;
 	}
 
+
+	void GLDisplayContext::CreateRenderWindow(int x, int y, int width, int height, bool bFullScreen, int multiSample, bool bResizable, bool bVsync)
+	{
+		CreateRenderWindow(m_windowName.c_str(),  x,  y,  width,  height,  bFullScreen,  multiSample,  bResizable,  bVsync);
+	}
 
 	void GLDisplayContext::CloseWindow()
 	{
@@ -228,7 +241,7 @@ namespace Sapphire
 
 	void* GLDisplayContext::GetWindow()
 	{
-		return NULL;
+		return m_mainWindow;
 	}
 
 	void GLDisplayContext::GetCurrentDisplayMode(DisplayMode& mode) const
@@ -302,6 +315,17 @@ namespace Sapphire
 			m_externalWindow = val;
 		else
 			SAPPHIRE_LOGERROR("Window already opened, can not set external window");
+	}
+
+	void GLDisplayContext::SetWindowTitle(const char* wndName)
+	{
+		
+		m_windowName = wndName;
+	}
+
+	const std::string& GLDisplayContext::GetWindowTitle() const
+	{
+		return m_windowName;
 	}
 
 #else

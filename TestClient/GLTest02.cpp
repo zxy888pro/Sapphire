@@ -7,6 +7,7 @@
 #include "Graphics.h"
 #include "Image.h"
 #include <GraphicDriver.h>
+#include <IGraphicDriver.h>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
@@ -27,11 +28,15 @@ GLTest02::~GLTest02()
 	Clean();
 }
 
+Sapphire::Core* pcore;
+
 void GLTest02::Init(const char* vertexShaderFile, const char* fragmentShaderFile)
 {
 	using namespace Sapphire;
-	new Sapphire::GraphicDriver();
-	imgMgr = Sapphire::GraphicDriver::GetSingletonPtr()->getImageMgr();
+	pcore = new Core();
+	createGraphicDriver(pcore);
+	IGraphicDriver* pDriver = dynamic_cast<IGraphicDriver*>(pcore->GetSubSystemWithType(ESST_GRAPHICDRIVER));
+	imgMgr = pDriver->getImageMgr();
 	if (FileIsExistA(vertexShaderFile) && FileIsExistA(fragmentShaderFile))
 	{
 		LogUtil::LogMsgLn("ÕÒµ½shaderÎÄ¼þ");

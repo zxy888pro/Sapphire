@@ -212,7 +212,7 @@ namespace Sapphire
 	bool GLGraphicDriver::m_gl3Support;
 
 
-	bool GLGraphicDriver::SetDisplayMode(int width, int height, bool bFullScreen, bool bVsync, int multiSample, bool tripleBuffer, bool resizable)
+	bool GLGraphicDriver::SetDisplayMode(int x, int y, int width, int height, bool bFullScreen, bool bVsync, int multiSample, bool tripleBuffer, bool resizable)
 	{
 
 		if (!width || !height) //长宽设置有非法
@@ -240,7 +240,7 @@ namespace Sapphire
 				//DisplayContext关闭存在的窗口，并标记GpuObject Lost
 				Release(false, true);
 				//重新再创建窗口
-				m_displayContext->CreateRenderWindow("sapphireWindow", 0, 0, width, height, bFullScreen, multiSample,false, bVsync);
+				m_displayContext->CreateRenderWindow(x, y, width, height, bFullScreen, multiSample,false, bVsync);
 				 
 			}
 			if (!m_displayContext->GetWindow())
@@ -267,9 +267,58 @@ namespace Sapphire
 		return true;
 	}
 
+	
 	void GLGraphicDriver::Restore()
 	{
+		//回复GPUObjects的状态
+		if (m_displayContext->GetWindow())
+			return;
 
+#ifdef SAPPHIRE_WIN
+
+
+#elif defined(SAPPHIRE_ANDROID)
+
+
+#endif
+
+		GLenum err = glewInit();
+		if (GLEW_OK != err)
+		{
+			SAPPHIRE_LOGERROR(StringFormatA("glewInit error! cause: %s", glewGetErrorString(err)));
+			return;
+		}
+#ifdef GLEW_VERSION_2_0
+
+		//創建一個一直使用的VAO對象
+		if(glIsBuffer(m_VAO))
+		{
+			glBindVertexArray(m_VAO);
+			glDeleteVertexArrays(1, &m_VAO);
+		}
+		glGenVertexArrays(1, &m_VAO);
+		glBindVertexArray(m_VAO);
+
+#else
+		//OPENGLES 2.0
+		//OpenGL Es2不支持VAO VBO
+
+#endif
+
+		// 设置纹理读写1字节对齐, 在上传任何纹理数据前是非常重要
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+
+		m_gpuObjMutex.Lock();
+		std::unordered_map<std::string, GPUObject*>::iterator it = m_gpuObjects.begin();
+		for (; it != m_gpuObjects.end(); ++it)
+		{
+			it->second->OnDeviceReset();
+		}
+		m_gpuObjMutex.Unlock();
+
+		FireEvent(ET_GRAPHIC_EVENT, EVENT_GRAPHICS_DEVICERESET, NULL);
 	}
 
 	void GLGraphicDriver::Maximize()
@@ -977,7 +1026,7 @@ namespace Sapphire
 
 	Sapphire::IDisplayContext* GLGraphicDriver::GetDisplayContext() const
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		return m_displayContext;
 	}
 
 	bool GLGraphicDriver::BeginFrame()

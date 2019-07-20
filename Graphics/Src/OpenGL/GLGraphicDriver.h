@@ -85,7 +85,7 @@ namespace Sapphire
 		virtual void Release();
 
 		//设置显示模式，改变窗口或创建新窗口
-		virtual bool SetDisplayMode(int width, int height, bool bFullScreen, bool bVsync, int multiSample, bool tripleBuffer, bool resizable);
+		virtual bool SetDisplayMode(int x, int y, int width, int height, bool bFullScreen, bool bVsync, int multiSample, bool tripleBuffer, bool resizable);
 
 		/// 恢复GPU对象并重新初始化，需要已经打开的窗口
 		void Restore();
@@ -308,6 +308,7 @@ namespace Sapphire
 		uint m_curBoundUBO;  //当前UBO
 		uint m_curBoundFBO;  //当前绑定FBO
 		uint m_sysFBO;      //系统FBO
+		uint m_VAO;          // VAO
 
 		MutexEx  m_gpuObjMutex; //GPU对象互斥锁
 		//gpu 对象表

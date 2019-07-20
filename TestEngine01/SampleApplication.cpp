@@ -24,6 +24,8 @@ namespace Sapphire
 		m_engineParameter["WindowHeight"] = 768;
 		m_engineParameter["Vsync"] = false;
 		m_engineParameter["MultiSample"] = false;
+		m_engineParameter["X"] = 400;
+		m_engineParameter["Y"] = 200;
 	}
 
 	void SampleApplication::Start()

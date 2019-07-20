@@ -21,6 +21,8 @@ namespace Sapphire
 
 			virtual void CreateRenderWindow(const char* wndName, int x, int y, int width, int height, bool bFullScreen, int multiSample, bool bResizable, bool bVsync);
 
+			virtual void CreateRenderWindow(int x, int y, int width, int height, bool bFullScreen, int multiSample, bool bResizable, bool bVsync);
+
 			//关闭并销毁opengl渲染窗口
 			virtual void CloseWindow();
 
@@ -34,15 +36,20 @@ namespace Sapphire
 
 			virtual void GetDisplayMode(int index, DisplayMode& mode) const;
 
-			IntVector2 GetWindowSize() const;
+			virtual IntVector2 GetWindowSize() const;
 
-			IntVector2 GetWindowPos() const;
+			virtual IntVector2 GetWindowPos() const;
 
-			bool IsTerminated() const { return m_isTerminated; }
+			virtual bool IsTerminated() const { return m_isTerminated; }
 			
-			void* GetExternalWindow() const { return m_externalWindow; }
+			virtual void* GetExternalWindow() const { return m_externalWindow; }
 
-			void SetExternalWindow(void* val);
+			virtual void SetExternalWindow(void* val);
+
+			virtual void SetWindowTitle(const char* wndName);
+
+			virtual const std::string& GetWindowTitle() const;
+
 	private:
 
 		void*          m_mainWindow;

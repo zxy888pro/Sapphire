@@ -47,7 +47,9 @@ namespace Sapphire
 
 		virtual bool  IsDeviceLost() = 0;  //设备是否丢失
 
-		virtual bool SetDisplayMode(int width, int height, bool bFullScreen, bool bVsync, int multiSample, bool tripleBuffer, bool resizable) = 0;
+		virtual bool SetDisplayMode(int x, int y, int width, int height, bool bFullScreen, bool bVsync, int multiSample, bool tripleBuffer, bool resizable) = 0;
+
+		virtual void Clear(unsigned flags, const Color& color = Color(0.0f, 0.0f, 0.0f, 0.0f), float depth = 1.0f, unsigned stencil = 0) = 0;
 
 		///  设置剔除模式
 		virtual void SetCullMode(CullMode mode) = 0;

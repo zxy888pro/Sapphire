@@ -45,6 +45,7 @@ int main()
 		Sapphire::LogUtil::LogMsgLn(Sapphire::StringFormatA("glew init error! errorCode:! %d", glGetError()));
 		glfwTerminate();
 	}
+	GLenum ret = glewInit();
 	GLTest02* test = new GLTest02();
 	
 	glViewport(0, 0, 800, 600);

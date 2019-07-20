@@ -6,6 +6,9 @@
 
 namespace Sapphire
 {
+
+	const Sapphire::Variant Variant::EMPTY;
+
 	const ResourceRef Variant::emptyResourceRef;
 	const ResourceRefList Variant::emptyResourceRefList;
 	const VariantVector Variant::emptyVariantVector;

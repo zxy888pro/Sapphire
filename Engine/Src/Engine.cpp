@@ -4,6 +4,7 @@
 #include "ResourceLoader.h"
 #include "GraphicDriver.h"
 #include "IGraphicDriver.h"
+#include "IDisplayContext.h"
 #include "IRenderSystem.h"
 #include "FileSystem.h"
 #include "Input.h"
@@ -87,8 +88,25 @@ namespace Sapphire
 		IRenderSystem* pRenderSys = dynamic_cast<IRenderSystem*>(m_pCore->GetSubSystemWithType(ESST_RENDERSYSTEM));
 		m_assert(pRenderSys);
 		{
+			//如果有,设置外部窗口
+			if (HasParameter(parameters, "ExternalWindow"))
+				pGraphicDriver->GetDisplayContext()->SetExternalWindow(GetParameter(parameters, "ExternalWindow").GetVoidPtr());
+			std::string wndName = "defaultWindow";
+			if (HasParameter(parameters, "WindowTitle"))
+				wndName = GetParameter(parameters, "WindowTitle").GetString().str();
+			pGraphicDriver->GetDisplayContext()->SetWindowTitle(wndName.c_str());
+			//读取显示参数设置
+			int width = GetParameter(parameters, "WindowWidth").GetInt();
+			int height = GetParameter(parameters, "WindowHeight").GetInt();
+			int x = GetParameter(parameters, "X").GetInt();
+			int y = GetParameter(parameters, "Y").GetInt();
+			bool bFullScreen  =  GetParameter(parameters, "FullScreen").GetBool();
+			bool bVsync = GetParameter(parameters, "Vsync").GetBool();
+			int  multiSample = GetParameter(parameters, "MultiSample").GetInt();
+			int  bResizable = GetParameter(parameters, "Resizable").GetBool();
+			
 			//设置图形参数
-			pGraphicDriver->SetDisplayMode(1024, 768, false, false, 1, 0, false);
+			pGraphicDriver->SetDisplayMode(x, y, width, height, bFullScreen, bVsync, multiSample, 0, bResizable);
 
 			
 		}
@@ -171,9 +189,11 @@ namespace Sapphire
 		IRenderSystem*	pRenderSystem  =  dynamic_cast<IRenderSystem*>(m_pCore->GetSubSystemWithType(ESST_RENDERSYSTEM));
 		if (pGraphicDriver && pGraphicDriver->BeginFrame())
 		{
+			//先渲染场景物件
 			pRenderSystem->Render();
-			//绘制UI
-
+			//再绘制UI
+			
+			//pGraphicDriver->Clear(CLEAR_COLOR | CLEAR_DEPTH | CLEAR_STENCIL,Color::RED);
 		}
 
 
