@@ -47,6 +47,12 @@ namespace Sapphire
 		virtual void setBackupTexture(ITexture* tex) override;
 		virtual bool IsCompressed() const override;
 
+		virtual void SetSRGB(bool enable) override;
+		virtual bool GetSRGB() const override;
+		virtual uint GetHWFormat() const override;
+		virtual void UpdateParameters() override;
+		virtual bool GetParametersDirty() const override;
+
 	public:
 
 		virtual uint getWidth() const { return m_uWidth; }
@@ -98,6 +104,11 @@ namespace Sapphire
 		size_t  m_uSize;
 		uint m_maxMipLevel;
 		unsigned m_skipMips[MAX_TEXTURE_QUALITY_LEVELS];
+		//阴影比较模式
+		bool m_bShadowCompare;
+
+		/// 边界颜色
+		Color m_borderColor;
 
 		SharedPtr<Texture2D>  m_backupTex;   //备份纹理，当主纹理无效时，使用的默认替代物
 		SharedPtr<GLRenderSurface>  m_renderSurface;     //内置的渲染目标
@@ -114,7 +125,9 @@ namespace Sapphire
 		//GL_TEXTURE_RECTANGLE : SamplerRect   //简单纹素矩形， 不支持mipmap
 		//GL_TEXTURE_BUFFER :  samplerBuffer   //任意纹素的1维数组，不支持mipmap
 		int  m_glType;
-
+		//是否使用SRGB， 2d纹理SRGB空间， 法线/高光线性空间
+		bool m_bSRGB;
+		bool m_bParametersDirty;   //纹理参数的脏标志
 		GLGraphicDriver*  m_pGraphicDriver;
 	};
 

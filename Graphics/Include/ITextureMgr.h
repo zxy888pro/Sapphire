@@ -30,5 +30,8 @@ namespace Sapphire
 		virtual ITexture* GetTexture(TextureUnit index) = 0;
 
 		virtual bool VerifyHWUID(uint uHwuid) = 0;
+
+		virtual void SetTextureForUpdate(ITexture* texture) = 0;
+
 	};
 }

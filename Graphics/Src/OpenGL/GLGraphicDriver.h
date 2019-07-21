@@ -60,9 +60,9 @@ namespace Sapphire
 		GLRenderSurface* colorAttachments[MAX_RENDERTARGETS];
 		/// 绑定的深度模板附件
 		GLRenderSurface* depthAttachment;
-		/// 读取缓冲区位数
+		/// 当前FBO用到的读取缓冲区位数
 		uint readBuffers;
-		/// 绘制缓冲区位数
+		/// 当前FBO用到的绘制缓冲区位数
 		uint drawBuffers;
 	};
 
@@ -103,6 +103,10 @@ namespace Sapphire
 		Sapphire::ShaderScriptMgr*  getShaderScriptMgr() const { return m_pShaderScriptMgr; }
 		//绘制前的准备工作,渲染前调用，更新UBO和FBO
 		virtual void PrepareDraw();
+		///绘制非索引化的的几何体
+		virtual void Draw(PrimitiveType type, unsigned vertexStart, unsigned vertexCount);
+		///绘制索引化的几何体
+		virtual void Draw(PrimitiveType type, unsigned indexStart, unsigned indexCount, unsigned minVertex, unsigned vertexCount);
 
 		//绑定一个纹理到指定的纹理单元
 		//先激活对应的纹理单元
@@ -117,6 +121,10 @@ namespace Sapphire
 		virtual bool  IsDeviceLost();
 
 		bool GetAnisotropySupport(){ return m_bAnisotropySupport; }
+		//是否支持SRGB空间
+		bool GetSRGBSupport() const { return m_bsRGBSupport;}
+
+		void MarkFBODirty();
 
 		uint GetMaxAnisotropyLevels();
 
@@ -231,6 +239,11 @@ namespace Sapphire
 		//检查特性支持
 		virtual void CheckFeatureSupport();
 
+		//默认的各项异性过滤dengj
+		unsigned GetTextureAnisotropy() const { return m_textureAnisotropy; }
+		//返回默认纹理过滤模式
+		TextureFilterMode GetDefaultTextureFilterMode() const { return m_eDefaultTextureFilterMode; }
+
 		//检查OpenGL扩展
 		virtual bool CheckExtension(const char* name);
 		//返回shadowMap 深度纹理格式， 如果位0则不支持
@@ -246,11 +259,16 @@ namespace Sapphire
 		virtual IDisplayContext* GetDisplayContext() const override;
 
 
+
 		virtual bool BeginFrame() override;
 
 		virtual void EndFrame() override;
 
-
+		//获取当前帧图元数
+		unsigned	GetNumPrimitives() const { return m_uNumPrimitives; }
+		//获取当前帧的批次
+		unsigned	GetNumBatches() const { return m_uNumBatches; }
+		
 	public:
 
 		static int GetHWTextureWarpParam(TextureAddressMode mode);
@@ -260,6 +278,10 @@ namespace Sapphire
 		static int GetSWTextureFormat(PixelFormat eFormat);
 
 		static uint GetHWTextureDataType(PixelFormat format);
+
+		static GLenum  GetWarpMode(TextureAddressMode mode);
+
+
 		//硬件Alpha格式
 		static int GetHWAlphaFormat();
 		//硬件明度格式
@@ -275,7 +297,6 @@ namespace Sapphire
 		{
 			return m_gl3Support;
 		}
-
 
 
 
@@ -299,10 +320,21 @@ namespace Sapphire
 
 		int            m_nTextureQuality;
 		bool		   m_bAnisotropySupport;
+		int            m_textureAnisotropy;
+
+		TextureFilterMode m_eDefaultTextureFilterMode;
 		uint           m_nMaxTextureUnits;
 		ImageTypeNameMap   m_imagetypeNames;
 
 		bool m_bGL3Support;  //是否支持OpenGL3
+
+		/////是否支持sRGB读
+		bool m_bsRGBReadSupport;
+		bool m_bsRGBWriteSupport;   //是否支持sRGB写
+		bool m_bsRGBSupport;
+
+		/// SRGB写标志
+		bool m_bSRGBWrite;
 
 		uint m_curBoundVBO;  //当前绑定VBO
 		uint m_curBoundUBO;  //当前UBO
@@ -318,7 +350,7 @@ namespace Sapphire
 
 
 		
-		/// 所有在用的渲染目标
+		/// 当前在用的渲染目标   
 		GLRenderSurface* m_renderTargets[MAX_RENDERTARGETS];
 		/// 当前的目标缓冲区
 		GLRenderSurface* m_depthStencil;
@@ -349,6 +381,9 @@ namespace Sapphire
 		std::vector<ScratchBuffer> m_scratchBuffers;
 		ulong m_maxScratchBufferRequest; //当前帧请求的ScratchBuffer最大值
 
+		/// 脏的Constant buffers.
+		std::vector<ConstantBuffer*> m_dirtyConstantBuffers;
+
 		//gles硬件深度模板格式
 		uint m_glesHWDepthStencilFormat;
 		//gles硬件读取深度格式
@@ -375,6 +410,11 @@ namespace Sapphire
 		IntRect			m_scissorRect;    
 		IntRect			m_viewport;   //视口区域
 		///  
+
+		/// 当前帧的图元数
+		unsigned m_uNumPrimitives;
+		/// 当前帧的批次数
+		unsigned m_uNumBatches;
 		
 		//当前再用的shader
 		GLShaderVariation* m_vertexShader;
@@ -382,6 +422,7 @@ namespace Sapphire
 		GLShaderVariation* m_geometryShader;
 		GLShaderVariation* m_computeShader;
 		GLShaderProgram* m_shaderProgram;
+
 
 		bool  m_bIsInitialized;
 

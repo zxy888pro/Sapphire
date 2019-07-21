@@ -43,6 +43,12 @@ namespace Sapphire
 		virtual void setBackupTexture(ITexture* tex) = 0;    //设置备份纹理
 		virtual void RenderSurfaceUpdate() = 0;
 		virtual bool IsCompressed() const = 0;    //紋理是否壓縮
+		virtual bool GetSRGB() const = 0;
+		virtual void SetSRGB(bool enable) = 0;       
+		virtual uint GetHWFormat() const = 0;      //获取硬件纹理格式
+		virtual void UpdateParameters() = 0;       //更新紋理參數
+		virtual bool GetParametersDirty() const = 0;   //紋理參數是否髒了
+
 	
 	};
 }

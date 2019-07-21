@@ -644,4 +644,29 @@ namespace Sapphire
 		}
 	}
 
+	void CubeTexture::SetSRGB(bool enable)
+	{
+
+	}
+
+	bool CubeTexture::GetSRGB() const
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
+	uint CubeTexture::GetHWFormat() const
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
+	void CubeTexture::UpdateParameters()
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
+	bool CubeTexture::GetParametersDirty() const
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
 }

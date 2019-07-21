@@ -211,5 +211,35 @@ namespace Sapphire
 			return false;
 		}
 
+
+		virtual bool GetSRGB() const override
+		{
+			throw std::logic_error("The method or operation is not implemented.");
+		}
+
+
+		virtual uint GetHWFormat() const override
+		{
+			throw std::logic_error("The method or operation is not implemented.");
+		}
+
+
+		virtual void UpdateParameters() override
+		{
+			throw std::logic_error("The method or operation is not implemented.");
+		}
+
+
+		virtual bool GetParametersDirty() const override
+		{
+			throw std::logic_error("The method or operation is not implemented.");
+		}
+
+
+		virtual void SetSRGB(bool enable) override
+		{
+			 
+		}
+
 	};
 }

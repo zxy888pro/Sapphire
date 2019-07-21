@@ -98,6 +98,66 @@ namespace Sapphire
 #endif // !GL_ES_VERSION_2_0
 
 
+	static GLenum glWrapModes[] =
+	{
+		GL_REPEAT,
+		GL_MIRRORED_REPEAT,
+		GL_CLAMP_TO_EDGE,
+#ifndef GL_ES_VERSION_2_0
+		GL_CLAMP
+#else
+		GL_CLAMP_TO_EDGE
+#endif
+	};
+
+#ifndef GL_ES_VERSION_2_0
+	static GLenum gl3WrapModes[] =
+	{
+		GL_REPEAT,
+		GL_MIRRORED_REPEAT,
+		GL_CLAMP_TO_EDGE,
+		GL_CLAMP_TO_BORDER
+	};
+#endif
+
+
+	//取的对应OpenGL的图元数和图元类型
+	void GetGLPrimitiveType(unsigned elementCount, PrimitiveType type, unsigned& primitiveCount, GLenum& glPrimitiveType)
+	{
+		switch (type)
+		{
+		case TRIANGLE_LIST:
+			primitiveCount = elementCount / 3;   //三角形 每三个顶点一个三角形
+			glPrimitiveType = GL_TRIANGLES;
+			break;
+
+		case LINE_LIST:
+			primitiveCount = elementCount / 2;     //线段  每2个顶点一条线段
+			glPrimitiveType = GL_LINES;
+			break;
+
+		case POINT_LIST:
+			primitiveCount = elementCount;    //点   每个顶点一个点
+			glPrimitiveType = GL_POINTS;
+			break;
+
+		case TRIANGLE_STRIP:                 //三角形带     三角形数=顶点数-2
+			primitiveCount = elementCount - 2;
+			glPrimitiveType = GL_TRIANGLE_STRIP;
+			break;
+
+		case LINE_STRIP:
+			primitiveCount = elementCount - 1;
+			glPrimitiveType = GL_LINE_STRIP;
+			break;
+
+		case TRIANGLE_FAN:
+			primitiveCount = elementCount - 2;
+			glPrimitiveType = GL_TRIANGLE_FAN;
+			break;
+		}
+	}
+
 	GLGraphicDriver::GLGraphicDriver(Core* pCore) :IGraphicDriver(pCore)
 	{
 		m_bIsInitialized = false;
@@ -111,6 +171,8 @@ namespace Sapphire
 		m_pImageMgr = new ImageMgr();
 		m_pShaderScriptMgr = new ShaderScriptMgr();
 		m_displayContext = new GLDisplayContext(); //创建OpenGL窗口显示环境
+		m_textureAnisotropy = 0;
+		m_eDefaultTextureFilterMode = FILTER_BILINEAR;
 
 	}
 
@@ -333,7 +395,268 @@ namespace Sapphire
 
 	void GLGraphicDriver::PrepareDraw()
 	{
+#ifndef GL_ES_VERSION_2_0
 
+		if (m_gl3Support)
+		{
+			for (std::vector<ConstantBuffer*>::iterator i = m_dirtyConstantBuffers.begin(); i != m_dirtyConstantBuffers.end(); ++i)
+				(*i)->Apply();
+			m_dirtyConstantBuffers.clear();
+		}
+#endif
+
+		if (m_fboDirty)
+		{
+			m_fboDirty = false;
+		}
+		//先检查有没有fbo对象正在使用
+		bool noFbo = !m_depthStencil;
+		if (noFbo)
+		{
+			for (unsigned i = 0; i < MAX_RENDERTARGETS; ++i)
+			{
+				if (m_renderTargets[i])
+				{
+					noFbo = false;
+					break;
+				}
+			}
+		}
+
+
+		if (noFbo)
+		{
+			//重新绑定回系统fbo
+			if (m_curBoundFBO != m_sysFBO)
+			{
+				BindFrameBuffer(m_sysFBO);
+				m_curBoundFBO = m_sysFBO;
+			}
+#ifndef GL_ES_VERSION_2_0
+			// 是否开启sRGB写
+			if (m_bsRGBWriteSupport)
+			{
+				bool sRGBWrite = m_renderTargets[0] ? m_renderTargets[0]->GetParentTexture()->GetSRGB(): m_bSRGBWrite;
+				if (sRGBWrite != m_bSRGBWrite) //是否等于当前的srgb写标志
+				{
+					if (sRGBWrite)
+						glEnable(GL_FRAMEBUFFER_SRGB_EXT);
+					else
+						glDisable(GL_FRAMEBUFFER_SRGB_EXT);
+				}
+			}
+#endif
+			return;
+		}
+		// 搜寻一个基于这个格式和大小的新的帧缓冲区，或者创建一个新的
+		IntVector2 rtSize = GetRenderTargetDimensions();
+		unsigned texFormat = 0;
+		if (m_renderTargets[0])
+			texFormat = m_renderTargets[0]->GetParentTexture()->GetHWFormat();
+		else if (m_depthStencil)
+			texFormat = m_depthStencil->GetParentTexture()->GetHWFormat();
+
+		//framebuffer表的key和分辨率相关  格式|x|y
+		unsigned long long fboKey = (rtSize.x_ << 16 | rtSize.y_) | (((unsigned long long)texFormat) << 32);
+		std::map<ulonglong, FrameBufferObject>::iterator it = m_frameBuffers.find(fboKey);
+
+		if(it == m_frameBuffers.end()) //没有找到
+		{
+			FrameBufferObject newFbo; //重新创建一个
+			newFbo.fbo = CreateFramebuffer();
+			std::pair <std::map<ulonglong, FrameBufferObject>::iterator, bool> pair = m_frameBuffers.insert(std::make_pair(fboKey, newFbo));
+			it = pair.first;
+		}
+
+		//綁定fbo到當前找到匹配的FBO
+		if (m_curBoundFBO != it->second.fbo)
+		{
+			BindFrameBuffer(it->second.fbo);
+			m_curBoundFBO = it->second.fbo;
+		}
+
+		
+
+		/////帧缓存对象的MRT多重渲染目标的设置
+#ifndef GL_ES_VERSION_2_0
+		// 如果需要的話,設置讀取和繪製緩存區
+		if (it->second.readBuffers != GL_NONE)
+		{
+			glReadBuffer(GL_NONE); 
+			it->second.readBuffers = GL_NONE;
+		}
+		//检查当前有哪些renderTarget在用，合并到newDrawBuffers中
+		unsigned newDrawBuffers = 0;
+		for (unsigned j = 0; j < MAX_RENDERTARGETS; ++j)
+		{
+			if (m_renderTargets[j])
+				newDrawBuffers |= 1 << j;
+		}
+
+		//当前用到renderTargets和FBO的drawBuffers对不上,更新当前FBO的drawBuffer
+		if (newDrawBuffers != it->second.drawBuffers)
+		{
+			// 检查非颜色渲染目标，（只有深度渲染）
+			if (!newDrawBuffers)
+				glDrawBuffer(GL_NONE); //复位
+			else
+			{
+				int drawBufferIds[MAX_RENDERTARGETS];
+				unsigned drawBufferCount = 0;
+
+				for (unsigned j = 0; j < MAX_RENDERTARGETS; ++j)
+				{
+					if (m_renderTargets[j])
+					{
+						if (!m_gl3Support)
+							drawBufferIds[drawBufferCount++] = GL_COLOR_ATTACHMENT0_EXT + j;
+						else
+							drawBufferIds[drawBufferCount++] = GL_COLOR_ATTACHMENT0 + j;
+					}
+				}
+				glDrawBuffers(drawBufferCount, (const GLenum*)drawBufferIds); //设置好drawBuffer的颜色缓存区
+			}
+			it->second.drawBuffers = newDrawBuffers;
+		}
+#else
+
+#endif
+		 //更新要附加到fbo的renderTarget的纹理对象
+		for (unsigned j = 0; j < MAX_RENDERTARGETS; ++j)
+		{
+			if (m_renderTargets[j])
+			{
+				ITexture* texture = m_renderTargets[j]->GetParentTexture();
+
+				// 如果紋理參數髒了，那麼在附加到緩存區對象前期，更新它
+				if (texture->GetParametersDirty())
+				{
+					m_pTextureMgr->SetTextureForUpdate(texture);//设置好要更新的纹理
+					texture->UpdateParameters();
+					BindTexture(0, TextureUnit::TU_DIFFUSE);//更新完了，记得恢复纹理默认值
+				}
+				//更新完了，位FBO添加颜色附件
+				if (it->second.colorAttachments[j] != m_renderTargets[j])
+				{
+					BindColorAttachment(j, m_renderTargets[j]->GetTarget(), texture->getUID());
+					it->second.colorAttachments[j] = m_renderTargets[j];
+				}
+			}
+			else
+			{
+				//没有renderTarget，置空
+				if (it->second.colorAttachments[j])
+				{
+					BindColorAttachment(j, GL_TEXTURE_2D, 0);
+					it->second.colorAttachments[j] = 0;
+				}
+			}
+		}
+
+
+		//更新深度模板缓存区
+		if (m_depthStencil)
+		{
+			ITexture* texture = m_depthStencil->GetParentTexture();
+
+#ifndef GL_ES_VERSION_2_0
+			bool hasStencil = texture->GetHWFormat() == GL_DEPTH24_STENCIL8_EXT;
+#else
+			bool hasStencil = texture->GetHWFormat() == GL_DEPTH24_STENCIL8_OES;
+#endif
+			//获取renderBuffer对象
+			unsigned renderBufferID = m_depthStencil->GetRenderBuffer();
+			if (!renderBufferID)
+			{
+				//没有renderBuffer对象,用纹理代替renderBuffer
+				if (texture->GetParametersDirty())
+				{
+					m_pTextureMgr->SetTextureForUpdate(texture);//设置好要更新的纹理
+					texture->UpdateParameters();
+					BindTexture(0, TextureUnit::TU_DIFFUSE);//更新完了，记得恢复纹理默认值
+				}
+
+				if (it->second.depthAttachment != m_depthStencil)
+				{
+					BindDepthAttachment(texture->getUID(), false);
+					BindStencilAttachment(hasStencil ? texture->getUID() : 0, false);
+					it->second.depthAttachment = m_depthStencil;
+				}
+			}
+			else
+			{
+				
+				if (it->second.depthAttachment != m_depthStencil)
+				{
+					BindDepthAttachment(renderBufferID, true);
+					BindStencilAttachment(hasStencil ? renderBufferID : 0, true);
+					it->second.depthAttachment = m_depthStencil;
+				}
+			}
+
+		}
+		else
+		{
+			//没有模板深度缓存区
+			if (it->second.depthAttachment)
+			{
+				BindDepthAttachment(0, false);
+				BindStencilAttachment(0, false);
+				it->second.depthAttachment = 0;
+			}
+		}
+
+
+#ifndef GL_ES_VERSION_2_0
+		// 是否开启sRGB写
+		if (m_bsRGBWriteSupport)
+		{
+			bool sRGBWrite = m_renderTargets[0] ? m_renderTargets[0]->GetParentTexture()->GetSRGB() : m_bSRGBWrite;
+			if (sRGBWrite != m_bSRGBWrite) //是否等于当前的srgb写标志
+			{
+				if (sRGBWrite)
+					glEnable(GL_FRAMEBUFFER_SRGB_EXT);
+				else
+					glDisable(GL_FRAMEBUFFER_SRGB_EXT);
+			}
+		}
+#endif
+	}
+
+	void GLGraphicDriver::Draw(PrimitiveType type, unsigned vertexStart, unsigned vertexCount)
+	{
+		if (!vertexCount)
+			return;
+
+		PrepareDraw();
+
+		unsigned primitiveCount;  //图元数
+		GLenum glPrimitiveType;   //图元类型
+
+		GetGLPrimitiveType(vertexCount, type, primitiveCount, glPrimitiveType);
+		glDrawArrays(glPrimitiveType, vertexStart, vertexCount);
+
+		m_uNumPrimitives += primitiveCount;
+		++m_uNumBatches;
+	}
+
+	void GLGraphicDriver::Draw(PrimitiveType type, unsigned indexStart, unsigned indexCount, unsigned minVertex, unsigned vertexCount)
+	{
+		if (!indexCount || !m_indexBuffer || !m_indexBuffer->GetUID())
+			return;
+
+		PrepareDraw();
+
+		unsigned indexSize = m_indexBuffer->GetIndexSize();  //获得索引大小
+		unsigned primitiveCount;
+		GLenum glPrimitiveType;
+
+		GetGLPrimitiveType(indexCount, type, primitiveCount, glPrimitiveType);
+		GLenum indexType = indexSize == sizeof(unsigned short) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+		glDrawElements(glPrimitiveType, indexCount, indexType, reinterpret_cast<const GLvoid*>(indexStart * indexSize));  //索引的偏移地址从indexStart处开始
+
+		m_uNumPrimitives += primitiveCount;
+		++m_uNumBatches;
 	}
 
 	void GLGraphicDriver::BindTexture(ITexture* pTexture, TextureUnit unit)
@@ -648,6 +971,11 @@ namespace Sapphire
 	bool GLGraphicDriver::IsDeviceLost()
 	{
 		return m_displayContext->IsTerminated();
+	}
+
+	void GLGraphicDriver::MarkFBODirty()
+	{
+		m_fboDirty = true;
 	}
 
 	uint GLGraphicDriver::GetMaxAnisotropyLevels()
@@ -1192,6 +1520,15 @@ namespace Sapphire
 #endif
 	}
 
+	GLenum GLGraphicDriver::GetWarpMode(TextureAddressMode mode)
+	{
+#ifndef GL_ES_VERSION_2_0
+		return GLGraphicDriver::GetGL3Support() ? gl3WrapModes[mode] : glWrapModes[mode];
+#else
+		return glWrapModes[mode];
+#endif
+	}
+
 	int GLGraphicDriver::GetHWAlphaFormat()
 	{
 		return GL_ALPHA;
@@ -1216,6 +1553,8 @@ namespace Sapphire
 	{
 		return GL_RGBA;
 	}
+
+	
 
 	void GLGraphicDriver::CheckFeature()
 	{

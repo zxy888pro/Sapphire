@@ -54,6 +54,12 @@ namespace Sapphire
 		virtual void setBackupTexture(ITexture* tex) override;
 		virtual void RenderSurfaceUpdate() override;
 
+		virtual void SetSRGB(bool enable) override;
+		virtual bool GetSRGB() const override;
+		virtual uint GetHWFormat() const override;
+		virtual void UpdateParameters() override;
+		virtual bool GetParametersDirty() const override;
+
 	public:
 		 
 		virtual uint getWidth() const { return m_uWidth; }

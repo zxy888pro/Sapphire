@@ -51,6 +51,11 @@ namespace Sapphire
 
 		virtual void Clear(unsigned flags, const Color& color = Color(0.0f, 0.0f, 0.0f, 0.0f), float depth = 1.0f, unsigned stencil = 0) = 0;
 
+		///绘制非索引化的的几何体
+		virtual void Draw(PrimitiveType type, unsigned vertexStart, unsigned vertexCount) = 0;
+		///绘制索引化的几何体
+		virtual void Draw(PrimitiveType type, unsigned indexStart, unsigned indexCount, unsigned minVertex, unsigned vertexCount) = 0;
+
 		///  设置剔除模式
 		virtual void SetCullMode(CullMode mode) = 0;
 		///  设置填充模式

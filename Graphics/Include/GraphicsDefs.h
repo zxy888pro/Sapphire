@@ -123,6 +123,17 @@ namespace Sapphire
 		MAX_VERTEX_ELEMENTS
 	};
 
+	//图元类型
+	enum PrimitiveType
+	{
+		TRIANGLE_LIST = 0,
+		LINE_LIST,
+		POINT_LIST,
+		TRIANGLE_STRIP,
+		LINE_STRIP,
+		TRIANGLE_FAN
+	};
+
 	/// 视口渲染表面的更新模式
 	enum RenderSurfaceUpdateMode
 	{
@@ -258,7 +269,7 @@ namespace Sapphire
 
 	//最大顶点流数, 决定同时有多少顶点缓冲区可用
 	static const int MAX_VERTEX_STREAMS = 4;
-	//最大渲染目标
+	//最大渲染目标数
 	static const int MAX_RENDERTARGETS = 4;
 
 }

@@ -108,6 +108,7 @@ namespace Sapphire
 			//绑定纹理
 			if (pTexture)
 			{
+				//获取OpenGL纹理类型
 				uint glType = pTexture->getTextureType();
 				//如果该纹理单元的纹理类型和该纹理不一致，那么重新绑定到该纹理
 				if (m_textureTypes[index] && m_textureTypes[index] != glType)
@@ -232,6 +233,23 @@ namespace Sapphire
 			}
 		}
 		return NULL;
+	}
+
+	void TextureMgr::SetTextureForUpdate(ITexture* texture)
+	{
+		if (m_nCurActiveTexUnit != 0)
+		{
+			glActiveTexture(GL_TEXTURE0);
+			m_nCurActiveTexUnit = 0;
+		}
+		//获取OpenGL纹理类型
+		unsigned glType = texture->getTextureType();
+		// 如果有必要取消旧的绑定纹理
+		if (m_textureTypes[0] && m_textureTypes[0] != glType)
+			glBindTexture(m_textureTypes[0], 0);
+		glBindTexture(glType, texture->getUID());
+		m_textureTypes[0] = glType;
+		m_textures[0] = texture;
 	}
 
 }

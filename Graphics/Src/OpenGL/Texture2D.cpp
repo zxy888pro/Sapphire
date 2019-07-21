@@ -28,6 +28,7 @@ namespace Sapphire
 		m_eFilterMode(TextureFilterMode::FILTER_NEAREST),
 		m_eUsage(TextureUsage::TEXTURE_STATIC),
 		m_szName(""),
+		m_bSRGB(false),
 		m_glType(GL_TEXTURE_2D)
 	{
 		m_requestLevel = 0;
@@ -50,6 +51,7 @@ namespace Sapphire
 		m_uNumMipmaps = NumMipmaps;
 		m_eAddressMode_[TextureCoordinate::COORD_U] = s;
 		m_eAddressMode_[TextureCoordinate::COORD_V] = t;
+		m_eAddressMode_[TextureCoordinate::COORD_W] = ADDRESS_REPEAT;
 		m_eFilterMode = filterMode;
 		m_szName = "";
 		m_bIsCompress = false;
@@ -299,6 +301,9 @@ namespace Sapphire
 
 		glTexParameteri(m_glType, GL_TEXTURE_WRAP_S, GLGraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_U]));
 		glTexParameteri(m_glType, GL_TEXTURE_WRAP_T, GLGraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_V]));
+#ifndef GL_ES_VERSION_2_0
+		glTexParameteri(m_glType, GL_TEXTURE_WRAP_T, GLGraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_W]));
+#endif
 
 		switch (m_eFilterMode)
 		{
@@ -606,6 +611,104 @@ namespace Sapphire
 			format_ == COMPRESSED_RGB_PVRTC_4BPPV1_IMG || format_ == COMPRESSED_RGBA_PVRTC_4BPPV1_IMG ||
 			format_ == COMPRESSED_RGB_PVRTC_2BPPV1_IMG || format_ == COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;*/
 		return m_bIsCompress;
+	}
+
+	void Texture2D::SetSRGB(bool enable)
+	{
+		if (m_pGraphicDriver)
+			enable &= m_pGraphicDriver->GetSRGBSupport();
+
+		if (enable != m_bSRGB)
+		{
+			m_bSRGB = enable;
+			// 如果纹理已经创建了，必须用sRGB纹理重新创建
+			if (m_uHwUID)
+				Create();
+
+			// 如果帧缓存对象再用这个纹理，标记为脏
+			if (m_pGraphicDriver && m_pGraphicDriver->GetRenderTarget(0) && m_pGraphicDriver->GetRenderTarget(0)->GetParentTexture() == this)
+				m_pGraphicDriver->MarkFBODirty();
+		}
+	}
+
+	bool Texture2D::GetSRGB() const
+	{
+		return m_bSRGB;
+	}
+
+	uint Texture2D::GetHWFormat() const
+	{
+		return GLGraphicDriver::GetHWTextureFormat(m_ePixelFormat);
+	}
+
+	void Texture2D::UpdateParameters()
+	{
+		if (!m_uHwUID || !m_pGraphicDriver)
+			return;
+
+		glTexParameteri(m_glType, GL_TEXTURE_WRAP_S, GLGraphicDriver::GetWarpMode(m_eAddressMode_[COORD_U]));
+		glTexParameteri(m_glType, GL_TEXTURE_WRAP_T, GLGraphicDriver::GetWarpMode(m_eAddressMode_[COORD_V]));
+#ifndef GL_ES_VERSION_2_0
+		glTexParameteri(m_glType, GL_TEXTURE_WRAP_R, GLGraphicDriver::GetWarpMode(m_eAddressMode_[COORD_W]));
+#endif
+
+		TextureFilterMode filterMode = m_eFilterMode;
+		if (filterMode == FILTER_DEFAULT)
+			filterMode = m_pGraphicDriver->GetDefaultTextureFilterMode();
+
+		switch (filterMode)
+		{
+		case FILTER_NEAREST:
+			glTexParameteri(m_glType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(m_glType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			break;
+
+		case FILTER_BILINEAR:
+			if (m_uAnisotropyLevel < 2)
+				glTexParameteri(m_glType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			else
+				glTexParameteri(m_glType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			glTexParameteri(m_glType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			break;
+
+		case FILTER_ANISOTROPIC:
+		case FILTER_TRILINEAR:
+			if (m_uAnisotropyLevel < 2)
+				glTexParameteri(m_glType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			else
+				glTexParameteri(m_glType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(m_glType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			break;
+
+		default:
+			break;
+		}
+
+#ifndef GL_ES_VERSION_2_0
+		if (m_pGraphicDriver->GetAnisotropySupport())
+		{
+			glTexParameterf(m_glType, GL_TEXTURE_MAX_ANISOTROPY_EXT,
+				filterMode == FILTER_ANISOTROPIC ? (float)m_pGraphicDriver->GetTextureAnisotropy() : 1.0f);
+		}
+
+		// 阴影比较
+		if (m_bShadowCompare)
+		{
+			glTexParameteri(m_glType, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+			glTexParameteri(m_glType, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+		}
+		else
+			glTexParameteri(m_glType, GL_TEXTURE_COMPARE_MODE, GL_NONE);
+
+		glTexParameterfv(m_glType, GL_TEXTURE_BORDER_COLOR, m_borderColor.Data());
+#endif
+
+		m_bParametersDirty = false;
+	}
+
+	bool Texture2D::GetParametersDirty() const
+	{
+		return m_bParametersDirty;
 	}
 
 	uint Texture2D::getUID() const
