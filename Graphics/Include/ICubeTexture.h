@@ -43,7 +43,7 @@ namespace Sapphire
 		}
 
 
-		virtual void setDepth(uint val) override
+		virtual void setDepth(uint val) 
 		{
 			return;
 		}
@@ -55,31 +55,20 @@ namespace Sapphire
 		}
 
 
-		virtual void setNumMipmaps(uint val) override
+
+		virtual void setMipLevel(uint val) 
 		{
 			return;
 		}
 
 
-		virtual uint getMipLevel() const override
+		virtual bool getIsCompress() const 
 		{
 			return 0;
 		}
 
 
-		virtual void setMipLevel(uint val) override
-		{
-			return;
-		}
-
-
-		virtual bool getIsCompress() const override
-		{
-			return 0;
-		}
-
-
-		virtual void setIsCompress(bool val) override
+		virtual void setIsCompress(bool val) 
 		{
 			return;
 		}

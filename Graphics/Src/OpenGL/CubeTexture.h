@@ -60,6 +60,8 @@ namespace Sapphire
 		virtual void UpdateParameters() override;
 		virtual bool GetParametersDirty() const override;
 
+
+		virtual uint getGPUHandle() const override;
 	public:
 		 
 		virtual uint getWidth() const { return m_uWidth; }
@@ -86,7 +88,7 @@ namespace Sapphire
 		virtual void setAnisotropyLevel(uint val) { m_uAnisotropyLevel = val; }
 		virtual Sapphire::TextureUsage getUsage() const { return m_eUsage; }
 		virtual void setUsage(Sapphire::TextureUsage val) { m_eUsage = val; }
-		virtual int getTextureType() const { return m_glType; }
+		virtual int getTextureType() const { return m_glTexTarget; }
 		virtual uint getUID() const override;
 		virtual bool IsCompressed() const { return m_bIsCompress; }
 
@@ -118,6 +120,14 @@ namespace Sapphire
 		SharedPtr<GLRenderSurface> m_renderSurfaces[MAX_CUBEMAP_FACES];
 		///每个面内存使用量
 		unsigned m_faceMemoryUse[MAX_CUBEMAP_FACES];
+
+
+		//阴影比较模式
+		bool m_bShadowCompare;
+
+		/// 边界颜色
+		Color m_borderColor;
+
 		//OpenGL 纹理目标类型  采样器
 		//GL_TEXTURE_1D  :  Sampler1D
 		//GL_TEXTURE_1D_ARRAY  : Sampler1DArray
@@ -129,8 +139,9 @@ namespace Sapphire
 		//GL_TEXTURE_CUBE_MAP :SamplerCube
 		//GL_TEXTURE_RECTANGLE : SamplerRect   //简单纹素矩形， 不支持mipmap
 		//GL_TEXTURE_BUFFER :  samplerBuffer   //任意纹素的1维数组，不支持mipmap
-		int  m_glType;
-
+		int  m_glTexTarget;
+		bool m_bSRGB;
+		bool m_bParametersDirty;   //纹理参数的脏标志
 		GLGraphicDriver*  m_pGraphicDriver;
 
 		virtual void Load(HIMAGE himg, CubeMapFace face);  //加载6个纹理中的一个面

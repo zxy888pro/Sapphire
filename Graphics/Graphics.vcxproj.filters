@@ -60,9 +60,6 @@
     <ClInclude Include="Include\ICubeTexture.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Include\IVertexBuffer.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -195,6 +192,15 @@
     <ClInclude Include="Include\GraphicsEvent.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Renderer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\OpenGL\GLTexture.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\OpenGL\GLTexture2D.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
@@ -285,6 +291,12 @@
       <Filter>源文件\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Src\OpenGL\GLDisplayContext.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\GLTexture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\GLTexture2D.cpp">
       <Filter>源文件\OpenGL</Filter>
     </ClCompile>
   </ItemGroup>

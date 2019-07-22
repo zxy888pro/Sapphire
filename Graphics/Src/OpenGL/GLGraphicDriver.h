@@ -5,6 +5,31 @@
 #include "Thread.h"
 #include "Math/Rect.h"
 
+#ifndef GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
+#define GL_COMPRESSED_RGBA_S3TC_DXT1_EXT 0x83f1
+#endif
+#ifndef GL_COMPRESSED_RGBA_S3TC_DXT3_EXT
+#define GL_COMPRESSED_RGBA_S3TC_DXT3_EXT 0x83f2
+#endif
+#ifndef GL_COMPRESSED_RGBA_S3TC_DXT5_EXT
+#define GL_COMPRESSED_RGBA_S3TC_DXT5_EXT 0x83f3
+#endif
+#ifndef GL_ETC1_RGB8_OES
+#define GL_ETC1_RGB8_OES 0x8d64
+#endif
+#ifndef COMPRESSED_RGB_PVRTC_4BPPV1_IMG
+#define COMPRESSED_RGB_PVRTC_4BPPV1_IMG 0x8c00
+#endif
+#ifndef COMPRESSED_RGB_PVRTC_2BPPV1_IMG
+#define COMPRESSED_RGB_PVRTC_2BPPV1_IMG 0x8c01
+#endif
+#ifndef COMPRESSED_RGBA_PVRTC_4BPPV1_IMG
+#define COMPRESSED_RGBA_PVRTC_4BPPV1_IMG 0x8c02
+#endif
+#ifndef COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
+#define COMPRESSED_RGBA_PVRTC_2BPPV1_IMG 0x8c03
+#endif
+
 
 namespace Sapphire
 {
@@ -111,7 +136,7 @@ namespace Sapphire
 		//绑定一个纹理到指定的纹理单元
 		//先激活对应的纹理单元
 		//然后绑定纹理对象
-		void BindTexture(ITexture* pTexture, TextureUnit unit);
+		virtual void BindTexture(ITexture* pTexture, TextureUnit unit);
 
 		void BindVBO(uint uHwUID);  //绑定VBO对象
 
@@ -120,9 +145,9 @@ namespace Sapphire
 
 		virtual bool  IsDeviceLost();
 
-		bool GetAnisotropySupport(){ return m_bAnisotropySupport; }
+		virtual bool GetAnisotropySupport() const { return m_bAnisotropySupport; }
 		//是否支持SRGB空间
-		bool GetSRGBSupport() const { return m_bsRGBSupport;}
+		virtual bool GetSRGBSupport() const { return m_bsRGBSupport;}
 
 		void MarkFBODirty();
 
@@ -130,9 +155,9 @@ namespace Sapphire
 
 		IntVector2 GetRenderTargetDimensions() const;
 
-		PixelFormat GetPixelFormat(ImageType eImgType);
+		virtual PixelFormat GetPixelFormat(ImageType eImgType);
 
-		PixelFormat GetPixelFormat(std::string szImageType);
+		virtual PixelFormat GetPixelFormat(std::string szImageType);
 
 		//取得当前绑定的FBO
 		virtual uint GetCurrentBoundFBO() const;
@@ -159,7 +184,7 @@ namespace Sapphire
 		virtual void RemoveGPUObject(GPUObject* gpuObj);
 
 
-		int getTextureQuality() const { return m_nTextureQuality; }
+		virtual int getTextureQuality() const { return m_nTextureQuality; }
 
 		void setTextureQuality(int val) { m_nTextureQuality = val; }
 
@@ -240,9 +265,9 @@ namespace Sapphire
 		virtual void CheckFeatureSupport();
 
 		//默认的各项异性过滤dengj
-		unsigned GetTextureAnisotropy() const { return m_textureAnisotropy; }
+		virtual unsigned GetTextureAnisotropy() const { return m_textureAnisotropy; }
 		//返回默认纹理过滤模式
-		TextureFilterMode GetDefaultTextureFilterMode() const { return m_eDefaultTextureFilterMode; }
+		virtual  TextureFilterMode GetDefaultTextureFilterMode() const { return m_eDefaultTextureFilterMode; }
 
 		//检查OpenGL扩展
 		virtual bool CheckExtension(const char* name);

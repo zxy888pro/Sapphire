@@ -63,7 +63,7 @@ namespace Sapphire
 		virtual void Clear();
 		virtual const std::string& GetName() const { return m_resName; }
 		virtual bool Create()	{ return false; }
-		virtual void Destroy()	{}
+		virtual void Destroy()	{}  //暂时无用,用Dispose
 		
 		virtual bool Load(){ return false; } //直接用资源名加载
 		virtual bool Load(const char* resPath) { m_resName = resPath; return Load(); }; //重新指定资源路径

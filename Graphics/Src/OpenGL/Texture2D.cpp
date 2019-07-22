@@ -487,7 +487,7 @@ namespace Sapphire
 		//先绑定纹理对象
 		m_pGraphicDriver->BindTexture(this, TextureUnit::TU_DIFFUSE); 
 
-		if (!pImageMgr->IsCompressd(himg))
+		if (!pImageMgr->IsCompressd(himg))//不是压缩的
 		{
 			//mip等级0，最大分辨率
 			PRAWIMAGE levelData = pImageMgr->GetImageRaw(himg);
@@ -709,6 +709,11 @@ namespace Sapphire
 	bool Texture2D::GetParametersDirty() const
 	{
 		return m_bParametersDirty;
+	}
+
+	uint Texture2D::getGPUHandle() const
+	{
+		return m_uHwUID;
 	}
 
 	uint Texture2D::getUID() const

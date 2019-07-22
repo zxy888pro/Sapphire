@@ -34,7 +34,7 @@ namespace Sapphire
 		m_eUsage(TextureUsage::TEXTURE_STATIC),
 		m_szName(""),
 		m_channelNum(0),
-		m_glType(GL_TEXTURE_CUBE_MAP)
+		m_glTexTarget(GL_TEXTURE_CUBE_MAP)
 	{
 		 
 		m_eType = ResoureType_Texture;
@@ -69,7 +69,7 @@ namespace Sapphire
 		m_requestLevel = 0;
 		m_maxMipLevel = 0;
 		m_uAnisotropyLevel = 8;
-		m_glType = GL_TEXTURE_CUBE_MAP;
+		m_glTexTarget = GL_TEXTURE_CUBE_MAP;
 		m_channelNum = 0;
 		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(pDriver);
 		m_assert(m_pGraphicDriver);
@@ -415,45 +415,45 @@ namespace Sapphire
 		//绑定纹理,设置属性
 		m_pGraphicDriver->BindTexture(this, TextureUnit::TU_CUBEMAP);
 
-		glTexParameteri(m_glType, GL_TEXTURE_WRAP_S, GLGraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_U]));
-		glTexParameteri(m_glType, GL_TEXTURE_WRAP_T, GLGraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_V]));
-		glTexParameteri(m_glType, GL_TEXTURE_WRAP_R, GLGraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_W]));
+		glTexParameteri(m_glTexTarget, GL_TEXTURE_WRAP_S, GLGraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_U]));
+		glTexParameteri(m_glTexTarget, GL_TEXTURE_WRAP_T, GLGraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_V]));
+		glTexParameteri(m_glTexTarget, GL_TEXTURE_WRAP_R, GLGraphicDriver::GetHWTextureWarpParam(m_eAddressMode_[TextureCoordinate::COORD_W]));
 
 		switch (m_eFilterMode)
 		{
 		case Sapphire::FILTER_NEAREST:
 		{
-			glTexParameteri(m_glType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(m_glType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(m_glTexTarget, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(m_glTexTarget, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		}
 		break;
 		case Sapphire::FILTER_BILINEAR:
 		{
-			glTexParameteri(m_glType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(m_glType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(m_glTexTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(m_glTexTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}
 		break;
 		case Sapphire::FILTER_TRILINEAR:
 		{
-			glTexParameteri(m_glType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(m_glType, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(m_glTexTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(m_glTexTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		}
 		break;
 		case Sapphire::FILTER_ANISOTROPIC:
 		{
 			if (m_pGraphicDriver->GetAnisotropySupport())
 			{
-				glTexParameteri(m_glType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				glTexParameteri(m_glType, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				glTexParameteri(m_glTexTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				glTexParameteri(m_glTexTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 				m_uAnisotropyLevel = MIN(m_pGraphicDriver->GetMaxAnisotropyLevels(), m_uAnisotropyLevel);
-				glTexParameterf(m_glType, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_uAnisotropyLevel);
+				glTexParameterf(m_glTexTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT, m_uAnisotropyLevel);
 			}
 		}
 		break;
 		case Sapphire::FILTER_DEFAULT:
 		{
-			glTexParameteri(m_glType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(m_glType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(m_glTexTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(m_glTexTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}
 		break;
 		default:
@@ -667,6 +667,11 @@ namespace Sapphire
 	bool CubeTexture::GetParametersDirty() const
 	{
 		throw std::logic_error("The method or operation is not implemented.");
+	}
+
+	uint CubeTexture::getGPUHandle() const
+	{
+		return m_uHwUID;
 	}
 
 }

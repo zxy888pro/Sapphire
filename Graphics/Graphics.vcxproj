@@ -127,6 +127,7 @@
     <ClInclude Include="Include\Material.h" />
     <ClInclude Include="Include\IShader.h" />
     <ClInclude Include="Include\Node.h" />
+    <ClInclude Include="Include\Renderer.h" />
     <ClInclude Include="Include\Scene.h" />
     <ClInclude Include="Include\SceneEventDef.h" />
     <ClInclude Include="Include\SceneNode.h" />
@@ -135,7 +136,6 @@
     <ClInclude Include="Include\TransformComponent.h" />
     <ClInclude Include="Include\View.h" />
     <ClInclude Include="Include\Viewport.h" />
-    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Src\ImageMgr.h" />
     <ClInclude Include="Src\OpenGL\ConstantBuffer.h" />
     <ClInclude Include="Src\OpenGL\CubeTexture.h" />
@@ -146,6 +146,8 @@
     <ClInclude Include="Src\OpenGL\GLShader.h" />
     <ClInclude Include="Src\OpenGL\GLShaderProgram.h" />
     <ClInclude Include="Src\OpenGL\GLShaderVariation.h" />
+    <ClInclude Include="Src\OpenGL\GLTexture.h" />
+    <ClInclude Include="Src\OpenGL\GLTexture2D.h" />
     <ClInclude Include="Src\OpenGL\GPUObject.h" />
     <ClInclude Include="Src\OpenGL\IndexBuffer.h" />
     <ClInclude Include="Src\OpenGL\ShaderMgr.h" />
@@ -175,6 +177,8 @@
     <ClCompile Include="Src\OpenGL\GLShader.cpp" />
     <ClCompile Include="Src\OpenGL\GLShaderProgram.cpp" />
     <ClCompile Include="Src\OpenGL\GLShaderVariation.cpp" />
+    <ClCompile Include="Src\OpenGL\GLTexture.cpp" />
+    <ClCompile Include="Src\OpenGL\GLTexture2D.cpp" />
     <ClCompile Include="Src\OpenGL\GpuObject.cpp" />
     <ClCompile Include="Src\OpenGL\GraphicDriver.cpp" />
     <ClCompile Include="Src\OpenGL\IndexBuffer.cpp" />

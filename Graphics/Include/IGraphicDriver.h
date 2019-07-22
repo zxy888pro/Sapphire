@@ -41,6 +41,10 @@ namespace Sapphire
 		virtual IImageMgr* getImageMgr() const = 0;
 		virtual GraphicDriverType getDriverType() const = 0;
 
+		virtual PixelFormat GetPixelFormat(ImageType eImgType) = 0;
+
+		virtual PixelFormat GetPixelFormat(std::string szImageType) = 0;
+
 		virtual bool    IsInitialized() = 0;   //是否初始化完成
 
 		virtual void SetViewport(const IntRect& rect) = 0; //设置视口
@@ -61,12 +65,27 @@ namespace Sapphire
 		///  设置填充模式
 		virtual void SetFillMode(FillMode mode) = 0;
 
+		virtual bool GetSRGBSupport() const = 0;
+
+		//是否支持各项异性过滤
+		virtual bool GetAnisotropySupport() const = 0;
+
+		//    获取默认的纹理过滤模式
+		virtual TextureFilterMode GetDefaultTextureFilterMode() const = 0;
+
+		//		获取纹理过滤等级
+		virtual unsigned GetTextureAnisotropy() const = 0;
+
 		virtual IDisplayContext*   GetDisplayContext() const = 0;
 
 		/// 添加一个跟踪的GPUObject对象，由GPUObject调用
 		virtual void AddGPUObject(GPUObject*  gpuObj) = 0;
 		/// 移除一个GPUObject对象，由GPUObject调用
 		virtual void RemoveGPUObject(GPUObject* gpuObj) = 0;
+
+		virtual int getTextureQuality() const = 0;
+
+		virtual void BindTexture(ITexture* pTexture, TextureUnit unit) = 0;
 
 	protected:
 
