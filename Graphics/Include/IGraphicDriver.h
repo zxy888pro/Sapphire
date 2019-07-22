@@ -7,6 +7,7 @@ namespace Sapphire
 {
 	struct  ITextureMgr;
 	struct  IImageMgr;
+	struct  ITexture;
 	struct  IDisplayContext;
 	class   GPUObject;
 	

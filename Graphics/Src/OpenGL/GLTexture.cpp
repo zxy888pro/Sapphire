@@ -1,10 +1,30 @@
 #include "GLTexture.h"
 #include "IGraphicDriver.h"
 #include "GLGraphicDriver.h"
+#include "XML/XMLFile.h"
+
 
 
 namespace Sapphire
 {
+	static const char* addressModeNames[] =
+	{
+		"wrap",
+		"mirror",
+		"clamp",
+		"border",
+		0
+	};
+
+	static const char* filterModeNames[] =
+	{
+		"nearest",
+		"bilinear",
+		"trilinear",
+		"anisotropic",
+		"default",
+		0
+	};
 
 	GLTexture::GLTexture(Core* pCore, IGraphicDriver* pDriver, const char* resName /*= ""*/):
 		BaseResource(pCore),
@@ -175,6 +195,13 @@ namespace Sapphire
 		return MAX(m_uHeight >> level, 1);
 	}
 
+	uint GLTexture::getLevelDepth(unsigned level) const
+	{
+		if (level > m_uNumMipmaps)
+			return 0;
+		return MAX(m_uDepth >> level, 1);
+	}
+
 	Sapphire::ITexture* GLTexture::getBackupTexture() const
 	{
 		return m_backupTex;
@@ -298,12 +325,60 @@ namespace Sapphire
 
 	void GLTexture::SetParameters(XMLFile* xmlFile)
 	{
+		if (!xmlFile)
+			return;
 
+		XMLElement rootElem = xmlFile->GetRoot();
+		SetParameter(rootElem);
 	}
 
 	void GLTexture::SetParameter(const XMLElement& xmlElem)
 	{
+		XMLElement paramElem = xmlElem.GetChild();
+		while (paramElem)
+		{
+			String name = paramElem.GetName();
 
+			if (name == "address")
+			{
+				String coord = paramElem.GetAttributeLower("coord");
+				if (coord.Length() >= 1)
+				{
+					TextureCoordinate coordIndex = (TextureCoordinate)(coord[0] - 'u');
+					String mode = paramElem.GetAttributeLower("mode");
+					setAddressMode(coordIndex, (TextureAddressMode)GetStringListIndex(mode.c_str(), addressModeNames, ADDRESS_REPEAT));
+				}
+			}
+
+			if (name == "border")
+				SetBorderColor(paramElem.GetColor("color"));
+
+			if (name == "filter")
+			{
+				String mode = paramElem.GetAttributeLower("mode");
+				setFilterMode((TextureFilterMode)GetStringListIndex(mode.c_str(), filterModeNames, FILTER_DEFAULT));
+			}
+
+			if (name == "mipmap")
+				setRequestMipLevel(paramElem.GetBool("enable") ? 0 : 1);
+
+			if (name == "quality")
+			{
+				if (paramElem.HasAttribute("low"))
+					SetMipsToSkip(QUALITY_LOW, paramElem.GetInt("low"));
+				if (paramElem.HasAttribute("med"))
+					SetMipsToSkip(QUALITY_MEDIUM, paramElem.GetInt("med"));
+				if (paramElem.HasAttribute("medium"))
+					SetMipsToSkip(QUALITY_MEDIUM, paramElem.GetInt("medium"));
+				if (paramElem.HasAttribute("high"))
+					SetMipsToSkip(QUALITY_HIGH, paramElem.GetInt("high"));
+			}
+
+			if (name == "srgb")
+				SetSRGB(paramElem.GetBool("enable"));
+
+			paramElem = paramElem.GetNext();
+		}
 	}
 
 	bool GLTexture::GetParametersDirty() const
@@ -380,6 +455,20 @@ namespace Sapphire
 #else
 		return format;
 #endif
+	}
+
+	void GLTexture::SetMipsToSkip(int quality, int toSkip)
+	{
+		if (quality >= QUALITY_LOW && quality < MAX_TEXTURE_QUALITY_LEVELS)
+		{
+			m_skipMips[quality] = (unsigned)toSkip;
+			// 确保高质量级别不会跳过更多的mips
+			for (int i = 1; i < MAX_TEXTURE_QUALITY_LEVELS; ++i)
+			{
+				if (m_skipMips[i] > m_skipMips[i - 1])
+					m_skipMips[i] = m_skipMips[i - 1];
+			}
+		}
 	}
 
 }

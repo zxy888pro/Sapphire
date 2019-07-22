@@ -1,9 +1,10 @@
 #include <mathHelper.h>
-
+#include "ResourceCache.h"
 #include "GLGraphicDriver.h"
 #include "GraphicException.h"
 #include "GLTexture2D.h"
 #include "GLRenderSurface.h"
+#include "TextureMgr.h"
 
 
 namespace Sapphire
@@ -64,7 +65,81 @@ namespace Sapphire
 
 	bool GLTexture2D::Create()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		if (m_pGraphicDriver == NULL || m_uWidth == 0 || m_uHeight == 0)
+		{
+			SAPPHIRE_LOGERROR("GraphicDriver is not initialized!");
+			return false;
+		}
+
+		if (m_pGraphicDriver->IsDeviceLost())
+		{
+			SAPPHIRE_LOGERROR("Texture Creation While Device is Lost!");
+			return true;
+		}
+		GLGraphicDriver* pGLDriver = dynamic_cast<GLGraphicDriver*>(m_pGraphicDriver);
+#ifndef GL_ES_VERSION_2_0
+		// 如果不支持深度纹理或者这是一个一个打包的深度模板纹理的话，创建一个renderBuffer替代原本texture
+		if (GLGraphicDriver::GetHWTextureFormat(m_ePixelFormat) == pGLDriver->GetHWDepthStencilFormat())
+#else
+		if (GraphicDriver::GetHWTextureFormat(m_ePixelFormat) == GL_DEPTH_COMPONENT16 || GraphicDriver::GetHWTextureFormat(m_ePixelFormat) == GL_DEPTH_COMPONENT24_OES || GraphicDriver::GetHWTextureFormat(m_ePixelFormat) == GL_DEPTH24_STENCIL8_OES ||
+			(GraphicDriver::GetHWTextureFormat(m_ePixelFormat) == GL_DEPTH_COMPONENT && !m_pGraphicDriver->GetHWShadowMapFormat()))
+#endif
+		{
+			if (m_renderSurface)
+			{
+				m_renderSurface->CreateRenderBuffer(m_uWidth, m_uHeight, m_ePixelFormat);
+				return true;
+			}
+			else
+				return false;
+		}
+
+
+		glGenTextures(1, &m_uHwUID);
+
+		//设置纹理到纹理单元0好对其进行更新
+		pGLDriver->getTextureMgr()->SetTextureForUpdate(this);
+		int format = GLGraphicDriver::GetSWTextureFormat(m_ePixelFormat);
+		//是否使用SRGB空间
+		format = GetSRGB() ? GetSRGBFormat(format) : format;
+		int internalFormat = GLGraphicDriver::GetHWTextureFormat(m_ePixelFormat);
+		int dataType = GLGraphicDriver::GetHWTextureDataType(m_ePixelFormat);
+
+		bool ret = true;
+		if (!IsCompressed())
+		{
+			glGetError();
+			glTexImage2D(m_glTexTarget, 0, internalFormat, m_uWidth, m_uHeight, 0, format, dataType, 0);
+			if (glGetError())
+			{
+				SAPPHIRE_LOGERROR("Failed to create texture");
+				ret = false;
+			}
+		}
+
+		//设置mipmap
+		m_uNumMipmaps = m_requestLevel;
+		if (!m_uNumMipmaps)
+		{
+			unsigned maxSize = MAX((int)m_uWidth, (int)m_uHeight);
+			while (maxSize)
+			{
+				maxSize >>= 1;
+				++m_uNumMipmaps;
+			}
+		}
+
+#ifndef GL_ES_VERSION_2_0
+		glTexParameteri(m_glTexTarget, GL_TEXTURE_BASE_LEVEL, 0);
+		glTexParameteri(m_glTexTarget, GL_TEXTURE_MAX_LEVEL, m_uNumMipmaps - 1);
+#endif
+ 
+		//更新纹理参数
+		UpdateParameters();
+		//设置完纹理对象，取消绑定
+		m_pGraphicDriver->BindTexture(NULL, TextureUnit::TU_DIFFUSE);
+
+		return true;
 	}
 
 	void GLTexture2D::RenderSurfaceUpdate()
@@ -81,11 +156,11 @@ namespace Sapphire
 	bool GLTexture2D::Load()
 	{
 		if (m_pGraphicDriver == NULL)
-			return;
+			return false;
 
 		if (m_pGraphicDriver->IsDeviceLost())
 		{
-			return;
+			return false;
 		}
 		//先释放之前的纹理对象
 		Dispose();
@@ -116,27 +191,58 @@ namespace Sapphire
 		return SetData(m_imageRes);
 	}
 
+	bool GLTexture2D::SetSize(int width, int height, PixelFormat eformat, TextureUsage eUsage /*= TEXTURE_STATIC*/)
+	{
+		m_renderSurface.Reset(); //释放旧资源
+	 
+		m_eUsage = eUsage;
+		m_uWidth = width;
+		m_uHeight = height;
+		m_ePixelFormat = eformat;
+		
+
+		if (eUsage >= TEXTURE_RENDERTARGET)
+		{
+			// 恢复默认设置
+			m_renderSurface = new GLRenderSurface(m_pCore,this); //重新创建对应渲染表面
+			m_eAddressMode_[COORD_U] = ADDRESS_CLAMP;
+			m_eAddressMode_[COORD_V] = ADDRESS_CLAMP;
+			m_eFilterMode = FILTER_NEAREST;
+			m_requestLevel = 1;
+		}
+		//订阅一个事件渲染表面更新, 有更新时调用RenderSurfaceUpdate
+		if (m_eUsage == TEXTURE_RENDERTARGET)
+			SubscribeEvent(ET_GRAPHIC_EVENT, EVENT_GRAPHICS_RENDERSURFACEUPDATE);
+		else
+			UnSubscribeEvent(ET_GRAPHIC_EVENT,EVENT_GRAPHICS_RENDERSURFACEUPDATE);
+		//大小和像素格式参数改变需重新创建空纹理
+		Dispose();
+		Create();
+		//SetData(m_mipLevel, 0, 0, width, height, NULL); //空纹理
+		return true;
+	}
+
 	bool GLTexture2D::SetData(SharedPtr<ImageRes> img, bool useAlpha)
 	{
 		PRAWIMAGE pImgData = img->getData();
 		if (pImgData == NULL)
 		{
 			SAPPHIRE_LOGERROR("Create Texture Failed! RawData is Null");
-			return;
+			return false;
 		}
 		//创建纹理对象
 		//Create();
-		bool useAlpha = true;
 		//默認alpha==false，只有一個通道的話默認為明度
 		//获取当前纹理质量
 		int quality = m_pGraphicDriver->getTextureQuality();
-		IImageMgr* pImageMgr = m_pGraphicDriver->getImageMgr();
+		/*IImageMgr* pImageMgr = m_pGraphicDriver->getImageMgr();
 		if (!pImageMgr)
 		{
 			SAPPHIRE_LOGERROR("ImageMgr is not initialized!");
 			return false;
-		}
-		unsigned memoryUse = sizeof(GLTexture2D);
+		}*/
+		//统计内存占用
+		unsigned memoryUse = sizeof(GLTexture2D); 
 		//先绑定纹理对象
 		m_pGraphicDriver->BindTexture(this, TextureUnit::TU_DIFFUSE);
 
@@ -145,10 +251,10 @@ namespace Sapphire
 			int channels = img->getChannels();  //获取通道数
 			//mip等级0，最大分辨率
 			PRAWIMAGE levelData = img->getData();
-			int levelWidth = img->getWidth;
+			int levelWidth = img->getWidth();
 			int levelHeight = img->getHeight();
 
-			PixelFormat ePixelFormat = m_pGraphicDriver->GetPixelFormat(img->getImageType);
+			PixelFormat ePixelFormat = m_pGraphicDriver->GetPixelFormat(img->getImageType());
 			int format = 0;
 			int nextLv = 1;
 			//根据画质设置，跳过指定mip等级, 质量越高，跳过的mipmap越少
@@ -160,34 +266,33 @@ namespace Sapphire
 				levelHeight = img->getHeight(i);
 				++nextLv;
 			}
-
 			//通过通道转换位对应的格式
-			switch (channels)
+			/*switch (channels)
 			{
 			case 1:
-				format = useAlpha ? GLGraphicDriver::GetHWAlphaFormat() : GLGraphicDriver::GetHWLuminanceFormat();
-				break;
+			format = useAlpha ? GLGraphicDriver::GetHWAlphaFormat() : GLGraphicDriver::GetHWLuminanceFormat();
+			break;
 
 			case 2:
-				format = GLGraphicDriver::GetHWLuminanceAlphaFormat();
-				break;
+			format = GLGraphicDriver::GetHWLuminanceAlphaFormat();
+			break;
 
 			case 3:
-				format = GLGraphicDriver::GetHWRGBFormat();
-				break;
+			format = GLGraphicDriver::GetHWRGBFormat();
+			break;
 
 			case 4:
-				format = GLGraphicDriver::GetHWRGBAFormat();
-				break;
+			format = GLGraphicDriver::GetHWRGBAFormat();
+			break;
 
 			default:
 			{
-				SAPPHIRE_LOGERROR("HWFormat format illegal !");
-				assert(false);
+			SAPPHIRE_LOGERROR("HWFormat format illegal !");
+			assert(false);
 			}
 			break;
 			}
-			m_glTexFormat = format;
+			m_glTexFormat = format;*/
 			//纹理质量设置，会改变纹理0的大小
 			SetSize(levelWidth, levelHeight, m_ePixelFormat);
 			for (unsigned i = 0; i < m_uNumMipmaps; ++i)
@@ -222,29 +327,124 @@ namespace Sapphire
 		}
 		//计算内存使用大小
 		m_uSize = memoryUse;
-		//接触绑定
+		//解除绑定
 		m_pGraphicDriver->BindTexture(0, TextureUnit::TU_DIFFUSE);
 		return true;
 	}
 
-	bool GLTexture2D::SetData(uint level, int x, int y, int width, int height, const void* data)
+	bool GLTexture2D::SetData(uint level, int x, int y, int width, int height, const void* pData)
 	{
+		if (!m_pGraphicDriver)
+		{
+			SAPPHIRE_LOGERROR("Error GraphicDriver is Null!");
+			return false;
+		}
+		ITextureMgr* pTexMgr = m_pGraphicDriver->getTextureMgr();
+		if (!pTexMgr)
+		{
+			LogUtil::LogMsgLn("Error TextureMgr is Null!");
+			return false;
+		}
 
+		if (m_pGraphicDriver->IsDeviceLost())
+		{
+			SAPPHIRE_LOGWARNING("Texture data assignment while device is lost");
+			m_bDataPending = true;
+			return true;
+		}
+
+		if (IsCompressed())
+		{
+			x &= ~3;
+			y &= ~3;
+		}
+
+		//绑定纹理对象，默认Diffuse
+		m_pGraphicDriver->BindTexture(this, TU_DIFFUSE);
+		if (!glIsTexture(m_uHwUID))
+		{
+			SAPPHIRE_LOGERROR("Error HwUID is invalid!");
+			return false;
+		}
+
+
+		int format = GLGraphicDriver::GetSWTextureFormat(m_ePixelFormat);
+		//判断是否SRGB空间 
+		format = GetSRGB() ? GetSRGBFormat(format) : format;
+		int internalFormat = GLGraphicDriver::GetHWTextureFormat(m_ePixelFormat);
+
+		//设置一下opengl纹理格式属性
+		m_glTexFormat = format;
+		//获取level级下mipmap宽高
+		int levelWidth = getLevelWidth(level);
+		int levelHeight = getLevelHeight(level);
+
+		//检查是否越界
+		if (x < 0 || x + width > levelWidth || y < 0 || y + height > levelHeight || width <= 0 || height <= 0)
+		{
+			SAPPHIRE_LOGERROR("Illegal dimensions for setting data");
+			return false;
+		}
+
+
+		//是否全范围
+		bool wholeLevel = x == 0 && y == 0 && width == levelWidth && height == levelHeight;
+
+		uint dataType = GLGraphicDriver::GetHWTextureDataType(m_ePixelFormat);
+		if (!IsCompressed())
+		{
+			//是更新整个纹理数据区
+			if (wholeLevel)
+				glTexImage2D(m_glTexTarget, level, internalFormat, width, height, 0, format, dataType, pData);
+			else
+				//更新部分
+				glTexSubImage2D(m_glTexTarget, level, x, y, width, height, internalFormat, dataType, pData);
+		}
+		else
+		{
+			if (wholeLevel)
+				glCompressedTexImage2D(m_glTexTarget, level, internalFormat, width, height, 0, GetSize(), pData);
+			else
+				glCompressedTexSubImage2D(m_glTexTarget, level, x, y, width, height, internalFormat, dataType, pData);
+		}
+		m_pGraphicDriver->BindTexture(NULL, TextureUnit::TU_DIFFUSE);
+		return true;
 	}
 
 	void GLTexture2D::OnLoadStart()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		m_eState = ResourceState_Loading;
 	}
 
 	void GLTexture2D::OnLoadEnd()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		m_eState = ResourceState_Loaded;
+		ResourceCache* cache = dynamic_cast<ResourceCache*>(m_pCore->GetSubSystemWithType(ESST_RESOURCECACHE));
+		if (cache)
+		{
+			cache->InsertResource(m_resName.c_str(), this);
+		}
 	}
 
 	void GLTexture2D::OnLoadError()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		m_eState = ResourceState_Unload;
+	}
+
+	void GLTexture2D::Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData /*= NULL*/)
+	{
+		if (eEventType == ET_GRAPHIC_EVENT)
+		{
+			switch (eEvent)
+			{
+			case EVENT_GRAPHICS_RENDERSURFACEUPDATE:
+				RenderSurfaceUpdate();
+				break;
+			default:
+				break;
+			}
+		}
+		
 	}
 
 }

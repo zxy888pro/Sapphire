@@ -18,7 +18,7 @@ namespace Sapphire
 		virtual uint getRequestMipLevel() const = 0;
 		virtual void setRequestMipLevel(uint val) = 0;
 		virtual PixelFormat getPixelFormat() const = 0;
-		virtual void setPixelFormat(PixelFormat val) = 0;
+		virtual void setPixelFormat(PixelFormat val) = 0; //设置通用的像素格式定义
 		virtual Sapphire::TextureFilterMode getFilterMode() const = 0;
 		virtual void setFilterMode(Sapphire::TextureFilterMode val) = 0;
 		virtual Sapphire::TextureAddressMode getAddressMode(TextureCoordinate crood) = 0;

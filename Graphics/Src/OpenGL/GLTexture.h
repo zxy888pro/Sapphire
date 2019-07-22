@@ -34,9 +34,12 @@ namespace Sapphire
 		virtual void OnDeviceLost() override;
 		virtual void OnDeviceReset() override;
 		virtual bool Create() override; //创建纹理对象,完成紋理對象的初始設置
-
+		//返回mip等级的宽度
 		virtual uint getLevelWidth(uint level) const override;
+		//返回mip等级的高度
 		virtual uint getLevelHeight(uint level) const override;
+		//返回mip等级的深度
+		virtual uint getLevelDepth(unsigned level) const;
 		virtual ITexture* getBackupTexture() const override;
 		virtual uint getRequestMipLevel() const override;
 		virtual void setRequestMipLevel(uint level) override;
@@ -56,7 +59,7 @@ namespace Sapphire
 		virtual uint getDepth() const { return m_uDepth; }
 		virtual uint getNumMipmaps() const { return m_uNumMipmaps; }
 		virtual PixelFormat getPixelFormat() const { return m_ePixelFormat; }
-		virtual void setPixelFormat(PixelFormat val);
+		virtual void setPixelFormat(PixelFormat val); //设置通用的像素格式定义
 		virtual Sapphire::TextureFilterMode getFilterMode() const { return m_eFilterMode; }
 		virtual void setFilterMode(Sapphire::TextureFilterMode val);
 		virtual Sapphire::TextureAddressMode getAddressMode(TextureCoordinate crood){ return m_eAddressMode_[crood]; }
@@ -79,6 +82,7 @@ namespace Sapphire
 	public:
 
 		unsigned GetSRGBFormat(unsigned format);
+		void     SetMipsToSkip(int quality, int toSkip);
 		
 	protected:
 
