@@ -148,6 +148,7 @@
     <ClInclude Include="Src\OpenGL\GLShaderVariation.h" />
     <ClInclude Include="Src\OpenGL\GLTexture.h" />
     <ClInclude Include="Src\OpenGL\GLTexture2D.h" />
+    <ClInclude Include="Src\OpenGL\GLUIRenderer.h" />
     <ClInclude Include="Src\OpenGL\GPUObject.h" />
     <ClInclude Include="Src\OpenGL\IndexBuffer.h" />
     <ClInclude Include="Src\OpenGL\ShaderMgr.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="Src\OpenGL\GLShaderVariation.cpp" />
     <ClCompile Include="Src\OpenGL\GLTexture.cpp" />
     <ClCompile Include="Src\OpenGL\GLTexture2D.cpp" />
+    <ClCompile Include="Src\OpenGL\GLUIRenderer.cpp" />
     <ClCompile Include="Src\OpenGL\GpuObject.cpp" />
     <ClCompile Include="Src\OpenGL\GraphicDriver.cpp" />
     <ClCompile Include="Src\OpenGL\IndexBuffer.cpp" />

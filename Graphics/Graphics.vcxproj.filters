@@ -201,6 +201,9 @@
     <ClInclude Include="Src\OpenGL\GLTexture2D.h">
       <Filter>源文件\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="Src\OpenGL\GLUIRenderer.h">
+      <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
@@ -297,6 +300,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\OpenGL\GLTexture2D.cpp">
+      <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\OpenGL\GLUIRenderer.cpp">
       <Filter>源文件\OpenGL</Filter>
     </ClCompile>
   </ItemGroup>

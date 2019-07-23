@@ -29,6 +29,7 @@ namespace Sapphire
 	protected:
 
 		GLGraphicDriver*  m_pGraphicDriver;
+	
 
 
 	};

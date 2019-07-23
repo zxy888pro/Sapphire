@@ -25,42 +25,79 @@ namespace Sapphire
 
 	void GLTexture2D::Release()
 	{
-		
+		if (m_uHwUID != 0 && m_pGraphicDriver != NULL)
+		{
+			//释放占用纹理对象
+			if (!m_pGraphicDriver->IsDeviceLost())
+			{
+				for (int i = 0; i < MAX_TEXTURE_UNITS; ++i)
+				{
+					if (m_pGraphicDriver->getTextureMgr()->GetTexture((TextureUnit)i) == this)
+						m_pGraphicDriver->getTextureMgr()->SetTexture(0, (TextureUnit)i);
+				}
+				glDeleteTextures(1, &m_uHwUID); //删除纹理对象
+			}
+			//初始化硬件资源ID
+			m_uHwUID = 0;
+		}
+		//释放renderSurface
+		if (m_renderSurface)
+			m_renderSurface->Release();
 	}
 
 	bool GLTexture2D::Recreate()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		Dispose();
+		if (m_szName != "")
+		{
+			ReRequest();  //重新请求纹理
+		}
+		return true;
 	}
 
 	void GLTexture2D::Dispose()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		Release();
+		m_bIsDisposed = true;
 	}
 
 	bool GLTexture2D::IsDisposed()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		if (glIsTexture(m_uHwUID) == false)
+		{
+			m_bIsDisposed = true;
+		}
+		return m_bIsDisposed;
 	}
 
 	size_t GLTexture2D::GetSize()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		return m_uSize;
 	}
 
 	void GLTexture2D::ReRequest()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		if (IsDisposed())
+		{
+			Load();
+		}
 	}
 
 	void GLTexture2D::OnDeviceLost()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		GPUObject::OnDeviceLost();
+		if (m_renderSurface)
+			m_renderSurface->OnDeviceLost();
 	}
 
 	void GLTexture2D::OnDeviceReset()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		if (glIsTexture(m_uHwUID) == false)
+		{
+			m_bDataLost = true; //数据已丢失
+		}
+		Recreate();  //重新创建
+		m_bDataPending = false;
 	}
 
 	bool GLTexture2D::Create()
@@ -144,7 +181,8 @@ namespace Sapphire
 
 	void GLTexture2D::RenderSurfaceUpdate()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		if (m_renderSurface && m_renderSurface->GetUpdateMode() == SURFACE_UPDATEALWAYS)
+			m_renderSurface->QueueUpdate();
 	}
 
 	bool GLTexture2D::Load(const char* resName)
