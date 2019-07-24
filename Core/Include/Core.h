@@ -71,6 +71,7 @@ namespace Sapphire
 		  MemoryManager*  m_memMgr;*/
 
 		 SUBSYTEM_MAP m_subSystems;
+		 std::unordered_map<std::string, std::string> m_subSystemNameMap;
 		 
 		 //事件系统作为核心系统，不在子系统中
 		 IEventMgr*      m_eventMgr;
@@ -148,6 +149,8 @@ namespace Sapphire
 		 if (m_subSystems.find(name) != m_subSystems.end())
 			 return;
 		 m_subSystems[name] = dynamic_cast<SubSystem*>(ptr);
+		 std::string className = T::GetClassTypeNameStatic();
+		 m_subSystemNameMap[className] = name;
 	 }
 
 }

@@ -134,6 +134,7 @@
     <ClInclude Include="Include\ShaderScript.h" />
     <ClInclude Include="Include\ShaderScriptMgr.h" />
     <ClInclude Include="Include\TransformComponent.h" />
+    <ClInclude Include="Include\UI\UIBatch.h" />
     <ClInclude Include="Include\View.h" />
     <ClInclude Include="Include\Viewport.h" />
     <ClInclude Include="Src\ImageMgr.h" />

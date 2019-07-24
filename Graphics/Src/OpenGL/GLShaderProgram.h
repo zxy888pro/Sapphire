@@ -33,6 +33,7 @@ namespace Sapphire
 	public:
 
 		GLShaderProgram(Core* pCore,IGraphicDriver* pDriver, GLShaderVariation* vertexShader, GLShaderVariation* pixelShader);
+		GLShaderProgram(Core* pCore, IGraphicDriver* pDriver, GLShaderVariation* vertexShader, GLShaderVariation* pixelShader, GLShaderVariation* geometryShader, GLShaderVariation* computeShader);
 		virtual ~GLShaderProgram();
 
 		virtual void Release() override;
@@ -78,6 +79,7 @@ namespace Sapphire
 		WeakPtr<GLShaderVariation>   m_vertexShader;
 		WeakPtr<GLShaderVariation>   m_pixelShader;
 		WeakPtr<GLShaderVariation>   m_geometryShader;
+		WeakPtr<GLShaderVariation>   m_computeShader;
 
 		std::unordered_map<std::string, ShaderParameter*>   m_shaderParamters;
 

@@ -80,6 +80,7 @@ namespace Sapphire
 		{
 			//设置程序目录，资源目录，配置目录等
 			//添加资源包
+			fileSys->SetCurrentPath("");
 			
 		}
 

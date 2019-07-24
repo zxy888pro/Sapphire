@@ -137,12 +137,16 @@ namespace Sapphire
 	Sapphire::SubSystem* Core::GetSubSystemWithName(std::string name) const
 	{
 		SubSystem* pss = NULL;
-		SUBSYTEM_CONST_ITEM it = m_subSystems.find(name);
-		if (it == m_subSystems.end())
+		std::unordered_map<std::string, std::string>::const_iterator i = m_subSystemNameMap.find(name);
+		if (i != m_subSystemNameMap.end())
 		{
-			return pss;
+			SUBSYTEM_CONST_ITEM it = m_subSystems.find(i->second);
+			if (it == m_subSystems.end())
+			{
+				return pss;
+			}
+			pss = it->second;
 		}
-		pss = it->second;
 		return pss;
 	}
 

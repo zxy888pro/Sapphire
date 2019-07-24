@@ -153,6 +153,8 @@ namespace Sapphire
 
 		uint GetMaxAnisotropyLevels();
 
+		static uint GetMaxBones();
+
 		IntVector2 GetRenderTargetDimensions() const;
 
 		virtual PixelFormat GetPixelFormat(ImageType eImgType);

@@ -4,7 +4,9 @@
 
 namespace Sapphire
 {
-#define STRING_NOPOS  0xffffffff
+	#define STRING_NOPOS  0xffffffff
+	
+
 	class SAPPHIRE_CLASS String
 	{
 	public:
@@ -171,6 +173,7 @@ namespace Sapphire
 
 		static std::vector<String> Split(const char* str, char separator, bool keepEmptyStrings = false);
 
+		static const unsigned NPOS = 0xffffffff;
 
 	private:
 
@@ -208,6 +211,8 @@ namespace Sapphire
 			value_(value)
 		{
 		}
+
+		
 
 		StringHash(const char* str);
 
@@ -256,6 +261,8 @@ namespace Sapphire
 
 		static const StringHash ZERO;
 
+		
+
 	private:
 
 		uint value_;
@@ -279,4 +286,7 @@ namespace Sapphire
 		}
 	};
 
+
+	 
+	
 }

@@ -68,6 +68,8 @@ namespace Sapphire
 
 		virtual bool Open(void* pData, ulong size) override;
 
+		virtual const Path& GetPath() const;
+
 	private:
 
 		//byte* m_buffer = NULL;

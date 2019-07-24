@@ -1,8 +1,10 @@
 #include "Sapphire.h"
 #include "FileStream.h"
+#include "ResourceCache.h"
 #include "Graphics.h"
 #include "GLShader.h"
 #include "ShaderMgr.h"
+#include <algorithm>
 #include "GLGraphicDriver.h"
 #include <GraphicException.h>
 #include "json/json.h"
@@ -10,7 +12,10 @@
 
 namespace Sapphire
 {
-
+	bool CompareDefines(const String& lhs, const String& rhs)
+	{
+		return lhs.ToHash() < rhs.ToHash();
+	}
 	
 	GLShader::GLShader(Core* pCore, const char* name) :
 		BaseResource(pCore,name),
@@ -36,22 +41,23 @@ namespace Sapphire
 	Sapphire::IShaderVariation* GLShader::GetVariation(ShaderType type, const char* defines)
 	{
 		IShaderVariation* pShaderVariation = NULL;
-		StringHash strHash(defines);
-		std::unordered_map<uint, SharedPtr<GLShaderVariation>>::iterator it;
+		String normalizeDefines = NormalizeDefines(defines); //先标准化一下
+		StringHash strHash(normalizeDefines);
+		SHADERVARIATION_MAP_ITERATOR it;
 		//判断类型
 		switch (type)
 		{
 		case Sapphire::VS:
 			{
-				it = m_vsVariation.find(strHash.Value());
+				it = m_vsVariation.find(strHash);
 				 if (it != m_vsVariation.end())
 				 {
 					 pShaderVariation = it->second;
 				 }
 				 else
 				 {
-					 std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type, m_pCore, m_pGraphicDriver)));
-					_pair.second->SetDefines(defines);
+					 std::pair<StringHash, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash, SharedPtr<GLShaderVariation>(new GLShaderVariation(type, m_pCore, m_pGraphicDriver,this)));
+					 _pair.second->SetDefines(normalizeDefines.str());
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(),ShaderType::VS));
 					m_vsVariation.insert(_pair);
 					RefreshMemoryUse();
@@ -62,15 +68,15 @@ namespace Sapphire
 			break;
 		case Sapphire::PS:
 			{
-				it = m_psVariation.find(strHash.Value());
+				it = m_psVariation.find(strHash);
 				if (it != m_psVariation.end())
 				{
 					pShaderVariation = it->second;
 				}
 				else
 				{
-					std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type,m_pCore, m_pGraphicDriver)));
-					_pair.second->SetDefines(defines);
+					std::pair<StringHash, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash, SharedPtr<GLShaderVariation>(new GLShaderVariation(type,m_pCore, m_pGraphicDriver,this)));
+					_pair.second->SetDefines(normalizeDefines.str());
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(), ShaderType::PS));
 					m_psVariation.insert(_pair);
 					RefreshMemoryUse();
@@ -80,15 +86,15 @@ namespace Sapphire
 			break;
 		case Sapphire::GS:
 			{
-				it = m_gsVariation.find(strHash.Value());
+				it = m_gsVariation.find(strHash);
 				if (it != m_gsVariation.end())
 				{
 					pShaderVariation = it->second;
 				}
 				else
 				{
-					std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type, m_pCore, m_pGraphicDriver)));
-					_pair.second->SetDefines(defines);
+					std::pair<StringHash, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash, SharedPtr<GLShaderVariation>(new GLShaderVariation(type, m_pCore, m_pGraphicDriver,this)));
+					_pair.second->SetDefines(normalizeDefines.str());
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(), ShaderType::GS));
 					m_gsVariation.insert(_pair);
 					RefreshMemoryUse();
@@ -98,15 +104,15 @@ namespace Sapphire
 			break;
 		case Sapphire::CS:
 			{
-				it = m_gsVariation.find(strHash.Value());
+				it = m_gsVariation.find(strHash);
 				if (it != m_gsVariation.end())
 				{
 					pShaderVariation = it->second;
 				}
 				else
 				{
-					std::pair<uint, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash.Value(), SharedPtr<GLShaderVariation>(new GLShaderVariation(type, m_pCore, m_pGraphicDriver)));
-					_pair.second->SetDefines(defines);
+					std::pair<StringHash, SharedPtr<GLShaderVariation>> _pair = std::make_pair(strHash, SharedPtr<GLShaderVariation>(new GLShaderVariation(type, m_pCore, m_pGraphicDriver,this)));
+					_pair.second->SetDefines(normalizeDefines.str());
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(), ShaderType::CS));
 					m_csVariation.insert(_pair);
 					RefreshMemoryUse();
@@ -158,7 +164,13 @@ namespace Sapphire
 
 	void GLShader::Dispose()
 	{
-		m_bIsDisposed = true;
+		if (!m_bIsDisposed)
+		{
+			m_bIsDisposed = true;
+			Release();
+		}
+		
+		
 	}
 
 	size_t GLShader::GetSize()
@@ -171,6 +183,11 @@ namespace Sapphire
 		return m_bIsDisposed;
 	}
 
+
+	void GLShader::Release()
+	{
+
+	}
 
 	bool GLShader::Load(HSHADERSCRIPT hscript)
 	{
@@ -222,6 +239,10 @@ namespace Sapphire
 		FileStream fs(m_resName.c_str(), FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
 		if (fs.IsOpen())
 		{
+			bool ret = false;
+			std::string source;
+			//ret = ProcessSource(source, fs); //解析shader源码
+
 			//解析json
 			std::string jsonStr = fs.ReadString(MAX_JSON_LENGTH);
 			fs.Release();
@@ -271,7 +292,12 @@ namespace Sapphire
 
 	void GLShader::OnLoadEnd()
 	{
-		m_eState = ResourceState_Unload;
+		m_eState = ResourceState_Loaded;
+		ResourceCache* cache = dynamic_cast<ResourceCache*>(m_pCore->GetSubSystemWithType(ESST_RESOURCECACHE));
+		if (cache)
+		{
+			cache->InsertResource(m_resName.c_str(), this);
+		}
 	}
 
 	void GLShader::OnLoadError()
@@ -287,8 +313,10 @@ namespace Sapphire
 		{
 			return false;
 		}
-		source = fs.ReadString(MAX_SHADER_SCRIPT_LENGTH);
+		bool ret = ProcessSource(source, fs);
 		fs.Release();
+		if (!ret)
+			return false;
 		switch (type)
 		{
 		case Sapphire::VS:
@@ -312,14 +340,55 @@ namespace Sapphire
 		return true;
 	}
 
-	bool GLShader::ProcessSource(std::string source)
+	
+
+	bool GLShader::ProcessSource(std::string& source, FileStream& istream)
 	{
-		return false;
+		ResourceCache* cache = m_pCore->GetSubSystem<ResourceCache>();
+		std::string line;
+		bool ret = istream.ReadLine(line);
+		while (ret)
+		{
+			if (line.find("#include") == 0)
+			{
+				//处理包含文件
+				Path curPath = istream.GetPath();
+				curPath = curPath.getParentDir();
+				curPath.addTailSlash();
+				std::string fileName = line.substr(9, line.length() - 10);
+				curPath += fileName;
+				FileStream fs(curPath.c_str(),FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
+				if (fs.IsOpen())
+				{
+					ProcessSource(source, fs); //递归处理
+					fs.Release();
+				}
+				else
+				{
+					return false;
+				}
+				source += line;
+				source += "\n";
+			}
+			ret = istream.ReadLine(line);
+		}
+		return true;
 	}
 
 	std::string GLShader::NormalizeDefines(const std::string& defines)
 	{
-		return "";
+		String _defines = defines;
+		_defines = _defines.ToUpper();
+		std::vector<String> definesVec = String::Split(_defines.c_str(),' ');
+		if (definesVec.size() == 0)
+			return "";
+		std::sort(definesVec.begin(), definesVec.end(), CompareDefines);
+		std::string ret = definesVec[0].str();
+		for (int i = 1; i < definesVec.size(); ++i)
+		{
+			ret = ret + " " + definesVec[i].str();
+		}
+		return ret;
 	}
 
 	void GLShader::RefreshMemoryUse()

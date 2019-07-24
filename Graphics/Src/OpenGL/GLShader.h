@@ -3,6 +3,7 @@
 #include "IShader.h"
 #include "GLShaderVariation.h"
 #include "ShaderScript.h"
+#include "FileStream.h"
 
 namespace Sapphire
 {
@@ -14,6 +15,11 @@ namespace Sapphire
 	{
 		SAPPHIRE_OBJECT(GLShader, BaseResource)
 	public:
+
+		typedef std::unordered_map<StringHash, SharedPtr<GLShaderVariation>, StringHashFunc,StringHashCMP>  SHADERVARIATION_MAP;
+		typedef std::unordered_map<StringHash, SharedPtr<GLShaderVariation>, StringHashFunc, StringHashCMP>::iterator  SHADERVARIATION_MAP_ITERATOR;
+		typedef std::unordered_map<StringHash, SharedPtr<GLShaderVariation>, StringHashFunc, StringHashCMP>::const_iterator  SHADERVARIATION_MAP_CITERATOR;
+
 		GLShader(Core* pCore,const char* name);
 		virtual ~GLShader();
 
@@ -37,6 +43,8 @@ namespace Sapphire
 			return m_name;
 		}
 
+
+		virtual void Release();
 
 		virtual bool Load() override;
 
@@ -64,8 +72,8 @@ namespace Sapphire
 
 	private:
 
-		//处理源码并包含文件
-		bool ProcessSource(std::string source);
+		//从stream解析源码
+		bool ProcessSource(std::string& source,  FileStream& istream);
 
 		//排序各定义并避免的重复定义
 		std::string  NormalizeDefines(const std::string& defines);
@@ -85,11 +93,13 @@ namespace Sapphire
 		uint  m_timeStamp;
 		uint  m_numVariation;
 		
+
+
 		//保存所有的Shader对象实例
-		std::unordered_map<uint, SharedPtr<GLShaderVariation>> m_vsVariation;   
-		std::unordered_map<uint, SharedPtr<GLShaderVariation>> m_psVariation;
-		std::unordered_map<uint, SharedPtr<GLShaderVariation>> m_gsVariation;
-		std::unordered_map<uint, SharedPtr<GLShaderVariation>> m_csVariation;
+		SHADERVARIATION_MAP m_vsVariation;   
+		SHADERVARIATION_MAP m_psVariation;
+		SHADERVARIATION_MAP m_gsVariation;
+		SHADERVARIATION_MAP m_csVariation;
 
 		GLGraphicDriver* m_pGraphicDriver;
 		bool  m_bIsDisposed;

@@ -84,6 +84,11 @@ namespace Sapphire
 		return false;
 	}
 
+	const Sapphire::Path& FileStream::GetPath() const
+	{
+		return m_filePath;
+	}
+
 	ulonglong FileStream::Read(void* buffer, ulong toRead)
 	{
 		if (!IsOpen())

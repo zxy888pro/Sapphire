@@ -750,4 +750,9 @@ namespace Sapphire
 			dest[index] = (unsigned char)value;
 	}
 
+	SAPPHIRE_API bool IsDigital(unsigned ch)
+	{
+		return ch < 256 ? isdigit(ch) != 0 : false;
+	}
+
 }

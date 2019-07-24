@@ -123,6 +123,8 @@ namespace Sapphire
 	/// Convert a C string to a byte buffer.
 	SAPPHIRE_API void StringToBuffer(std::vector<byte>& dest, const char* source);
 
+	SAPPHIRE_API bool IsDigital(unsigned ch);
+
 	 
 
 

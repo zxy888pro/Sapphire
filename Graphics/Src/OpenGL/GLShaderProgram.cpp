@@ -34,6 +34,24 @@ namespace Sapphire
 			m_parameterSources[i] = (const void*)M_MAX_UNSIGNED;
 	}
 
+	GLShaderProgram::GLShaderProgram(Core* pCore, IGraphicDriver* pDriver, GLShaderVariation* vertexShader, GLShaderVariation* pixelShader, GLShaderVariation* geometryShader, GLShaderVariation* computeShader):
+		BaseObject(pCore),
+		GPUObject(pDriver),
+		m_uFrameNumber(0),
+		m_vertexShader(vertexShader),
+		m_pixelShader(pixelShader),
+		m_pDriver(NULL),
+		m_computeShader(computeShader),
+		m_geometryShader(geometryShader)
+	{
+		m_pDriver = dynamic_cast<GLGraphicDriver*>(pDriver);
+		m_assert(m_pDriver);
+		for (unsigned i = 0; i < MAX_TEXTURE_UNITS; ++i)
+			m_bUseTextureUnits[i] = false;
+		for (unsigned i = 0; i < MAX_SHADER_PARAMETER_GROUPS; ++i)
+			m_parameterSources[i] = (const void*)M_MAX_UNSIGNED;
+	}
+
 	GLShaderProgram::~GLShaderProgram()
 	{
 		Release();

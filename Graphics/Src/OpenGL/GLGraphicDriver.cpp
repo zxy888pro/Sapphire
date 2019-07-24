@@ -985,6 +985,15 @@ namespace Sapphire
 		return (uint)maxAniLevel;
 	}
 
+	uint GLGraphicDriver::GetMaxBones()
+	{
+#ifdef RPI
+		return 32;
+#else
+		return GLGraphicDriver::GetGL3Support() ? 128 : 64;
+#endif
+	}
+
 	Sapphire::IntVector2 GLGraphicDriver::GetRenderTargetDimensions() const
 	{
 		int width, height;
@@ -1084,12 +1093,12 @@ namespace Sapphire
 
 	Sapphire::IShaderVariation* GLGraphicDriver::GetVertexShader() const
 	{
-		return NULL;
+		return m_vertexShader;
 	}
 
 	Sapphire::IShaderVariation* GLGraphicDriver::GetPixelShader() const
 	{
-		return NULL;
+		return m_pixelShader;
 	}
 
 	void GLGraphicDriver::CleanupShaderPrograms(IShaderVariation* pShaderVariation)

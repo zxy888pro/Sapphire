@@ -44,4 +44,7 @@ namespace Sapphire
 		mutable std::string				  m_programPath;
 
 	};
+
+
+
 }

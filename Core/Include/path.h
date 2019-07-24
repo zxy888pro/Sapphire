@@ -92,7 +92,11 @@ namespace Sapphire
 		{
 			_Elem slash[2] = { CHAR_SLASH };
 			_Elem slash2[2] = { CHAR_SLASH2 };
+#ifdef SAPPHIRE_WIN
 			replace_all(_String(slash2), _String(slash));
+#else
+			replace_all(_String(slash), _String(slash2));
+#endif
 		}
 
 		void replace_all(const _String& substr, const _String& str)
@@ -177,15 +181,25 @@ namespace Sapphire
 
 		_MyType& addTailSlash()
 		{
+#ifdef SAPPHIRE_WIN
 			if (*(end() - 1) != CHAR_SLASH)
 				*this += CHAR_SLASH;
+#else
+			if (*(end() - 1) != CHAR_SLASH2)
+				*this += CHAR_SLASH2;
+#endif
 			return (*this);
 		}
 
 		_MyType& removeTailSlash()
 		{
+#ifdef SAPPHIRE_WIN
 			if (*(end() - 1) == CHAR_SLASH)
 				erase(end() - 1);
+#else
+			if (*(end() - 1) == CHAR_SLASH2)
+				erase(end() - 1);
+#endif
 			return (*this);
 		}
 
@@ -204,15 +218,26 @@ namespace Sapphire
 		}
 		inline size_type getLastSlashPos() const
 		{
+#ifdef SAPPHIRE_WIN
 			return find_last_of(CHAR_SLASH);
+#else
+			return find_last_of(CHAR_SLASH2);
+#endif
 		}
 		inline size_type getLastSlashPos(int count) const
 		{
 			size_type pos;
+#ifdef SAPPHIRE_WIN
 			pos = find_last_of(CHAR_SLASH);
 			while (pos != npos && --count > 0)
 				pos = find_last_of(CHAR_SLASH, pos - 1);
 			return pos;
+#else
+			pos = find_last_of(CHAR_SLASH2);
+			while (pos != npos && --count > 0)
+				pos = find_last_of(CHAR_SLASH2, pos - 1);
+			return pos;
+#endif
 		}
 	private:
 		bool	_isFile;

@@ -22,6 +22,9 @@
     <Filter Include="源文件\Scene">
       <UniqueIdentifier>{c8697346-1554-49da-8d5d-c0c91545fc00}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\UI">
+      <UniqueIdentifier>{d0f289a2-5eee-433e-ab41-338a7161849a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Image.h">
@@ -203,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="Src\OpenGL\GLUIRenderer.h">
       <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\UI\UIBatch.h">
+      <Filter>头文件\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

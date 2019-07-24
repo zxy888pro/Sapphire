@@ -19,6 +19,7 @@ namespace Sapphire
 	public:
 
 		GLShaderVariation(ShaderType type, Core* pCore, IGraphicDriver* pDriver);
+		GLShaderVariation(ShaderType type, Core* pCore, IGraphicDriver* pDriver, GLShader* owner);
 
 		virtual ~GLShaderVariation();
 		//±‡“ÎΩ≈±æ
@@ -29,6 +30,8 @@ namespace Sapphire
 		void SetDefines(const std::string& defines);
 
 		IShader* GetOwner() const;
+
+		void    SetOwner(GLShader* owner);
 
 		ShaderType GetShaderType() const;
 
@@ -50,6 +53,8 @@ namespace Sapphire
 
 
 	private:
+
+		std::string Precompile(const std::string& sourceCode);
 
 		WeakPtr<GLShader> m_owner;
 
