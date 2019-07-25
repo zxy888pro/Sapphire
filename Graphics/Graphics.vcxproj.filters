@@ -25,6 +25,9 @@
     <Filter Include="头文件\UI">
       <UniqueIdentifier>{d0f289a2-5eee-433e-ab41-338a7161849a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\UI">
+      <UniqueIdentifier>{7cc00bd9-84c9-40b5-a6af-89ca78c9a016}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Image.h">
@@ -210,6 +213,9 @@
     <ClInclude Include="Include\UI\UIBatch.h">
       <Filter>头文件\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Include\UI\UIElement.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Image.cpp">
@@ -310,6 +316,12 @@
     </ClCompile>
     <ClCompile Include="Src\OpenGL\GLUIRenderer.cpp">
       <Filter>源文件\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\UI\UIBatch.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\UI\UIElement.cpp">
+      <Filter>源文件\UI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

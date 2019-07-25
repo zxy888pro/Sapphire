@@ -135,6 +135,7 @@
     <ClInclude Include="Include\ShaderScriptMgr.h" />
     <ClInclude Include="Include\TransformComponent.h" />
     <ClInclude Include="Include\UI\UIBatch.h" />
+    <ClInclude Include="Include\UI\UIElement.h" />
     <ClInclude Include="Include\View.h" />
     <ClInclude Include="Include\Viewport.h" />
     <ClInclude Include="Src\ImageMgr.h" />
@@ -193,6 +194,8 @@
     <ClCompile Include="Src\ShaderScript.cpp" />
     <ClCompile Include="Src\ShaderScriptMgr.cpp" />
     <ClCompile Include="Src\TransformComponent.cpp" />
+    <ClCompile Include="Src\UI\UIBatch.cpp" />
+    <ClCompile Include="Src\UI\UIElement.cpp" />
     <ClCompile Include="Src\Viewport.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
