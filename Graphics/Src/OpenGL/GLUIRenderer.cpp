@@ -31,6 +31,11 @@ namespace Sapphire
 
 	void GLUIRenderer::RenderUpdate()
 	{
+		m_bIsRenderered = false;
+
+		m_batches.clear();
+		m_vertexData.clear();
+
 
 	}
 
