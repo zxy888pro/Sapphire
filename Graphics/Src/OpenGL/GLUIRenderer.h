@@ -22,6 +22,7 @@ namespace Sapphire
 		GLUIRenderer(Core* pcore);
 		virtual ~GLUIRenderer();
 
+		void Initialize();
 
 		void Clear();
 
@@ -35,15 +36,22 @@ namespace Sapphire
 		void RenderUpdate();
 
 
-		virtual void Render();
+		virtual void Render(bool resetRenderTargets);
 
+
+
+		virtual void Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData = NULL) override;
 
 	protected:
 
+		void		GetBatches(UIElment* element, IntRect curScissor);
+
+		void		Render(bool resetRenderTargets, VertexBuffer* buffer, const std::vector<UIBatch>& batches, unsigned batchStart, unsigned batchEnd);
 
 	private:
 
-		WeakPtr<GLGraphicDriver> m_pGraphicDriver;
+		WeakPtr<IGraphicDriver> m_pGraphicDriver;
+
 
 		std::vector<UIBatch>			m_batches;      //要渲染的UI批次
 		std::vector<float>				m_vertexData;   //顶点数据
@@ -53,6 +61,9 @@ namespace Sapphire
 
 		bool							m_bIsRenderered;    //是否已经渲染的标志
 		bool							m_bIsInitilaized;   //是否初始化
+
+		uint							m_batcheSize;      //批次大小
+		SharedPtr<UIElment>				m_rootElement;
 
 	};
 

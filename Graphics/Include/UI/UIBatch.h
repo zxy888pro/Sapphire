@@ -27,12 +27,16 @@ namespace Sapphire
 		void SetDefaultColor();
 
 		uint GetInterpolatedColor(int x, int y);
-
+		//添加一个多边形的顶点数据
 		void AddQuad(int x, int y, int width, int height, int texOffsetX, int texOffsetY, int texWidth = 0, int texHeight = 0);
-
+		//添加一个多边形的顶点数据
 		void AddQuad(int x, int y, int width, int height, int texOffsetX, int texOffsetY, int texWidth, int texHeight, bool tiled);
-
+		//添加一个多边形的顶点数据
 		void AddQuad(const Matrix3x4& transform,  int x, int y, int width, int height, int texOffsetX, int texOffsetY, int texWidth, int texHeight);
+
+		bool Merge(const UIBatch& batch);
+
+		void AddOrMerge(std::vector<UIBatch>& batches);
 
 
 		static Vector3			      posAdjust;     //位置调整

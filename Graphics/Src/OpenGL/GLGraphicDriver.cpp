@@ -777,9 +777,64 @@ namespace Sapphire
 		}
 	}
 
+	void GLGraphicDriver::SetStencilTest(bool enable, CompareMode mode /*= CMP_ALWAYS*/, StencilOp pass /*= OP_KEEP*/, StencilOp fail /*= OP_KEEP*/, StencilOp zFail /*= OP_KEEP*/, unsigned stencilRef /*= 0*/, unsigned compareMask /*= M_MAX_UNSIGNED*/, unsigned writeMask /*= M_MAX_UNSIGNED*/)
+	{
+#ifndef GL_ES_VERSION_2_0
+		//判断是否设置有改变
+		if (enable != m_bStencilTest)
+		{
+			if (enable)
+				glEnable(GL_STENCIL_TEST);
+			else
+				glDisable(GL_STENCIL_TEST);
+			m_bStencilTest = enable;
+		}
+
+		if (enable)
+		{
+			//判断模板测试的模式、参考值、比较掩码是否与之前相同
+			if (mode != m_stencilTestMode || stencilRef != m_stencilRefVal || compareMask != m_stencilCompareMask)
+			{
+				//设置模板比较函数, 参考值， 比较掩码
+				glStencilFunc(glCmpFunc[mode], stencilRef, compareMask);
+				//保存当前的设置
+				m_stencilTestMode = mode;
+				m_stencilRefVal = stencilRef;
+				m_stencilCompareMask = compareMask;
+			}
+			if (writeMask != m_stencilCompareMask)
+			{
+				glStencilMask(writeMask);
+				m_stencilWriteMask = writeMask;
+			}
+			//  设置模板测试通过，失败的操作
+			if (pass != m_stencilPassOp || fail != m_stencilFailOp || zFail != m_stencilZFailOp)
+			{
+				glStencilOp(glStencilOps[fail], glStencilOps[zFail], glStencilOps[pass]);
+				m_stencilPassOp = pass;
+				m_stencilFailOp = fail;
+				m_stencilZFailOp = zFail;
+			}
+		}
+#endif // GL_ES_VERSION_2_0
+
+	}
+
 	void GLGraphicDriver::SetBlendMode(BlendMode mode)
 	{
+		if (mode != m_blendMode)
+		{
+			if (mode == BLEND_REPLACE)
+				glDisable(GL_BLEND);
+			else
+			{
+				glEnable(GL_BLEND);
+				glBlendFunc(glSrcBlend[mode], glDestBlend[mode]);
+				glBlendEquation(glBlendOp[mode]);
+			}
 
+			m_blendMode = mode;
+		}
 	}
 
 	void GLGraphicDriver::SetScissorTest(bool enable, const IntRect& rect)
@@ -872,6 +927,11 @@ namespace Sapphire
 				glDisable(GL_SCISSOR_TEST);
 			m_bScissorTest = enable;
 		}
+	}
+
+	void GLGraphicDriver::ClearParameterSources()
+	{
+		GLShaderProgram::ClearParameterSources();
 	}
 
 	Sapphire::ConstantBuffer* GLGraphicDriver::GetOrCreateConstantBuffer(unsigned bindingIndex, unsigned size)

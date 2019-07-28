@@ -270,4 +270,29 @@ namespace Sapphire
 		dest[35] = bottomUV;
 	}
 
+	bool UIBatch::Merge(const UIBatch& batch)
+	{
+		if (batch.m_blendMode != m_blendMode ||
+			batch.m_scissor != m_scissor ||
+			batch.m_pTexture != m_pTexture ||
+			batch.m_vertexData != m_vertexData ||
+			batch.m_vertexStart != m_vertexEnd)
+			return false;
+
+		m_vertexEnd = batch.m_vertexEnd;
+		return true;
+	}
+
+	void UIBatch::AddOrMerge(std::vector<UIBatch>& batches)
+	{
+		if (m_vertexEnd == m_vertexStart)
+			return;
+		//有一个批次就行了
+		//如果为空的话，添加这个batch到batches中，否则，合并到末尾的批次里
+		if (!batches.empty() && batches.back().Merge(*this))
+			return;
+
+		batches.push_back(*this);
+	}
+
 }

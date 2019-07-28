@@ -223,27 +223,36 @@ namespace Sapphire
 		virtual void SetViewport(const IntRect& rect);  //设置视口
 
 		/// 设置颜色写入
-		void SetColorWrite(bool enable);
+		virtual  void SetColorWrite(bool enable);
 		///  设置剔除模式
 		virtual void SetCullMode(CullMode mode);
 		///  设置填充模式
 		virtual void SetFillMode(FillMode mode);
 		///  设置深度测试
-		void SetDepthTest(CompareMode mode);
+		virtual  void SetDepthTest(CompareMode mode);
 		///	设置深度写入
-		void SetDepthWrite(bool enable);
+		virtual void SetDepthWrite(bool enable);
+		//	设置模板测试
+		virtual  void SetStencilTest(bool enable, CompareMode mode = CMP_ALWAYS, StencilOp pass = OP_KEEP, StencilOp fail = OP_KEEP, StencilOp zFail = OP_KEEP,
+			unsigned stencilRef = 0, unsigned compareMask = M_MAX_UNSIGNED, unsigned writeMask = M_MAX_UNSIGNED);
 		///  设置Alpha混合模式
-		void SetBlendMode(BlendMode mode);
+		virtual void SetBlendMode(BlendMode mode);
 		///  设置剪裁测试
 		void SetScissorTest(bool enable, const IntRect& rect);
 		///  设置剪裁测试
 		void SetScissorTest(bool enable, const Rect& rect = Rect::FULL, bool borderInclusive = true);
 
+		
+
+		//清理参数源
+		virtual void ClearParameterSources();
+
+
 
 		ConstantBuffer* GetOrCreateConstantBuffer(unsigned bindingIndex, unsigned size);  //获取或者创建一个ConstantsBuffer对象
 
 		/// 重置所有渲染目标，深度缓冲区表面和视口
-		void ResetRenderTargets();
+		virtual void ResetRenderTargets();
 
 		virtual void ResetRenderTarget(uint index);
 
@@ -431,7 +440,15 @@ namespace Sapphire
 		CullMode		m_cullmode;         //剔除模式
 		FillMode		m_fillmode;		//填充模式
 		CompareMode     m_depthTestMode;   //深度测试模式
+		
 		BlendMode		m_blendMode;		//alpha混合模式
+		uint			m_stencilRefVal;    //模板测试的参考值
+		CompareMode		m_stencilTestMode;	//模板测试模式
+		uint			m_stencilCompareMask;    //模板比较的掩码
+		StencilOp		m_stencilPassOp;		//模板测试通过的操作  
+		StencilOp		m_stencilFailOp;		//模板测试失败的操作
+		StencilOp		m_stencilZFailOp;		//通过模板测试，没通过深度测试的操作
+		StencilOp		m_stencilZPassOp;		//通过深度测试或者没开启深度测试执行的操作
 
 		/// 剪裁测试区域
 		IntRect			m_scissorRect;    

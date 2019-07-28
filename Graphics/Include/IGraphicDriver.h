@@ -10,6 +10,7 @@ namespace Sapphire
 	struct  ITexture;
 	struct  IDisplayContext;
 	class   GPUObject;
+	struct  IVertexBuffer;
 	
 
 	//OpenGL 与硬件层访问驱动类。  
@@ -54,6 +55,20 @@ namespace Sapphire
 
 		virtual bool SetDisplayMode(int x, int y, int width, int height, bool bFullScreen, bool bVsync, int multiSample, bool tripleBuffer, bool resizable) = 0;
 
+		virtual  void SetColorWrite(bool enable) = 0;
+
+		virtual void SetDepthWrite(bool enable) = 0;
+		
+		virtual  void SetDepthTest(CompareMode mode) = 0;
+
+		//设置顶点缓冲区对象
+		virtual void  SetVertexBuffer(IVertexBuffer* vertexBuffer) = 0;
+
+		//设置模板测试
+		virtual  void SetStencilTest(bool enable, CompareMode mode = CMP_ALWAYS, StencilOp pass = OP_KEEP, StencilOp fail = OP_KEEP, StencilOp zFail = OP_KEEP,
+			unsigned stencilRef = 0, unsigned compareMask = M_MAX_UNSIGNED, unsigned writeMask = M_MAX_UNSIGNED) = 0;
+
+		//清理缓冲区
 		virtual void Clear(unsigned flags, const Color& color = Color(0.0f, 0.0f, 0.0f, 0.0f), float depth = 1.0f, unsigned stencil = 0) = 0;
 
 		///绘制非索引化的的几何体
@@ -65,7 +80,9 @@ namespace Sapphire
 		virtual void SetCullMode(CullMode mode) = 0;
 		///  设置填充模式
 		virtual void SetFillMode(FillMode mode) = 0;
-
+		//   设置混合模式
+		virtual void SetBlendMode(BlendMode mode) = 0;
+		//   是否支持SRGB颜色空间
 		virtual bool GetSRGBSupport() const = 0;
 
 		//是否支持各项异性过滤
@@ -76,7 +93,7 @@ namespace Sapphire
 
 		//		获取纹理过滤等级
 		virtual unsigned GetTextureAnisotropy() const = 0;
-
+		//      获取显示设备环境
 		virtual IDisplayContext*   GetDisplayContext() const = 0;
 
 		/// 添加一个跟踪的GPUObject对象，由GPUObject调用
@@ -85,8 +102,15 @@ namespace Sapphire
 		virtual void RemoveGPUObject(GPUObject* gpuObj) = 0;
 
 		virtual int getTextureQuality() const = 0;
-
+		//		绑定纹理对象
 		virtual void BindTexture(ITexture* pTexture, TextureUnit unit) = 0;
+
+		//清理shader参数源
+		virtual void ClearParameterSources() = 0;
+
+		//重置所有RenderTarget
+		virtual void ResetRenderTargets() = 0;
+
 
 	protected:
 

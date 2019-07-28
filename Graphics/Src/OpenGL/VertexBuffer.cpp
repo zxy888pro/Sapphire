@@ -290,6 +290,11 @@ namespace Sapphire
 		return true;
 	}
 
+	bool VertexBuffer::SetData(void* ptr)
+	{
+		throw std::logic_error("The method or operation is not implemented.");
+	}
+
 	//设置一部分数据
 	bool VertexBuffer::SetDataRange(const void* data, unsigned start, unsigned count, bool discard /*= false*/)
 	{

@@ -203,6 +203,16 @@ namespace Sapphire
 		MAX_CULLMODES
 	};
 
+	//模板操作
+	enum StencilOp
+	{
+		OP_KEEP = 0,
+		OP_ZERO,
+		OP_REF,
+		OP_INCR,
+		OP_DECR
+	};
+
 	/// Billboardx相机朝向模式
 	enum FaceCameraMode
 	{

@@ -46,6 +46,7 @@ namespace Sapphire
 
 		virtual bool SetDataRange(const void* data, unsigned start, unsigned count, bool discard = false);  //更新GPU端一段数据
 
+		//设置顶点数， 顶点元素掩码,  是否动态
 		virtual bool SetSize(uint vertexCount, unsigned elementMask, bool dynamic = false);
 
 		//返回CPU端的影子数据
@@ -64,6 +65,9 @@ namespace Sapphire
 
 
 		virtual uint GetUID() const override;
+
+
+		virtual bool SetData(void* ptr) override;
 
 	private:
 
