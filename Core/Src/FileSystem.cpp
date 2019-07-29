@@ -51,7 +51,7 @@ namespace Sapphire
 
 	bool FileSystem::CheckAccess(const char* path) const
 	{
-		return false;
+		return DirIsExistA(path);
 	}
 
 	void FileSystem::ThreadFunc()

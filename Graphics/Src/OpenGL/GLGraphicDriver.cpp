@@ -1,5 +1,6 @@
 #include "Variant.h"
 #include "Math/Rect.h"
+#include "ResourceCache.h"
 #include "GLGraphicDriver.h"
 #include <GraphicException.h>
 #include "GLDisplayContext.h"
@@ -16,6 +17,7 @@
 #include "VertexBuffer.h"
 #include "GLRenderSurface.h"
 #include "GLRenderSystem.h"
+#include "GLShader.h"
 
 
 
@@ -1146,6 +1148,31 @@ namespace Sapphire
 
  
 
+	Sapphire::IShaderVariation* GLGraphicDriver::GetShader(ShaderType type, const std::string& name, const std::string& defines /*= ""*/) const
+	{
+		GetShader(type, name.c_str(), defines.c_str());
+	}
+
+	Sapphire::IShaderVariation* GLGraphicDriver::GetShader(ShaderType type, const char* name, const char* defines) const
+	{
+		ResourceCache* cache = m_pCore->GetSubSystem<ResourceCache>();
+		if (cache)
+		{
+			Path path = m_shaderResPath;
+			path.addTailSlash();
+			path += name;
+			path += ".shader";
+			BaseResource* pRes = cache->GetResource(path.c_str());
+			//要判断加载完成
+			if (pRes && pRes->GetType() == ResourceType_Shader && pRes->GetState() == ResourceState::ResourceState_Loaded)
+			{
+				GLShader* pShader = dynamic_cast<GLShader*>(pRes);
+				return pShader->GetVariation(type, defines);
+			}
+		}
+		return NULL;
+	}
+
 	void GLGraphicDriver::SetShaders(IShaderVariation* vs, IShaderVariation* ps)
 	{
 
@@ -1159,6 +1186,15 @@ namespace Sapphire
 	Sapphire::IShaderVariation* GLGraphicDriver::GetPixelShader() const
 	{
 		return m_pixelShader;
+	}
+
+	void GLGraphicDriver::SetShaderPath(std::string path)
+	{
+		if (DirIsExistA(path.c_str()))
+		{
+			m_shaderResPath = path;
+		}
+		
 	}
 
 	void GLGraphicDriver::CleanupShaderPrograms(IShaderVariation* pShaderVariation)

@@ -199,6 +199,17 @@ namespace Sapphire
 		return itor->second;
 	}
 
+
+	Sapphire::BaseResource* ResourceCache::RequestResource(const char* name, ResoureType type /*= ResourceType_Unkown*/)
+	{
+		BaseResource* pRes = GetResource(name);
+		if (pRes && pRes->GetType() == type)
+		{
+			return pRes;
+		}
+		return NULL;
+	}
+
 	void ResourceCache::StoreResourceDependency(BaseResource* resource, const std::string& dependency)
 	{
 		ResGuard<MutexEx> resGurad(m_depMutex);

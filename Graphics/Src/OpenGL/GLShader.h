@@ -24,10 +24,10 @@ namespace Sapphire
 		virtual ~GLShader();
 
 		//加载不同预定义的shader对象
-		IShaderVariation* GetVariation(ShaderType type, const std::string& defines);
-		IShaderVariation* GetVariation(ShaderType type, const char* defines);
+		virtual  IShaderVariation* GetVariation(ShaderType type, const std::string& defines);
+		virtual  IShaderVariation* GetVariation(ShaderType type, const char* defines);
 
-		const std::string&  GetSourceCode(ShaderType type) const;
+		virtual  const std::string&  GetSourceCode(ShaderType type) const;
 
 		uint GetTimeStamp() const { return m_timeStamp; }
 

@@ -31,7 +31,7 @@ namespace Sapphire
 
 		void		RegisterAccessPath(const char* path);
 
-		bool		CheckAccess(const char* path) const;
+		bool		CheckAccess(const char* path) const;   
 
 
 		virtual void ThreadFunc() override;

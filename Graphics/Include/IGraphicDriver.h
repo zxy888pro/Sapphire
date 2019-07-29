@@ -111,6 +111,14 @@ namespace Sapphire
 		//重置所有RenderTarget
 		virtual void ResetRenderTargets() = 0;
 
+		//获取shaderVaration
+		virtual IShaderVariation* GetShader(ShaderType type, const std::string& name, const std::string& defines = "") const = 0;
+		//获取shaderVaration
+		virtual IShaderVariation* GetShader(ShaderType type, const char* name, const char* defines) const = 0;
+		//获取shader资源路径
+		virtual const Path& GetShaderPath() const = 0;
+		//设置shader资源路径
+		virtual void  SetShaderPath(std::string path) = 0; 
 
 	protected:
 

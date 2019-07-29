@@ -126,6 +126,12 @@ namespace Sapphire
 		Sapphire::ShaderMgr* getShaderMgr() const { return m_pShaderMgr; }
 
 		Sapphire::ShaderScriptMgr*  getShaderScriptMgr() const { return m_pShaderScriptMgr; }
+
+
+		virtual IShaderVariation* GetShader(ShaderType type, const std::string& name, const std::string& defines = "") const;
+
+		virtual IShaderVariation* GetShader(ShaderType type, const char* name, const char* defines) const;
+
 		//绘制前的准备工作,渲染前调用，更新UBO和FBO
 		virtual void PrepareDraw();
 		///绘制非索引化的的几何体
@@ -200,6 +206,10 @@ namespace Sapphire
 
 		virtual IShaderVariation* GetVertexShader() const;
 		virtual IShaderVariation* GetPixelShader() const;
+
+		virtual const Path& GetShaderPath() const { return m_shaderResPath; }
+
+		virtual void    SetShaderPath(std::string path);
 
 		virtual void CleanupShaderPrograms(IShaderVariation* pShaderVariation);
 
@@ -466,6 +476,7 @@ namespace Sapphire
 		GLShaderVariation* m_geometryShader;
 		GLShaderVariation* m_computeShader;
 		GLShaderProgram* m_shaderProgram;
+		Path		 m_shaderResPath;
 
 
 		bool  m_bIsInitialized;
