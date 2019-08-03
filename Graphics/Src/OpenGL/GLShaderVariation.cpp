@@ -172,13 +172,16 @@ namespace Sapphire
 					break;
 			}
 			String versionDefine = shaderCode.GetSubString(verStart, verEnd - verStart);
-			precompilieCode += versionDefine + "\n";
+			precompilieCode += versionDefine;
+			precompilieCode += +"\n";
 		}
 		if (!verEnd && GLGraphicDriver::GetGL3Support())
 			precompilieCode += "#version 300\n";
 
 		/////声明最大骨骼数///////////
-		precompilieCode += "#define MAXBONES " + String(GLGraphicDriver::GetMaxBones()) + "\n";
+		precompilieCode += "#define MAXBONES ";
+		precompilieCode += String(GLGraphicDriver::GetMaxBones());
+		precompilieCode += "\n";
 
 		//////////加上预定义/////////
 		std::vector<String> vec = String::Split(m_defines.c_str(), ' ');

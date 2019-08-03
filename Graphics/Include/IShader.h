@@ -1,11 +1,12 @@
 #pragma once
 #include "Graphics.h"
 
-struct IShaderVariation;
+
 
 namespace Sapphire
 {
-	 
+	struct IShaderVariation;
+
 	struct IShader
 	{
 

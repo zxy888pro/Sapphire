@@ -17,15 +17,29 @@ namespace Sapphire
 		Release();
 	}
 
-	void ResourceLoader::LoadResource(BaseResource* resource)
+	void ResourceLoader::LoadResource(BaseResource* resource, bool bAsysn)
 	{
 		if (resource)
 		{
 			m_assert(m_pCore);
-			AsynTaskPool* pTaskPool = dynamic_cast<AsynTaskPool*>(m_pCore->GetSubSystemWithType(ESST_ASYNTASKPOOL));
-			m_assert(pTaskPool);
-			ResourceTask* pResTask = new ResourceTask(resource, true);
-			pTaskPool->AddTask(pResTask);
+			if (bAsysn)
+			{
+				//異步加載
+				AsynTaskPool* pTaskPool = m_pCore->GetSubSystem<AsynTaskPool>();
+				m_assert(pTaskPool);
+				ResourceTask* pResTask = new ResourceTask(resource, true);
+				pTaskPool->AddTask(pResTask);
+			}
+			else
+			{
+				//同步加載
+				resource->OnLoadStart();
+				if (resource->Load())
+					resource->OnLoadEnd();
+				else
+					resource->OnLoadError();
+			}
+			
 
 		}
 	}

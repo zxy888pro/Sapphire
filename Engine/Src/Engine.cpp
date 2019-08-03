@@ -105,9 +105,16 @@ namespace Sapphire
 			bool bVsync = GetParameter(parameters, "Vsync").GetBool();
 			int  multiSample = GetParameter(parameters, "MultiSample").GetInt();
 			int  bResizable = GetParameter(parameters, "Resizable").GetBool();
-			
+			bool bGL3Support = GetParameter(parameters, "GL3Support").GetBool();
+			Path shaderPath  = GetCurrentDirA();
+			shaderPath.addTailSlash();
+			shaderPath += "shaders";
+			//設置shader讀取路徑
+			pGraphicDriver->SetShaderPath(shaderPath.c_str());
 			//设置图形参数
 			pGraphicDriver->SetDisplayMode(x, y, width, height, bFullScreen, bVsync, multiSample, 0, bResizable);
+			
+			
 
 			
 		}

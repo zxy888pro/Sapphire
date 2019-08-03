@@ -46,6 +46,7 @@ namespace Sapphire
 
 		 IEventMgr*  GetEventManager(){ return m_eventMgr; }
 
+		 SubSystem*  GetSubSystemWithClassName(std::string name) const;
 		 SubSystem*  GetSubSystemWithName(std::string name) const;
 		 SubSystem*  GetSubSystemWithType(ESubSystemType type) const;
 		 //template<class T>  SubSystem* GetSubSystem() const;
@@ -96,7 +97,7 @@ namespace Sapphire
 
 
 	 
-	 template <class T> T* Core::GetSubSystem() const { return dynamic_cast<T*>(GetSubSystemWithName(T::GetClassTypeNameStatic())); }
+	 template <class T> T* Core::GetSubSystem() const { return dynamic_cast<T*>(GetSubSystemWithClassName(T::GetClassTypeNameStatic())); }
 	 //template <class T> SubSystem* Core::GetSubSystem() const { return GetSubSystemWithName(T::GetClassTypeNameStatic()); }
 	 
 	 template<class T>

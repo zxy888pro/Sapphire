@@ -259,22 +259,25 @@ namespace Sapphire
 
 	void XMLFile::OnLoadStart()
 	{
-		m_eState = ResourceState_Loading;
+		/*m_eState = ResourceState_Loading;
+		ResourceCache* cache = dynamic_cast<ResourceCache*>(m_pCore->GetSubSystemWithType(ESST_RESOURCECACHE));
+		if (cache)
+		{
+			cache->InsertResource(m_resName.c_str(), this);
+		}*/
+		BaseResource::OnLoadStart();
 	}
 
 	void XMLFile::OnLoadEnd()
 	{
-		m_eState = ResourceState_Loaded;
-		ResourceCache* cache  = dynamic_cast<ResourceCache*>(m_pCore->GetSubSystemWithType(ESST_RESOURCECACHE));
-		if (cache)
-		{
-			cache->InsertResource(m_resName.c_str(), this);
-		}
+		//m_eState = ResourceState_Loaded;	
+		BaseResource::OnLoadEnd();
 	}
 
 	void XMLFile::OnLoadError()
 	{
-		m_eState = ResourceState_Unload;
+		//m_eState = ResourceState_Unload;
+		BaseResource::OnLoadEnd();
 	}
 
 	size_t XMLFile::GetSize()

@@ -195,22 +195,24 @@ namespace Sapphire
 
 	void ImageRes::OnLoadStart()
 	{
-		m_eState = ResourceState_Loading;
-	}
-
-	void ImageRes::OnLoadEnd()
-	{
-		m_eState = ResourceState_Loaded;
+		/*m_eState = ResourceState_Loading;
 		ResourceCache* cache = dynamic_cast<ResourceCache*>(m_pCore->GetSubSystemWithType(ESST_RESOURCECACHE));
 		if (cache)
 		{
 			cache->InsertResource(m_resName.c_str(), this);
-		}
+		}*/
+		BaseResource::OnLoadStart();
+	}
+
+	void ImageRes::OnLoadEnd()
+	{
+		//m_eState = ResourceState_Loaded;
+		BaseResource::OnLoadEnd();
 	}
 
 	void ImageRes::OnLoadError()
 	{
-		m_eState = ResourceState_Unload;
+		//m_eState = ResourceState_Unload;
 	}
 
 	size_t ImageRes::GetSize()

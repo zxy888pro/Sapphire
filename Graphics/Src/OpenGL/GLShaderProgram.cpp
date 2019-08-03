@@ -16,6 +16,7 @@ namespace Sapphire
 		"object",
 		"custom"
 	};
+	const void* GLShaderProgram::g_parameterSources[MAX_SHADER_PARAMETER_GROUPS];
 
 
 	GLShaderProgram::GLShaderProgram(Core* pCore, IGraphicDriver* pDriver, GLShaderVariation* vertexShader, GLShaderVariation* pixelShader) :

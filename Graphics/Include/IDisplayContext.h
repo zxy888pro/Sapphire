@@ -49,6 +49,14 @@ namespace Sapphire
 		virtual void SetWindowTitle(const char* wndName) = 0;
 
 		virtual const std::string& GetWindowTitle() const = 0;
+
+		virtual const std::string& GetDeviceName() const = 0;
+
+		virtual const std::string& GetProviderName() const = 0;
+
+		virtual const std::string& GetApiName() const = 0;
+
+		virtual const std::string& GetApiVersion() const = 0;
 	};
 
 

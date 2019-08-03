@@ -11,6 +11,7 @@ namespace Sapphire
 	struct  IDisplayContext;
 	class   GPUObject;
 	struct  IVertexBuffer;
+	struct  IShaderVariation;
 	
 
 	//OpenGL 与硬件层访问驱动类。  

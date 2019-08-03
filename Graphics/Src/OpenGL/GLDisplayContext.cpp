@@ -26,7 +26,8 @@ namespace Sapphire
 		m_bFullScreen(false),
 		m_multiSample(1),
 		m_bResizable(false),
-		m_externalWindow(NULL)
+		m_externalWindow(NULL),
+		m_ApiName("OpenGL")
 	{
 
 	}
@@ -45,7 +46,7 @@ namespace Sapphire
 	
 	void GLDisplayContext::Initialize()
 	{
-
+		
 //		glfwInit();
 //#ifndef GL_ES_VERSION_2_0
 //		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -200,6 +201,7 @@ namespace Sapphire
 		//捕捉鼠标
 		glfwSetInputMode((GLFWwindow*)m_mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		glewExperimental = GL_TRUE;
+		
 		if (glewInit() != GLEW_OK)
 		{
 
@@ -207,6 +209,22 @@ namespace Sapphire
 			Terminate();
 		}
 		glViewport(0, 0, width, height);
+		const GLubyte* name = glGetString(GL_VENDOR); //返回负责当前OpenGL实现厂商的名字
+		const GLubyte* GLRenderer = glGetString(GL_RENDERER); //返回一个渲染器标识符，通常是个硬件平台
+		const GLubyte* OpenGLVersion = glGetString(GL_VERSION); //返回当前OpenGL实现的版本号
+		const GLubyte* Extensions = glGetString(GL_EXTENSIONS);
+		if (name)
+		{
+			m_providerName = (const char*)name;
+		}
+		if (GLRenderer)
+		{
+			m_deviceName = (const char*)GLRenderer;
+		}
+		if (OpenGLVersion)
+		{
+			m_ApiVer = (const char*)OpenGLVersion;
+		}
 		m_isTerminated = false;
 	}
 

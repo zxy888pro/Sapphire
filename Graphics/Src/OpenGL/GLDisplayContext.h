@@ -50,6 +50,14 @@ namespace Sapphire
 
 			virtual const std::string& GetWindowTitle() const;
 
+			virtual const std::string& GetDeviceName() const { return m_deviceName; }
+
+			virtual const std::string& GetProviderName() const { return m_providerName; }
+
+			virtual const std::string& GetApiName() const { return m_ApiName; }
+
+			virtual const std::string& GetApiVersion() const { return m_ApiVer; }
+
 	private:
 
 		void*          m_mainWindow;
@@ -64,6 +72,10 @@ namespace Sapphire
 		int            m_multiSample;
 		bool		   m_bResizable;
 		std::string    m_windowName;
+		std::string    m_providerName;
+		std::string    m_deviceName;
+		std::string    m_ApiVer;
+		std::string    m_ApiName;
 	};
 
 }

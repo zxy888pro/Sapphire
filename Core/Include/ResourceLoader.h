@@ -31,7 +31,7 @@ namespace Sapphire
 		ResourceLoader(Core* pCore);
 		virtual ~ResourceLoader();
 
-		void LoadResource(BaseResource* resource);
+		void LoadResource(BaseResource* resource, bool bAsysn = false);
 
 		void Initialize();
 

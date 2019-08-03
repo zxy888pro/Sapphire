@@ -9,6 +9,8 @@ namespace Sapphire
 {
 
 	class GLGraphicDriver;
+	struct IShaderVariation;
+	
 
 	//Shader資源，由源碼和多個shader
 	class GLShader :public IShader, public BaseResource

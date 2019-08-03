@@ -287,22 +287,25 @@ namespace Sapphire
 
 	void GLShader::OnLoadStart()
 	{
-		m_eState = ResourceState_Loading;	
-	}
-
-	void GLShader::OnLoadEnd()
-	{
-		m_eState = ResourceState_Loaded;
+		/*m_eState = ResourceState_Loading;
 		ResourceCache* cache = dynamic_cast<ResourceCache*>(m_pCore->GetSubSystemWithType(ESST_RESOURCECACHE));
 		if (cache)
 		{
 			cache->InsertResource(m_resName.c_str(), this);
-		}
+		}*/
+		BaseResource::OnLoadStart();
+	}
+
+	void GLShader::OnLoadEnd()
+	{
+		//m_eState = ResourceState_Loaded;		
+		BaseResource::OnLoadEnd();
 	}
 
 	void GLShader::OnLoadError()
 	{
-		m_eState = ResourceState_Loaded;
+		//m_eState = ResourceState_Loaded;
+		BaseResource::OnLoadError();
 	}
 
 	bool GLShader::LoadShaderScript(const char* scriptPath, ShaderType type)

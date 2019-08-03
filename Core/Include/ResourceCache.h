@@ -91,9 +91,6 @@ namespace Sapphire
 		BaseResource* GetResource(const std::string& name);
 		BaseResource* GetResource(const char* name);
 
-
-		BaseResource* RequestResource(const char* name, ResoureType type = ResourceType_Unkown);
-
 		void StoreResourceDependency(BaseResource* resource, const std::string& dependency);  //保存资源的依赖
 
 		void ResetDependencies(BaseResource* resource);  //重置资源依赖

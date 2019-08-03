@@ -451,22 +451,26 @@ namespace Sapphire
 
 	void GLTexture2D::OnLoadStart()
 	{
-		m_eState = ResourceState_Loading;
-	}
-
-	void GLTexture2D::OnLoadEnd()
-	{
-		m_eState = ResourceState_Loaded;
+		/*m_eState = ResourceState_Loading;
 		ResourceCache* cache = dynamic_cast<ResourceCache*>(m_pCore->GetSubSystemWithType(ESST_RESOURCECACHE));
 		if (cache)
 		{
 			cache->InsertResource(m_resName.c_str(), this);
-		}
+		}*/
+		BaseResource::OnLoadStart();
+	}
+
+	void GLTexture2D::OnLoadEnd()
+	{
+		//m_eState = ResourceState_Loaded;
+		BaseResource::OnLoadEnd();
+		
 	}
 
 	void GLTexture2D::OnLoadError()
 	{
-		m_eState = ResourceState_Unload;
+		//m_eState = ResourceState_Unload;
+		BaseResource::OnLoadError();
 	}
 
 	void GLTexture2D::Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData /*= NULL*/)

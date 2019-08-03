@@ -1,10 +1,32 @@
 #include "BaseResource.h"
 #include <queue>
+#include "ResourceCache.h"
+
 void Sapphire::BaseResource::Clear()
 {
 	m_Priority = RES_MED_PRIORITY;
 	m_nRefCount = 0;
 	m_LastAccess = 0;
+}
+
+void Sapphire::BaseResource::OnLoadStart()
+{
+	m_eState = ResourceState_Loading;
+	ResourceCache* cache = m_pCore->GetSubSystem<ResourceCache>();
+	if (cache)
+	{
+		cache->InsertResource(m_resName.c_str(), this);
+	}
+}
+
+void Sapphire::BaseResource::OnLoadEnd()
+{
+	m_eState = ResourceState_Unload;
+}
+
+void Sapphire::BaseResource::OnLoadError()
+{
+	m_eState = ResourceState_Unload;
 }
 
 bool Sapphire::BaseResource::operator < (BaseResource& container)

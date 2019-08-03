@@ -50,6 +50,7 @@ namespace Sapphire
 	class GLShaderProgram;
 	class GLDisplayContext;
 	class GPUObject;
+	class GLShaderManager;
 
 
 	///方便顶点更新的CPU端缓冲区
@@ -200,6 +201,7 @@ namespace Sapphire
 
 		virtual IVertexBuffer* GetVertexBuffer(uint index) const;
 
+		//獲取Shader，如果緩存裡沒有，同步加載
 		virtual IShaderVariation*  GetShader(ShaderType type, const std::string& name, const std::string define = "") const;
 
 		virtual void SetShaders(IShaderVariation* vs, IShaderVariation* ps);
@@ -354,9 +356,10 @@ namespace Sapphire
 
 
 		GraphicDriverType  m_driverType;
-		ITextureMgr*   m_pTextureMgr;
-		IImageMgr*     m_pImageMgr;
-		ShaderMgr*     m_pShaderMgr;
+		ITextureMgr*			m_pTextureMgr;
+		IImageMgr*				m_pImageMgr;
+		ShaderMgr*				m_pShaderMgr;
+		GLShaderManager*		m_pGLShaderMgr;
 		ShaderScriptMgr*   m_pShaderScriptMgr;
 		GLRenderSystem*  m_renderSys;
 		GLDisplayContext*  m_displayContext;

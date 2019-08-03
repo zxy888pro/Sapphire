@@ -18,6 +18,7 @@
 #include "GLRenderSurface.h"
 #include "GLRenderSystem.h"
 #include "GLShader.h"
+#include "GLShaderManager.h"
 
 
 
@@ -172,9 +173,10 @@ namespace Sapphire
 		m_pTextureMgr = new TextureMgr(m_pCore);
 		m_pImageMgr = new ImageMgr();
 		m_pShaderScriptMgr = new ShaderScriptMgr();
+		m_pGLShaderMgr = new GLShaderManager(pCore, this);
 		m_displayContext = new GLDisplayContext(); //创建OpenGL窗口显示环境
 		m_textureAnisotropy = 0;
-		m_eDefaultTextureFilterMode = FILTER_BILINEAR;
+		m_eDefaultTextureFilterMode = FILTER_BILINEAR;	
 
 	}
 
@@ -1150,27 +1152,13 @@ namespace Sapphire
 
 	Sapphire::IShaderVariation* GLGraphicDriver::GetShader(ShaderType type, const std::string& name, const std::string& defines /*= ""*/) const
 	{
-		GetShader(type, name.c_str(), defines.c_str());
+		return GetShader(type, name.c_str(), defines.c_str());
 	}
 
 	Sapphire::IShaderVariation* GLGraphicDriver::GetShader(ShaderType type, const char* name, const char* defines) const
 	{
-		ResourceCache* cache = m_pCore->GetSubSystem<ResourceCache>();
-		if (cache)
-		{
-			Path path = m_shaderResPath;
-			path.addTailSlash();
-			path += name;
-			path += ".shader";
-			BaseResource* pRes = cache->GetResource(path.c_str());
-			//要判断加载完成
-			if (pRes && pRes->GetType() == ResourceType_Shader && pRes->GetState() == ResourceState::ResourceState_Loaded)
-			{
-				GLShader* pShader = dynamic_cast<GLShader*>(pRes);
-				return pShader->GetVariation(type, defines);
-			}
-		}
-		return NULL;
+		//獲取shader應該用同步加載
+		return m_pGLShaderMgr->GetShader(type, name, defines, false);
 	}
 
 	void GLGraphicDriver::SetShaders(IShaderVariation* vs, IShaderVariation* ps)
@@ -1432,7 +1420,18 @@ namespace Sapphire
 
 	void GLGraphicDriver::CheckFeatureSupport()
 	{
-
+		std::string ver = m_displayContext->GetApiVersion();
+		if (!ver.empty() &&ver.size()>7)
+		{
+			if (ver[0] > '3')
+			{
+				m_gl3Support = true; //支持OpenGL3.0以上
+			}
+		}
+		else
+		{
+			m_gl3Support = false;
+		}
 	}
 
 	bool GLGraphicDriver::CheckExtension(const char* name)

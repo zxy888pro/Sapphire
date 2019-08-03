@@ -134,7 +134,7 @@ namespace Sapphire
 		return it != m_objFactories.end() ? it->second->GetTypeName() : "";
 	}
 
-	Sapphire::SubSystem* Core::GetSubSystemWithName(std::string name) const
+	Sapphire::SubSystem* Core::GetSubSystemWithClassName(std::string name) const
 	{
 		SubSystem* pss = NULL;
 		std::unordered_map<std::string, std::string>::const_iterator i = m_subSystemNameMap.find(name);
@@ -148,6 +148,16 @@ namespace Sapphire
 			pss = it->second;
 		}
 		return pss;
+	}
+
+	Sapphire::SubSystem* Core::GetSubSystemWithName(std::string name) const
+	{
+		SUBSYTEM_CONST_ITEM it = m_subSystems.find(name);
+		if (it == m_subSystems.end())
+		{
+			return NULL;
+		}
+		return it->second;
 	}
 
 	Sapphire::SubSystem* Core::GetSubSystemWithType(ESubSystemType type) const

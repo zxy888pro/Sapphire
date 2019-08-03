@@ -75,9 +75,9 @@ namespace Sapphire
 		ResourceState GetState() const { return m_eState; }
 		void SetState(ResourceState state) { m_eState = state; }
 
-		virtual void OnLoadStart() {}; //异步开始加载时回调
-		virtual void OnLoadEnd() {};  //异步加载完成时回调
-		virtual void OnLoadError() {}; //异步加载失败时调用
+		virtual void OnLoadStart(); //异步开始加载时回调
+		virtual void OnLoadEnd();  //异步加载完成时回调
+		virtual void OnLoadError();//异步加载失败时调用
 		
 
 		virtual size_t GetSize() = 0;

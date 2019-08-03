@@ -146,6 +146,7 @@
     <ClInclude Include="Src\OpenGL\GLRenderSurface.h" />
     <ClInclude Include="Src\OpenGL\GLRenderSystem.h" />
     <ClInclude Include="Src\OpenGL\GLShader.h" />
+    <ClInclude Include="Src\OpenGL\GLShaderManager.h" />
     <ClInclude Include="Src\OpenGL\GLShaderProgram.h" />
     <ClInclude Include="Src\OpenGL\GLShaderVariation.h" />
     <ClInclude Include="Src\OpenGL\GLTexture.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="Src\OpenGL\GLRenderSurface.cpp" />
     <ClCompile Include="Src\OpenGL\GLRenderSystem.cpp" />
     <ClCompile Include="Src\OpenGL\GLShader.cpp" />
+    <ClCompile Include="Src\OpenGL\GLShaderManager.cpp" />
     <ClCompile Include="Src\OpenGL\GLShaderProgram.cpp" />
     <ClCompile Include="Src\OpenGL\GLShaderVariation.cpp" />
     <ClCompile Include="Src\OpenGL\GLTexture.cpp" />
