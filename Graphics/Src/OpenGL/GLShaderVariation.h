@@ -23,25 +23,25 @@ namespace Sapphire
 
 		virtual ~GLShaderVariation();
 		//±‡“ÎΩ≈±æ
-		bool Create();
+		virtual bool Create();
 
-		void SetName(const std::string&  name);
+		virtual void SetName(const std::string&  name);
 
-		void SetDefines(const std::string& defines);
+		virtual void SetDefines(const std::string& defines);
 
-		IShader* GetOwner() const;
+		virtual IShader* GetOwner() const;
 
 		void    SetOwner(GLShader* owner);
 
 		ShaderType GetShaderType() const;
 
-		const std::string& GetName() const;
+		virtual const std::string& GetName() const;
 
-		const std::string& GetDefines() const;
+		virtual const std::string& GetDefines() const;
 
 		const std::string& GetCompilerOutput() const;
 
-		std::string GetFullName() const;
+		virtual const std::string GetFullName() const;
 
 
 

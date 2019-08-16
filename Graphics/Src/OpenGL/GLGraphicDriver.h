@@ -133,6 +133,29 @@ namespace Sapphire
 
 		virtual IShaderVariation* GetShader(ShaderType type, const char* name, const char* defines) const;
 
+		//獲取Shader，如果緩存裡沒有，同步加載
+		virtual IShaderVariation*  GetShader(ShaderType type, const std::string& name, const std::string define = "") const;
+
+		//设置当前渲染使用的Shader
+		virtual void SetShaders(IShaderVariation* vs, IShaderVariation* ps);
+
+		virtual IShaderVariation* GetVertexShader() const;
+		virtual IShaderVariation* GetPixelShader() const;
+
+		virtual const Path& GetShaderPath() const { return m_shaderResPath; }
+
+		virtual void    SetShaderPath(std::string path);
+
+		//设置一个float
+		virtual void SetShaderParameter(StringHash param, float value);
+		//设置一个float缓冲区
+		virtual void SetShaderParameter(StringHash param, const float* data, unsigned count);
+		//设置一个Vector4
+		virtual void SetShaderParameter(StringHash param, const Vector4& vector);
+
+		virtual void SetShaderParameter(StringHash param, const Matrix4x4& matrix);
+
+
 		//绘制前的准备工作,渲染前调用，更新UBO和FBO
 		virtual void PrepareDraw();
 		///绘制非索引化的的几何体
@@ -201,17 +224,7 @@ namespace Sapphire
 
 		virtual IVertexBuffer* GetVertexBuffer(uint index) const;
 
-		//獲取Shader，如果緩存裡沒有，同步加載
-		virtual IShaderVariation*  GetShader(ShaderType type, const std::string& name, const std::string define = "") const;
-
-		virtual void SetShaders(IShaderVariation* vs, IShaderVariation* ps);
-
-		virtual IShaderVariation* GetVertexShader() const;
-		virtual IShaderVariation* GetPixelShader() const;
-
-		virtual const Path& GetShaderPath() const { return m_shaderResPath; }
-
-		virtual void    SetShaderPath(std::string path);
+		
 
 		virtual void CleanupShaderPrograms(IShaderVariation* pShaderVariation);
 
@@ -395,7 +408,7 @@ namespace Sapphire
 		//gpu 对象表
 		std::unordered_map<std::string, GPUObject*>   m_gpuObjects;
 		//已链接的shaderProgames
-		std::unordered_map<std::string, GLShaderProgram*>    m_shaderProgramDict;
+		std::unordered_map<std::string, SharedPtr<GLShaderProgram>>    m_shaderProgramDict;
 
 
 		
@@ -410,6 +423,9 @@ namespace Sapphire
 		IVertexBuffer* m_vertexBuffers[MAX_VERTEX_STREAMS];
 		//UBO缓冲区集合
 		std::unordered_map<unsigned, SharedPtr<ConstantBuffer> > m_constantsBuffers;
+		/// 当前绑定的constantBuffer,VertexShader和PixelShader各占一段，所以是两倍
+		ConstantBuffer* m_currentConstantBuffers[MAX_SHADER_PARAMETER_GROUPS * 2];
+
 		//使用的元素掩码
 		uint m_elementMasks[MAX_VERTEX_STREAMS];
 		//上一次使用的实例数据偏移
@@ -467,6 +483,10 @@ namespace Sapphire
 		IntRect			m_scissorRect;    
 		IntRect			m_viewport;   //视口区域
 		///  
+		///自定义剪裁平面
+		bool			m_useCustomClipPlane;
+		///当前自定义剪裁平面
+		Vector4			m_customclipPlane;
 
 		/// 当前帧的图元数
 		unsigned m_uNumPrimitives;

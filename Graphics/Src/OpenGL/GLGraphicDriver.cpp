@@ -1163,6 +1163,134 @@ namespace Sapphire
 
 	void GLGraphicDriver::SetShaders(IShaderVariation* vs, IShaderVariation* ps)
 	{
+		//判断是否是当前使用的shader
+		if (vs == m_vertexShader && ps == m_pixelShader)
+			return;
+		
+		GLShaderVariation* glvs = (GLShaderVariation*)(vs);
+		GLShaderVariation* glps = (GLShaderVariation*)(ps);
+		//是否编译完成
+		if (glvs && glvs->GetGPUHandle())
+		{
+			if (glvs->GetCompilerOutput().empty())
+			{
+				//编译
+				bool bSuccess = glvs->Create();
+				if (bSuccess)
+				{
+					SAPPHIRE_LOG(StringFormatA("Compiled vertex shader %s",glvs->GetFullName().c_str()));
+				}
+				else
+				{
+					SAPPHIRE_LOG(StringFormatA("Failed to compile vertex shader %s :\n ", glvs->GetFullName().c_str(),glvs->GetCompilerOutput().c_str()));
+					glvs = NULL;
+				}
+			}
+
+		}
+		else
+		{
+			glvs = NULL;
+		}
+		if (glps && glps->GetGPUHandle())
+		{
+			if (glps->GetCompilerOutput().empty())
+			{
+				//编译
+				bool bSuccess = glps->Create();
+				if (bSuccess)
+				{
+					SAPPHIRE_LOG(StringFormatA("Compiled pixel shader %s", glps->GetFullName().c_str()));
+				}
+				else
+				{
+					SAPPHIRE_LOG(StringFormatA("Failed to compile pixel shader %s :\n ", glps->GetFullName().c_str(), glps->GetCompilerOutput().c_str()));
+					glps = NULL;
+				}
+			}
+
+		}
+		else
+		{
+			glps = NULL;
+		}
+
+		if (!glvs || !glps)
+		{
+			glUseProgram(0);
+			m_vertexShader = 0;
+			m_pixelShader = 0;
+			m_shaderProgram = 0;
+		}
+		else
+		{
+			m_vertexShader = glvs;
+			m_pixelShader = glps;
+
+			 
+			std::string  key = GLShaderProgram::GetGLProgrameName(glvs, glps, NULL, NULL);
+			
+			std::unordered_map<std::string, SharedPtr<GLShaderProgram>>::iterator it = m_shaderProgramDict.find(key);
+			if (it != m_shaderProgramDict.end())
+			{
+				if (it->second->GetGPUHandle())
+				{
+					glUseProgram(it->second->GetGPUHandle());
+					m_shaderProgram = it->second;
+				}
+				else
+				{
+					glUseProgram(0);
+					m_shaderProgram = NULL;
+				}
+			}
+			else
+			{
+				 
+				GLShaderProgram* newProgram = SharedPtr<GLShaderProgram>(new GLShaderProgram(m_pCore, this, glvs, glps));
+				if (newProgram->Link())
+				{
+					SAPPHIRE_LOG(StringFormatA("Linked vertex Shader %s and pixel Shader %s", glvs->GetFullName().c_str(),glps->GetFullName().c_str()));
+					m_shaderProgram = newProgram;
+				}
+				else
+				{
+					SAPPHIRE_LOG(StringFormatA("Linked vertex Shader %s and pixel Shader %s  :\n %s", glvs->GetFullName().c_str(), glps->GetFullName().c_str(), newProgram->GetLinkerOutput().c_str()));
+					m_shaderProgram = 0;
+				}
+				m_shaderProgramDict[key] = newProgram;
+			}
+
+		}
+
+#ifndef GL_ES_VERSION_2_0
+
+		if (m_gl3Support && m_shaderProgram)
+		{
+			const SharedPtr<ConstantBuffer>* constantBuffers = m_shaderProgram->GetConstantBuffers();
+			for (unsigned i = 0; i < MAX_SHADER_PARAMETER_GROUPS * 2; ++i) //VertexShader和PixelShader各占一段，所以是两倍
+			{
+				ConstantBuffer* buffer = constantBuffers[i].Get();
+				if (buffer != m_currentConstantBuffers[i])
+				{
+					unsigned handle = buffer ? buffer->GetGPUHandle() : 0;
+					glBindBufferBase(GL_UNIFORM_BUFFER, i, handle); //绑定缓冲区对象
+					m_curBoundUBO = handle; //当前绑定的ubo
+					m_currentConstantBuffers[i] = buffer;  //设置当前绑定的ubo对象
+					//清理全局参数源
+					GLShaderProgram::ClearGlobalParameterSource((ShaderParameterGroup)(i % MAX_SHADER_PARAMETER_GROUPS));
+				}
+				
+			}
+			//是否设置自定义剪裁平面
+			SetShaderParameter(VSP_CLIPPLANE, m_useCustomClipPlane ? m_customclipPlane : Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+		}
+
+#endif
+		//
+		//if (m_shaderPrecache)
+			//m_shaderPrecache->StoreShaders(glvs, glps);
+		
 
 	}
 

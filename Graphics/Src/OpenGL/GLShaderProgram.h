@@ -69,6 +69,9 @@ namespace Sapphire
 		///当constant buffer改变，清理所有参数源
 		static void ClearGlobalParameterSource(ShaderParameterGroup group);
 
+
+		static std::string GetGLProgrameName(IShaderVariation* vs, IShaderVariation* ps, IShaderVariation* gs=NULL, IShaderVariation* cs=NULL);
+
 	protected:
 
 		GLGraphicDriver*  m_pDriver;

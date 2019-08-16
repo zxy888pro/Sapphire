@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Sapphire.h"
 
 namespace Sapphire
 {
@@ -234,7 +234,7 @@ namespace Sapphire
 		SP_MATERIAL,
 		SP_OBJECT,
 		SP_CUSTOM,
-		MAX_SHADER_PARAMETER_GROUPS
+		MAX_SHADER_PARAMETER_GROUPS 
 	};
 
 #define	QUALITY_LOW  0
@@ -281,6 +281,55 @@ namespace Sapphire
 	static const int MAX_VERTEX_STREAMS = 4;
 	//最大渲染目标数
 	static const int MAX_RENDERTARGETS = 4;
+
+
+	// 内建的Shader参数
+	extern SAPPHIRE_API const StringHash VSP_AMBIENTSTARTCOLOR;
+	extern SAPPHIRE_API const StringHash VSP_AMBIENTENDCOLOR;
+	extern SAPPHIRE_API const StringHash VSP_BILLBOARDROT;
+	extern SAPPHIRE_API const StringHash VSP_CAMERAPOS;
+	extern SAPPHIRE_API const StringHash VSP_CAMERAROT;
+	extern SAPPHIRE_API const StringHash VSP_CLIPPLANE;
+	extern SAPPHIRE_API const StringHash VSP_NEARCLIP;
+	extern SAPPHIRE_API const StringHash VSP_FARCLIP;
+	extern SAPPHIRE_API const StringHash VSP_DEPTHMODE;
+	extern SAPPHIRE_API const StringHash VSP_DELTATIME;
+	extern SAPPHIRE_API const StringHash VSP_ELAPSEDTIME;
+	extern SAPPHIRE_API const StringHash VSP_FRUSTUMSIZE;
+	extern SAPPHIRE_API const StringHash VSP_GBUFFEROFFSETS;
+	extern SAPPHIRE_API const StringHash VSP_LIGHTDIR;
+	extern SAPPHIRE_API const StringHash VSP_LIGHTPOS;
+	extern SAPPHIRE_API const StringHash VSP_MODEL;
+	extern SAPPHIRE_API const StringHash VSP_VIEWPROJ;
+	extern SAPPHIRE_API const StringHash VSP_UOFFSET;
+	extern SAPPHIRE_API const StringHash VSP_VOFFSET;
+	extern SAPPHIRE_API const StringHash VSP_ZONE;
+	extern SAPPHIRE_API const StringHash VSP_LIGHTMATRICES;
+	extern SAPPHIRE_API const StringHash VSP_SKINMATRICES;
+	extern SAPPHIRE_API const StringHash VSP_VERTEXLIGHTS;
+	extern SAPPHIRE_API const StringHash PSP_AMBIENTCOLOR;
+	extern SAPPHIRE_API const StringHash PSP_CAMERAPOS;
+	extern SAPPHIRE_API const StringHash PSP_DELTATIME;
+	extern SAPPHIRE_API const StringHash PSP_DEPTHRECONSTRUCT;
+	extern SAPPHIRE_API const StringHash PSP_ELAPSEDTIME;
+	extern SAPPHIRE_API const StringHash PSP_FOGCOLOR;
+	extern SAPPHIRE_API const StringHash PSP_FOGPARAMS;
+	extern SAPPHIRE_API const StringHash PSP_GBUFFERINVSIZE;
+	extern SAPPHIRE_API const StringHash PSP_LIGHTCOLOR;
+	extern SAPPHIRE_API const StringHash PSP_LIGHTDIR;
+	extern SAPPHIRE_API const StringHash PSP_LIGHTPOS;
+	extern SAPPHIRE_API const StringHash PSP_MATDIFFCOLOR;
+	extern SAPPHIRE_API const StringHash PSP_MATEMISSIVECOLOR;
+	extern SAPPHIRE_API const StringHash PSP_MATENVMAPCOLOR;
+	extern SAPPHIRE_API const StringHash PSP_MATSPECCOLOR;
+	extern SAPPHIRE_API const StringHash PSP_NEARCLIP;
+	extern SAPPHIRE_API const StringHash PSP_FARCLIP;
+	extern SAPPHIRE_API const StringHash PSP_SHADOWCUBEADJUST;
+	extern SAPPHIRE_API const StringHash PSP_SHADOWDEPTHFADE;
+	extern SAPPHIRE_API const StringHash PSP_SHADOWINTENSITY;
+	extern SAPPHIRE_API const StringHash PSP_SHADOWMAPINVSIZE;
+	extern SAPPHIRE_API const StringHash PSP_SHADOWSPLITS;
+	extern SAPPHIRE_API const StringHash PSP_LIGHTMATRICES;
 
 }
 

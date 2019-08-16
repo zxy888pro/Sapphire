@@ -385,6 +385,31 @@ namespace Sapphire
 		g_parameterSources[group] = (const void*)M_MAX_UNSIGNED;
 	}
 
+	
+
+	std::string GLShaderProgram::GetGLProgrameName(IShaderVariation* vs, IShaderVariation* ps, IShaderVariation* gs/*=NULL*/, IShaderVariation* cs/*=NULL*/)
+	{
+		std::string ret = "";
+		if (vs)
+		{
+			ret = vs->GetFullName();
+		}
+		if (ps)
+		{
+			ret += "#" + ps->GetFullName();
+		}
+		if (gs)
+		{
+			ret += "#" + gs->GetFullName();
+
+		}
+		if (cs)
+		{
+			ret += "#" + cs->GetFullName();
+		}
+		return ret;
+	}
+
 	ulong GLShaderProgram::g_uFrameNumber;
 
 }

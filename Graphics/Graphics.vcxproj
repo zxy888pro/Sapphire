@@ -167,6 +167,7 @@
     <ClCompile Include="Src\Component.cpp" />
     <ClCompile Include="Src\Font.cpp" />
     <ClCompile Include="Src\GraphicException.cpp" />
+    <ClCompile Include="Src\GraphicsDefs.cpp" />
     <ClCompile Include="Src\Image.cpp" />
     <ClCompile Include="Src\ImageHelper.cpp" />
     <ClCompile Include="Src\ImageMgr.cpp" />

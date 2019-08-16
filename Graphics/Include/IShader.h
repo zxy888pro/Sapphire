@@ -15,5 +15,7 @@ namespace Sapphire
 		virtual  IShaderVariation* GetVariation(ShaderType type, const std::string& defines) = 0;
 		virtual  IShaderVariation* GetVariation(ShaderType type, const char* defines) = 0;
 
+		virtual  const std::string&  GetName() const = 0;
+
 	};
 }
