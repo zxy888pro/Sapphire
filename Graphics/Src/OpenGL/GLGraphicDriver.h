@@ -102,6 +102,7 @@ namespace Sapphire
 	public:
 
 		typedef std::unordered_map<std::string, ImageType>   ImageTypeNameMap;
+		
 
 		GLGraphicDriver(Core* pCore);
 		virtual ~GLGraphicDriver();
@@ -146,14 +147,35 @@ namespace Sapphire
 
 		virtual void    SetShaderPath(std::string path);
 
+
 		//设置一个float
 		virtual void SetShaderParameter(StringHash param, float value);
 		//设置一个float缓冲区
 		virtual void SetShaderParameter(StringHash param, const float* data, unsigned count);
+		//设置一个Vector2
+		virtual void SetShaderParameter(StringHash param, const Vector2& vector);
 		//设置一个Vector4
 		virtual void SetShaderParameter(StringHash param, const Vector4& vector);
-
+		//设置一个Vector3
+		virtual void SetShaderParameter(StringHash param, const Vector3& vector);
+		///设置一个3x3矩阵
+		virtual void SetShaderParameter(StringHash param, const Matrix3x3& matrix);
+		///设置一个4x3矩阵
+		virtual void SetShaderParameter(StringHash param, const Matrix3x4& matrix);
+		//设置一个4x4矩阵
 		virtual void SetShaderParameter(StringHash param, const Matrix4x4& matrix);
+		///设置一个Color
+		virtual void SetShaderParameter(StringHash param, const Color& color);
+		//是否有参数
+		virtual bool HasShaderParameter(StringHash param);
+		//检查参数组是否需要更新，如果不存在不做检查
+		virtual bool NeedParameterUpdate(ShaderParameterGroup group, const void* source);
+		//清理Shader参数源
+		virtual void ClearParameterSources();
+		///清理变换Shader参数源
+		virtual void ClearTransformSources();
+		///清理指定的shader参数源组
+		virtual void ClearParameterSource(ShaderParameterGroup group);
 
 
 		//绘制前的准备工作,渲染前调用，更新UBO和FBO
@@ -162,6 +184,9 @@ namespace Sapphire
 		virtual void Draw(PrimitiveType type, unsigned vertexStart, unsigned vertexCount);
 		///绘制索引化的几何体
 		virtual void Draw(PrimitiveType type, unsigned indexStart, unsigned indexCount, unsigned minVertex, unsigned vertexCount);
+
+		///重设缓存的渲染状态
+		void ResetCachedState();
 
 		//绑定一个纹理到指定的纹理单元
 		//先激活对应的纹理单元
@@ -268,9 +293,6 @@ namespace Sapphire
 		void SetScissorTest(bool enable, const Rect& rect = Rect::FULL, bool borderInclusive = true);
 
 		
-
-		//清理参数源
-		virtual void ClearParameterSources();
 
 
 
@@ -410,7 +432,7 @@ namespace Sapphire
 		//已链接的shaderProgames
 		std::unordered_map<std::string, SharedPtr<GLShaderProgram>>    m_shaderProgramDict;
 
-
+		
 		
 		/// 当前在用的渲染目标   
 		GLRenderSurface* m_renderTargets[MAX_RENDERTARGETS];

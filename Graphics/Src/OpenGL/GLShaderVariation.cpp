@@ -112,7 +112,7 @@ namespace Sapphire
 		return m_compilerOutput;
 	}
 
-	std::string GLShaderVariation::GetFullName() const
+	const std::string GLShaderVariation::GetFullName() const
 	{
 		return m_name + "(" + m_defines + ")";
 	}

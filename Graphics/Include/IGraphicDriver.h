@@ -106,9 +106,6 @@ namespace Sapphire
 		//		绑定纹理对象
 		virtual void BindTexture(ITexture* pTexture, TextureUnit unit) = 0;
 
-		//清理shader参数源
-		virtual void ClearParameterSources() = 0;
-
 		//重置所有RenderTarget
 		virtual void ResetRenderTargets() = 0;
 
@@ -120,6 +117,35 @@ namespace Sapphire
 		virtual const Path& GetShaderPath() const = 0;
 		//设置shader资源路径
 		virtual void  SetShaderPath(std::string path) = 0; 
+
+		//设置一个float
+		virtual void SetShaderParameter(StringHash param, float value) = 0;
+		//设置一个float缓冲区
+		virtual void SetShaderParameter(StringHash param, const float* data, unsigned count) = 0;
+		//设置一个Vector2
+		virtual void SetShaderParameter(StringHash param, const Vector2& vector) = 0;
+		//设置一个Vector4
+		virtual void SetShaderParameter(StringHash param, const Vector4& vector) = 0;
+		//设置一个Vector3
+		virtual void SetShaderParameter(StringHash param, const Vector3& vector) = 0;
+		///设置一个3x3矩阵
+		virtual void SetShaderParameter(StringHash param, const Matrix3x3& matrix) = 0;
+		///设置一个4x3矩阵
+		virtual void SetShaderParameter(StringHash param, const Matrix3x4& matrix) = 0;
+		//设置一个4x4矩阵
+		virtual void SetShaderParameter(StringHash param, const Matrix4x4& matrix) = 0;
+		///设置一个Color
+		virtual void SetShaderParameter(StringHash param, const Color& color) = 0;
+		//是否有参数
+		virtual bool HasShaderParameter(StringHash param) = 0;
+		//检查参数组是否需要更新，如果不存在不做检查
+		virtual bool NeedParameterUpdate(ShaderParameterGroup group, const void* source) = 0;
+		//清理Shader参数源
+		virtual void ClearParameterSources() =0;
+		///清理变换Shader参数源
+		virtual void ClearTransformSources() = 0;
+		///清理指定的shader参数源组
+		virtual void ClearParameterSource(ShaderParameterGroup group) = 0;
 
 	protected:
 

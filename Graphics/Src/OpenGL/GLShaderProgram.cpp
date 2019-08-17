@@ -304,9 +304,24 @@ namespace Sapphire
 		return false;
 	}
 
+	bool GLShaderProgram::HasParameter(StringHash param) const
+	{
+		if (m_shaderParamters.find(param) != m_shaderParamters.end())
+			return true;
+		return false;
+	}
+
 	const Sapphire::ShaderParameter* GLShaderProgram::GetParameter(std::string param) const
 	{
-		std::unordered_map<std::string, ShaderParameter*>::const_iterator it  = m_shaderParamters.find(param);
+		ShaderParameterMapCIterator it  = m_shaderParamters.find(param);
+		if (it != m_shaderParamters.end())
+			return it->second;
+		return NULL;
+	}
+
+	const Sapphire::ShaderParameter* GLShaderProgram::GetParameter(StringHash param) const
+	{
+		ShaderParameterMapCIterator it = m_shaderParamters.find(param);
 		if (it != m_shaderParamters.end())
 			return it->second;
 		return NULL;

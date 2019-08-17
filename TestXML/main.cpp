@@ -63,7 +63,14 @@ Sapphire::TestMutexClass tmc;
 namespace Sapphire
 {
 	
+	class Test1
+	{
+	public:
 
+		int a = 0;
+		bool c = true;
+		float b = 0;
+	};
 	
 
 	class TestThreadLock : public Thread
@@ -210,6 +217,8 @@ int main() {
 	TestThreadLock* thread = new TestThreadLock();
 	thread->Run();
 	}*/
+	Test1*  ta1[10];
+	memset(ta1, 0, sizeof(ta1));
 
 	App* app = new App();
 	app->Initialize();

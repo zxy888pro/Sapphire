@@ -5,6 +5,8 @@
 
 namespace Sapphire
 {
+	
+
 	SampleApplication::SampleApplication(Sapphire::Core* pCore) :Application(pCore)
 	{
 
@@ -17,6 +19,7 @@ namespace Sapphire
 
 	void SampleApplication::Setup()
 	{
+
 		//设置程序的初始化参数
 		m_engineParameter["FullScreen"] = false;
 		m_engineParameter["WindowTitle"] = "SampleApplication";

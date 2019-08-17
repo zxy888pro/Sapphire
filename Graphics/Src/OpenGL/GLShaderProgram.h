@@ -32,6 +32,10 @@ namespace Sapphire
 
 	public:
 
+		typedef std::unordered_map<StringHash, ShaderParameter*, StringHashFunc, StringHashCMP>     ShaderParameterMap;
+		typedef std::unordered_map<StringHash, ShaderParameter*, StringHashFunc, StringHashCMP>::iterator		ShaderParameterMapIterator;
+		typedef std::unordered_map<StringHash, ShaderParameter*, StringHashFunc, StringHashCMP>::const_iterator		ShaderParameterMapCIterator;
+
 		GLShaderProgram(Core* pCore,IGraphicDriver* pDriver, GLShaderVariation* vertexShader, GLShaderVariation* pixelShader);
 		GLShaderProgram(Core* pCore, IGraphicDriver* pDriver, GLShaderVariation* vertexShader, GLShaderVariation* pixelShader, GLShaderVariation* geometryShader, GLShaderVariation* computeShader);
 		virtual ~GLShaderProgram();
@@ -53,8 +57,11 @@ namespace Sapphire
 		virtual bool HasTextureUnit(TextureUnit unit) const { return m_bUseTextureUnits[unit]; }
 
 		virtual bool HasParameter(std::string param) const;
+		virtual bool HasParameter(StringHash param) const;
 
 		virtual const ShaderParameter* GetParameter(std::string param) const;
+		virtual const ShaderParameter* GetParameter(StringHash param) const;
+
 		virtual const std::string& GetLinkerOutput() const { return m_linkOutMsg; }
 
 		const SharedPtr<ConstantBuffer>* GetConstantBuffers() const { return &m_constantBuffers[0]; }
@@ -84,7 +91,7 @@ namespace Sapphire
 		WeakPtr<GLShaderVariation>   m_geometryShader;
 		WeakPtr<GLShaderVariation>   m_computeShader;
 
-		std::unordered_map<std::string, ShaderParameter*>   m_shaderParamters;
+		ShaderParameterMap   m_shaderParamters;
 
 		//记录用到的纹理单元
 		bool                        m_bUseTextureUnits[MAX_TEXTURE_UNITS];

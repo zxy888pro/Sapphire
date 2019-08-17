@@ -3,6 +3,7 @@
 
 namespace Sapphire
 {
+	struct IShader;
 	struct IShaderVariation
 	{
 

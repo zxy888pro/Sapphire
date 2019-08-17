@@ -44,7 +44,6 @@ namespace Sapphire
 		virtual const std::string GetFullName() const;
 
 
-
 		virtual void Release() override;
 
 

@@ -177,6 +177,48 @@ namespace Sapphire
 		m_displayContext = new GLDisplayContext(); //创建OpenGL窗口显示环境
 		m_textureAnisotropy = 0;
 		m_eDefaultTextureFilterMode = FILTER_BILINEAR;	
+		m_shaderProgram = NULL;
+		m_curBoundFBO = 0;
+		m_curBoundVBO = 0;
+		m_curBoundUBO = 0;
+		m_vertexShader = NULL;
+		m_pixelShader = NULL;
+		m_VAO = 0;
+		m_indexBuffer = NULL;
+		m_viewport = IntRect(0, 0, 0, 0);
+		m_blendMode = BLEND_REPLACE;
+		m_cullmode = CULL_NONE;
+		m_stencilFailOp = OP_KEEP;
+		m_stencilPassOp = OP_KEEP;
+		m_stencilRefVal = 0;
+		m_stencilTestMode = CMP_ALWAYS;
+		m_stencilZFailOp = OP_KEEP;
+		m_stencilZPassOp = OP_KEEP;
+		m_stencilCompareMask = M_MAX_UNSIGNED;
+		m_stencilWriteMask = M_MAX_UNSIGNED;
+		m_useCustomClipPlane = false;
+		m_bsRGBReadSupport = false;
+		m_bsRGBWriteSupport = false;
+		m_bsRGBSupport = false;
+		m_driverType = GRAPHICDRIVER_OPENGL;
+		m_depthTestMode = CMP_ALWAYS;
+		m_bDepthWrite = false;
+		m_fillmode = FillMode::FILL_SOLID;
+		m_scissorRect = IntRect::ZERO;
+		m_bScissorTest = false;
+		m_bColorWrite = true;
+		m_depthStencil = 0;
+		for (unsigned i = 0; i < MAX_VERTEX_STREAMS; ++i)
+		{
+			m_vertexBuffers[i] = 0;
+			m_elementMasks[i] = 0;
+			 
+		}
+		for (unsigned i = 0; i < MAX_RENDERTARGETS; ++i)
+			m_renderTargets[i] = 0;
+
+		for (unsigned i = 0; i < MAX_SHADER_PARAMETER_GROUPS * 2; ++i)
+			m_currentConstantBuffers[i] = 0;
 
 	}
 
@@ -663,6 +705,14 @@ namespace Sapphire
 		++m_uNumBatches;
 	}
 
+	void GLGraphicDriver::ResetCachedState()
+	{
+		m_indexBuffer = NULL;
+		m_vertexShader = NULL;
+		m_pixelShader = NULL;
+		m_shaderProgram = NULL;
+	}
+
 	void GLGraphicDriver::BindTexture(ITexture* pTexture, TextureUnit unit)
 	{
 		if (m_pTextureMgr)
@@ -933,9 +983,314 @@ namespace Sapphire
 		}
 	}
 
+	void GLGraphicDriver::SetShaderParameter(StringHash param, float value)
+	{
+		if (m_shaderProgram)
+		{
+			const ShaderParameter* info = m_shaderProgram->GetParameter(param);
+			if (info)
+			{
+				//如果有缓冲区，设置到缓存区中
+				if (info->m_bufferPtr)
+				{
+					ConstantBuffer* buffer = info->m_bufferPtr;
+					if (!buffer->IsDirty())
+					{
+						m_dirtyConstantBuffers.push_back(buffer);
+					}
+					buffer->SetParameter((uint)info->m_location,sizeof(value), &value);//复制到影子缓冲区
+					return;
+				}
+				glUniform1fv(info->m_location, 1, &value); //设置到OpengGL Shader
+			}
+		}
+	}
+
+	void GLGraphicDriver::SetShaderParameter(StringHash param, const float* data, unsigned count)
+	{
+		if (m_shaderProgram)
+		{
+			const ShaderParameter* info = m_shaderProgram->GetParameter(param);
+			if (info)
+			{
+				//如果有缓冲区，设置到缓存区中
+				if (info->m_bufferPtr)
+				{
+					ConstantBuffer* buffer = info->m_bufferPtr;
+					if (!buffer->IsDirty())
+					{
+						m_dirtyConstantBuffers.push_back(buffer);
+					}
+					buffer->SetParameter((uint)info->m_location, sizeof(float)*count, data);//复制到影子缓冲区
+					return;
+				}
+				switch (info->m_type)
+				{
+				case GL_FLOAT:
+					{
+						glUniform1fv(info->m_location, count, data);
+					}
+					break;
+				case GL_FLOAT_VEC2:
+					glUniform2fv(info->m_location, count / 2, data);
+					break;
+
+				case GL_FLOAT_VEC3:
+					glUniform3fv(info->m_location, count / 3, data);
+					break;
+
+				case GL_FLOAT_VEC4:
+					glUniform4fv(info->m_location, count / 4, data);
+					break;
+
+				case GL_FLOAT_MAT3:
+					glUniformMatrix3fv(info->m_location, count / 9, GL_FALSE, data);
+					break;
+
+				case GL_FLOAT_MAT4:
+					glUniformMatrix4fv(info->m_location, count / 16, GL_FALSE, data);
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+
+	void GLGraphicDriver::SetShaderParameter(StringHash param, const Vector2& vector)
+	{
+		if (m_shaderProgram)
+		{
+			const ShaderParameter* info = m_shaderProgram->GetParameter(param);
+			if (info)
+			{
+				//如果有缓冲区，设置到缓存区中
+				if (info->m_bufferPtr)
+				{
+					ConstantBuffer* buffer = info->m_bufferPtr;
+					if (!buffer->IsDirty())
+					{
+						m_dirtyConstantBuffers.push_back(buffer);
+					}
+					buffer->SetParameter((uint)info->m_location, sizeof(Vector2), &vector);//复制到影子缓冲区
+					return;
+				}
+				switch (info->m_type)
+				{
+				case GL_FLOAT:
+				{
+					glUniform1fv(info->m_location, 1, vector.Data());
+				}
+				break;
+				case GL_FLOAT_VEC2:
+					glUniform2fv(info->m_location, 1, vector.Data());
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+
+	void GLGraphicDriver::SetShaderParameter(StringHash param, const Vector4& vector)
+	{
+		if (m_shaderProgram)
+		{
+			const ShaderParameter* info = m_shaderProgram->GetParameter(param);
+			if (info)
+			{
+				//如果有缓冲区，设置到缓存区中
+				if (info->m_bufferPtr)
+				{
+					ConstantBuffer* buffer = info->m_bufferPtr;
+					if (!buffer->IsDirty())
+					{
+						m_dirtyConstantBuffers.push_back(buffer);
+					}
+					buffer->SetParameter((uint)info->m_location, sizeof(Vector4), &vector);//复制到影子缓冲区
+					return;
+				}
+				switch (info->m_type)
+				{
+				case GL_FLOAT:
+				{
+					glUniform1fv(info->m_location, 1, vector.Data());
+				}
+				break;
+				case GL_FLOAT_VEC2:
+					glUniform2fv(info->m_location, 1, vector.Data());
+					break;
+				case GL_FLOAT_VEC3:
+					glUniform3fv(info->m_location, 1, vector.Data());
+					break;
+				case GL_FLOAT_VEC4:
+					glUniform4fv(info->m_location, 1, vector.Data());
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+
+	void GLGraphicDriver::SetShaderParameter(StringHash param, const Vector3& vector)
+	{
+		if (m_shaderProgram)
+		{
+			const ShaderParameter* info = m_shaderProgram->GetParameter(param);
+			if (info)
+			{
+				//如果有缓冲区，设置到缓存区中
+				if (info->m_bufferPtr)
+				{
+					ConstantBuffer* buffer = info->m_bufferPtr;
+					if (!buffer->IsDirty())
+					{
+						m_dirtyConstantBuffers.push_back(buffer);
+					}
+					buffer->SetParameter((uint)info->m_location, sizeof(Vector3), &vector);//复制到影子缓冲区
+					return;
+				}
+				switch (info->m_type)
+				{
+				case GL_FLOAT:
+				{
+					glUniform1fv(info->m_location, 1, vector.Data());
+				}
+				break;
+				case GL_FLOAT_VEC2:
+					glUniform2fv(info->m_location, 1, vector.Data());
+					break;
+				case GL_FLOAT_VEC3:
+					glUniform3fv(info->m_location, 1, vector.Data());
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+
+	void GLGraphicDriver::SetShaderParameter(StringHash param, const Matrix3x3& matrix)
+	{
+		if (m_shaderProgram)
+		{
+			const ShaderParameter* info = m_shaderProgram->GetParameter(param);
+			if (info)
+			{
+				//如果有缓冲区，设置到缓存区中
+				if (info->m_bufferPtr)
+				{
+					ConstantBuffer* buffer = info->m_bufferPtr;
+					if (!buffer->IsDirty())
+					{
+						m_dirtyConstantBuffers.push_back(buffer);
+					}
+					buffer->SetParameter((uint)info->m_location, sizeof(Matrix3x3), &matrix);//复制到影子缓冲区
+					return;
+				}
+				glUniformMatrix3fv(info->m_location, 1, GL_FALSE, matrix.Data());
+			}
+		}
+	}
+
+	void GLGraphicDriver::SetShaderParameter(StringHash param, const Matrix3x4& matrix)
+	{
+		if (m_shaderProgram)
+		{
+			const ShaderParameter* info = m_shaderProgram->GetParameter(param);
+			if (info)
+			{
+				// 扩展成4x4矩阵
+				static Matrix4x4 fullMatrix;
+				fullMatrix.m00_ = matrix.m00_;
+				fullMatrix.m01_ = matrix.m01_;
+				fullMatrix.m02_ = matrix.m02_;
+				fullMatrix.m03_ = matrix.m03_;
+				fullMatrix.m10_ = matrix.m10_;
+				fullMatrix.m11_ = matrix.m11_;
+				fullMatrix.m12_ = matrix.m12_;
+				fullMatrix.m13_ = matrix.m13_;
+				fullMatrix.m20_ = matrix.m20_;
+				fullMatrix.m21_ = matrix.m21_;
+				fullMatrix.m22_ = matrix.m22_;
+				fullMatrix.m23_ = matrix.m23_;
+				//如果有缓冲区，设置到缓存区中
+				if (info->m_bufferPtr)
+				{
+					ConstantBuffer* buffer = info->m_bufferPtr;
+					if (!buffer->IsDirty())
+					{
+						m_dirtyConstantBuffers.push_back(buffer);
+					}
+					buffer->SetParameter((uint)info->m_location, sizeof(Matrix3x4), &matrix);//复制到影子缓冲区
+					return;
+				}
+				glUniformMatrix4fv(info->m_location, 1, GL_FALSE, matrix.Data());
+			}
+		}
+	}
+
+	void GLGraphicDriver::SetShaderParameter(StringHash param, const Matrix4x4& matrix)
+	{
+		if (m_shaderProgram)
+		{
+			const ShaderParameter* info = m_shaderProgram->GetParameter(param);
+			if (info)
+			{
+				//如果有缓冲区，设置到缓存区中
+				if (info->m_bufferPtr)
+				{
+					ConstantBuffer* buffer = info->m_bufferPtr;
+					if (!buffer->IsDirty())
+					{
+						m_dirtyConstantBuffers.push_back(buffer);
+					}
+					buffer->SetParameter((uint)info->m_location, sizeof(Matrix4x4), &matrix);//复制到影子缓冲区
+					return;
+				}
+				glUniformMatrix4fv(info->m_location, 1, GL_FALSE, matrix.Data());
+			}
+		}
+	}
+
+	void GLGraphicDriver::SetShaderParameter(StringHash param, const Color& color)
+	{
+		SetShaderParameter(param, color.Data(), 4);
+	}
+
+
+	bool GLGraphicDriver::HasShaderParameter(StringHash param)
+	{
+		return m_shaderProgram && m_shaderProgram->HasParameter(param);
+	}
+
+	bool GLGraphicDriver::NeedParameterUpdate(ShaderParameterGroup group, const void* source)
+	{
+		return m_shaderProgram ? m_shaderProgram->NeedParameterUpdate(group, source) : false;
+	}
+
 	void GLGraphicDriver::ClearParameterSources()
 	{
 		GLShaderProgram::ClearParameterSources();
+	}
+
+	void GLGraphicDriver::ClearTransformSources()
+	{
+		if (m_shaderProgram)
+		{
+			m_shaderProgram->ClearParameterSource(SP_CAMERA);
+			m_shaderProgram->ClearParameterSource(SP_OBJECT);
+		}
+
+	}
+
+	void GLGraphicDriver::ClearParameterSource(ShaderParameterGroup group)
+	{
+		if (m_shaderProgram)
+		{
+			m_shaderProgram->ClearGlobalParameterSource(group);
+		}
 	}
 
 	Sapphire::ConstantBuffer* GLGraphicDriver::GetOrCreateConstantBuffer(unsigned bindingIndex, unsigned size)
@@ -1161,6 +1516,7 @@ namespace Sapphire
 		return m_pGLShaderMgr->GetShader(type, name, defines, false);
 	}
 
+
 	void GLGraphicDriver::SetShaders(IShaderVariation* vs, IShaderVariation* ps)
 	{
 		//判断是否是当前使用的shader
@@ -1312,6 +1668,8 @@ namespace Sapphire
 		}
 		
 	}
+
+	
 
 	void GLGraphicDriver::CleanupShaderPrograms(IShaderVariation* pShaderVariation)
 	{
@@ -1986,6 +2344,7 @@ namespace Sapphire
 			glStencilMask(m_stencilWriteMask);
 
 	}
+
 
 	void GLGraphicDriver::AddGPUObject(GPUObject* gpuObj)
 	{
