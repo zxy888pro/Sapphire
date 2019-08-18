@@ -2,6 +2,7 @@
 #include "VertexBuffer.h"
 #include "UI/UIElement.h"
 #include "Math/Matrix4x4.h"
+#include "Math/Matrix3x4.h"
 #include "IDisplayContext.h"
 #include "IGraphicDriver.h"
 
@@ -119,6 +120,50 @@ namespace Sapphire
 		if (resetRenderTargets)
 			m_pGraphicDriver->ResetRenderTargets();
 		m_pGraphicDriver->SetVertexBuffer(buffer);
+
+
+		//纯顶点色vertex shader
+		IShaderVariation* noTextureVS = m_pGraphicDriver->GetShader(VS, "Basic", "VERTEXCOLOR");
+		IShaderVariation* noTexturePS = m_pGraphicDriver->GetShader(PS, "Basic", "VERTEXCOLOR");
+
+		uint alphaFormat = GLGraphicDriver::GetHWAlphaFormat();
+
+		for (int i = batchStart; i < batchEnd; i++)
+		{
+			const UIBatch& batch = batches[i];
+			if (batch.GetVertexStart() == batch.GetVertexEnd())
+			{
+				continue;
+			}
+
+			IShaderVariation* vs = NULL;
+			IShaderVariation* ps = NULL;
+
+			if (batch.GetTexture() == NULL)
+			{
+				//无纹理，顶点色
+				vs = noTextureVS;
+				ps = noTexturePS;
+			}
+			else
+			{
+				//带纹理
+			}
+			m_pGraphicDriver->SetShaders(vs, ps);
+			if (m_pGraphicDriver->NeedParameterUpdate(SP_OBJECT, this))
+				m_pGraphicDriver->SetShaderParameter(VSP_MODEL, Matrix3x4::IDENTITY);
+			if (m_pGraphicDriver->NeedParameterUpdate(SP_CAMERA, this))
+				m_pGraphicDriver->SetShaderParameter(VSP_VIEWPROJ, projection);
+			if (m_pGraphicDriver->NeedParameterUpdate(SP_MATERIAL, this))
+				m_pGraphicDriver->SetShaderParameter(PSP_MATDIFFCOLOR, Color(1.0f, 1.0f, 1.0f, 1.0f));
+
+			m_pGraphicDriver->SetBlendMode(batch.GetBlendMode());
+			m_pGraphicDriver->SetScissorTest(true, batch.GetScissor());
+			m_pGraphicDriver->BindTexture(batch.GetTexture(),TextureUnit::TU_DIFFUSE);
+			m_pGraphicDriver->Draw(TRIANGLE_LIST, batch.GetVertexStart() / UI_VERTEX_SIZE,
+				(batch.GetVertexEnd() - batch.GetVertexStart()) / UI_VERTEX_SIZE);
+			
+		}
 
 
 	}

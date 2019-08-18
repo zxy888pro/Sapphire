@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Graphics.h"
+#include "Math/Rect.h"
 
 
 namespace Sapphire
@@ -61,6 +62,9 @@ namespace Sapphire
 		virtual void SetDepthWrite(bool enable) = 0;
 		
 		virtual  void SetDepthTest(CompareMode mode) = 0;
+
+		//设置Shader
+		virtual void SetShaders(IShaderVariation* vs, IShaderVariation* ps, IShaderVariation* gs = NULL, IShaderVariation* cs = NULL) = 0;
 
 		//设置顶点缓冲区对象
 		virtual void  SetVertexBuffer(IVertexBuffer* vertexBuffer) = 0;
@@ -146,6 +150,11 @@ namespace Sapphire
 		virtual void ClearTransformSources() = 0;
 		///清理指定的shader参数源组
 		virtual void ClearParameterSource(ShaderParameterGroup group) = 0;
+
+		///  设置剪裁测试
+		virtual void SetScissorTest(bool enable, const IntRect& rect) = 0;
+		///  设置剪裁测试
+		virtual void SetScissorTest(bool enable, const Rect& rect = Rect::FULL, bool borderInclusive = true) = 0;
 
 	protected:
 

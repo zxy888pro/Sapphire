@@ -138,7 +138,7 @@ namespace Sapphire
 		virtual IShaderVariation*  GetShader(ShaderType type, const std::string& name, const std::string define = "") const;
 
 		//设置当前渲染使用的Shader
-		virtual void SetShaders(IShaderVariation* vs, IShaderVariation* ps);
+		virtual void SetShaders(IShaderVariation* vs, IShaderVariation* ps, IShaderVariation* gs = NULL, IShaderVariation* cs = NULL);
 
 		virtual IShaderVariation* GetVertexShader() const;
 		virtual IShaderVariation* GetPixelShader() const;
@@ -288,9 +288,9 @@ namespace Sapphire
 		///  设置Alpha混合模式
 		virtual void SetBlendMode(BlendMode mode);
 		///  设置剪裁测试
-		void SetScissorTest(bool enable, const IntRect& rect);
+		virtual void SetScissorTest(bool enable, const IntRect& rect);
 		///  设置剪裁测试
-		void SetScissorTest(bool enable, const Rect& rect = Rect::FULL, bool borderInclusive = true);
+		virtual void SetScissorTest(bool enable, const Rect& rect = Rect::FULL, bool borderInclusive = true);
 
 		
 
@@ -331,6 +331,7 @@ namespace Sapphire
 		virtual bool CheckExtension(const char* name);
 		//返回shadowMap 深度纹理格式， 如果位0则不支持
 		virtual uint GetHWShadowMapFormat() const { return m_shadowMapFormat; }
+
 
 		virtual GraphicDriverType getDriverType() const override;
 

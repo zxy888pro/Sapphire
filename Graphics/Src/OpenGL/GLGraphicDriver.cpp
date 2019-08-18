@@ -1517,7 +1517,7 @@ namespace Sapphire
 	}
 
 
-	void GLGraphicDriver::SetShaders(IShaderVariation* vs, IShaderVariation* ps)
+	void GLGraphicDriver::SetShaders(IShaderVariation* vs, IShaderVariation* ps, IShaderVariation* gs /*= NULL*/, IShaderVariation* cs /*= NULL*/)
 	{
 		//判断是否是当前使用的shader
 		if (vs == m_vertexShader && ps == m_pixelShader)
@@ -1649,6 +1649,7 @@ namespace Sapphire
 		
 
 	}
+
 
 	Sapphire::IShaderVariation* GLGraphicDriver::GetVertexShader() const
 	{
@@ -2121,6 +2122,11 @@ namespace Sapphire
 
 	int GLGraphicDriver::GetHWAlphaFormat()
 	{
+#ifndef GL_ES_VERSION_2_0
+		// Alpha format is deprecated on OpenGL 3+
+		if (GLGraphicDriver::GetGL3Support())
+			return GL_R8;
+#endif
 		return GL_ALPHA;
 	}
 

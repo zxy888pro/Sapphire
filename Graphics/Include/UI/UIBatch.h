@@ -38,8 +38,27 @@ namespace Sapphire
 
 		void AddOrMerge(std::vector<UIBatch>& batches);
 
+		uint GetVertexStart() const { return m_vertexStart; }
+
+		uint GetVertexEnd() const { return m_vertexEnd; }
+
+		void    SetTexture(ITexture* pTexture) { m_pTexture = pTexture; }
+
+		ITexture*  GetTexture() const { return m_pTexture; }
 
 		static Vector3			      posAdjust;     //Î»ÖÃµ÷Õû
+
+		BlendMode GetBlendMode() const { return m_blendMode; }
+
+		void     SetBlendMode(BlendMode mode){ m_blendMode = mode; }
+
+		Color	 GetColor() const { return m_color; }
+
+		void     SetColor(Color c) { m_color = c; }
+		
+		const IntRect&  GetScissor() const { return m_scissor; }
+
+
 
 	private:
 
