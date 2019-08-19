@@ -217,6 +217,10 @@ int main() {
 	TestThreadLock* thread = new TestThreadLock();
 	thread->Run();
 	}*/
+	std::string str1 = "tas";
+	std::string cont1 = "";
+	std::string cont2 = "-sdk";
+	str1 += cont1 + cont2;
 	Test1*  ta1[10];
 	memset(ta1, 0, sizeof(ta1));
 

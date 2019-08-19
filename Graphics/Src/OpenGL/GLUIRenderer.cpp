@@ -151,9 +151,9 @@ namespace Sapphire
 			}
 			m_pGraphicDriver->SetShaders(vs, ps);
 			if (m_pGraphicDriver->NeedParameterUpdate(SP_OBJECT, this))
-				m_pGraphicDriver->SetShaderParameter(VSP_MODEL, Matrix3x4::IDENTITY);
+				m_pGraphicDriver->SetShaderParameter(VSP_MODEL, Matrix3x4::IDENTITY); //对象位置变化
 			if (m_pGraphicDriver->NeedParameterUpdate(SP_CAMERA, this))
-				m_pGraphicDriver->SetShaderParameter(VSP_VIEWPROJ, projection);
+				m_pGraphicDriver->SetShaderParameter(VSP_VIEWPROJ, projection);  //相机投影
 			if (m_pGraphicDriver->NeedParameterUpdate(SP_MATERIAL, this))
 				m_pGraphicDriver->SetShaderParameter(PSP_MATDIFFCOLOR, Color(1.0f, 1.0f, 1.0f, 1.0f));
 

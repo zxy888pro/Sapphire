@@ -178,6 +178,20 @@ namespace Sapphire
 		if (!verEnd && GLGraphicDriver::GetGL3Support())
 			precompilieCode += "#version 300\n";
 
+		//如果不同类型加上不同define
+		switch (m_eType)
+		{
+		case VS:
+			precompilieCode += "#define COMPILEVS\n";
+		case PS:
+			precompilieCode += "#define COMPILEPS\n";
+		case GS:
+			precompilieCode += "#define COMPILEGS\n";
+		case CS:
+			precompilieCode += "#define COMPILECS\n";
+		default:
+			break;
+		}
 		/////声明最大骨骼数///////////
 		precompilieCode += "#define MAXBONES ";
 		precompilieCode += String(GLGraphicDriver::GetMaxBones());

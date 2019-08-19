@@ -1,0 +1,29 @@
+{
+	"shaders":
+	[
+		{
+			"alias":"",
+			"vertexShader":
+			{
+				"name":"",
+				"define":""
+			}，
+			"pixelShader":
+			{
+				"name":"",
+				"define":""
+			}，
+			"geometryShader":
+			{
+				"name":"",
+				"define":""
+			}，
+			"computeShader":
+			{
+				"name":"",
+				"define":""
+			}
+		} 
+	]
+	
+}
