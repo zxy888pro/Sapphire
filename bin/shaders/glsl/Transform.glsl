@@ -119,11 +119,11 @@ vec3 GetWorldTangent(mat4 modelMatrix)
 
 #else
 
-// Silence GLSL 150 deprecation warnings
+
 #ifdef GL3
 #define varying in
 
-// \todo: should not hardcode the number of MRT outputs according to defines
+
 #if defined(DEFERRED)
 out vec4 fragData[4];
 #elif defined(PREPASS)

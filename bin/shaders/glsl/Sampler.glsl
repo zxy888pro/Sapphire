@@ -45,9 +45,11 @@ vec3 DecodeNormal(vec4 normalInput)
     #endif
 }
 
+//把一个depth编码到RGB中
 vec3 EncodeDepth(float depth)
 {
     #ifndef GL3
+        //针对OpenGL3 废掉gl_FragData
         vec3 ret;
         depth *= 255.0;
         ret.x = floor(depth);
@@ -57,11 +59,11 @@ vec3 EncodeDepth(float depth)
         ret.xy *= 1.0 / 255.0;
         return ret;
     #else
-        // OpenGL3 可以使用不同的MRT格式，不需要这样编码
+        // OpenGL3 废掉gl_FragData, gl_FragColor,可以使用不同的MRT格式，不需要这样编码
         return vec3(depth, 0.0, 0.0);
     #endif
 }
-
+//从一个RGB中解码深度信息
 float DecodeDepth(vec3 depth)
 {
     #ifndef GL3
