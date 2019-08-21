@@ -198,9 +198,6 @@
     <ClInclude Include="Include\GraphicsEvent.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Renderer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Src\OpenGL\GLTexture.h">
       <Filter>源文件\OpenGL</Filter>
     </ClInclude>
@@ -218,6 +215,9 @@
     </ClInclude>
     <ClInclude Include="Src\OpenGL\GLShaderManager.h">
       <Filter>源文件\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\IRenderer.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

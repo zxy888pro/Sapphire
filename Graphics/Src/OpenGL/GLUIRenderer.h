@@ -6,16 +6,16 @@
 #include "GLGraphicDriver.h"
 #include "VertexBuffer.h"
 #include "UI/UIBatch.h"
-
+#include "IRenderer.h"
 
 
 namespace Sapphire
 {
 
-
-	class SAPPHIRE_CLASS GLUIRenderer : public BaseObject
+	//OpenGL的UI渲染器
+	class SAPPHIRE_CLASS GLUIRenderer : public IRenderer
 	{
-		SAPPHIRE_OBJECT(GLUIRenderer, BaseObject)
+		SAPPHIRE_OBJECT(IRenderer, GLUIRenderer)
 
 	public:
 
@@ -24,16 +24,16 @@ namespace Sapphire
 
 		void Initialize();
 
-		void Clear();
+		virtual void Clear();
 
 		//设置顶点数据到顶点缓冲区中
-		void SetVertexData(VertexBuffer* dest, const std::vector<float>& vertexData);
+		virtual void SetVertexData(VertexBuffer* dest, const std::vector<float>& vertexData);
 
 		//逻辑更新
-		void Update(float timeStep);
+		virtual void Update(float timeStep);
 
 		//更新准备渲染
-		void RenderUpdate();
+		virtual void RenderUpdate();
 
 
 		virtual void Render(bool resetRenderTargets);

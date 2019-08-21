@@ -2,10 +2,11 @@
 #ifdef COMPILEVS
 
 #ifdef GL3
-#define attribute in
+#define attribute in        //如果OpenGL3 替换attribute 为in  替换Varying为out
 #define varying out
 #endif
 
+//用glBindAttribLocation来绑定每个attribute变量的位置，然后用函数glVertexAttribPointer给每个变量赋值
 attribute vec4 iPos;
 attribute vec3 iNormal;
 attribute vec4 iColor;
@@ -96,22 +97,23 @@ vec3 GetBillboardNormal()
 
 vec3 GetWorldPos(mat4 modelMatrix)
 {
-    #if defined(BILLBOARD)
+    #if defined(BILLBOARD)  //如果是公共板
         return GetBillboardPos(iPos, iTexCoord2, modelMatrix);
     #else
-        return (iPos * modelMatrix).xyz;
+        return (iPos * modelMatrix).xyz;    //顶点位置变换到世界空间
     #endif
 }
 
-vec3 GetWorldNormal(mat4 modelMatrix)
+////获得世界空间的法向量
+vec3 GetWorldNormal(mat4 modelMatrix)   
 {
     #if defined(BILLBOARD)
         return GetBillboardNormal();
     #else
-        return normalize(iNormal * GetNormalMatrix(modelMatrix));
+        return normalize(iNormal * GetNormalMatrix(modelMatrix));   
     #endif
 }
-
+////获得世界空间的切向量
 vec3 GetWorldTangent(mat4 modelMatrix)
 {
     return normalize(iTangent.xyz * GetNormalMatrix(modelMatrix));
@@ -125,7 +127,7 @@ vec3 GetWorldTangent(mat4 modelMatrix)
 
 
 #if defined(DEFERRED)
-out vec4 fragData[4];
+out vec4 fragData[4];//延迟渲染
 #elif defined(PREPASS)
 out vec4 fragData[2];
 #else

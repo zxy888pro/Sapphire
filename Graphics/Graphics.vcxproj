@@ -127,7 +127,7 @@
     <ClInclude Include="Include\Material.h" />
     <ClInclude Include="Include\IShader.h" />
     <ClInclude Include="Include\Node.h" />
-    <ClInclude Include="Include\Renderer.h" />
+    <ClInclude Include="Include\IRenderer.h" />
     <ClInclude Include="Include\Scene.h" />
     <ClInclude Include="Include\SceneEventDef.h" />
     <ClInclude Include="Include\SceneNode.h" />

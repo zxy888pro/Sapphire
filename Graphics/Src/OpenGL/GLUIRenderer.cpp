@@ -10,9 +10,9 @@
 namespace Sapphire
 {
 
-	GLUIRenderer::GLUIRenderer(Core* pcore) :BaseObject(pcore)
+	GLUIRenderer::GLUIRenderer(Core* pcore) :IRenderer(pcore)
 	{
-		m_rootElement = new UIElment(pcore);
+		m_rootElement = new UIElment(pcore); //暂时创建一个测试UIElement
 	}
 
 	GLUIRenderer::~GLUIRenderer()

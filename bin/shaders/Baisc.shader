@@ -1,17 +1,14 @@
 {
-	"shaders":
-	[
-		{
 			"alias":"",
 			"vertexShader":
 			{
-				"name":"",
-				"define":""
+				"name":"glsl/Basic.vert",
+				"define":"NOUV VERTEXCOLOR"
 			}，
 			"pixelShader":
 			{
-				"name":"",
-				"define":""
+				"name":"glsl/Basic.frag",
+				"define":"VERTEXCOLOR"
 			}，
 			"geometryShader":
 			{
@@ -23,7 +20,5 @@
 				"name":"",
 				"define":""
 			}
-		} 
-	]
 	
 }

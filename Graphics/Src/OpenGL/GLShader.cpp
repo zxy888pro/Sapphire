@@ -311,7 +311,12 @@ namespace Sapphire
 	bool GLShader::LoadShaderScript(const char* scriptPath, ShaderType type)
 	{
 		std::string source = "";
-		FileStream fs(scriptPath, FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
+		PathA fullPath = m_pGraphicDriver->GetShaderPath();
+		fullPath.addTailSlash();
+		fullPath += scriptPath;
+		fullPath.normalize();
+
+		FileStream fs(fullPath.c_str(), FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
 		if (!fs.IsOpen())
 		{
 			return false;
