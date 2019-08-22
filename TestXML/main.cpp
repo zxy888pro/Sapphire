@@ -10,6 +10,11 @@
 
 namespace Sapphire
 {
+	class TestRef : public RefCounter
+	{
+	public:
+		int a = 0;
+	};
 
 	class TestMutexClass
 	{
@@ -223,6 +228,17 @@ int main() {
 	str1 += cont1 + cont2;
 	Test1*  ta1[10];
 	memset(ta1, 0, sizeof(ta1));
+	const char* pszStr = "hello jack";
+	const char* pszStr2 = "hello jack2";
+	TestRef* tr = new TestRef();
+	std::map<int, std::map<int,SharedPtr<TestRef>>> tesstMap;
+	tesstMap[1] = std::map<int, SharedPtr<TestRef>>();
+	auto i =  tesstMap.find(1);
+	i->second.insert(std::make_pair(1, SharedPtr<TestRef>(tr)));
+	auto k = i->second.find(1);
+	k->second->a = 25;
+	tesstMap.erase(i);
+ 
 
 	App* app = new App();
 	app->Initialize();

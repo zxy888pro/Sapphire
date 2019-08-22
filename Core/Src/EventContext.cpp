@@ -43,19 +43,57 @@ namespace Sapphire
 		m_eventMgr->BroadcastEvent(eEventType, eEvent, this, eventData);
 	}
 
-	void EventContext::SubscribeEvent(ushort eEventType, ushort eEvent)
+	void EventContext::SubscribeEvent(ushort eEventType, ushort eEvent, EventHandler* handler)
 	{
+		auto i = m_eventHandlerMap.find(eEventType);
+		if (i != m_eventHandlerMap.end())
+		{
+			auto evtTypeMap = i->second;
+			auto k = evtTypeMap.find(eEvent);
+			if (k != evtTypeMap.end())
+			{
+				if (k->second != handler)
+					evtTypeMap[eEvent] = handler;
+			}
+			else
+			{
+				evtTypeMap[eEvent] = handler;
+			}
+		}
+		else
+		{
+			m_eventHandlerMap.insert(std::make_pair(eEventType, std::map<ushort, SharedPtr<EventHandler>>()));
+			m_eventHandlerMap[eEventType][eEvent] = handler;
+		}
 		m_eventMgr->SubscribeEvent(eEventType, eEvent, this);
 	}
 
 	void EventContext::UnSubscribeEvent(ushort eEventType, ushort eEvent)
 	{
+		auto i = m_eventHandlerMap.find(eEventType);
+		if (i != m_eventHandlerMap.end())
+		{
+			auto k = i->second.find(eEvent);
+			if (k != i->second.end())
+			{
+				i->second.erase(k);
+			}
+		}
 		m_eventMgr->UnSubscribeEvent(eEventType, eEvent, this);
 	}
 
 	void EventContext::Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData /*= NULL*/)
 	{
 		//事件处理
+		auto i = m_eventHandlerMap.find(eEventType);
+		if (i != m_eventHandlerMap.end())
+		{
+			auto k = i->second.find(eEvent);
+			if (k != i->second.end())
+			{
+				k->second->Invoke(eventData);
+			}
+		}
 	}
 
 

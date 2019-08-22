@@ -4,42 +4,20 @@
 #include <map>
 #include <sigslot/sigslot.h>
 #include "Str.h"
+#include "Ptr.h"
 
 namespace Sapphire
 {
 	struct IEventMgr;
 	class  BaseObject;
 
-	class SAPPHIRE_CLASS EventContext : public sigslot::has_slots<>
-	{
-	public:
-		friend class Core;
-		EventContext();
-		virtual ~EventContext();
-	
-		virtual void Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData = NULL);
-		void FireEvent(ushort eEventType, ushort eEvent, void* eventData = NULL);
-		void SubscribeEvent(ushort eEventType, ushort eEvent);
-		void UnSubscribeEvent(ushort eEventType, ushort eEvent);
-
-	protected:
-
-	 
-
-	private:
-		typedef std::map<ushort, std::map<ushort, bool>> SUBSCRIBE_INFO;
-
-		SUBSCRIBE_INFO m_subsInfo;
-		IEventMgr*  m_eventMgr;
-		
-	};
 
 	//事件处理器
-	class SAPPHIRE_CLASS EventHandler
+	class SAPPHIRE_CLASS EventHandler : public RefCounter
 	{
 	public:
 
-		EventHandler(BaseObject* recevier):
+		EventHandler(BaseObject* recevier) :
 			m_recevier(recevier),
 			m_sender(0),
 			m_eventType(0),
@@ -59,7 +37,7 @@ namespace Sapphire
 
 		void	SetEvent(ushort eEventType, ushort eEvent)
 		{
-			
+
 			m_eventType = eEventType;
 			m_event = eEvent;
 		}
@@ -85,6 +63,32 @@ namespace Sapphire
 		void*			 m_usrData;
 
 	};
+
+	class SAPPHIRE_CLASS EventContext : public sigslot::has_slots<>
+	{
+	public:
+		friend class Core;
+		EventContext();
+		virtual ~EventContext();
+	
+		virtual void Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData = NULL);
+		void FireEvent(ushort eEventType, ushort eEvent, void* eventData = NULL);
+		void SubscribeEvent(ushort eEventType, ushort eEvent, EventHandler* handler = NULL);
+		void UnSubscribeEvent(ushort eEventType, ushort eEvent);
+
+	protected:
+
+	 
+
+	private:
+		typedef std::map<ushort, std::map<ushort, bool>> SUBSCRIBE_INFO;
+		typedef std::map<ushort, std::map<ushort, SharedPtr<EventHandler>>>  EVENTHANDLER_MAP;
+		SUBSCRIBE_INFO		 m_subsInfo;
+		EVENTHANDLER_MAP	m_eventHandlerMap;
+		IEventMgr*  m_eventMgr;
+		
+	};
+
 
 	template <class T>
 	class SAPPHIRE_CLASS EventHandlerImpl : public EventHandler
