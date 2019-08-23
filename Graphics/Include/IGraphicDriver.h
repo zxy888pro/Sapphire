@@ -13,6 +13,7 @@ namespace Sapphire
 	class   GPUObject;
 	struct  IVertexBuffer;
 	struct  IShaderVariation;
+	class   IRenderer;
 	
 
 	//OpenGL 与硬件层访问驱动类。  
@@ -32,6 +33,8 @@ namespace Sapphire
 
 		virtual void Init() = 0;
 		virtual void Release() = 0;
+
+		virtual SharedPtr<IRenderer> GetRenderer(const StringHash& key) const = 0;
 
 		/// 渲染帧的开始，如果设备有效可以渲染，返回true
 		virtual bool BeginFrame() = 0;

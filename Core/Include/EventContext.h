@@ -10,6 +10,7 @@ namespace Sapphire
 {
 	struct IEventMgr;
 	class  BaseObject;
+	class  Variant;
 
 
 	//事件处理器
@@ -86,6 +87,7 @@ namespace Sapphire
 		SUBSCRIBE_INFO		 m_subsInfo;
 		EVENTHANDLER_MAP	m_eventHandlerMap;
 		IEventMgr*  m_eventMgr;
+
 		
 	};
 
@@ -95,7 +97,7 @@ namespace Sapphire
 	{
 	public:
 		//定义一个指向成员函数的指针
-		typedef void (T::*HandlerFunctionPtr)(const char*, void*);
+		typedef void (T::*HandlerFunctionPtr)(ushort, ushort, void*);
 
 		EventHandlerImpl(T* receiver, HandlerFunctionPtr function) :
 			EventHandler(receiver),
@@ -114,7 +116,7 @@ namespace Sapphire
 		virtual void Invoke(void* eventData)
 		{
 			T* receiver = static_cast<T*>(m_recevier);
-			(receiver->*myFunction)(m_eventType, eventData);
+			(receiver->*myFunction)(m_eventType,m_event, eventData);
 		}
 
 	private:
@@ -123,7 +125,7 @@ namespace Sapphire
 		HandlerFunctionPtr myFunction;
 	};
 
-#define SAPPHIRE_HANDLER(className, function) (new Urho3D::EventHandlerImpl<className>(this, &className::function))
-#define SAPPHIRE_HANDLER_USERDATA(className, function, userData) (new Urho3D::EventHandlerImpl<className>(this, &className::function, userData))
+#define SAPPHIRE_HANDLER(className, function) (new Sapphire::EventHandlerImpl<className>(this, &className::function))
+#define SAPPHIRE_HANDLER_USERDATA(className, function, userData) (new Sapphire::EventHandlerImpl<className>(this, &className::function, userData))
 	
 }

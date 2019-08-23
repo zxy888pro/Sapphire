@@ -8,6 +8,7 @@
 #include "IRenderSystem.h"
 #include "FileSystem.h"
 #include "Input.h"
+#include "IRenderer.h"
 
 namespace Sapphire
 {
@@ -86,6 +87,7 @@ namespace Sapphire
 
 		IGraphicDriver* pGraphicDriver = dynamic_cast<IGraphicDriver*>(m_pCore->GetSubSystemWithType(ESST_GRAPHICDRIVER));
 		m_assert(pGraphicDriver);
+		
 		IRenderSystem* pRenderSys = dynamic_cast<IRenderSystem*>(m_pCore->GetSubSystemWithType(ESST_RENDERSYSTEM));
 		m_assert(pRenderSys);
 		{
@@ -118,11 +120,19 @@ namespace Sapphire
 
 			
 		}
-		
+		SharedPtr<IRenderer> pUIRender = pGraphicDriver->GetRenderer(RENDERER_UI);
+		SharedPtr<IRenderer> pSceneRender = pGraphicDriver->GetRenderer(RENDERER_SCENE);
+
+		if (pSceneRender.Null())
+		{
+			SAPPHIRE_LOGERROR("SceneRenderer is null");
+		}
+
 
 
 		m_frameTimer.Reset();
 		m_bInitialized = true;
+
 		return m_bInitialized;
 	}
 
@@ -160,6 +170,7 @@ namespace Sapphire
 		Input* pInputSys = dynamic_cast<Input*>(m_pCore->GetSubSystemWithType(ESST_INPUTSYSTEM));
 		m_assert(pInputSys);
 
+		
 		timeSys->BeginFrame(m_uTimeStep);
 		if (m_bPauseMinimized && pInputSys->IsWindowMinimized())
 		{

@@ -19,7 +19,7 @@ namespace Sapphire
 
 	public:
 
-		GLUIRenderer(Core* pcore);
+		GLUIRenderer(Core* pcore, GLGraphicDriver* pDriver);
 		virtual ~GLUIRenderer();
 
 		void Initialize();
@@ -40,13 +40,19 @@ namespace Sapphire
 
 
 
-		virtual void Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData = NULL) override;
+		//virtual void Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData = NULL) override;
 
 	protected:
 
 		void		GetBatches(UIElment* element, IntRect curScissor);
 
 		void		Render(bool resetRenderTargets, VertexBuffer* buffer, const std::vector<UIBatch>& batches, unsigned batchStart, unsigned batchEnd);
+
+	private:
+
+		void		OnBeginFrame(ushort eEventType, ushort eEvent, void* eventData);
+		void		OnRenderUpdate(ushort eEventType, ushort eEvent, void* eventData);
+		void		OnPostUpdate(ushort eEventType, ushort eEvent, void* eventData);
 
 	private:
 

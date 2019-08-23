@@ -250,7 +250,7 @@ namespace Sapphire
 		}
 		//订阅一个事件渲染表面更新, 有更新时调用RenderSurfaceUpdate
 		if (m_eUsage == TEXTURE_RENDERTARGET)
-			SubscribeEvent(ET_GRAPHIC_EVENT, EVENT_GRAPHICS_RENDERSURFACEUPDATE);
+			SubscribeEvent(ET_GRAPHIC_EVENT, EVENT_GRAPHICS_RENDERSURFACEUPDATE,SAPPHIRE_HANDLER(GLTexture2D, OnRendersurfaceUpdate));
 		else
 			UnSubscribeEvent(ET_GRAPHIC_EVENT,EVENT_GRAPHICS_RENDERSURFACEUPDATE);
 		//大小和像素格式参数改变需重新创建空纹理
@@ -449,6 +449,11 @@ namespace Sapphire
 		return true;
 	}
 
+	void GLTexture2D::OnRendersurfaceUpdate(ushort eEventType, ushort eEvent, void* eventData)
+	{
+		RenderSurfaceUpdate();
+	}
+
 	void GLTexture2D::OnLoadStart()
 	{
 		/*m_eState = ResourceState_Loading;
@@ -473,20 +478,20 @@ namespace Sapphire
 		BaseResource::OnLoadError();
 	}
 
-	void GLTexture2D::Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData /*= NULL*/)
-	{
-		if (eEventType == ET_GRAPHIC_EVENT)
-		{
-			switch (eEvent)
-			{
-			case EVENT_GRAPHICS_RENDERSURFACEUPDATE:
-				RenderSurfaceUpdate();
-				break;
-			default:
-				break;
-			}
-		}
-		
-	}
+	//void GLTexture2D::Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData /*= NULL*/)
+	//{
+	//	if (eEventType == ET_GRAPHIC_EVENT)
+	//	{
+	//		switch (eEvent)
+	//		{
+	//		case EVENT_GRAPHICS_RENDERSURFACEUPDATE:
+	//			RenderSurfaceUpdate();
+	//			break;
+	//		default:
+	//			break;
+	//		}
+	//	}
+	//	
+	//}
 
 }

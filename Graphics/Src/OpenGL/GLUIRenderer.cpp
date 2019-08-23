@@ -10,7 +10,7 @@
 namespace Sapphire
 {
 
-	GLUIRenderer::GLUIRenderer(Core* pcore) :IRenderer(pcore)
+	GLUIRenderer::GLUIRenderer(Core* pcore, GLGraphicDriver* pDriver) : IRenderer(pcore), m_pGraphicDriver(pDriver)
 	{
 		m_rootElement = new UIElment(pcore); //暂时创建一个测试UIElement
 	}
@@ -22,16 +22,15 @@ namespace Sapphire
 
 	void GLUIRenderer::Initialize()
 	{
-		m_pGraphicDriver = m_pCore->GetSubSystem<IGraphicDriver>();
 		if (!m_pGraphicDriver->IsInitialized())
 			return;
 		m_rootElement->SetName("root");
 		m_rootElement->SetSize(IntVector2(400, 150));
 		m_vertexBuffer = SharedPtr<VertexBuffer>(new VertexBuffer(m_pCore, m_pGraphicDriver));
 		
-		SubscribeEvent(ET_CORE_EVENT, EVENT_CORE_BEGINFRAME);
-		SubscribeEvent(ET_CORE_EVENT, EVENT_CORE_POSTUPDATE);
-		SubscribeEvent(ET_CORE_EVENT, EVENT_CORE_RENDERUPDATE);
+		SubscribeEvent(ET_CORE_EVENT, EVENT_CORE_BEGINFRAME,SAPPHIRE_HANDLER(GLUIRenderer, OnBeginFrame));
+		SubscribeEvent(ET_CORE_EVENT, EVENT_CORE_POSTUPDATE, SAPPHIRE_HANDLER(GLUIRenderer, OnPostUpdate));
+		SubscribeEvent(ET_CORE_EVENT, EVENT_CORE_RENDERUPDATE, SAPPHIRE_HANDLER(GLUIRenderer, OnRenderUpdate));
 		m_bIsInitilaized = true;
 	}
 
@@ -168,35 +167,50 @@ namespace Sapphire
 
 	}
 
-	void GLUIRenderer::Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData /*= NULL*/)
+	void GLUIRenderer::OnBeginFrame(ushort eEventType, ushort eEvent, void* eventData)
 	{
-		switch (eEventType)
-		{
-		case ET_CORE_EVENT:
-		{
-			switch (eEvent)
-			{
-			case EVENT_CORE_BEGINFRAME:
-			{
 
-			}
-				break;
-			case EVENT_CORE_RENDERUPDATE:
-			{
-				RenderUpdate();
-			}
-			break;
-			default:
-				break;
-			}
-		}
-			break;
-		case ET_GRAPHIC_EVENT:
-			break;
-		default:
-			break;
-		}
 	}
+
+	void GLUIRenderer::OnRenderUpdate(ushort eEventType, ushort eEvent, void* eventData)
+	{
+		RenderUpdate();
+	}
+
+	void GLUIRenderer::OnPostUpdate(ushort eEventType, ushort eEvent, void* eventData)
+	{
+
+	}
+
+	//void GLUIRenderer::Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData /*= NULL*/)
+	//{
+	//	switch (eEventType)
+	//	{
+	//	case ET_CORE_EVENT:
+	//	{
+	//		switch (eEvent)
+	//		{
+	//		case EVENT_CORE_BEGINFRAME:
+	//		{
+
+	//		}
+	//			break;
+	//		case EVENT_CORE_RENDERUPDATE:
+	//		{
+	//			RenderUpdate();
+	//		}
+	//		break;
+	//		default:
+	//			break;
+	//		}
+	//	}
+	//		break;
+	//	case ET_GRAPHIC_EVENT:
+	//		break;
+	//	default:
+	//		break;
+	//	}
+	//}
 
 	void GLUIRenderer::GetBatches(UIElment* element, IntRect curScissor)
 	{

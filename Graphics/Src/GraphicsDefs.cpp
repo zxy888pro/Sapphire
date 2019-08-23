@@ -2,7 +2,8 @@
 
 namespace Sapphire
 {
-
+	extern	SAPPHIRE_API const StringHash RENDERER_SCENE("SceneRenderer");
+	extern	SAPPHIRE_API const StringHash RENDERER_UI("UIRenderer");
 	extern SAPPHIRE_API const StringHash VSP_AMBIENTSTARTCOLOR("AmbientStartColor");
 	extern SAPPHIRE_API const StringHash VSP_AMBIENTENDCOLOR("AmbientEndColor");
 	extern SAPPHIRE_API const StringHash VSP_BILLBOARDROT("BillboardRot");

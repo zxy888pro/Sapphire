@@ -46,7 +46,8 @@ namespace Sapphire
 		
 
 
-		virtual void Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData = NULL) override;
+		//virtual void Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData = NULL) override;
+
 	public:
 
 		bool	Load(const char* resName);  //加载资源
@@ -57,6 +58,11 @@ namespace Sapphire
 		bool SetData(SharedPtr<ImageRes> img, bool useAlpha = false);  //设置纹理数据,-包括mipmap ,  在只有一個通道的時候useAlpha表示是alpha還是明度
 		//获取渲染表面
 		GLRenderSurface* GetRenderSurface() const { return m_renderSurface; }
+
+
+	private:
+
+		void OnRendersurfaceUpdate(ushort eEventType, ushort eEvent, void* eventData);
 
 	protected:
 

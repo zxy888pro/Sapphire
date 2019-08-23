@@ -48,7 +48,7 @@ namespace Sapphire
 		virtual void ThreadFunc() override
 		{
 			ImageRes* img1 = new ImageRes(pCore, "container2.png");
-			resourceLoader->LoadResource(img1);
+			resourceLoader->LoadResource(img1,true);
 			while (getExitFlag())
 			{
 

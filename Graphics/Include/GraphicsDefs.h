@@ -283,6 +283,11 @@ namespace Sapphire
 	static const int MAX_RENDERTARGETS = 4;
 
 
+	//Renderer名字
+	extern	SAPPHIRE_API const StringHash RENDERER_SCENE;
+	extern	SAPPHIRE_API const StringHash RENDERER_UI;
+
+
 	// 内建的Shader参数
 	extern SAPPHIRE_API const StringHash VSP_AMBIENTSTARTCOLOR;
 	extern SAPPHIRE_API const StringHash VSP_AMBIENTENDCOLOR;

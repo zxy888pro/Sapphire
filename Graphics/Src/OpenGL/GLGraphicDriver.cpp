@@ -19,6 +19,8 @@
 #include "GLRenderSystem.h"
 #include "GLShader.h"
 #include "GLShaderManager.h"
+#include "GLUIRenderer.h"
+
 
 
 
@@ -230,6 +232,22 @@ namespace Sapphire
 		safeDelete(m_pShaderScriptMgr);
 	}
 
+	void GLGraphicDriver::AddRenderer(const StringHash& key, SharedPtr<IRenderer> renderer)
+	{
+		if (renderer.NotNull())
+			m_glRenderers[key] = renderer;
+	}
+
+	Sapphire::SharedPtr<Sapphire::IRenderer> GLGraphicDriver::GetRenderer(const StringHash& key) const
+	{
+		auto it = m_glRenderers.find(key);
+		if (it != m_glRenderers.end())
+		{
+			return it->second;
+		}
+		return SharedPtr<IRenderer>();
+	}
+
 	void GLGraphicDriver::Init()
 	{
 		
@@ -248,6 +266,11 @@ namespace Sapphire
 		IRenderSystem* pRenderSys = new GLRenderSystem(m_pCore,this);
 		pRenderSys->Initialize();
 		m_pCore->RegisterSubSystem<IRenderSystem>(pRenderSys, ESST_RENDERSYSTEM);
+
+		//´´½¨UIäÖÈ¾Æ÷
+		SharedPtr<IRenderer> renderer = SharedPtr<IRenderer>(new GLUIRenderer(m_pCore,this));
+		AddRenderer(RENDERER_UI, renderer);
+
 		m_bIsInitialized = true;
 
 	}

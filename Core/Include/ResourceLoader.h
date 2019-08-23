@@ -37,8 +37,11 @@ namespace Sapphire
 
 		void Release();
 
+		void OnResourceRequestEvent(ushort eEventType, ushort eEvent, void* eventData);
 
-		virtual void Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData = NULL) override;
+		void OnResourceLoadedEvent(ushort eEventType, ushort eEvent, void* eventData);
+
+		//virtual void Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData = NULL) override;
 
 	protected:
 

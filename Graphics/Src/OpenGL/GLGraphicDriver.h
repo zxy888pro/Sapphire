@@ -51,6 +51,7 @@ namespace Sapphire
 	class GLDisplayContext;
 	class GPUObject;
 	class GLShaderManager;
+	class IRenderer;
 
 
 	///方便顶点更新的CPU端缓冲区
@@ -106,6 +107,11 @@ namespace Sapphire
 
 		GLGraphicDriver(Core* pCore);
 		virtual ~GLGraphicDriver();
+
+
+		
+
+		virtual SharedPtr<IRenderer> GetRenderer(const StringHash& key) const;
 
 		virtual void Init();
 
@@ -386,6 +392,8 @@ namespace Sapphire
 
 	private:
 
+		void AddRenderer(const StringHash& key, SharedPtr<IRenderer> renderer);
+
 		void CheckFeature();
 
 		void Release(bool clearGpuObjects, bool closeWindow); //释放清理GPU资源和窗口
@@ -399,6 +407,8 @@ namespace Sapphire
 		ShaderScriptMgr*   m_pShaderScriptMgr;
 		GLRenderSystem*  m_renderSys;
 		GLDisplayContext*  m_displayContext;
+
+		std::unordered_map<StringHash, SharedPtr<IRenderer>, StringHashFunc, StringHashCMP> m_glRenderers;
 
 		static  bool   m_gl3Support;
 

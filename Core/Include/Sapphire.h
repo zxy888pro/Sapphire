@@ -14,5 +14,6 @@
 #include <BaseResource.h>
 #include <Core.h>
 #include <logUtil.h>
+#include "EventContext.h"
 
 #endif //__SAPPHIRE__

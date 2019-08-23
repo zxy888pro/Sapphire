@@ -1,5 +1,5 @@
 #include "TimeSystem.h"
-
+#include "Variant.h"
 
 
 namespace Sapphire
@@ -117,11 +117,19 @@ namespace Sapphire
 			++frameNumber_;
 
 		timeStep_ = timeStep;
+
+		VariantVector eventData;
+		eventData[0] = frameNumber_;
+		eventData[1] = timeStep_;
+		//发送开始一帧的事件
+		FireEvent(ET_CORE_EVENT, EVENT_CORE_BEGINFRAME, (void*)&eventData);
+
 	}
 
 	void TimeSystem::EndFrame()
 	{
-
+		//发送结束一帧的事件
+		FireEvent(ET_CORE_EVENT, EVENT_CORE_ENDFRAME);
 	}
 
 	void TimeSystem::SetTimerPeriod(unsigned mSec)

@@ -1,6 +1,7 @@
 #include "EventContext.h"
 #include <IEventMgr.h>
 #include <Core.h>
+#include "Variant.h"
 
 namespace Sapphire
 {
@@ -48,7 +49,7 @@ namespace Sapphire
 		auto i = m_eventHandlerMap.find(eEventType);
 		if (i != m_eventHandlerMap.end())
 		{
-			auto evtTypeMap = i->second;
+			auto& evtTypeMap = i->second;
 			auto k = evtTypeMap.find(eEvent);
 			if (k != evtTypeMap.end())
 			{
