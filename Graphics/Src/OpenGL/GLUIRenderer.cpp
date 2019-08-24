@@ -13,6 +13,7 @@ namespace Sapphire
 	GLUIRenderer::GLUIRenderer(Core* pcore, GLGraphicDriver* pDriver) : IRenderer(pcore), m_pGraphicDriver(pDriver)
 	{
 		m_rootElement = new UIElment(pcore); //暂时创建一个测试UIElement
+		Initialize();
 	}
 
 	GLUIRenderer::~GLUIRenderer()
@@ -22,8 +23,7 @@ namespace Sapphire
 
 	void GLUIRenderer::Initialize()
 	{
-		if (!m_pGraphicDriver->IsInitialized())
-			return;
+		m_assert(m_pGraphicDriver);
 		m_rootElement->SetName("root");
 		m_rootElement->SetSize(IntVector2(400, 150));
 		m_vertexBuffer = SharedPtr<VertexBuffer>(new VertexBuffer(m_pCore, m_pGraphicDriver));
@@ -169,17 +169,18 @@ namespace Sapphire
 
 	void GLUIRenderer::OnBeginFrame(ushort eEventType, ushort eEvent, void* eventData)
 	{
-
+		SAPPHIRE_LOG("GLUIRenderer::OnBeginFrame");
 	}
 
 	void GLUIRenderer::OnRenderUpdate(ushort eEventType, ushort eEvent, void* eventData)
 	{
+		SAPPHIRE_LOG("GLUIRenderer::OnRenderUpdate");
 		RenderUpdate();
 	}
 
 	void GLUIRenderer::OnPostUpdate(ushort eEventType, ushort eEvent, void* eventData)
 	{
-
+		SAPPHIRE_LOG("GLUIRenderer::OnPostUpdate");
 	}
 
 	//void GLUIRenderer::Invoke(ushort eEventType, ushort eEvent, EventContext* src, void* eventData /*= NULL*/)

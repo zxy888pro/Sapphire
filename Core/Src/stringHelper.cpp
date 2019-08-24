@@ -68,6 +68,18 @@ namespace Sapphire
 		return strRet;
 	}
 
+	std::string StringFormatA(const std::string& fmt, ...)
+	{
+		char szBuffer[FORMAT_MSG_BUFFER_SIZE + 1] = { 0 };
+		memset(szBuffer, 0, FORMAT_MSG_BUFFER_SIZE + 1);
+		va_list args;
+		va_start(args, fmt);
+		vsnprintf(szBuffer, FORMAT_MSG_BUFFER_SIZE, fmt.c_str(), args);
+		va_end(args);
+		std::string strRet = szBuffer;
+		return strRet;
+	}
+
 	int ReplaceA(std::string& source, const std::string& replaceThis, const std::string& replaceWith)
 	{
 		unsigned nextPos = 0;
@@ -133,6 +145,18 @@ namespace Sapphire
 	}
 
 
+
+	std::wstring StringFormatW(const std::wstring& fmt, ...)
+	{
+		wchar_t szBuffer[FORMAT_MSG_BUFFER_SIZE + 1] = { 0 };
+		memset(szBuffer, 0, FORMAT_MSG_BUFFER_SIZE + 1);
+		va_list args;
+		va_start(args, fmt);
+		vswprintf(szBuffer, FORMAT_MSG_BUFFER_SIZE, fmt.c_str(), args);
+		va_end(args);
+		std::wstring strRet = szBuffer;
+		return strRet;
+	}
 
 	size_t StringFindNoCase(std::string strSource, const char* szTarget)
 	{

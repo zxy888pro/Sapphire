@@ -1,31 +1,31 @@
-// ConstantBufferéœ€è¦OpenGL3 ï¼ˆOpenGL3æ‰æ”¯æŒUBOï¼ŒConstantBufferæ˜¯å¯¹åº”Dxçš„å«æ³•ï¼‰
+// ConstantBufferĞèÒªOpenGL3 £¨OpenGL3²ÅÖ§³ÖUBO£¬ConstantBufferÊÇ¶ÔÓ¦DxµÄ½Ğ·¨£©
 
 #if !defined(GL3) || !defined(USE_CBUFFERS)
 
-// OpenGL 2 uniforms (ä¸æ”¯æŒUBO)
+// OpenGL 2 uniforms (²»Ö§³ÖUBO)
 
-//Vertex Shader éƒ¨åˆ†
+//Vertex Shader ²¿·Ö
 #ifdef COMPILEVS
           
 // Vertex shader uniforms
-uniform vec3 cAmbientStartColor;        //åŠ¨ç”»å¼€å§‹é¢œè‰²
-uniform vec3 cAmbientEndColor;          //åŠ¨ç”»ç»“æŸé¢œè‰²
-uniform mat3 cBillboardRot;             //å…¬å‘Šæ¿æ—‹è½¬çŸ©é˜µ
-uniform vec3 cCameraPos;                //ç›¸æœºä½ç½®
-uniform mat3 cCameraRot;                //ç›¸æœºæ—‹è½¬
-uniform float cNearClip;                //è¿‘è£å¹³é¢
-uniform float cFarClip;                 //è¿œè£å¹³é¢
-uniform vec4 cDepthMode;                //æ·±åº¦æ¨¡å¼
-uniform vec3 cFrustumSize;              //è§†æ¤ä½“å¤§å°
-uniform float cDeltaTime;               //å¢é‡æ—¶é—´
-uniform float cElapsedTime;             //å·²é€å»æ—¶é—´
-uniform vec4 cGBufferOffsets;           //GBufferåç§»
-uniform vec3 cLightDir;                 //å…‰æºæ–¹å‘
-uniform vec4 cLightPos;                 //å…‰æºä½ç½®
-uniform mat4 cModel;                    //modelçŸ©é˜µ
-uniform mat4 cViewProj;                 //viewçŸ©é˜µ
-uniform vec4 cUOffset;                  //uåç§»
-uniform vec4 cVOffset;                  //våç§»
+uniform vec3 cAmbientStartColor;        //¶¯»­¿ªÊ¼ÑÕÉ«
+uniform vec3 cAmbientEndColor;          //¶¯»­½áÊøÑÕÉ«
+uniform mat3 cBillboardRot;             //¹«¸æ°åĞı×ª¾ØÕó
+uniform vec3 cCameraPos;                //Ïà»úÎ»ÖÃ
+uniform mat3 cCameraRot;                //Ïà»úĞı×ª
+uniform float cNearClip;                //½ü²ÃÆ½Ãæ
+uniform float cFarClip;                 //Ô¶²ÃÆ½Ãæ
+uniform vec4 cDepthMode;                //Éî¶ÈÄ£Ê½
+uniform vec3 cFrustumSize;              //ÊÓ×µÌå´óĞ¡
+uniform float cDeltaTime;               //ÔöÁ¿Ê±¼ä
+uniform float cElapsedTime;             //ÒÑÊÅÈ¥Ê±¼ä
+uniform vec4 cGBufferOffsets;           //GBufferÆ«ÒÆ
+uniform vec3 cLightDir;                 //¹âÔ´·½Ïò
+uniform vec4 cLightPos;                 //¹âÔ´Î»ÖÃ
+uniform mat4 cModel;                    //model¾ØÕó
+uniform mat4 cViewProj;                 //view¾ØÕó
+uniform vec4 cUOffset;                  //uÆ«ÒÆ
+uniform vec4 cVOffset;                  //vÆ«ÒÆ
 uniform mat4 cZone;
 #if !defined(GL_ES) || defined(WEBGL)
     uniform mat4 cLightMatrices[4];
@@ -33,18 +33,18 @@ uniform mat4 cZone;
     uniform mat4 cLightMatrices[2];
 #endif
 #ifdef SKINNED
-    //è’™çš®çŸ©é˜µéœ€å®šä¹‰MAXBONES
+    //ÃÉÆ¤¾ØÕóĞè¶¨ÒåMAXBONES
     uniform vec4 cSkinMatrices[MAXBONES*3];
 #endif
 #ifdef NUMVERTEXLIGHTS
-    uniform vec4 cVertexLights[4*3];       //æœ€å¤§é¡¶ç‚¹å…‰æºæ•°
+    uniform vec4 cVertexLights[4*3];       //×î´ó¶¥µã¹âÔ´Êı
 #endif
 #ifdef GL3
-    uniform vec4 cClipPlane;                //å‰ªè£å¹³é¢
+    uniform vec4 cClipPlane;                //¼ô²ÃÆ½Ãæ
 #endif
 #endif
 
-//PixelShader éƒ¨åˆ†
+//PixelShader ²¿·Ö
 #ifdef COMPILEPS
 
 // Pixel shader uniforms
@@ -80,8 +80,8 @@ uniform mat4 cLightMatricesPS[4];
 
 #else
 
-// OpenGL 3 uniforms (æ”¯æŒUBO)
-//Vertex Shader éƒ¨åˆ†
+// OpenGL 3 uniforms (Ö§³ÖUBO)
+//Vertex Shader ²¿·Ö
 #ifdef COMPILEVS
 
 uniform FrameVS
@@ -143,7 +143,7 @@ uniform ObjectVS
 #endif
 
 
-//Pixel Shaderéƒ¨åˆ†
+//Pixel Shader²¿·Ö
 #ifdef COMPILEPS
 
 // Pixel shader uniforms

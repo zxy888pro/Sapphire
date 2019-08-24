@@ -119,6 +119,7 @@ namespace Sapphire
 		timeStep_ = timeStep;
 
 		VariantVector eventData;
+		eventData.resize(2);
 		eventData[0] = frameNumber_;
 		eventData[1] = timeStep_;
 		//发送开始一帧的事件

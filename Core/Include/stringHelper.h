@@ -27,7 +27,11 @@ namespace Sapphire
 
 	std::string StringFormatA(const char *fmt, ...);
 
+	std::string StringFormatA(const std::string& fmt, ...);
+
 	std::wstring StringFormatW(wchar_t *fmt, ...);
+
+	std::wstring StringFormatW(const std::wstring& fmt, ...);
 
 	size_t StringFindNoCase(std::string strSource, const char* szTarget);
 	

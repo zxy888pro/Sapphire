@@ -258,7 +258,7 @@ namespace Sapphire
 		{
 			return false;
 		}
-		while (ch != '\n')
+		while (ch != '\n' && ch != EOF)
 		{
 			ss << ch;
 			++iCount;

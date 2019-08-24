@@ -45,11 +45,11 @@ vec3 DecodeNormal(vec4 normalInput)
     #endif
 }
 
-//æŠŠä¸€ä¸ªdepthç¼–ç åˆ°RGBä¸­
+//°ÑÒ»¸ödepth±àÂëµ½RGBÖĞ
 vec3 EncodeDepth(float depth)
 {
     #ifndef GL3
-        //é’ˆå¯¹OpenGL3 åºŸæ‰gl_FragData
+        //Õë¶ÔOpenGL3 ·Ïµôgl_FragData
         vec3 ret;
         depth *= 255.0;
         ret.x = floor(depth);
@@ -59,18 +59,18 @@ vec3 EncodeDepth(float depth)
         ret.xy *= 1.0 / 255.0;
         return ret;
     #else
-        // OpenGL3 åºŸæ‰gl_FragData, gl_FragColor,å¯ä»¥ä½¿ç”¨ä¸åŒçš„MRTæ ¼å¼ï¼Œä¸éœ€è¦è¿™æ ·ç¼–ç 
+        // OpenGL3 ·Ïµôgl_FragData, gl_FragColor,¿ÉÒÔÊ¹ÓÃ²»Í¬µÄMRT¸ñÊ½£¬²»ĞèÒªÕâÑù±àÂë
         return vec3(depth, 0.0, 0.0);
     #endif
 }
-//ä»ä¸€ä¸ªRGBä¸­è§£ç æ·±åº¦ä¿¡æ¯
+//´ÓÒ»¸öRGBÖĞ½âÂëÉî¶ÈĞÅÏ¢
 float DecodeDepth(vec3 depth)
 {
     #ifndef GL3
         const vec3 dotValues = vec3(1.0, 1.0 / 255.0, 1.0 / (255.0 * 255.0));
         return dot(depth, dotValues);
     #else
-       // OpenGL3 å¯ä»¥ä½¿ç”¨ä¸åŒçš„MRTæ ¼å¼ï¼Œä¸éœ€è¦è¿™æ ·ç¼–ç 
+       // OpenGL3 ¿ÉÒÔÊ¹ÓÃ²»Í¬µÄMRT¸ñÊ½£¬²»ĞèÒªÕâÑù±àÂë
         return depth.r;
     #endif
 }

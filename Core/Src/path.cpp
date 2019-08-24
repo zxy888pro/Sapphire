@@ -8,11 +8,15 @@
 #ifdef SAPPHIRE_WIN
 #include <windows.h>
 #include <psapi.h>
+#include <Shlwapi.h>
 #endif // SAPPHIRE_WIN
 
 
 SAPPHIRE_API bool Sapphire::FileIsExistA(const char* path)
 {
+#ifdef SAPPHIRE_WIN
+	return PathFileExistsA(path);
+#else
 	struct _stat fileStat;
 	if (!((_stat(path, &fileStat) == 0) && (fileStat.st_mode & _S_IFREG)))
 	{
@@ -20,10 +24,15 @@ SAPPHIRE_API bool Sapphire::FileIsExistA(const char* path)
 
 	}
 	return true;
+#endif
+	
 }
 
 SAPPHIRE_API bool Sapphire::FileIsExistW(const wchar_t* path)
 {
+#ifdef SAPPHIRE_WIN
+	return PathFileExistsW(path);
+#else
 	struct _stat fileStat;
 	if (!((_wstat(path, &fileStat) == 0) && (fileStat.st_mode & _S_IFREG)))
 	{
@@ -31,10 +40,15 @@ SAPPHIRE_API bool Sapphire::FileIsExistW(const wchar_t* path)
 
 	}
 	return true;
+#endif
+	
 }
 
 SAPPHIRE_API bool Sapphire::DirIsExistA(const char* path)
 {
+#ifdef SAPPHIRE_WIN
+	return PathIsDirectoryA(path);
+#else
 	struct _stat fileStat;
 	if (!((_stat(path, &fileStat) == 0) && (fileStat.st_mode & _S_IFDIR)))
 	{
@@ -42,10 +56,15 @@ SAPPHIRE_API bool Sapphire::DirIsExistA(const char* path)
 
 	}
 	return false;
+#endif
+	
 }
 
 SAPPHIRE_API bool Sapphire::DirIsExistW(const wchar_t* path)
 {
+#ifdef SAPPHIRE_WIN
+	return PathIsDirectoryW(path);
+#else
 	struct _stat fileStat;
 	if (!((_wstat(path, &fileStat) == 0) && (fileStat.st_mode & _S_IFDIR)))
 	{
@@ -53,6 +72,8 @@ SAPPHIRE_API bool Sapphire::DirIsExistW(const wchar_t* path)
 
 	}
 	return false;
+#endif
+	
 }
 
 SAPPHIRE_API size_t Sapphire::GetFileSizeA(const char* fileName)

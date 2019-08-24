@@ -17,11 +17,11 @@ void main()
     #ifdef VERTEXCOLOR
         diffColor *= vColor;
     #endif
-    //é¡¶ç‚¹è‰²
+    //¶¥µãÉ«
     #if (!defined(DIFFMAP)) && (!defined(ALPHAMAP))
         gl_FragColor = diffColor;
     #endif
-    //æ¼«åå°„è´´å›¾
+    //Âş·´ÉäÌùÍ¼
     #ifdef DIFFMAP
         vec4 diffInput = texture2D(sDiffMap, vTexCoord);
         #ifdef ALPHAMASK
@@ -30,7 +30,7 @@ void main()
         #endif
         gl_FragColor = diffColor * diffInput;
     #endif
-    //alphaè´´å›¾
+    //alphaÌùÍ¼
     #ifdef ALPHAMAP
         #ifdef GL3
             float alphaInput = texture2D(sDiffMap, vTexCoord).r;

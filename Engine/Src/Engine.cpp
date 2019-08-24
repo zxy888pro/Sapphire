@@ -122,7 +122,7 @@ namespace Sapphire
 		}
 		SharedPtr<IRenderer> pUIRender = pGraphicDriver->GetRenderer(RENDERER_UI);
 		SharedPtr<IRenderer> pSceneRender = pGraphicDriver->GetRenderer(RENDERER_SCENE);
-
+		
 		if (pSceneRender.Null())
 		{
 			SAPPHIRE_LOGERROR("SceneRenderer is null");
@@ -205,13 +205,21 @@ namespace Sapphire
 	void Engine::Render()
 	{
 		IGraphicDriver* pGraphicDriver =  dynamic_cast<IGraphicDriver*>(m_pCore->GetSubSystemWithType(ESST_GRAPHICDRIVER));
-		IRenderSystem*	pRenderSystem  =  dynamic_cast<IRenderSystem*>(m_pCore->GetSubSystemWithType(ESST_RENDERSYSTEM));
+		//IRenderSystem*	pRenderSystem  =  dynamic_cast<IRenderSystem*>(m_pCore->GetSubSystemWithType(ESST_RENDERSYSTEM));
+		SharedPtr<IRenderer> pUIRenderer = pGraphicDriver->GetRenderer(RENDERER_UI);
+		SharedPtr<IRenderer> pSceneRender = pGraphicDriver->GetRenderer(RENDERER_SCENE);
 		if (pGraphicDriver && pGraphicDriver->BeginFrame())
 		{
 			//先渲染场景物件
-			pRenderSystem->Render();
+			if (pSceneRender.NotNull())
+			{
+				pSceneRender->Render();
+			}
 			//再绘制UI
-			
+			if (pUIRenderer.NotNull())
+			{
+				pUIRenderer->Render();
+			}
 			//pGraphicDriver->Clear(CLEAR_COLOR | CLEAR_DEPTH | CLEAR_STENCIL,Color::RED);
 		}
 

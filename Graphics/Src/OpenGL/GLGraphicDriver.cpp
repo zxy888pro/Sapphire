@@ -1549,7 +1549,7 @@ namespace Sapphire
 		GLShaderVariation* glvs = (GLShaderVariation*)(vs);
 		GLShaderVariation* glps = (GLShaderVariation*)(ps);
 		//ÊÇ·ñ±àÒëÍê³É
-		if (glvs && glvs->GetGPUHandle())
+		if (glvs && !glvs->GetGPUHandle())
 		{
 			if (glvs->GetCompilerOutput().empty())
 			{
@@ -1571,7 +1571,7 @@ namespace Sapphire
 		{
 			glvs = NULL;
 		}
-		if (glps && glps->GetGPUHandle())
+		if (glps && !glps->GetGPUHandle())
 		{
 			if (glps->GetCompilerOutput().empty())
 			{

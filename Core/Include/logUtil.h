@@ -51,7 +51,7 @@ namespace Sapphire
 
 	};
 
-#define  SAPPHIRE_LOG(info) Sapphire::LogUtil::LogMsgLn(info)
-#define  SAPPHIRE_LOGWARNING(info) Sapphire::LogUtil::LogMsgLn(info)
-#define  SAPPHIRE_LOGERROR(info) Sapphire::LogUtil::LogMsgLn(info)
+#define  SAPPHIRE_LOG(info,...) Sapphire::LogUtil::LogMsgLn(StringFormatA(info,##__VA_ARGS__))
+#define  SAPPHIRE_LOGWARNING(info,...) Sapphire::LogUtil::LogMsgLn(StringFormatA(info,##__VA_ARGS__))
+#define  SAPPHIRE_LOGERROR(info,...) Sapphire::LogUtil::LogMsgLn(StringFormatA(info,##__VA_ARGS__))
 }

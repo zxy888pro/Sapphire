@@ -2,11 +2,11 @@
 #ifdef COMPILEVS
 
 #ifdef GL3
-#define attribute in        //å¦‚æœOpenGL3 æ›¿æ¢attribute ä¸ºin  æ›¿æ¢Varyingä¸ºout
+#define attribute in        //Èç¹ûOpenGL3 Ìæ»»attribute Îªin  Ìæ»»VaryingÎªout
 #define varying out
 #endif
 
-//ç”¨glBindAttribLocationæ¥ç»‘å®šæ¯ä¸ªattributeå˜é‡çš„ä½ç½®ï¼Œç„¶åç”¨å‡½æ•°glVertexAttribPointerç»™æ¯ä¸ªå˜é‡èµ‹å€¼
+//ÓÃglBindAttribLocationÀ´°ó¶¨Ã¿¸öattribute±äÁ¿µÄÎ»ÖÃ£¬È»ºóÓÃº¯ÊıglVertexAttribPointer¸øÃ¿¸ö±äÁ¿¸³Öµ
 attribute vec4 iPos;
 attribute vec3 iNormal;
 attribute vec4 iColor;
@@ -58,9 +58,9 @@ vec4 GetClipPos(vec3 worldPos)
     //
     vec4 ret = vec4(worldPos, 1.0) * cViewProj;
     #if !defined(GL_ES) && !defined(GL3)
-        gl_ClipVertex = ret;  //ç”¨äºç”¨æˆ·è£å‰ªå¹³é¢çš„è£å‰ª
+        gl_ClipVertex = ret;  //ÓÃÓÚÓÃ»§²Ã¼ôÆ½ÃæµÄ²Ã¼ô
     #elif defined(GL3)
-        gl_ClipDistance[0] = dot(cClipPlane, ret);//gl_ClipDistanceå…è®¸ç€è‰²å™¨è®¾ç½®ä¸€ä¸ªé¡¶ç‚¹åˆ°æ¯ä¸ªå‰ªåˆ‡å¹³é¢çš„è·ç¦»ã€‚æ­£å€¼è¡¨ç¤ºé¡¶ç‚¹åœ¨å‰ªåˆ‡å¹³é¢çš„é‡Œé¢ï¼ˆåé¢ï¼‰ï¼Œè€Œè´Ÿå€¼è¡¨ç¤ºåœ¨å‰ªåˆ‡å¹³é¢çš„å¤–é¢ï¼ˆå‰é¢ï¼‰
+        gl_ClipDistance[0] = dot(cClipPlane, ret);//gl_ClipDistanceÔÊĞí×ÅÉ«Æ÷ÉèÖÃÒ»¸ö¶¥µãµ½Ã¿¸ö¼ôÇĞÆ½ÃæµÄ¾àÀë¡£ÕıÖµ±íÊ¾¶¥µãÔÚ¼ôÇĞÆ½ÃæµÄÀïÃæ£¨ºóÃæ£©£¬¶ø¸ºÖµ±íÊ¾ÔÚ¼ôÇĞÆ½ÃæµÄÍâÃæ£¨Ç°Ãæ£©
     #endif
     return ret;
 }
@@ -97,14 +97,14 @@ vec3 GetBillboardNormal()
 
 vec3 GetWorldPos(mat4 modelMatrix)
 {
-    #if defined(BILLBOARD)  //å¦‚æœæ˜¯å…¬å…±æ¿
+    #if defined(BILLBOARD)  //Èç¹ûÊÇ¹«¹²°å
         return GetBillboardPos(iPos, iTexCoord2, modelMatrix);
     #else
-        return (iPos * modelMatrix).xyz;    //é¡¶ç‚¹ä½ç½®å˜æ¢åˆ°ä¸–ç•Œç©ºé—´
+        return (iPos * modelMatrix).xyz;    //¶¥µãÎ»ÖÃ±ä»»µ½ÊÀ½ç¿Õ¼ä
     #endif
 }
 
-////è·å¾—ä¸–ç•Œç©ºé—´çš„æ³•å‘é‡
+////»ñµÃÊÀ½ç¿Õ¼äµÄ·¨ÏòÁ¿
 vec3 GetWorldNormal(mat4 modelMatrix)   
 {
     #if defined(BILLBOARD)
@@ -113,7 +113,7 @@ vec3 GetWorldNormal(mat4 modelMatrix)
         return normalize(iNormal * GetNormalMatrix(modelMatrix));   
     #endif
 }
-////è·å¾—ä¸–ç•Œç©ºé—´çš„åˆ‡å‘é‡
+////»ñµÃÊÀ½ç¿Õ¼äµÄÇĞÏòÁ¿
 vec3 GetWorldTangent(mat4 modelMatrix)
 {
     return normalize(iTangent.xyz * GetNormalMatrix(modelMatrix));
@@ -127,7 +127,7 @@ vec3 GetWorldTangent(mat4 modelMatrix)
 
 
 #if defined(DEFERRED)
-out vec4 fragData[4];//å»¶è¿Ÿæ¸²æŸ“
+out vec4 fragData[4];//ÑÓ³ÙäÖÈ¾
 #elif defined(PREPASS)
 out vec4 fragData[2];
 #else

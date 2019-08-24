@@ -5,6 +5,7 @@
 #include "GLShader.h"
 #include "ShaderMgr.h"
 #include <algorithm>
+#include "IGraphicDriver.h"
 #include "GLGraphicDriver.h"
 #include <GraphicException.h>
 #include "json/json.h"
@@ -60,6 +61,7 @@ namespace Sapphire
 					 _pair.second->SetDefines(normalizeDefines.str());
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(),ShaderType::VS));
 					m_vsVariation.insert(_pair);
+					pShaderVariation = _pair.second;
 					RefreshMemoryUse();
 					++m_numVariation;
 					
@@ -79,6 +81,7 @@ namespace Sapphire
 					_pair.second->SetDefines(normalizeDefines.str());
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(), ShaderType::PS));
 					m_psVariation.insert(_pair);
+					pShaderVariation = _pair.second;
 					RefreshMemoryUse();
 					++m_numVariation;
 				}
@@ -97,6 +100,7 @@ namespace Sapphire
 					_pair.second->SetDefines(normalizeDefines.str());
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(), ShaderType::GS));
 					m_gsVariation.insert(_pair);
+					pShaderVariation = _pair.second;
 					RefreshMemoryUse();
 					++m_numVariation;
 				}
@@ -115,6 +119,7 @@ namespace Sapphire
 					_pair.second->SetDefines(normalizeDefines.str());
 					_pair.second->SetName(ShaderMgr::GetFileName(GetName(), ShaderType::CS));
 					m_csVariation.insert(_pair);
+					pShaderVariation = _pair.second;
 					RefreshMemoryUse();
 					++m_numVariation;
 				}
@@ -235,6 +240,8 @@ namespace Sapphire
 
 	bool GLShader::Load()
 	{
+		m_pGraphicDriver = dynamic_cast<GLGraphicDriver*>(m_pCore->GetSubSystem<IGraphicDriver>());
+		m_assert(m_pGraphicDriver);
 		//加载资源名	 
 		FileStream fs(m_resName.c_str(), FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
 		if (fs.IsOpen())
@@ -265,6 +272,11 @@ namespace Sapphire
 				m_bIsDisposed = false;
 				return true;
 			}
+			else
+			{
+				SAPPHIRE_LOGERROR("Parse Shader %s Error: %s",m_name.c_str(),errs.c_str());
+			}
+			
 		}
 		return false;
 	}
@@ -310,12 +322,16 @@ namespace Sapphire
 
 	bool GLShader::LoadShaderScript(const char* scriptPath, ShaderType type)
 	{
+		
 		std::string source = "";
 		PathA fullPath = m_pGraphicDriver->GetShaderPath();
 		fullPath.addTailSlash();
 		fullPath += scriptPath;
 		fullPath.normalize();
-
+		if (!FileIsExistA(fullPath.c_str()))
+		{
+			throw GraphicDriverException(fullPath + "is not exist! ", GraphicDriverException::GDError_LoadShaderError);
+		}
 		FileStream fs(fullPath.c_str(), FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
 		if (!fs.IsOpen())
 		{
@@ -363,8 +379,12 @@ namespace Sapphire
 				Path curPath = istream.GetPath();
 				curPath = curPath.getParentDir();
 				curPath.addTailSlash();
-				std::string fileName = line.substr(9, line.length() - 10);
+				std::string fileName = line.substr(10, line.length() - 11);
 				curPath += fileName;
+				if (!FileIsExistA(curPath.c_str()))
+				{
+					throw GraphicDriverException(curPath + "is not exist! ",GraphicDriverException::GDError_LoadShaderError);
+				}
 				FileStream fs(curPath.c_str(),FileMode::FILE_EXIST | FileMode::FILE_READ | FileMode::FILE_READ | FileMode::FILE_STRING);
 				if (fs.IsOpen())
 				{
@@ -375,6 +395,10 @@ namespace Sapphire
 				{
 					return false;
 				}
+				
+			}
+			else
+			{
 				source += line;
 				source += "\n";
 			}

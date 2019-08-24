@@ -36,7 +36,7 @@ namespace Sapphire
 		virtual void RenderUpdate();
 
 
-		virtual void Render(bool resetRenderTargets);
+		virtual void Render(bool resetRenderTargets = true);
 
 
 

@@ -21,7 +21,7 @@ void Sapphire::BaseResource::OnLoadStart()
 
 void Sapphire::BaseResource::OnLoadEnd()
 {
-	m_eState = ResourceState_Unload;
+	m_eState = ResourceState_Loaded;
 }
 
 void Sapphire::BaseResource::OnLoadError()

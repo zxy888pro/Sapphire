@@ -7,6 +7,7 @@
 #include <iostream>
 #include "ImageRes.h"
 #include "XML/XMLFile.h"
+#include "path.h"
 
 namespace Sapphire
 {
@@ -183,7 +184,7 @@ namespace Sapphire
 			}
 		}
 
-
+		
 
 		bool getExitFlag() const { return bExitFlag; }
 		void setExitFlag(bool val) { bExitFlag = val; }
@@ -246,7 +247,9 @@ int main() {
 	Path curDir = GetCurrentDir();
 	std::cout << curDir.c_str() << std::endl;
 
-
+	PathA path = "G:\\CplusplusProject\\Sapphire\\bin\\shaders\\Baisc.shader";
+	path.normalize();
+	bool ret = FileIsExistA(path.c_str());
 	char c = getchar();
 	while (c != 'q')
 	{
